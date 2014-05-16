@@ -78,6 +78,7 @@ BEGIN_EVENT_TABLE( OutputDialog, wxDialog )
     EVT_BUTTON( wxID_CANCEL, OutputDialog::OnCancelClick )
     EVT_BUTTON( wxID_OK, OutputDialog::OnOkClick )
     EVT_BUTTON( wxID_APPLY, OutputDialog::OnApplyClick )
+    EVT_BUTTON( wxID_HELP, OutputDialog::OnHelpClick )
 ////@end OutputDialog event table entries
     EVT_MENU( ID_PANEL_CO_GENERAL, OutputDialog::OnSelectPage )
 
@@ -726,7 +727,7 @@ void OutputDialog::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer66 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer66, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer66, 0, wxGROW|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer66->AddButton(m_Cancel);
 
@@ -736,6 +737,9 @@ void OutputDialog::CreateControls()
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer66->AddButton(m_Apply);
+
+    wxButton* itemButton70 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer66->AddButton(itemButton70);
 
     itemStdDialogButtonSizer66->Realize();
 
@@ -967,5 +971,21 @@ void OutputDialog::onAccessory( wxCommandEvent& event )
 void OutputDialog::onDoc( wxCommandEvent& event )
 {
   doDoc( event, "outputs" );
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void OutputDialog::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "output" ); break; // index
+  case 1: wxGetApp().openLink( "output-gen" ); break;
+  case 2: wxGetApp().openLink( "output-int" ); break;
+  case 3: wxGetApp().openLink( "output" ); break; // position
+  default: wxGetApp().openLink( "output" ); break;
+  }
 }
 
