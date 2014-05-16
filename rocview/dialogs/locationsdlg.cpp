@@ -69,29 +69,18 @@ BEGIN_EVENT_TABLE( LocationsDialog, wxDialog )
 
 ////@begin LocationsDialog event table entries
     EVT_LISTBOX( ID_LISTBOX_LOCATIONS_LOCATIONS, LocationsDialog::OnListboxLocationsLocationsSelected )
-
     EVT_LISTBOX( ID_LISTBOX_LOCATIONS_BLOCKS, LocationsDialog::OnListboxLocationsBlocksSelected )
-
     EVT_BUTTON( ID__LOCATIONS_BLOCK_ADD, LocationsDialog::OnLocationsBlockAddClick )
-
     EVT_BUTTON( ID__LOCATIONS_BLOCK_DELETE, LocationsDialog::OnLocationsBlockDeleteClick )
-
     EVT_BUTTON( ID_LOCATION_BLOCK_UP, LocationsDialog::OnBlockUp )
-
     EVT_BUTTON( ID_LOCATION_BLOCK_DOWN, LocationsDialog::OnBlockDown )
-
     EVT_BUTTON( ID_BUTTON_LOCATIONS_NEW, LocationsDialog::OnButtonLocationsNewClick )
-
     EVT_BUTTON( ID_BUTTON_LOCATIONS_MODIFY, LocationsDialog::OnButtonLocationsModifyClick )
-
     EVT_BUTTON( ID_BUTTON_LOCATIONS_DELETE, LocationsDialog::OnButtonLocationsDeleteClick )
-
     EVT_BUTTON( wxID_OK, LocationsDialog::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, LocationsDialog::OnCancelClick )
-
     EVT_BUTTON( wxID_APPLY, LocationsDialog::OnApplyClick )
-
+    EVT_BUTTON( wxID_HELP, LocationsDialog::OnHelpClick )
 ////@end LocationsDialog event table entries
 
 END_EVENT_TABLE()
@@ -357,14 +346,14 @@ void LocationsDialog::CreateControls()
     itemBoxSizer3->Add(itemBoxSizer4, 0, wxGROW|wxALL, 5);
 
     m_LabLocations = new wxStaticText( itemDialog1, wxID_STATIC_LOCATIONS_LOCATIONS, _("Locations"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer4->Add(m_LabLocations, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemBoxSizer4->Add(m_LabLocations, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_LocationListStrings;
     m_LocationList = new wxListBox( itemDialog1, ID_LISTBOX_LOCATIONS_LOCATIONS, wxDefaultPosition, wxSize(200, -1), m_LocationListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB );
     itemBoxSizer4->Add(m_LocationList, 1, wxGROW|wxALL, 5);
 
     m_LabName = new wxStaticText( itemDialog1, wxID_STATIC_LOCATIONS_NAME, _("Name"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer4->Add(m_LabName, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
+    itemBoxSizer4->Add(m_LabName, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_Name = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_LOCATION_NAME, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer4->Add(m_Name, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -373,7 +362,7 @@ void LocationsDialog::CreateControls()
     itemBoxSizer3->Add(itemBoxSizer9, 1, wxGROW|wxALL, 5);
 
     m_LabBlocks = new wxStaticText( itemDialog1, wxID_STATIC_LOCATIONS_BLOCKS, _("Blocks"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer9->Add(m_LabBlocks, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemBoxSizer9->Add(m_LabBlocks, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_BlockListStrings;
     m_BlockList = new wxListBox( itemDialog1, ID_LISTBOX_LOCATIONS_BLOCKS, wxDefaultPosition, wxSize(200, 120), m_BlockListStrings, wxLB_SINGLE );
@@ -429,7 +418,7 @@ void LocationsDialog::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer27 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer27, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer27, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
     itemStdDialogButtonSizer27->AddButton(m_OK);
@@ -439,6 +428,9 @@ void LocationsDialog::CreateControls()
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer27->AddButton(m_Apply);
+
+    wxButton* itemButton31 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer27->AddButton(itemButton31);
 
     itemStdDialogButtonSizer27->Realize();
 
@@ -695,5 +687,15 @@ void LocationsDialog::OnBlockDown( wxCommandEvent& event )
     m_BlockList->Delete(sel);
     OnListboxLocationsBlocksSelected(event);
   }
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void LocationsDialog::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "locations-def" );
 }
 

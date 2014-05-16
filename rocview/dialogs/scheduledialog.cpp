@@ -79,52 +79,31 @@ BEGIN_EVENT_TABLE( ScheduleDialog, wxDialog )
 ////@begin ScheduleDialog event table entries
     EVT_LIST_ITEM_SELECTED( ID_LISTBOX_SCHEDULE_LIST, ScheduleDialog::OnListboxScheduleListSelected )
     EVT_LIST_COL_CLICK( ID_LISTBOX_SCHEDULE_LIST, ScheduleDialog::OnListboxScheduleListColLeftClick )
-
     EVT_CHECKBOX( ID_CHECKBOX_SCHEDULES_SHOW_ALL, ScheduleDialog::OnCheckboxSchedulesShowAllClick )
-
     EVT_BUTTON( ID_BUTTON_SCHEDULE_NEW, ScheduleDialog::OnButtonScheduleNewClick )
-
     EVT_BUTTON( ID_BUTTON_SCHEDULE_DELETE, ScheduleDialog::OnButtonScheduleDeleteClick )
-
     EVT_BUTTON( ID_BUTTON_SC_DOC, ScheduleDialog::OnButtonScDocClick )
-
     EVT_BUTTON( ID_BUTTON_SCHEDULE_COPY, ScheduleDialog::OnButtonScheduleCopyClick )
-
     EVT_TEXT( ID_TEXTCTRL_SCHEDULE_ID, ScheduleDialog::OnTextctrlScheduleIdUpdated )
-
     EVT_SPINCTRL( ID_SCHEDULE_FROMHOUR, ScheduleDialog::OnScheduleFromhourUpdated )
-
     EVT_RADIOBOX( ID_SC_TIMEPROCESSING, ScheduleDialog::OnScTimeprocessingSelected )
-
     EVT_GRID_CELL_LEFT_CLICK( ScheduleDialog::OnCellLeftClick )
     EVT_GRID_CELL_RIGHT_CLICK( ScheduleDialog::OnCellRightClick )
     EVT_GRID_LABEL_LEFT_CLICK( ScheduleDialog::OnLabelLeftClick )
     EVT_GRID_LABEL_RIGHT_CLICK( ScheduleDialog::OnLabelRightClick )
-
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_ADD_LOCATION, ScheduleDialog::OnAddLocationClick )
-
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_ADD_BLOCK, ScheduleDialog::OnAddBlockClick )
-
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_ENTRY_ACTIONS, ScheduleDialog::OnButtonScheduleEntryActionsClick )
-
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_REMOVE_DESTINATION, ScheduleDialog::OnRemoveDestinationClick )
-
     EVT_BUTTON( wxID_BUTTON_SCHEDULE_MODIFY_DESTINATION, ScheduleDialog::OnModifyDestinationClick )
-
     EVT_BUTTON( ID_DESTUP, ScheduleDialog::OnDestupClick )
-
     EVT_BUTTON( ID_DESTDOWN, ScheduleDialog::OnDestdownClick )
-
     EVT_BUTTON( ID_SCHEDULE_ACTIONS, ScheduleDialog::OnScheduleActionsClick )
-
     EVT_BUTTON( ID_BUTTON_GRAPH_GEN, ScheduleDialog::OnButtonGraphGenClick )
-
     EVT_BUTTON( wxID_OK, ScheduleDialog::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, ScheduleDialog::OnCancelClick )
-
     EVT_BUTTON( wxID_APPLY, ScheduleDialog::OnApplyClick )
-
+    EVT_BUTTON( wxID_HELP, ScheduleDialog::OnHelpClick )
 ////@end ScheduleDialog event table entries
 
 END_EVENT_TABLE()
@@ -863,7 +842,7 @@ void ScheduleDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer19 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer18->Add(itemFlexGridSizer19, 0, wxGROW|wxALL, 5);
     m_LabelID = new wxStaticText( m_Destinations, wxID_STATIC_SCHEDULE_ID, _("ID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer19->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer19->Add(m_LabelID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     m_ID = new wxTextCtrl( m_Destinations, ID_TEXTCTRL_SCHEDULE_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer19->Add(m_ID, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -925,10 +904,10 @@ void ScheduleDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer36 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer34->Add(itemFlexGridSizer36, 0, wxGROW|wxALL, 5);
     m_LabelLocation = new wxStaticText( m_Destinations, ID_STATICTEXT_SCHEDULE_FROM, _("Location"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer36->Add(m_LabelLocation, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer36->Add(m_LabelLocation, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_LabelBlock = new wxStaticText( m_Destinations, ID_STATICTEXT_SCHEDULE_TO, _("Block"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer36->Add(m_LabelBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer36->Add(m_LabelBlock, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_LocationStrings;
     m_Location = new wxComboBox( m_Destinations, ID_COMBOBOX_SCHEDULE_FROM_LOCATION, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_LocationStrings, wxCB_READONLY );
@@ -957,10 +936,10 @@ void ScheduleDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer46 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer45->Add(itemFlexGridSizer46, 0, wxGROW, 5);
     m_labHour = new wxStaticText( m_Destinations, wxID_ANY, _("hour"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer46->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer46->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_labMinute = new wxStaticText( m_Destinations, wxID_ANY, _("minute"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer46->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
+    itemFlexGridSizer46->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE, 5);
 
     m_Hour = new wxSpinCtrl( m_Destinations, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
     itemFlexGridSizer46->Add(m_Hour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
@@ -1027,7 +1006,7 @@ void ScheduleDialog::CreateControls()
     wxBoxSizer* itemBoxSizer69 = new wxBoxSizer(wxVERTICAL);
     itemPanel68->SetSizer(itemBoxSizer69);
 
-    m_Graph = new ScheduleGraph( itemPanel68, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    m_Graph = new ScheduleGraph( itemPanel68, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     m_Graph->SetBackgroundColour(wxColour(255, 255, 255));
     itemBoxSizer69->Add(m_Graph, 1, wxGROW|wxALL, 10);
 
@@ -1051,6 +1030,9 @@ void ScheduleDialog::CreateControls()
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer73->AddButton(m_Apply);
+
+    wxButton* itemButton77 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer73->AddButton(itemButton77);
 
     itemStdDialogButtonSizer73->Realize();
 
@@ -1592,6 +1574,21 @@ void ScheduleDialog::OnButtonGraphGenClick( wxCommandEvent& event )
 {
   if( m_Props != NULL ) {
     m_Graph->setSchedule(m_Props);
+  }
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void ScheduleDialog::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_NoteBook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "schedules-index" ); break;
+  case 1: wxGetApp().openLink( "schedules-dest" ); break;
+  case 2: wxGetApp().openLink( "schedules-actions" ); break;
+  default: wxGetApp().openLink( "schedules" ); break;
   }
 }
 

@@ -49,11 +49,9 @@ BEGIN_EVENT_TABLE( SelectDialog, wxDialog )
 
 ////@begin SelectDialog event table entries
     EVT_RADIOBOX( ID_SELECT_ACTION, SelectDialog::OnSelectActionSelected )
-
     EVT_BUTTON( wxID_CANCEL, SelectDialog::OnCancelClick )
-
     EVT_BUTTON( wxID_OK, SelectDialog::OnOkClick )
-
+    EVT_BUTTON( wxID_HELP, SelectDialog::OnHelpClick )
 ////@end SelectDialog event table entries
 
 END_EVENT_TABLE()
@@ -351,7 +349,6 @@ void SelectDialog::CreateControls()
     itemFlexGridSizer14->Add(m_TargetY, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     wxFlexGridSizer* itemFlexGridSizer19 = new wxFlexGridSizer(1, 2, 0, 0);
-    itemFlexGridSizer19->AddGrowableCol(1);
     itemStaticBoxSizer13->Add(itemFlexGridSizer19, 0, wxGROW, 5);
 
     m_labLevel = new wxStaticText( itemDialog1, wxID_ANY, _("level"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -360,6 +357,8 @@ void SelectDialog::CreateControls()
     wxArrayString m_LevelStrings;
     m_Level = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_LevelStrings, 0 );
     itemFlexGridSizer19->Add(m_Level, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+
+    itemFlexGridSizer19->AddGrowableCol(1);
 
     wxArrayString m_ActionBoxStrings;
     m_ActionBoxStrings.Add(_("&Move"));
@@ -372,7 +371,6 @@ void SelectDialog::CreateControls()
     itemBoxSizer2->Add(m_ActionBox, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer23 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemFlexGridSizer23->AddGrowableCol(1);
     itemBoxSizer2->Add(itemFlexGridSizer23, 0, wxGROW|wxALL, 5);
 
     m_labRouteIDs = new wxStaticText( itemDialog1, wxID_ANY, _("Route IDs"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -392,14 +390,19 @@ void SelectDialog::CreateControls()
     m_BlockID = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockIDStrings, wxCB_DROPDOWN );
     itemFlexGridSizer23->Add(m_BlockID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    itemFlexGridSizer23->AddGrowableCol(1);
+
     wxStdDialogButtonSizer* itemStdDialogButtonSizer29 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer29, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer29, 0, wxGROW|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer29->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer29->AddButton(m_OK);
+
+    wxButton* itemButton32 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer29->AddButton(itemButton32);
 
     itemStdDialogButtonSizer29->Realize();
 
@@ -481,5 +484,15 @@ void SelectDialog::OnSelectActionSelected( wxCommandEvent& event )
     m_TargetY->Enable(true);
     m_Level->Enable(true);
   }
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void SelectDialog::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "select" );
 }
 
