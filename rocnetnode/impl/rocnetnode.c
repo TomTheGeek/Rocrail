@@ -1948,7 +1948,7 @@ static void __adcsensorscanner( void* threadinst ) {
 
           if( value > data->adcthreshold && ( startofday || data->adcsensorvalue[idx*4+port] == 0) ) {
             data->adcsensorcounter[idx*4+port]++;
-            if( data->adcsensorcounter[idx*4+port] > 2 ) {
+            if( data->adcsensorcounter[idx*4+port] > 3 ) {
               /* report on */
               data->adcsensorcounter[idx*4+port] = 0;
               data->adcsensorvalue[idx*4+port] = value;
@@ -1956,7 +1956,7 @@ static void __adcsensorscanner( void* threadinst ) {
               __reportADCSensor(rocnetnode, idx*4+port, True, value );
             }
           }
-          else if( value > data->adcthreshold && data->adcsensorvalue[idx*4+port] > 0 && abs(data->adcsensorvalue[idx*4+port] - value) > data->adcthreshold ) {
+          else if( value > data->adcthreshold && data->adcsensorvalue[idx*4+port] > 0 && abs(data->adcsensorvalue[idx*4+port] - value) >= 10 ) {
             /* report on changed */
             data->adcsensorvalue[idx*4+port] = value;
             data->adcsensortimer[idx*4+port] = SystemOp.getTick();
@@ -1995,7 +1995,7 @@ static void __adcsensorscanner( void* threadinst ) {
       startofday = data->adcstartofday;
     }
 
-    ThreadOp.sleep(20);
+    ThreadOp.sleep(25);
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ADC Sensor scanner ended" );
