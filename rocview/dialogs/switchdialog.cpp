@@ -84,6 +84,7 @@ BEGIN_EVENT_TABLE( SwitchDialog, wxDialog )
     EVT_BUTTON( wxID_CANCEL, SwitchDialog::OnCancelClick )
     EVT_BUTTON( wxID_OK, SwitchDialog::OnOkClick )
     EVT_BUTTON( wxID_APPLY, SwitchDialog::OnApplyClick )
+    EVT_BUTTON( wxID_HELP, SwitchDialog::OnHelpClick )
 ////@end SwitchDialog event table entries
     EVT_MENU( ID_PANEL_SW_GENERAL, SwitchDialog::OnSelectPage )
 
@@ -1972,6 +1973,9 @@ void SwitchDialog::CreateControls()
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer233->AddButton(m_Apply);
 
+    wxButton* itemButton237 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer233->AddButton(itemButton237);
+
     itemStdDialogButtonSizer233->Realize();
 
 ////@end SwitchDialog content construction
@@ -2264,6 +2268,26 @@ void SwitchDialog::OnTogglebuttonTestClick( wxCommandEvent& event )
     wxGetApp().sendToRocrail( swcmd );
     NodeOp.base.del( swcmd );
     m_Test->SetLabel( wxGetApp().getMsg( "test" ) );
+  }
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void SwitchDialog::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "switch-index" ); break;
+  case 1: wxGetApp().openLink( "switch-gen" ); break;
+  case 2: wxGetApp().openLink( "switch-index" ); break; // Position
+  case 3: wxGetApp().openLink( "switch-int" ); break;
+  case 4: wxGetApp().openLink( "switch-wiring" ); break;
+  case 5: wxGetApp().openLink( "switch-ctrl" ); break;
+  case 6: wxGetApp().openLink( "switch-frog" ); break;
+  case 7: wxGetApp().openLink( "switch-td" ); break;
+  default: wxGetApp().openLink( "switch-index" ); break;
   }
 }
 

@@ -272,6 +272,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
     void OnOkClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+    void OnHelpClick( wxCommandEvent& event );
+
 ////@end BlockDialog event handler declarations
 
 ////@begin BlockDialog member function declarations

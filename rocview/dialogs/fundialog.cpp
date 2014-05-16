@@ -63,9 +63,8 @@ BEGIN_EVENT_TABLE( FunctionDialog, wxDialog )
 
 ////@begin FunctionDialog event table entries
     EVT_BUTTON( wxID_CANCEL, FunctionDialog::OnCancelClick )
-
     EVT_BUTTON( wxID_OK, FunctionDialog::OnOkClick )
-
+    EVT_BUTTON( wxID_HELP, FunctionDialog::OnHelpClick )
 ////@end FunctionDialog event table entries
 
 END_EVENT_TABLE()
@@ -279,11 +278,9 @@ void FunctionDialog::CreateControls()
     itemDialog1->SetSizer(itemBoxSizer2);
 
     wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(3, 3, 0, 0);
-    itemFlexGridSizer3->AddGrowableCol(1);
-    itemFlexGridSizer3->AddGrowableCol(2);
     itemBoxSizer2->Add(itemFlexGridSizer3, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC_FN_DUMMY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC_FN_DUMMY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(itemStaticText4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Label_OnEvent = new wxStaticText( itemDialog1, wxID_STATIC_ONEVENT, _("On event"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -307,12 +304,15 @@ void FunctionDialog::CreateControls()
     itemFlexGridSizer3->Add(m_Label_Event, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_BlockOnEventStrings;
-    m_BlockOnEvent = new wxComboBox( itemDialog1, ID_COMBOBOX_BLOCKON_EVENT, _T(""), wxDefaultPosition, wxDefaultSize, m_BlockOnEventStrings, wxCB_READONLY );
+    m_BlockOnEvent = new wxComboBox( itemDialog1, ID_COMBOBOX_BLOCKON_EVENT, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockOnEventStrings, wxCB_READONLY );
     itemFlexGridSizer3->Add(m_BlockOnEvent, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_BlockOffEventStrings;
-    m_BlockOffEvent = new wxComboBox( itemDialog1, ID_COMBOBOX_BLOCKOFF_EVENT, _T(""), wxDefaultPosition, wxDefaultSize, m_BlockOffEventStrings, wxCB_READONLY );
+    m_BlockOffEvent = new wxComboBox( itemDialog1, ID_COMBOBOX_BLOCKOFF_EVENT, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_BlockOffEventStrings, wxCB_READONLY );
     itemFlexGridSizer3->Add(m_BlockOffEvent, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer3->AddGrowableCol(1);
+    itemFlexGridSizer3->AddGrowableCol(2);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer13 = new wxStdDialogButtonSizer;
 
@@ -323,6 +323,9 @@ void FunctionDialog::CreateControls()
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
     itemStdDialogButtonSizer13->AddButton(m_OK);
+
+    wxButton* itemButton16 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer13->AddButton(itemButton16);
 
     itemStdDialogButtonSizer13->Realize();
 
@@ -390,4 +393,14 @@ void FunctionDialog::OnOkClick( wxCommandEvent& event )
   EndModal( wxID_OK );
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void FunctionDialog::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "loc-fun" );
+}
 

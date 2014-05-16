@@ -88,91 +88,49 @@ BEGIN_EVENT_TABLE( BlockDialog, wxDialog )
 ////@begin BlockDialog event table entries
     EVT_LIST_ITEM_SELECTED( ID_LISTCTRLINDEX_BK, BlockDialog::OnListctrlindexBkSelected )
     EVT_LIST_COL_CLICK( ID_LISTCTRLINDEX_BK, BlockDialog::OnListctrlindexBkColLeftClick )
-
     EVT_BUTTON( ID_BUTTON_BLOCK_NEW, BlockDialog::OnButtonBlockNewClick )
-
     EVT_BUTTON( ID_BUTTON_BLOCK_DELETE, BlockDialog::OnButtonBlockDeleteClick )
-
     EVT_BUTTON( ID_BLOCK_DOC, BlockDialog::onDoc )
-
     EVT_BUTTON( ID_BUTTON_BK_LOCPROPS, BlockDialog::OnButtonBkLocpropsClick )
-
     EVT_CHECKBOX( wxID_BLOCK_WAIT, BlockDialog::OnBlockWaitClick )
-
     EVT_BUTTON( ID_BUTTON_BLOCK_ACTIONS, BlockDialog::OnButtonBlockActionsClick )
-
     EVT_BUTTON( ID_BUTTON_BK_SIGNAL, BlockDialog::OnButtonBkSignalClick )
-
     EVT_BUTTON( ID_BUTTON_BK_WSIGNAL, BlockDialog::OnButtonBkWsignalClick )
-
     EVT_BUTTON( ID_BUTTON_BK_SIGNAL_R, BlockDialog::OnButtonBkSignalRClick )
-
     EVT_BUTTON( ID_BUTTON_BK_WSIGNAL_R, BlockDialog::OnButtonBkWsignalRClick )
-
     EVT_RADIOBOX( ID_RADIOBOX_BK_WAIT, BlockDialog::OnRadioboxBkWaitSelected )
-
     EVT_LISTBOX( ID_LISTBOX_BK_ROUTES, BlockDialog::OnListboxBkRoutesSelected )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ID1, BlockDialog::OnBlockSensor )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ACTION1, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END1, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_BLOCK_SENS1_T2, BlockDialog::OnBlockSensor )
-
     EVT_BUTTON( ID_BUTTON_BLOCKS_SENSOR_PROPS1, BlockDialog::OnSensorProps )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ID2, BlockDialog::OnBlockSensor )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ACTION2, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END2, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_BLOCK_SENS2_T2, BlockDialog::OnBlockSensor )
-
     EVT_BUTTON( ID_BUTTON_BLOCK_SENSOR_PROPS2, BlockDialog::OnSensorProps )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ID3, BlockDialog::OnBlockSensor )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ACTION3, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END3, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_BLOCK_SENS3_T2, BlockDialog::OnBlockSensor )
-
     EVT_BUTTON( ID_BUTTON_BLOCKS_SENSOR_PROPS3, BlockDialog::OnSensorProps )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ID4, BlockDialog::OnBlockSensor )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ACTION4, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END4, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_BLOCK_SENS4_T2, BlockDialog::OnBlockSensor )
-
     EVT_BUTTON( ID_BUTTON_BLOCKS_SENSOR_PROPS4, BlockDialog::OnSensorProps )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ID5, BlockDialog::OnBlockSensor )
-
     EVT_COMBOBOX( ID_COMBOBOX_BLOCK_SENSOR_ACTION5, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_CHECKBOX_BLOCK_SENSOR_END5, BlockDialog::OnBlockSensor )
-
     EVT_CHECKBOX( ID_BLOCK_SENS5_T2, BlockDialog::OnBlockSensor )
-
     EVT_BUTTON( ID_BUTTON_BLOCKS_SENSOR_PROPS5, BlockDialog::OnSensorProps )
-
     EVT_BUTTON( ID_BUTTON1, BlockDialog::OnButtonBkRoutePropsClick )
-
     EVT_BUTTON( ID_BUTTON2, BlockDialog::OnButtonBkRouteTestClick )
-
     EVT_BUTTON( wxID_CANCEL, BlockDialog::OnCancelClick )
-
     EVT_BUTTON( wxID_APPLY, BlockDialog::OnApplyClick )
-
     EVT_BUTTON( wxID_OK, BlockDialog::OnOkClick )
-
+    EVT_BUTTON( wxID_HELP, BlockDialog::OnHelpClick )
 ////@end BlockDialog event table entries
     EVT_MENU( ID_PANEL_BK_GENERAL, BlockDialog::OnSelectPage )
 
@@ -348,7 +306,7 @@ void BlockDialog::initLabels() {
   m_Notebook->SetPageText( 3, wxGetApp().getMsg( "signals" ) );
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "details" ) );
   m_Notebook->SetPageText( 5, wxGetApp().getMsg( "routes" ) );
-  m_Notebook->SetPageText( 6, wxGetApp().getMsg( "interface" ) );
+  m_Notebook->SetPageText( 6, wxGetApp().getMsg( "trackdriver" ) );
   m_Notebook->SetPageText( 7, wxGetApp().getMsg( "permissions" ) );
 
   // Index
@@ -1411,19 +1369,19 @@ void BlockDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer14 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer13->Add(itemFlexGridSizer14, 0, wxGROW|wxALL, 5);
     m_label_ID = new wxStaticText( m_General_Panel, wxID_STATIC_ID_BLOCK, _("ID:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer14->Add(m_label_ID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer14->Add(m_label_ID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_ID = new wxTextCtrl( m_General_Panel, ID_TEXTCTRL_ID_BLOCK, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_ID, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Label_Description = new wxStaticText( m_General_Panel, wxID_STATIC_DESCRIPTION_BLOCK, _("Description:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer14->Add(m_Label_Description, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer14->Add(m_Label_Description, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Description = new wxTextCtrl( m_General_Panel, ID_TEXTCTRL_DESCRIPTION_BLOCK, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer14->Add(m_Description, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Label_Length = new wxStaticText( m_General_Panel, wxID_STATIC_LENGTH_BLOCK, _("Length:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer14->Add(m_Label_Length, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer14->Add(m_Label_Length, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Length = new wxTextCtrl( m_General_Panel, ID_TEXTCTRL_LENGTH_BLOCK, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer14->Add(m_Length, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1445,13 +1403,13 @@ void BlockDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer25 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer13->Add(itemFlexGridSizer25, 0, wxGROW|wxALL, 5);
     m_LabelLocID = new wxStaticText( m_General_Panel, wxID_STATIC_BK_LOCID, _("LocID:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer25->Add(m_LabelLocID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer25->Add(m_LabelLocID, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_LocID = new wxTextCtrl( m_General_Panel, ID_TEXTCTRL_BK_LOCID, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     itemFlexGridSizer25->Add(m_LocID, 2, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LocProps = new wxButton( m_General_Panel, ID_BUTTON_BK_LOCPROPS, _("..."), wxDefaultPosition, wxSize(40, -1), 0 );
-    itemFlexGridSizer25->Add(m_LocProps, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer25->Add(m_LocProps, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_labTurntableID = new wxStaticText( m_General_Panel, wxID_ANY, _("Turntable ID:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer25->Add(m_labTurntableID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1550,19 +1508,19 @@ void BlockDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer55 = new wxFlexGridSizer(0, 4, 0, 0);
     itemStaticBoxSizer54->Add(itemFlexGridSizer55, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
     m_LabelX = new wxStaticText( m_LocationPanel, wxID_ANY, _("x"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer55->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer55->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_x = new wxTextCtrl( m_LocationPanel, ID_TEXTCTRL, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer55->Add(m_x, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelY = new wxStaticText( m_LocationPanel, wxID_ANY, _("y"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer55->Add(m_LabelY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer55->Add(m_LabelY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_y = new wxTextCtrl( m_LocationPanel, ID_TEXTCTRL1, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer55->Add(m_y, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelZ = new wxStaticText( m_LocationPanel, wxID_ANY, _("z"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer55->Add(m_LabelZ, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer55->Add(m_LabelZ, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_z = new wxTextCtrl( m_LocationPanel, ID_TEXTCTRL2, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer55->Add(m_z, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1585,7 +1543,7 @@ void BlockDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer67 = new wxFlexGridSizer(0, 3, 0, 0);
     itemStaticBoxSizer66->Add(itemFlexGridSizer67, 0, wxGROW|wxALL, 5);
     m_LabelSignal = new wxStaticText( m_PanelWirering, ID_STATICTEXT_BK_SIGNAL, _("Signal"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer67->Add(m_LabelSignal, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer67->Add(m_LabelSignal, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_SignalStrings;
     m_Signal = new wxComboBox( m_PanelWirering, ID_COMBOBOX_BK_SIGNAL, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_SignalStrings, wxCB_READONLY );
@@ -1595,7 +1553,7 @@ void BlockDialog::CreateControls()
     itemFlexGridSizer67->Add(m_SignalProps, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelWSignal = new wxStaticText( m_PanelWirering, wxID_STATIC_BK_WSIGNAL, _("Warning Signal"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer67->Add(m_LabelWSignal, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer67->Add(m_LabelWSignal, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_WSignalStrings;
     m_WSignal = new wxComboBox( m_PanelWirering, ID_COMBOBOX_BK_WSIGNAL, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_WSignalStrings, wxCB_READONLY );
@@ -1616,7 +1574,7 @@ void BlockDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer76 = new wxFlexGridSizer(0, 3, 0, 0);
     itemStaticBoxSizer75->Add(itemFlexGridSizer76, 0, wxGROW|wxALL, 5);
     m_LabelSignalR = new wxStaticText( m_PanelWirering, wxID_ANY, _("Signal"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer76->Add(m_LabelSignalR, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer76->Add(m_LabelSignalR, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_SignalRStrings;
     m_SignalR = new wxComboBox( m_PanelWirering, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_SignalRStrings, wxCB_READONLY );
@@ -1626,7 +1584,7 @@ void BlockDialog::CreateControls()
     itemFlexGridSizer76->Add(m_SignalPropsR, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelWSignalR = new wxStaticText( m_PanelWirering, wxID_ANY, _("Warning Signal"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer76->Add(m_LabelWSignalR, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer76->Add(m_LabelWSignalR, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_WSignalRStrings;
     m_WSignalR = new wxComboBox( m_PanelWirering, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_WSignalRStrings, wxCB_READONLY );
@@ -1650,7 +1608,7 @@ void BlockDialog::CreateControls()
     wxBoxSizer* itemBoxSizer86 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer85->Add(itemBoxSizer86, 0, wxALIGN_TOP, 5);
     wxFlexGridSizer* itemFlexGridSizer87 = new wxFlexGridSizer(0, 4, 0, 0);
-    itemBoxSizer86->Add(itemFlexGridSizer87, 0, wxGROW, 5);
+    itemBoxSizer86->Add(itemFlexGridSizer87, 0, wxGROW|wxADJUST_MINSIZE, 5);
     wxArrayString m_InclineStrings;
     m_InclineStrings.Add(_("&none"));
     m_InclineStrings.Add(_("&up"));
@@ -1676,19 +1634,19 @@ void BlockDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer92 = new wxFlexGridSizer(0, 2, 0, 0);
     m_WaitDetails->Add(itemFlexGridSizer92, 0, wxALIGN_CENTER_VERTICAL, 5);
     m_LabelRandomMin = new wxStaticText( m_PanelDetails, wxID_STATIC_BK_RANDOM_MIN, _("Radom min:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer92->Add(m_LabelRandomMin, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer92->Add(m_LabelRandomMin, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     m_RandomMin = new wxTextCtrl( m_PanelDetails, ID_TEXTCTRL_BK_RANDOM_MIN, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer92->Add(m_RandomMin, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_LabelRandomMax = new wxStaticText( m_PanelDetails, wxID_STATIC_BK_RANDOM_MAX, _("Random max:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer92->Add(m_LabelRandomMax, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer92->Add(m_LabelRandomMax, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     m_RandomMax = new wxTextCtrl( m_PanelDetails, ID_TEXTCTRL_BK_RANDOM_MAX, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer92->Add(m_RandomMax, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_LabelFixed = new wxStaticText( m_PanelDetails, wxID_STATIC_BK_FIXED, _("Fixed:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer92->Add(m_LabelFixed, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemFlexGridSizer92->Add(m_LabelFixed, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     m_Fixed = new wxTextCtrl( m_PanelDetails, ID_TEXTCTRL_BK_FIXED, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer92->Add(m_Fixed, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 5);
@@ -1789,24 +1747,24 @@ void BlockDialog::CreateControls()
     itemBoxSizer119->Add(m_Routes, 1, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
 
     m_LabelSensorsFromBlock = new wxStaticText( m_RoutesPanel, wxID_STATIC_SENSORS_TITLE, _("..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer119->Add(m_LabelSensorsFromBlock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemBoxSizer119->Add(m_LabelSensorsFromBlock, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxFlexGridSizer* itemFlexGridSizer122 = new wxFlexGridSizer(0, 5, 0, 0);
     itemBoxSizer118->Add(itemFlexGridSizer122, 0, wxGROW, 5);
     m_LabelSensorIDs = new wxStaticText( m_RoutesPanel, ID_STATICTEXT_BLOCK_SENSORID, _("Sensor ID:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer122->Add(m_LabelSensorIDs, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 2);
+    itemFlexGridSizer122->Add(m_LabelSensorIDs, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxADJUST_MINSIZE, 2);
 
     m_LabelSensorActions = new wxStaticText( m_RoutesPanel, ID_STATICTEXT_BLOCK_SENSOR_ACTION, _("Event:"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer122->Add(m_LabelSensorActions, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 2);
+    itemFlexGridSizer122->Add(m_LabelSensorActions, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxADJUST_MINSIZE, 2);
 
     m_LabelSensorEnd = new wxStaticText( m_RoutesPanel, wxID_STATIC_BLOCK_SENSOR_END, _("End"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer122->Add(m_LabelSensorEnd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP, 2);
+    itemFlexGridSizer122->Add(m_LabelSensorEnd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 2);
 
     m_labTim2 = new wxStaticText( m_RoutesPanel, wxID_ANY, _("T2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer122->Add(m_labTim2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelProps = new wxStaticText( m_RoutesPanel, ID_STATICTEXT_BLOCK_SENSOR_FREE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer122->Add(m_LabelProps, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP, 5);
+    itemFlexGridSizer122->Add(m_LabelProps, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_SensorID1Strings;
     m_SensorID1 = new wxComboBox( m_RoutesPanel, ID_COMBOBOX_BLOCK_SENSOR_ID1, wxEmptyString, wxDefaultPosition, wxSize(120, -1), m_SensorID1Strings, wxCB_READONLY );
@@ -1908,7 +1866,7 @@ void BlockDialog::CreateControls()
     wxBoxSizer* itemBoxSizer153 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer118->Add(itemBoxSizer153, 0, wxGROW|wxALL, 5);
     m_labTimer = new wxStaticText( m_RoutesPanel, wxID_STATIC_BK_TIMER, _("Event timer"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer153->Add(m_labTimer, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer153->Add(m_labTimer, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Timer = new wxTextCtrl( m_RoutesPanel, ID_TEXTCTRL_BK_TIMER, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Timer->SetMaxLength(5);
@@ -1957,19 +1915,19 @@ void BlockDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer168 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer166->Add(itemFlexGridSizer168, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_BK_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer168->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer168->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_iid = new wxTextCtrl( m_Interface, ID_TEXTCTRL_BK_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer168->Add(m_iid, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelAddress = new wxStaticText( m_Interface, wxID_STATIC_BK_ADDRESS, _("address"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer168->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer168->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Address = new wxTextCtrl( m_Interface, ID_TEXTCTRL_BK_ADDRESS, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer168->Add(m_Address, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelPort = new wxStaticText( m_Interface, wxID_STATIC_BK_PORT, _("port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer168->Add(m_LabelPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer168->Add(m_LabelPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Port = new wxTextCtrl( m_Interface, ID_TEXTCTRL_BK_PORT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer168->Add(m_Port, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1983,14 +1941,14 @@ void BlockDialog::CreateControls()
     m_PermissionsPanel->SetSizer(itemBoxSizer176);
 
     m_labInclude = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Include"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer176->Add(m_labInclude, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemBoxSizer176->Add(m_labInclude, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_IncludeListStrings;
     m_IncludeList = new wxCheckListBox( m_PermissionsPanel, wxID_ANY, wxDefaultPosition, wxSize(-1, 100), m_IncludeListStrings, wxLB_SINGLE );
     itemBoxSizer176->Add(m_IncludeList, 0, wxGROW|wxALL, 5);
 
     m_labExclude = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Exclude"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer176->Add(m_labExclude, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemBoxSizer176->Add(m_labExclude, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_ExcludeListStrings;
     m_ExcludeList = new wxCheckListBox( m_PermissionsPanel, wxID_ANY, wxDefaultPosition, wxSize(-1, 100), m_ExcludeListStrings, wxLB_SINGLE );
@@ -2065,6 +2023,9 @@ void BlockDialog::CreateControls()
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
     itemStdDialogButtonSizer194->AddButton(m_OK);
+
+    wxButton* itemButton198 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer194->AddButton(itemButton198);
 
     itemStdDialogButtonSizer194->Realize();
 
@@ -2736,5 +2697,25 @@ void BlockDialog::OnListctrlindexBkColLeftClick( wxListEvent& event )
 void BlockDialog::onDoc( wxCommandEvent& event )
 {
   doDoc( event, "blocks" );
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void BlockDialog::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "block" ); break;
+  case 1: wxGetApp().openLink( "block-gen" ); break;
+  case 2: wxGetApp().openLink( "block" ); break; // Position
+  case 3: wxGetApp().openLink( "block-signals" ); break;
+  case 4: wxGetApp().openLink( "block-details" ); break;
+  case 5: wxGetApp().openLink( "block-routes" ); break;
+  case 6: wxGetApp().openLink( "block-int" ); break;
+  case 7: wxGetApp().openLink( "block_permissions" ); break;
+  default: wxGetApp().openLink( "block" ); break;
+  }
 }
 
