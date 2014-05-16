@@ -84,6 +84,7 @@ BEGIN_EVENT_TABLE( TurntableDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_TT_MODIFYTRACK, TurntableDialog::OnButtonTtModifytrackClick )
     EVT_BUTTON( wxID_OK, TurntableDialog::OnOkClick )
     EVT_BUTTON( wxID_CANCEL, TurntableDialog::OnCancelClick )
+    EVT_BUTTON( wxID_HELP, TurntableDialog::OnHelpClick )
 ////@end TurntableDialog event table entries
     EVT_MENU(ME_Props, TurntableDialog::OnProps)
     EVT_MENU(ME_TTTrackAdd, TurntableDialog::OnTTTrackAdd)
@@ -1242,13 +1243,16 @@ void TurntableDialog::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer134 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer134, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer134, 0, wxALIGN_RIGHT|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
     itemStdDialogButtonSizer134->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer134->AddButton(m_Cancel);
+
+    wxButton* itemButton137 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer134->AddButton(itemButton137);
 
     itemStdDialogButtonSizer134->Realize();
 
@@ -1449,5 +1453,22 @@ void TurntableDialog::OnManagerClick( wxCommandEvent& event )
   if(m_Manager->IsChecked())
     m_EmbeddedBlock->SetValue(true);
   m_EmbeddedBlock->Enable(!m_Manager->IsChecked());
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void TurntableDialog::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "turntable-gen" ); break;
+  case 1: wxGetApp().openLink( "turntable-pos" ); break;
+  case 2: wxGetApp().openLink( "turntable-int" ); break;
+  case 3: wxGetApp().openLink( "tt-multiport" ); break;
+  case 4: wxGetApp().openLink( "turntable-tracks" ); break;
+  default: wxGetApp().openLink( "turntable-gen" ); break;
+  }
 }
 

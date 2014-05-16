@@ -62,9 +62,8 @@ BEGIN_EVENT_TABLE( PlanPanelProps, wxDialog )
 
 ////@begin PlanPanelProps event table entries
     EVT_BUTTON( wxID_OK, PlanPanelProps::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, PlanPanelProps::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, PlanPanelProps::OnHelpClick )
 ////@end PlanPanelProps event table entries
 
 END_EVENT_TABLE()
@@ -169,13 +168,12 @@ void PlanPanelProps::CreateControls()
     itemDialog1->SetSizer(itemBoxSizer2);
 
     wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemFlexGridSizer3->AddGrowableCol(1);
     itemBoxSizer2->Add(itemFlexGridSizer3, 0, wxGROW|wxALL, 5);
 
     m_LabelTitle = new wxStaticText( itemDialog1, ID_STATICTEXT_PP_TITLE, _("Title"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_LabelTitle, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_Title = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_PP_TITLE, _T(""), wxDefaultPosition, wxSize(200, -1), 0 );
+    m_Title = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_PP_TITLE, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
     m_Title->SetMaxLength(40);
     itemFlexGridSizer3->Add(m_Title, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -184,6 +182,8 @@ void PlanPanelProps::CreateControls()
 
     m_ZLevel = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_PP_ZLEVEL, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer3->Add(m_ZLevel, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer3->AddGrowableCol(1);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer8 = new wxStdDialogButtonSizer;
 
@@ -194,6 +194,9 @@ void PlanPanelProps::CreateControls()
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer8->AddButton(m_Cancel);
+
+    wxButton* itemButton11 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer8->AddButton(itemButton11);
 
     itemStdDialogButtonSizer8->Realize();
 
@@ -261,4 +264,14 @@ void PlanPanelProps::OnCancelClick( wxCommandEvent& event )
   EndModal( 0 );
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void PlanPanelProps::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "track-diagram" );
+}
 
