@@ -63,11 +63,9 @@ BEGIN_EVENT_TABLE( ConnectionDialog, wxDialog )
 ////@begin ConnectionDialog event table entries
     EVT_COMBOBOX( ID_COMBOBOX_CONN_HOST, ConnectionDialog::OnComboboxConnHostSelected )
     EVT_TEXT( ID_COMBOBOX_CONN_HOST, ConnectionDialog::OnComboboxConnHostUpdated )
-
     EVT_BUTTON( wxID_OK, ConnectionDialog::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, ConnectionDialog::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, ConnectionDialog::OnHelpClick )
 ////@end ConnectionDialog event table entries
 
 END_EVENT_TABLE()
@@ -197,11 +195,10 @@ void ConnectionDialog::CreateControls()
     itemDialog1->SetSizer(itemBoxSizer2);
 
     wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer3->AddGrowableCol(1);
     itemBoxSizer2->Add(itemFlexGridSizer3, 0, wxGROW|wxALL, 5);
 
     m_LabelHost = new wxStaticText( itemDialog1, wxID_STATIC_CON_HOST, _("Hostname"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer3->Add(m_LabelHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer3->Add(m_LabelHost, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_HostStrings;
     m_Host = new wxComboBox( itemDialog1, ID_COMBOBOX_CONN_HOST, _("localhost"), wxDefaultPosition, wxSize(200, -1), m_HostStrings, wxCB_DROPDOWN );
@@ -209,7 +206,7 @@ void ConnectionDialog::CreateControls()
     itemFlexGridSizer3->Add(m_Host, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelPort = new wxStaticText( itemDialog1, wxID_STATIC_CONN_PORT, _("Port"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer3->Add(m_LabelPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer3->Add(m_LabelPort, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Port = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_CONN_PORT, _("8051"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Port->SetMaxLength(5);
@@ -221,6 +218,8 @@ void ConnectionDialog::CreateControls()
     m_ControlCode = new wxTextCtrl( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_ControlCode, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemFlexGridSizer3->AddGrowableCol(1);
+
     wxStdDialogButtonSizer* itemStdDialogButtonSizer10 = new wxStdDialogButtonSizer;
 
     itemBoxSizer2->Add(itemStdDialogButtonSizer10, 0, wxALIGN_RIGHT|wxALL, 5);
@@ -230,6 +229,9 @@ void ConnectionDialog::CreateControls()
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer10->AddButton(m_Cancel);
+
+    wxButton* itemButton13 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer10->AddButton(itemButton13);
 
     itemStdDialogButtonSizer10->Realize();
 
@@ -321,4 +323,14 @@ void ConnectionDialog::OnComboboxConnHostUpdated( wxCommandEvent& event )
 ////@end wxEVT_COMMAND_TEXT_UPDATED event handler for ID_COMBOBOX_CONN_HOST in ConnectionDialog.
 }
 
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void ConnectionDialog::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "gui-connectto" );
+}
 
