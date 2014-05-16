@@ -143,3 +143,8 @@ void DonKey::initValues() {
   }
 }
 
+void DonKey::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "rocgui-donate" );
+}
+
+

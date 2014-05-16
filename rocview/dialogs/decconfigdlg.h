@@ -22,6 +22,7 @@ class DecConfigDlg : public decconfigdlggen
   void initValues();
   void onCancel( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
+  void onHelp( wxCommandEvent& event );
 
 public:
 	/** Constructor */

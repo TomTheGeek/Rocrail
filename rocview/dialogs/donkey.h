@@ -42,6 +42,7 @@ protected:
 	void OnLoadKey( wxCommandEvent& event );
 	void OnDonateNow( wxCommandEvent& event );
   void OnOK( wxCommandEvent& event );
+  void onHelp( wxCommandEvent& event );
 	
 public:
 	/** Constructor */
