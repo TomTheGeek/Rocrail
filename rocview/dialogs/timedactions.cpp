@@ -87,6 +87,7 @@ BEGIN_EVENT_TABLE( TimedActions, wxDialog )
     EVT_BUTTON( wxID_OK, TimedActions::OnOkClick )
     EVT_BUTTON( wxID_CANCEL, TimedActions::OnCancelClick )
     EVT_BUTTON( wxID_APPLY, TimedActions::OnApplyClick )
+    EVT_BUTTON( wxID_HELP, TimedActions::OnHelpClick )
 ////@end TimedActions event table entries
 
 END_EVENT_TABLE()
@@ -742,7 +743,7 @@ void TimedActions::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer59 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer59, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer59, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer59->AddButton(m_OK);
 
@@ -751,6 +752,9 @@ void TimedActions::CreateControls()
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer59->AddButton(m_Apply);
+
+    wxButton* itemButton63 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer59->AddButton(itemButton63);
 
     itemStdDialogButtonSizer59->Realize();
 
@@ -1149,5 +1153,15 @@ void TimedActions::OnListctrlColLeftClick( wxListEvent& event )
 void TimedActions::OnButtonAcDocClick( wxCommandEvent& event )
 {
   doDoc( event, "actions");
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void TimedActions::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "actions" );
 }
 

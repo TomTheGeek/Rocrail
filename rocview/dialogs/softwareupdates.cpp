@@ -54,11 +54,9 @@ BEGIN_EVENT_TABLE( Softwareupdates, wxDialog )
 ////@begin Softwareupdates event table entries
     EVT_LISTBOX( wxID_ANY, Softwareupdates::OnAnySelected )
     EVT_CHECKLISTBOX( wxID_ANY, Softwareupdates::OnAnyToggled )
-
     EVT_BUTTON( wxID_OK, Softwareupdates::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, Softwareupdates::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, Softwareupdates::OnHelpClick )
 ////@end Softwareupdates event table entries
     EVT_TIMER (ME_UpdateTimer, Softwareupdates::OnTimer)
 
@@ -458,13 +456,16 @@ void Softwareupdates::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer7 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer7, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer7, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->Enable(false);
     itemStdDialogButtonSizer7->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer7->AddButton(m_Cancel);
+
+    wxButton* itemButton10 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer7->AddButton(itemButton10);
 
     itemStdDialogButtonSizer7->Realize();
 
@@ -595,5 +596,15 @@ void Softwareupdates::OnAnyToggled( wxCommandEvent& event )
       m_OK->Enable(true);
     }
   }
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void Softwareupdates::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "updates" );
 }
 

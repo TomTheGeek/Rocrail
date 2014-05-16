@@ -87,6 +87,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+    void OnHelpClick( wxCommandEvent& event );
+
 ////@end MVTrackDlg event handler declarations
 
 ////@begin MVTrackDlg member function declarations

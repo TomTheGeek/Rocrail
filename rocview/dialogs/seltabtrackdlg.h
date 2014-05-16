@@ -82,6 +82,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+    void OnHelpClick( wxCommandEvent& event );
+
 ////@end SelTabTrackDialog event handler declarations
 
 ////@begin SelTabTrackDialog member function declarations

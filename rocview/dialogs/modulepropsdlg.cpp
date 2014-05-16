@@ -55,9 +55,8 @@ BEGIN_EVENT_TABLE( ModulePropsDlg, wxDialog )
 
 ////@begin ModulePropsDlg event table entries
     EVT_BUTTON( wxID_OK, ModulePropsDlg::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, ModulePropsDlg::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, ModulePropsDlg::OnHelpClick )
 ////@end ModulePropsDlg event table entries
 
 END_EVENT_TABLE()
@@ -430,7 +429,6 @@ void ModulePropsDlg::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer23 = new wxStaticBoxSizer(m_NorthBox, wxVERTICAL);
     itemBoxSizer22->Add(itemStaticBoxSizer23, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer24->AddGrowableCol(1);
     itemStaticBoxSizer23->Add(itemFlexGridSizer24, 0, wxGROW|wxALL, 5);
     m_labNorthModID = new wxStaticText( m_ConnectionPanel, wxID_ANY, _("Module ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer24->Add(m_labNorthModID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -439,11 +437,12 @@ void ModulePropsDlg::CreateControls()
     m_NorthModID = new wxChoice( m_ConnectionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_NorthModIDStrings, 0 );
     itemFlexGridSizer24->Add(m_NorthModID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    itemFlexGridSizer24->AddGrowableCol(1);
+
     m_EastBox = new wxStaticBox(m_ConnectionPanel, wxID_ANY, _("East"));
     wxStaticBoxSizer* itemStaticBoxSizer27 = new wxStaticBoxSizer(m_EastBox, wxVERTICAL);
     itemBoxSizer22->Add(itemStaticBoxSizer27, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer28 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer28->AddGrowableCol(1);
     itemStaticBoxSizer27->Add(itemFlexGridSizer28, 0, wxGROW|wxALL, 5);
     m_labEastModID = new wxStaticText( m_ConnectionPanel, wxID_ANY, _("Module ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer28->Add(m_labEastModID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -452,11 +451,12 @@ void ModulePropsDlg::CreateControls()
     m_EastModID = new wxChoice( m_ConnectionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_EastModIDStrings, 0 );
     itemFlexGridSizer28->Add(m_EastModID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    itemFlexGridSizer28->AddGrowableCol(1);
+
     m_SouthBox = new wxStaticBox(m_ConnectionPanel, wxID_ANY, _("South"));
     wxStaticBoxSizer* itemStaticBoxSizer31 = new wxStaticBoxSizer(m_SouthBox, wxVERTICAL);
     itemBoxSizer22->Add(itemStaticBoxSizer31, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer32 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer32->AddGrowableCol(1);
     itemStaticBoxSizer31->Add(itemFlexGridSizer32, 0, wxGROW|wxALL, 5);
     m_labSouthModID = new wxStaticText( m_ConnectionPanel, wxID_ANY, _("Module ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer32->Add(m_labSouthModID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -465,11 +465,12 @@ void ModulePropsDlg::CreateControls()
     m_SouthModID = new wxChoice( m_ConnectionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_SouthModIDStrings, 0 );
     itemFlexGridSizer32->Add(m_SouthModID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    itemFlexGridSizer32->AddGrowableCol(1);
+
     m_WestBox = new wxStaticBox(m_ConnectionPanel, wxID_ANY, _("West"));
     wxStaticBoxSizer* itemStaticBoxSizer35 = new wxStaticBoxSizer(m_WestBox, wxVERTICAL);
     itemBoxSizer22->Add(itemStaticBoxSizer35, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer36 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer36->AddGrowableCol(1);
     itemStaticBoxSizer35->Add(itemFlexGridSizer36, 0, wxGROW|wxALL, 5);
     m_labWestModID = new wxStaticText( m_ConnectionPanel, wxID_ANY, _("Module ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer36->Add(m_labWestModID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
@@ -478,18 +479,23 @@ void ModulePropsDlg::CreateControls()
     m_WestModID = new wxChoice( m_ConnectionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_WestModIDStrings, 0 );
     itemFlexGridSizer36->Add(m_WestModID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    itemFlexGridSizer36->AddGrowableCol(1);
+
     m_NoteBook->AddPage(m_ConnectionPanel, _("Connections"));
 
     itemBoxSizer2->Add(m_NoteBook, 0, wxGROW|wxALL, 5);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer39 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer39, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer39, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer39->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer39->AddButton(m_Cancel);
+
+    wxButton* itemButton42 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer39->AddButton(itemButton42);
 
     itemStdDialogButtonSizer39->Realize();
 
@@ -564,5 +570,15 @@ void ModulePropsDlg::OnOkClick( wxCommandEvent& event )
 void ModulePropsDlg::OnCancelClick( wxCommandEvent& event )
 {
   EndModal( 0 );
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void ModulePropsDlg::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "modular-setup" );
 }
 

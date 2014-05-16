@@ -50,11 +50,9 @@ BEGIN_EVENT_TABLE( MVTrackDlg, wxDialog )
 
 ////@begin MVTrackDlg event table entries
     EVT_BUTTON( ID_MVTRACK_ACTIONS, MVTrackDlg::OnMvtrackActionsClick )
-
     EVT_BUTTON( wxID_OK, MVTrackDlg::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, MVTrackDlg::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, MVTrackDlg::OnHelpClick )
 ////@end MVTrackDlg event table entries
 
 END_EVENT_TABLE()
@@ -250,7 +248,7 @@ void MVTrackDlg::CreateControls()
     m_labGaugePrefix = new wxStaticText( itemDialog1, wxID_ANY, _("1:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_labGaugePrefix, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_Gauge = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("87"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 1, 300, 87 );
+    m_Gauge = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("87"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 1, 300, 87 );
     itemFlexGridSizer3->Add(m_Gauge, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(2, 3, 0, 0);
@@ -276,27 +274,32 @@ void MVTrackDlg::CreateControls()
     itemFlexGridSizer12->Add(m_labSensor1, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_Sensor1Strings;
-    m_Sensor1 = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(130, -1), m_Sensor1Strings, wxCB_DROPDOWN );
-    itemFlexGridSizer12->Add(m_Sensor1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_Sensor1 = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(130, -1), m_Sensor1Strings, wxCB_READONLY );
+    itemFlexGridSizer12->Add(m_Sensor1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSensor2 = new wxStaticText( itemDialog1, wxID_ANY, _("Sensor 2"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer12->Add(m_labSensor2, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_Sensor2Strings;
-    m_Sensor2 = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(130, -1), m_Sensor2Strings, wxCB_DROPDOWN );
-    itemFlexGridSizer12->Add(m_Sensor2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_Sensor2 = new wxComboBox( itemDialog1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(130, -1), m_Sensor2Strings, wxCB_READONLY );
+    itemFlexGridSizer12->Add(m_Sensor2, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer12->AddGrowableCol(1);
 
     m_Actions = new wxButton( itemDialog1, ID_MVTRACK_ACTIONS, _("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add(m_Actions, 0, wxALIGN_LEFT|wxALL, 5);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer18 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer18, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer18, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer18->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer18->AddButton(m_Cancel);
+
+    wxButton* itemButton21 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer18->AddButton(itemButton21);
 
     itemStdDialogButtonSizer18->Realize();
 
@@ -377,5 +380,15 @@ void MVTrackDlg::OnMvtrackActionsClick( wxCommandEvent& event )
   }
 
   dlg->Destroy();
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void MVTrackDlg::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "mvtrack-setup" );
 }
 

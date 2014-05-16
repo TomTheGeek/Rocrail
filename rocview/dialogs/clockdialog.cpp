@@ -44,9 +44,8 @@ BEGIN_EVENT_TABLE( ClockDialog, wxDialog )
 
 ////@begin ClockDialog event table entries
     EVT_BUTTON( wxID_OK, ClockDialog::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, ClockDialog::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, ClockDialog::OnHelpClick )
 ////@end ClockDialog event table entries
 
 END_EVENT_TABLE()
@@ -160,19 +159,19 @@ void ClockDialog::CreateControls()
     m_ClockBox->Add(itemFlexGridSizer4, 0, wxALIGN_CENTER_HORIZONTAL, 5);
 
     m_labDevider = new wxStaticText( itemDialog1, wxID_ANY, _("divider"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer4->Add(m_labDevider, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer4->Add(m_labDevider, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Divider = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("1"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 1, 100, 1 );
     itemFlexGridSizer4->Add(m_Divider, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     m_labHour = new wxStaticText( itemDialog1, wxID_ANY, _("hour"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer4->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer4->Add(m_labHour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Hour = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 23, 0 );
     itemFlexGridSizer4->Add(m_Hour, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     m_labMinute = new wxStaticText( itemDialog1, wxID_ANY, _("minute"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer4->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer4->Add(m_labMinute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Minute = new wxSpinCtrl( itemDialog1, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 59, 0 );
     itemFlexGridSizer4->Add(m_Minute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
@@ -188,12 +187,15 @@ void ClockDialog::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer14 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer14, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer14, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer14->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer14->AddButton(m_Cancel);
+
+    wxButton* itemButton17 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer14->AddButton(itemButton17);
 
     itemStdDialogButtonSizer14->Realize();
 
@@ -260,5 +262,15 @@ void ClockDialog::OnOkClick( wxCommandEvent& event )
     // Before editing this code, remove the block markers.
     event.Skip();
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK in ClockDialog. 
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void ClockDialog::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "clock-adjust" );
 }
 

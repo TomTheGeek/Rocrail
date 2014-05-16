@@ -71,39 +71,23 @@ BEGIN_EVENT_TABLE( ActionsCtrlDlg, wxDialog )
 
 ////@begin ActionsCtrlDlg event table entries
     EVT_LISTBOX( ID_ACTIONCTRL_LIST, ActionsCtrlDlg::OnActionctrlListSelected )
-
     EVT_BUTTON( ID_ACTIONCTRL_UP, ActionsCtrlDlg::OnActionctrlUpClick )
-
     EVT_BUTTON( ID_ACTIONCTRL_DOWN, ActionsCtrlDlg::OnActionctrlDownClick )
-
     EVT_BUTTON( ID_ACTIONCTRL_COPY, ActionsCtrlDlg::OnActionctrlCopyClick )
-
     EVT_BUTTON( ID_ACTIONCTRL_PASTE, ActionsCtrlDlg::OnActionctrlPasteClick )
-
     EVT_BUTTON( ID_ACTIONCTRL_ADD, ActionsCtrlDlg::OnActionctrlAddClick )
-
     EVT_BUTTON( ID_ACTIONCTRL_DELETE, ActionsCtrlDlg::OnActionctrlDeleteClick )
-
     EVT_BUTTON( ID_ACTIONCTRL_MODIFY, ActionsCtrlDlg::OnActionctrlModifyClick )
-
     EVT_LISTBOX( ID_CONDITIONS, ActionsCtrlDlg::OnConditionsSelected )
-
     EVT_CHOICE( ID_ACTIONCTRL_COND_TYPE, ActionsCtrlDlg::OnActionctrlCondTypeSelected )
-
     EVT_CHOICE( ID_ACTIOINCTRL_COND_ID, ActionsCtrlDlg::OnActioinctrlCondIdSelected )
-
     EVT_BUTTON( ID_ACTIONCTRL_COND_ADD, ActionsCtrlDlg::OnActionctrlCondAddClick )
-
     EVT_BUTTON( ID_ACTIONCTRL_COND_DELETE, ActionsCtrlDlg::OnActionctrlCondDeleteClick )
-
     EVT_BUTTON( ID_ACTIONCTRL_COND_MODIFY, ActionsCtrlDlg::OnActionctrlCondModifyClick )
-
     EVT_BUTTON( wxID_OK, ActionsCtrlDlg::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, ActionsCtrlDlg::OnCancelClick )
-
     EVT_BUTTON( wxID_APPLY, ActionsCtrlDlg::OnApplyClick )
-
+    EVT_BUTTON( wxID_HELP, ActionsCtrlDlg::OnHelpClick )
 ////@end ActionsCtrlDlg event table entries
 
 END_EVENT_TABLE()
@@ -799,7 +783,6 @@ void ActionsCtrlDlg::CreateControls()
     itemBoxSizer7->Add(m_Paste, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5);
 
     wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer12->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer12, 0, wxGROW|wxALL, 5);
     m_labID = new wxStaticText( m_IndexPanel, wxID_ANY, _("Action ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer12->Add(m_labID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -827,6 +810,8 @@ void ActionsCtrlDlg::CreateControls()
 
     m_Desc = new wxTextCtrl( m_IndexPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer12->Add(m_Desc, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer12->AddGrowableCol(1);
 
     wxFlexGridSizer* itemFlexGridSizer21 = new wxFlexGridSizer(0, 1, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer21, 0, wxGROW, 5);
@@ -864,7 +849,6 @@ void ActionsCtrlDlg::CreateControls()
     itemBoxSizer29->Add(m_Conditions, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer31 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer31->AddGrowableCol(1);
     itemBoxSizer29->Add(itemFlexGridSizer31, 0, wxGROW|wxALL, 5);
     m_labCondType = new wxStaticText( m_ConditionsPanel, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer31->Add(m_labCondType, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -887,6 +871,8 @@ void ActionsCtrlDlg::CreateControls()
     m_CondState = new wxComboBox( m_ConditionsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CondStateStrings, wxCB_DROPDOWN );
     itemFlexGridSizer31->Add(m_CondState, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemFlexGridSizer31->AddGrowableCol(1);
+
     wxBoxSizer* itemBoxSizer38 = new wxBoxSizer(wxHORIZONTAL);
     itemBoxSizer29->Add(itemBoxSizer38, 0, wxGROW|wxALL, 5);
     m_CondAdd = new wxButton( m_ConditionsPanel, ID_ACTIONCTRL_COND_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -904,7 +890,7 @@ void ActionsCtrlDlg::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer42 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer42, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer42, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer42->AddButton(m_OK);
 
@@ -913,6 +899,9 @@ void ActionsCtrlDlg::CreateControls()
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer42->AddButton(m_Apply);
+
+    wxButton* itemButton46 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer42->AddButton(itemButton46);
 
     itemStdDialogButtonSizer42->Realize();
 
@@ -1268,5 +1257,20 @@ void ActionsCtrlDlg::OnActionctrlPasteClick( wxCommandEvent& event )
       cb->Close();
     }
   }
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void ActionsCtrlDlg::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "actionctrl" ); break;
+  case 1: wxGetApp().openLink( "actioncond" ); break;
+  default: wxGetApp().openLink( "actionctrl" ); break;
+  }
+
 }
 

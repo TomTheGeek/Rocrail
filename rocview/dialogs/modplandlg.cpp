@@ -51,11 +51,9 @@ BEGIN_EVENT_TABLE( ModPlanDlg, wxDialog )
 
 ////@begin ModPlanDlg event table entries
     EVT_CHECKBOX( ID_MODPLAN_SAVE, ModPlanDlg::OnModplanSaveClick )
-
     EVT_BUTTON( wxID_OK, ModPlanDlg::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, ModPlanDlg::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, ModPlanDlg::OnHelpClick )
 ////@end ModPlanDlg event table entries
 
 END_EVENT_TABLE()
@@ -256,12 +254,15 @@ void ModPlanDlg::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer18 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer18, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer18, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer18->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer18->AddButton(m_Cancel);
+
+    wxButton* itemButton21 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer18->AddButton(itemButton21);
 
     itemStdDialogButtonSizer18->Realize();
 
@@ -340,5 +341,15 @@ void ModPlanDlg::OnOkClick( wxCommandEvent& event )
 void ModPlanDlg::OnModplanSaveClick( wxCommandEvent& event )
 {
   m_SaveModules->Enable( m_Save->IsChecked() );
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void ModPlanDlg::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "modular-setup" );
 }
 
