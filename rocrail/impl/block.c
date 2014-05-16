@@ -553,7 +553,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
     {
       /* TODO: Check MU consist */
       if( LocOp.matchIdent(loc, ident, ident2, ident3, ident4) ) {
-        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc(MU)=%d ident=%s",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "ident matched: block=%s loc(MU)=%s ident=%s",
             data->id, locident, ident );
       }
       else if (StrOp.len(ident) > 0 && atoi(ident) > 0) {
