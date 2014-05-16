@@ -1264,3 +1264,15 @@ void CarDlg::onF4Icon( wxMouseEvent& event )
 }
 
 
+void CarDlg::onHelp( wxCommandEvent& event ) {
+  switch( m_CarBook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "car" ); break;
+  case 1: wxGetApp().openLink( "car-gen" ); break;
+  case 2: wxGetApp().openLink( "car-details" ); break;
+  case 3: wxGetApp().openLink( "car-int" ); break;
+  case 4: wxGetApp().openLink( "car-fun" ); break;
+  case 5: wxGetApp().openLink( "car:car-cv" ); break;
+  default: wxGetApp().openLink( "car" ); break;
+  }
+}
+

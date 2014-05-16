@@ -74,6 +74,7 @@ public:
   const char* getCMsg( const char* key );
   wxString getTip( const char* key );
   wxString getMenu( const char* key );
+  void openLink( const char* pagename );
   iONode getWrpInf( const char* wrpname );
   void Callback( obj me, iONode node );
   void cleanupOldModel();

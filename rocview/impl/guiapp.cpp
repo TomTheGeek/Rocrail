@@ -348,6 +348,15 @@ wxString RocGui::getMenu( const char* key ) {
 wxString RocGui::getTip( const char* key ) {
   return wxString(ResOp.getTip( m_Res, key ),wxConvUTF8);
 }
+void RocGui::openLink( const char* pagename ) {
+  const char* lang = wGui.getlang(wxGetApp().getIni());
+  if( StrOp.equals( wGui.lang_german, lang ) )
+    wxLaunchDefaultBrowser(wxString::Format(wxT("http://wiki.rocrail.net/doku.php?id=%s-de"), pagename), wxBROWSER_NEW_WINDOW );
+  else if( StrOp.equals( wGui.lang_italien, lang ) )
+    wxLaunchDefaultBrowser(wxString::Format(wxT("http://wiki.rocrail.net/doku.php?id=%s-it"), pagename), wxBROWSER_NEW_WINDOW );
+  else
+    wxLaunchDefaultBrowser(wxString::Format(wxT("http://wiki.rocrail.net/doku.php?id=%s-en"), pagename), wxBROWSER_NEW_WINDOW );
+}
 
 
 void RocGui::readArgs(const char* langfile) {

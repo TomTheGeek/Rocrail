@@ -90,7 +90,7 @@ public:
   void onF2Icon( wxMouseEvent& event );
   void onF3Icon( wxMouseEvent& event );
   void onF4Icon( wxMouseEvent& event );
-
+  void onHelp( wxCommandEvent& event );
 };
 
 #endif // __cardlg__
