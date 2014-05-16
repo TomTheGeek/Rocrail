@@ -165,6 +165,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_APPLY
     void OnApplyClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+    void OnHelpClick( wxCommandEvent& event );
+
 ////@end FeedbackDialog event handler declarations
 
 ////@begin FeedbackDialog member function declarations

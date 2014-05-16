@@ -78,23 +78,15 @@ BEGIN_EVENT_TABLE( FeedbackDialog, wxDialog )
 ////@begin FeedbackDialog event table entries
     EVT_LIST_ITEM_SELECTED( ID_LISTCTRLINDEX_FB, FeedbackDialog::OnListctrlindexFbSelected )
     EVT_LIST_COL_CLICK( ID_LISTCTRLINDEX_FB, FeedbackDialog::OnListctrlindexFbColLeftClick )
-
     EVT_BUTTON( ID_BUTTON_FB_NEW, FeedbackDialog::OnButtonFbNewClick )
-
     EVT_BUTTON( ID_BUTTON_FB_DELETE, FeedbackDialog::OnButtonFbDeleteClick )
-
     EVT_BUTTON( ID_BUTTON_FB_DOC, FeedbackDialog::OnButtonFbDocClick )
-
     EVT_BUTTON( ID_FEEDBACK_ACTIONS, FeedbackDialog::OnFeedbackActionsClick )
-
     EVT_RADIOBOX( ID_FB_TYPE, FeedbackDialog::OnFbTypeSelected )
-
     EVT_BUTTON( wxID_CANCEL, FeedbackDialog::OnCancelClick )
-
     EVT_BUTTON( wxID_OK, FeedbackDialog::OnOkClick )
-
     EVT_BUTTON( wxID_APPLY, FeedbackDialog::OnApplyClick )
-
+    EVT_BUTTON( wxID_HELP, FeedbackDialog::OnHelpClick )
 ////@end FeedbackDialog event table entries
     EVT_MENU( ID_PANEL_FB_GENERAL, FeedbackDialog::OnSelectPage )
 
@@ -545,7 +537,7 @@ void FeedbackDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer13 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer12->Add(itemFlexGridSizer13, 0, wxGROW|wxALL, 5);
     m_LabelId = new wxStaticText( m_General, wxID_STATIC_FB_ID, _("id"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer13->Add(m_LabelId, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer13->Add(m_LabelId, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Id = new wxTextCtrl( m_General, ID_TEXTCTRL_FB_ID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_Id, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -564,7 +556,7 @@ void FeedbackDialog::CreateControls()
     itemFlexGridSizer13->Add(m_RouteIDs, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelDescription = new wxStaticText( m_General, wxID_STATIC_FB_DESC, _("description"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer13->Add(m_LabelDescription, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer13->Add(m_LabelDescription, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Description = new wxTextCtrl( m_General, ID_TEXTCTRL_FB_DESC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer13->Add(m_Description, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -620,19 +612,19 @@ void FeedbackDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer36 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer35->Add(itemFlexGridSizer36, 0, wxALIGN_TOP|wxALL, 5);
     m_LabelX = new wxStaticText( m_LocationPanel, wxID_STATIC_FB_X, _("x"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer36->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer36->Add(m_LabelX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_x = new wxTextCtrl( m_LocationPanel, ID_TEXTCTRL_FB_X, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer36->Add(m_x, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelY = new wxStaticText( m_LocationPanel, wxID_STATIC_FB_Y, _("y"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer36->Add(m_LabelY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer36->Add(m_LabelY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_y = new wxTextCtrl( m_LocationPanel, ID_TEXTCTRL_FB_Y, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer36->Add(m_y, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelZ = new wxStaticText( m_LocationPanel, wxID_STATIC_FB_Z, _("z"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer36->Add(m_LabelZ, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer36->Add(m_LabelZ, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_z = new wxTextCtrl( m_LocationPanel, ID_TEXTCTRL_FB_Z, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     itemFlexGridSizer36->Add(m_z, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -655,7 +647,7 @@ void FeedbackDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer46 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer45->Add(itemFlexGridSizer46, 0, wxGROW|wxALL, 5);
     m_Labeliid = new wxStaticText( m_Interface, wxID_STATIC_FB_IID, _("iid"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer46->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer46->Add(m_Labeliid, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_iid = new wxTextCtrl( m_Interface, ID_TEXTCTRL_FB_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer46->Add(m_iid, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -680,7 +672,7 @@ void FeedbackDialog::CreateControls()
     itemFlexGridSizer52->Add(m_BusNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_LabelAddress = new wxStaticText( m_Interface, wxID_STATIC_FB_ADDRESS1, _("Address"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer52->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer52->Add(m_LabelAddress, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Address = new wxSpinCtrl( m_Interface, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer52->Add(m_Address, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -785,6 +777,9 @@ void FeedbackDialog::CreateControls()
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer79->AddButton(m_Apply);
+
+    wxButton* itemButton83 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer79->AddButton(itemButton83);
 
     itemStdDialogButtonSizer79->Realize();
 
@@ -992,5 +987,22 @@ void FeedbackDialog::OnListctrlindexFbSelected( wxListEvent& event )
 void FeedbackDialog::OnListctrlindexFbColLeftClick( wxListEvent& event )
 {
   sortOnColumn(event.GetColumn());
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void FeedbackDialog::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "sensor" ); break;
+  case 1: wxGetApp().openLink( "sensor-gen" ); break;
+  case 2: wxGetApp().openLink( "sensor" ); break; // Position
+  case 3: wxGetApp().openLink( "sensor-int" ); break;
+  case 4: wxGetApp().openLink( "sensor-wiring" ); break;
+  default: wxGetApp().openLink( "sensor" ); break;
+  }
 }
 

@@ -107,6 +107,7 @@ BEGIN_EVENT_TABLE( RouteDialog, wxDialog )
     EVT_BUTTON( wxID_CANCEL, RouteDialog::OnCancelClick )
     EVT_BUTTON( wxID_OK, RouteDialog::OnOkClick )
     EVT_BUTTON( wxID_APPLY, RouteDialog::OnApplyClick )
+    EVT_BUTTON( wxID_HELP, RouteDialog::OnHelpClick )
 ////@end RouteDialog event table entries
     EVT_MENU( ID_PANEL_ST_GENERAL, RouteDialog::OnSelectPage )
 
@@ -1873,6 +1874,9 @@ void RouteDialog::CreateControls()
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer153->AddButton(m_Apply);
 
+    wxButton* itemButton157 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer153->AddButton(itemButton157);
+
     itemStdDialogButtonSizer153->Realize();
 
 ////@end RouteDialog content construction
@@ -2649,5 +2653,25 @@ void RouteDialog::OnResetRouteClick( wxCommandEvent& event ) {
   wRoute.setid( cmd, wRoute.getid( m_Props ) );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void RouteDialog::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "route-index" ); break;
+  case 1: wxGetApp().openLink( "route-gen" ); break;
+  case 2: wxGetApp().openLink( "route-turnouts" ); break;
+  case 3: wxGetApp().openLink( "route-sensors" ); break;
+  case 4: wxGetApp().openLink( "route-perm" ); break;
+  case 5: wxGetApp().openLink( "route-cond" ); break;
+  case 6: wxGetApp().openLink( "route" ); break; // Position
+  case 7: wxGetApp().openLink( "route-wiring" ); break;
+  default: wxGetApp().openLink( "route-index" ); break;
+  }
 }
 
