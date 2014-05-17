@@ -355,6 +355,8 @@ void RocGui::openLink( const char* pagename ) {
     pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-de", pagename);
   else if( StrOp.equals( wGui.lang_italien, lang ) )
     pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-it", pagename);
+  else if( StrOp.equals( wGui.lang_dutch, lang ) )
+    pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-nl", pagename);
   else
     pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-en", pagename);
   wxLaunchDefaultBrowser(wxString(pagefilename,wxConvUTF8 ), wxBROWSER_NEW_WINDOW );
