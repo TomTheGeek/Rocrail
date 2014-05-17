@@ -25,6 +25,7 @@
 #include "roclcdr/impl/lcdriver_impl.h"
 
 #include "roclcdr/impl/tools/tools.h"
+#include "roclcdr/impl/events/events.h"
 #include "rocs/public/strtok.h"
 #include "rocs/public/system.h"
 
@@ -96,8 +97,14 @@ void eventEnter( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolea
       TraceOp.trc(name, TRCLEVEL_USER1, __LINE__, 9999,
           "Free previous block on enter for [%s] in [%s] with state [%d]", data->loc->getId(data->loc), blockId, data->state);
 
+      data->useCurBlock4Signals = True;
+      data->curBlock4Signals = data->curBlock;
       freePrevBlock(inst, block);
     }
+    else {
+      data->useCurBlock4Signals = False;
+    }
+
     /* end insert to free previous block          */
     /**********************************************/
   }

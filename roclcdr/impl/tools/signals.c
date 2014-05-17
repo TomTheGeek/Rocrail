@@ -141,24 +141,31 @@ Boolean setSignals(iOLcDriver inst, Boolean onEnter ) {
   Boolean semaphore = False;
   Boolean reverse = False;
   Boolean signalpair = False; /* default false for the forwards signals */
+  iIBlockBase curBlock = data->curBlock;
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setting signals..." );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setting signals...(useCurBlock4Signals=%d)", data->useCurBlock4Signals );
   listBlocks(inst);
 
+  if( data->useCurBlock4Signals ) {
+    /* fix for free prev block on enter */
+    curBlock = data->curBlock4Signals;
+    data->useCurBlock4Signals = False;
+  }
+
   /* set signal current block on enter */
-  if( onEnter && data->curBlock != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setting signals for curBlock to default aspect" );
+  if( onEnter && curBlock != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "setting signals for curBlock[%s] to default aspect", curBlock->base.id(curBlock) );
     if( data->next1Route != NULL ) {
-      if( __checkSignalPair(inst, data->next1Route, data->curBlock, data->next1RouteFromTo, &signalpair) ) {
-        data->curBlock->setDefaultAspect( data->curBlock, signalpair );
+      if( __checkSignalPair(inst, data->next1Route, curBlock, data->next1RouteFromTo, &signalpair) ) {
+        data->curBlock->setDefaultAspect( curBlock, signalpair );
         /* crossing blocks ... */
         setCrossingblockSignals( inst, data->next1Route, DEFAULT_ASPECT, !signalpair );
         setCrossingblockSignals( inst, data->next1Route, DEFAULT_ASPECT, signalpair );
       }
     }
     else {
-      data->curBlock->setDefaultAspect( data->curBlock, True );
-      data->curBlock->setDefaultAspect( data->curBlock, False );
+      curBlock->setDefaultAspect( data->curBlock, True );
+      curBlock->setDefaultAspect( data->curBlock, False );
     }
   }
 

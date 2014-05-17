@@ -49,6 +49,8 @@
       <var name="brake" vt="Boolean"/>
       <var name="direction" vt="lc_direction"/>
       <var name="prevBlock" vt="iIBlockBase"/>
+      <var name="useCurBlock4Signals" vt="Boolean"/>
+      <var name="curBlock4Signals" vt="iIBlockBase"/>
       <var name="curBlock" vt="iIBlockBase"/>
       <var name="next1Block" vt="iIBlockBase"/>
       <var name="next2Block" vt="iIBlockBase"/>

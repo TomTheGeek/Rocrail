@@ -154,15 +154,17 @@ void listBlocks(iOLcDriver inst) {
   iOLcDriverData data = Data(inst);
 
   if( data->curBlock != NULL )
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "curBlock   [%s]", data->curBlock->base.id(data->curBlock) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "curBlock         [%s]", data->curBlock->base.id(data->curBlock) );
+  if( data->useCurBlock4Signals && data->curBlock4Signals != NULL )
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "curBlock4Signals [%s]", data->curBlock4Signals->base.id(data->curBlock4Signals) );
   if( data->gotoBlock != NULL )
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "gotoBlock  [%s]", data->gotoBlock );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "gotoBlock        [%s]", data->gotoBlock );
   if( data->next1Block != NULL )
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next1Block [%s]", data->next1Block->base.id(data->next1Block) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next1Block       [%s]", data->next1Block->base.id(data->next1Block) );
   if( data->next2Block != NULL )
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next2Block [%s]", data->next2Block->base.id(data->next2Block) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next2Block       [%s]", data->next2Block->base.id(data->next2Block) );
   if( data->next3Block != NULL )
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next3Block [%s]", data->next3Block->base.id(data->next3Block) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "next3Block       [%s]", data->next3Block->base.id(data->next3Block) );
 
 }
 
