@@ -323,3 +323,7 @@ void PowerCtrlDlg::onResetStat( wxCommandEvent& event ) {
 }
 
 
+void PowerCtrlDlg::OnHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "powerman" );
+}
+

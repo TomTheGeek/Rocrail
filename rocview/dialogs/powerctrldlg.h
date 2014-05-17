@@ -55,7 +55,7 @@ protected:
   void onSize( wxSizeEvent& event );
   void onClose( wxCloseEvent& event );
   void onResetStat( wxCommandEvent& event );
-
+  void OnHelp( wxCommandEvent& event );
 
 public:
 	/** Constructor */

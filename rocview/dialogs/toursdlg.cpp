@@ -480,3 +480,7 @@ void ToursDlg::onShowAll( wxCommandEvent& event ){
 }
 
 
+void ToursDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "tours" );
+}
+

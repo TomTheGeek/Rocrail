@@ -69,6 +69,7 @@ protected:
   void onIndexNew( wxCommandEvent& event );
   void onIndexDelete( wxCommandEvent& event );
   void OnApply( wxCommandEvent& event );
+  void OnHelp( wxCommandEvent& event );
 
 public:
 	/** Constructor */

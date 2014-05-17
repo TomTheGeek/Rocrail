@@ -59,6 +59,7 @@ public:
   void OnCopy( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
   void onSetPage( wxCommandEvent& event );
+  void onHelp( wxCommandEvent& event );
 
   iONode getSelectedWaybill();
   bool isDelivered();

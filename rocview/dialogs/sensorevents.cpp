@@ -367,3 +367,9 @@ void SensorEventsDlg::onDrag( wxListEvent& event ) {
   dragSource.SetData( my_data );
   wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
 }
+
+
+void SensorEventsDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "sensormon" );
+}
+

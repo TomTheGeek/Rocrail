@@ -61,7 +61,7 @@ protected:
   void onBlockSelect( wxCommandEvent& event );
   void onModuleSelect( wxCommandEvent& event );
   void onActions( wxCommandEvent& event );
-
+  void OnHelp( wxCommandEvent& event );
 public:
 	/** Constructor */
 	PowerManDlg( wxWindow* parent );

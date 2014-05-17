@@ -1080,3 +1080,7 @@ void RocProDlg::onCVURL( wxCommandEvent& event ) {
   }
 }
 
+void RocProDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "rocpro" );
+}
+

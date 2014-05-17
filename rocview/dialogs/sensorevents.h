@@ -54,7 +54,7 @@ class SensorEventsDlg : public SensorEventsGen
 		void onColClick( wxListEvent& event );
 		void onDrag( wxListEvent& event );
 		bool Validate();
-	
+		void onHelp( wxCommandEvent& event );
 };
 
 #endif // __sensorevents__

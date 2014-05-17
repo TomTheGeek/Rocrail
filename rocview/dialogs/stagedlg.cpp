@@ -819,3 +819,13 @@ void StageDlg::setSelection(const char* ID) {
 }
 
 
+void StageDlg::OnHelp( wxCommandEvent& event ) {
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "stageblock:stage-index" ); break;
+  case 1: wxGetApp().openLink( "stageblock:stage-gen" ); break;
+  case 2: wxGetApp().openLink( "stageblock:stage-sections" ); break;
+  case 3: wxGetApp().openLink( "stageblock:stage-details" ); break;
+  default: wxGetApp().openLink( "stage" ); break;
+  }
+}
+

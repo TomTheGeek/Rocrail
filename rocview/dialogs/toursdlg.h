@@ -60,6 +60,7 @@ public:
   void onCancel( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
   void onShowAll( wxCommandEvent& event );
+  void onHelp( wxCommandEvent& event );
 
   static bool isFirst(iONode tour, const char* startblock);
 

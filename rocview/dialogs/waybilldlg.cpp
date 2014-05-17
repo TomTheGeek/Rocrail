@@ -455,4 +455,12 @@ void WaybillDlg::onOK( wxCommandEvent& event ){
 }
 
 
+void WaybillDlg::onHelp( wxCommandEvent& event ) {
+  switch( m_WaybillBook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "waybill-index" ); break;
+  case 1: wxGetApp().openLink( "waybill-gen" ); break;
+  case 2: wxGetApp().openLink( "waybill-routing" ); break;
+  default: wxGetApp().openLink( "waybill" ); break;
+  }
+}
 

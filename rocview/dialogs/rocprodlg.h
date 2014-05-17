@@ -103,6 +103,7 @@ class RocProDlg : public RocProDlgGen
     void onDIP( wxCommandEvent& event );
     void onTreeDIP( wxTreeEvent& event );
     void onCVURL( wxCommandEvent& event );
+    void onHelp( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		RocProDlg( wxWindow* parent );

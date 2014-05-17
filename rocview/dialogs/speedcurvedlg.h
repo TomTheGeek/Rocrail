@@ -27,7 +27,7 @@ class SpeedCurveDlg : public speedcurvedlggen
   void onLogarithmize( wxCommandEvent& event );
   void onCancel( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
-
+  void onHelp( wxCommandEvent& event );
 
 public:
 	/** Constructor */

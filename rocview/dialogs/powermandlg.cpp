@@ -533,3 +533,9 @@ void PowerManDlg::onActions( wxCommandEvent& event )
 
   dlg->Destroy();
 }
+
+
+void PowerManDlg::OnHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "powerman" );
+}
+
