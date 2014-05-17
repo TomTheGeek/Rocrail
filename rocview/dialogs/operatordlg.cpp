@@ -972,3 +972,12 @@ void OperatorDlg::onShowAllOperators( wxCommandEvent& event ) {
   initIndex();
 }
 
+void OperatorDlg::onHelp( wxCommandEvent& event )  {
+  switch( m_OperatorBook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "operator-index" ); break;
+  case 1: wxGetApp().openLink( "operator-loco" ); break;
+  case 2: wxGetApp().openLink( "operator-consist" ); break;
+  default: wxGetApp().openLink( "operator-control" ); break;
+  }
+}
+

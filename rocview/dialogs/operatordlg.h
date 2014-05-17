@@ -83,7 +83,7 @@ public:
     int findID( const char* ID );
     void onTabChanged( wxNotebookEvent& event );
     void onShowAllOperators( wxCommandEvent& event );
-
+    void onHelp( wxCommandEvent& event );
 
 };
 

@@ -6,6 +6,7 @@
  */
 #include "fxdlg.h"
 
+#include "rocview/public/guiapp.h"
 #include "rocs/public/trace.h"
 
 
@@ -99,3 +100,8 @@ void FxDlg::onGeneration( wxCommandEvent& event ) {
 void FxDlg::onActivation( wxCommandEvent& event ) {
   onGeneration(event);
 }
+
+void FxDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "pt" );
+}
+

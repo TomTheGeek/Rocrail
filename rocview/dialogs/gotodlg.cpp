@@ -156,3 +156,7 @@ void GotoDlg::onAdd2Trip( wxCommandEvent& event ) {
   }
 }
 
+void GotoDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "automatic" );
+}
+

@@ -54,6 +54,7 @@ class GotoDlg : public gotodlggen, public BaseDialog
 		void onCancel( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
     void onAdd2Trip( wxCommandEvent& event );
+    void onHelp( wxCommandEvent& event );
 	public:
 		/** Constructor */
     GotoDlg( wxWindow* parent, const char* lcid );

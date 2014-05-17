@@ -30,6 +30,7 @@ protected:
   void onFunction( wxCommandEvent& event );
   void onGeneration( wxCommandEvent& event );
   void onActivation( wxCommandEvent& event );
+  void onHelp( wxCommandEvent& event );
 
 public:
 	/** Constructor */
