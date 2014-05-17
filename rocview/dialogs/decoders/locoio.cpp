@@ -58,90 +58,50 @@ BEGIN_EVENT_TABLE( LocoIO, wxDialog )
 
 ////@begin LocoIO event table entries
     EVT_SPINCTRL( wxID_LOCOIO_LOW_ADDR, LocoIO::OnLocoioLowAddrUpdated )
-
     EVT_BUTTON( ID_BUTTON_GET_GEN, LocoIO::OnButtonGetGenClick )
-
     EVT_BUTTON( ID_BUTTON_SET_GEN, LocoIO::OnButtonSetGenClick )
-
     EVT_SPINCTRL( wxID_LOCOIO_SUB_ADDR, LocoIO::OnLocoioSubAddrUpdated )
-
     EVT_BUTTON( ID_BUTTON_RESET_LOCOIO, LocoIO::OnButtonResetLocoioClick )
-
     EVT_LISTBOX( ID_LN_ADDRESSLIST, LocoIO::OnLnAddresslistDoubleClicked )
     EVT_LISTBOX_DCLICK( ID_LN_ADDRESSLIST, LocoIO::OnLnAddresslistDoubleClicked )
-
     EVT_BUTTON( ID_QUEURY_ADDRESSES, LocoIO::OnQueuryAddressesClick )
-
     EVT_BUTTON( ID_LOCOIO_REPORT, LocoIO::OnLocoIOReport )
-
     EVT_RADIOBOX( wxID_ANY, LocoIO::OnEasyTypeSelected )
-
     EVT_BUTTON( ID_EASYTEST1, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST2, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST3, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST4, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST5, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST6, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST7, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST8, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST9, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST10, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST11, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST12, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST13, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST14, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST15, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYTEST16, LocoIO::OnEasytestClick )
-
     EVT_BUTTON( ID_EASYGETALL, LocoIO::OnEasygetallClick )
-
     EVT_BUTTON( ID_EASYSETALL, LocoIO::OnEasysetallClick )
-
     EVT_BUTTON( ID_BUTTON_EASY_SAVE, LocoIO::OnButtonEasySaveClick )
-
     EVT_BUTTON( ID_BUTTON_EASY_READ, LocoIO::OnButtonEasyReadClick )
-
     EVT_CHECKBOX( ID_LOCOIO_BOOSTER, LocoIO::OnBoosterClick )
-
     EVT_SPINCTRL( wxID_ANY, LocoIO::OnAnyUpdated )
     EVT_SPIN_UP( wxID_ANY, LocoIO::OnAnyUp )
     EVT_SPIN_DOWN( wxID_ANY, LocoIO::OnAnyDown )
-
     EVT_BUTTON( ID_BUTTON_PORT_GET, LocoIO::OnButtonPortGetClick )
-
     EVT_BUTTON( ID_BUTTON_PORT_SET, LocoIO::OnButtonPortSetClick )
-
     EVT_RADIOBOX( ID_LOCOIO_TYPE, LocoIO::OnLocoioTypeSelected )
-
     EVT_BUTTON( ID_BUTTON_OPC_GET, LocoIO::OnButtonOpcGetClick )
-
     EVT_BUTTON( ID_BUTTON_OPC_SET, LocoIO::OnButtonOpcSetClick )
-
     EVT_BUTTON( ID_BUTTON_MP_READ, LocoIO::OnButtonMpReadClick )
-
     EVT_BUTTON( ID_BUTTON_MP_WRITE, LocoIO::OnButtonMpWriteClick )
-
     EVT_BUTTON( ID_BUTTON_SERVO_PORT_GET, LocoIO::OnButtonServoPortGetClick )
-
     EVT_BUTTON( ID_BUTTON_SERVO_PORT_SET, LocoIO::OnButtonServoPortSetClick )
-
     EVT_BUTTON( wxID_CANCEL, LocoIO::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, LocoIO::OnHelpClick )
 ////@end LocoIO event table entries
     EVT_TIMER (ME_SVTimer, LocoIO::OnTimer)
 
@@ -278,6 +238,7 @@ LocoIO::~LocoIO()
 void LocoIO::Init()
 {
 ////@begin LocoIO member initialisation
+    m_Notebook = NULL;
     m_GeneralPanel = NULL;
     m_AddressBox = NULL;
     m_labIID = NULL;
@@ -472,9 +433,9 @@ void LocoIO::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
-    wxNotebook* itemNotebook3 = new wxNotebook( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBK_DEFAULT|m_TabAlign );
+    m_Notebook = new wxNotebook( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBK_DEFAULT|m_TabAlign );
 
-    m_GeneralPanel = new wxPanel( itemNotebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    m_GeneralPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     wxBoxSizer* itemBoxSizer5 = new wxBoxSizer(wxVERTICAL);
     m_GeneralPanel->SetSizer(itemBoxSizer5);
 
@@ -482,13 +443,14 @@ void LocoIO::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer(m_AddressBox, wxVERTICAL);
     itemBoxSizer5->Add(itemStaticBoxSizer6, 0, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer7->AddGrowableCol(1);
     itemStaticBoxSizer6->Add(itemFlexGridSizer7, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT, 5);
     m_labIID = new wxStaticText( m_GeneralPanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_labIID, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_IID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, -1), 0 );
     itemFlexGridSizer7->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer7->AddGrowableCol(1);
 
     wxFlexGridSizer* itemFlexGridSizer10 = new wxFlexGridSizer(0, 4, 0, 0);
     itemStaticBoxSizer6->Add(itemFlexGridSizer10, 0, wxGROW|wxLEFT|wxRIGHT, 5);
@@ -562,9 +524,9 @@ void LocoIO::CreateControls()
     m_ModConfig->Enable(false);
     itemFlexGridSizer28->Add(m_ModConfig, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemNotebook3->AddPage(m_GeneralPanel, _("General"));
+    m_Notebook->AddPage(m_GeneralPanel, _("General"));
 
-    m_AddressesPanel = new wxPanel( itemNotebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    m_AddressesPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     wxBoxSizer* itemBoxSizer34 = new wxBoxSizer(wxVERTICAL);
     m_AddressesPanel->SetSizer(itemBoxSizer34);
 
@@ -580,9 +542,9 @@ void LocoIO::CreateControls()
     m_Report = new wxButton( m_AddressesPanel, ID_LOCOIO_REPORT, _("Report..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer36->Add(m_Report, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemNotebook3->AddPage(m_AddressesPanel, _("Addresses"));
+    m_Notebook->AddPage(m_AddressesPanel, _("Addresses"));
 
-    m_EasyPanel = new wxPanel( itemNotebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    m_EasyPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     wxBoxSizer* itemBoxSizer40 = new wxBoxSizer(wxVERTICAL);
     m_EasyPanel->SetSizer(itemBoxSizer40);
 
@@ -1017,9 +979,9 @@ void LocoIO::CreateControls()
     m_Booster->SetValue(false);
     itemBoxSizer143->Add(m_Booster, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemNotebook3->AddPage(m_EasyPanel, _("Easy Setup"));
+    m_Notebook->AddPage(m_EasyPanel, _("Easy Setup"));
 
-    m_IOPanel = new wxPanel( itemNotebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    m_IOPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     wxBoxSizer* itemBoxSizer150 = new wxBoxSizer(wxHORIZONTAL);
     m_IOPanel->SetSizer(itemBoxSizer150);
 
@@ -1173,9 +1135,9 @@ void LocoIO::CreateControls()
     m_InputType->SetSelection(0);
     itemStaticBoxSizer185->Add(m_InputType, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    itemNotebook3->AddPage(m_IOPanel, _("I/O"));
+    m_Notebook->AddPage(m_IOPanel, _("I/O"));
 
-    m_OPCPanel = new wxPanel( itemNotebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    m_OPCPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     wxBoxSizer* itemBoxSizer193 = new wxBoxSizer(wxVERTICAL);
     m_OPCPanel->SetSizer(itemBoxSizer193);
 
@@ -1213,9 +1175,9 @@ void LocoIO::CreateControls()
     m_ARG2 = new wxSpinCtrl( m_OPCPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 127, 0 );
     itemFlexGridSizer199->Add(m_ARG2, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemNotebook3->AddPage(m_OPCPanel, _("OPC"));
+    m_Notebook->AddPage(m_OPCPanel, _("OPC"));
 
-    m_MultiPortPanel = new wxPanel( itemNotebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    m_MultiPortPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     wxBoxSizer* itemBoxSizer207 = new wxBoxSizer(wxVERTICAL);
     m_MultiPortPanel->SetSizer(itemBoxSizer207);
 
@@ -1341,9 +1303,9 @@ void LocoIO::CreateControls()
     m_MPWrite = new wxButton( m_MultiPortPanel, ID_BUTTON_MP_WRITE, _("Write"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer241->Add(m_MPWrite, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    itemNotebook3->AddPage(m_MultiPortPanel, _("MultiPort"));
+    m_Notebook->AddPage(m_MultiPortPanel, _("MultiPort"));
 
-    wxPanel* itemPanel244 = new wxPanel( itemNotebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxPanel* itemPanel244 = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
     wxBoxSizer* itemBoxSizer245 = new wxBoxSizer(wxVERTICAL);
     itemPanel244->SetSizer(itemBoxSizer245);
 
@@ -1384,16 +1346,19 @@ void LocoIO::CreateControls()
     m_V = new wxSpinCtrl( itemPanel244, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 5, 0 );
     itemFlexGridSizer252->Add(m_V, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    itemNotebook3->AddPage(itemPanel244, _("Servo"));
+    m_Notebook->AddPage(itemPanel244, _("Servo"));
 
-    itemBoxSizer2->Add(itemNotebook3, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemBoxSizer2->Add(m_Notebook, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer259 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer259, 0, wxALIGN_RIGHT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer259, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Cancel->SetDefault();
     itemStdDialogButtonSizer259->AddButton(m_Cancel);
+
+    wxButton* itemButton261 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer259->AddButton(itemButton261);
 
     itemStdDialogButtonSizer259->Realize();
 
@@ -2672,6 +2637,25 @@ void LocoIO::updateTypeSelected()
   for( int i = 1; i < 17; i++) {
     // enable test button
     easyTest[i]->Enable( easyType[i]->GetSelection() > 1 );
+  }
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void LocoIO::OnHelpClick( wxCommandEvent& event )
+{
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "lnsv" ); break;
+  case 1: wxGetApp().openLink( "locoio-addr" ); break;
+  case 2: wxGetApp().openLink( "loconet-easy" ); break; // Position
+  case 3: wxGetApp().openLink( "loconet-io" ); break;
+  case 4: wxGetApp().openLink( "locoio-opc" ); break;
+  case 5: wxGetApp().openLink( "locoio-multi" ); break;
+  case 6: wxGetApp().openLink( "locoio-servo" ); break;
+  default: wxGetApp().openLink( "lnsv" ); break;
   }
 }
 

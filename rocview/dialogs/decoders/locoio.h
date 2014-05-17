@@ -31,6 +31,7 @@
  */
 
 ////@begin forward declarations
+class wxNotebook;
 class wxSpinCtrl;
 ////@end forward declarations
 
@@ -216,6 +217,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+    void OnHelpClick( wxCommandEvent& event );
+
 ////@end LocoIO event handler declarations
 
 ////@begin LocoIO member function declarations
@@ -231,6 +235,7 @@ public:
     static bool ShowToolTips();
 
 ////@begin LocoIO member variables
+    wxNotebook* m_Notebook;
     wxPanel* m_GeneralPanel;
     wxStaticBox* m_AddressBox;
     wxStaticText* m_labIID;
