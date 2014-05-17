@@ -404,3 +404,9 @@ void MGVDlg::onSetRightAngle( wxCommandEvent& event ) {
 void MGVDlg::onSetSpeed( wxCommandEvent& event ) {
   setServoSpeed();
 }
+
+
+void MGVDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "mgv-programming" );
+}
+

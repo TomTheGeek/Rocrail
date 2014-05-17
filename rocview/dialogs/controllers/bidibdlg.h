@@ -43,6 +43,7 @@ protected:
 	void OnOK( wxCommandEvent& event );
   void onConfigureNodes( wxCommandEvent& event );
   void onSubLib( wxCommandEvent& event );
+  void OnHelp( wxCommandEvent& event );
 
   void initLabels();
   void initValues();

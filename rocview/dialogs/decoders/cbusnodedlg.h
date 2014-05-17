@@ -146,6 +146,7 @@ class CBusNodeDlg : public cbusnodedlggen
 protected:
 	// Handlers for cbusnodedlggen events.
 	void onOK( wxCommandEvent& event );
+	void onHelp( wxCommandEvent& event );
   void onSetNodeNumber( wxCommandEvent& event );
   void onIndexSelect2( wxListEvent& event );
   void onIndexSelect( int index );

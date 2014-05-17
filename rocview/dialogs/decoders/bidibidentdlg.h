@@ -78,6 +78,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
 		// Handlers for BidibIdentDlgGen events.
 		void onCancel( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
+		void onHelp( wxCommandEvent& event );
     void onTreeSelChanged( wxTreeEvent& event );
     void onBeginDrag( wxTreeEvent& event );
     void onItemActivated( wxTreeEvent& event );

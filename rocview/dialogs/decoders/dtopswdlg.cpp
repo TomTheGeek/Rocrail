@@ -224,9 +224,13 @@ void DTOpSwDlg::event( iONode event ) {
 }
 
 
-
 void DTOpSwDlg::onOK( wxCommandEvent& event ){
   delete m_Timer;
   EndModal( wxID_OK );
+}
+
+
+void DTOpSwDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "loconet:dtopsw" );
 }
 

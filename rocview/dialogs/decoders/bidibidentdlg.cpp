@@ -2096,3 +2096,7 @@ void BidibIdentDlg::onUsernameSet( wxCommandEvent& event ) {
 }
 
 
+void BidibIdentDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "bidib:bidib-config" );
+}
+

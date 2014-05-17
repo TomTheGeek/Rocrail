@@ -128,5 +128,7 @@ void DCC232Dlg::onCancel( wxCommandEvent& event ) {
 }
 
 
-
+void DCC232Dlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "dcc232" );
+}
 

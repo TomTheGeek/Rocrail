@@ -60,6 +60,7 @@ protected:
 	void onWriteAll( wxCommandEvent& event );
 	void onReadAll( wxCommandEvent& event );
 	void onOK( wxCommandEvent& event );
+	void onHelp( wxCommandEvent& event );
   void initLabels();
 
 public:

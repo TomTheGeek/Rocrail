@@ -74,6 +74,7 @@ class RocnetNodeDlg : public rocnetnodegen, public DecoderBase
 		void onPortRead( wxCommandEvent& event );
 		void onPortWrite( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
+		void onHelp( wxCommandEvent& event );
 		void onClose( wxCloseEvent& event );
 		void onNodeOptionsRead( wxCommandEvent& event );
 		void onNodeOptionsWrite( wxCommandEvent& event );

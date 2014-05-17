@@ -248,3 +248,8 @@ void BidibDlg::onSubLib( wxCommandEvent& event ) {
   subLib();
 }
 
+
+void BidibDlg::OnHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "bidib" );
+}
+

@@ -1836,3 +1836,7 @@ void RocnetNodeDlg::onChannelTest( wxCommandEvent& event ) {
 }
 
 
+void RocnetNodeDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "rocnet:rocnetnode-setup" );
+}
+

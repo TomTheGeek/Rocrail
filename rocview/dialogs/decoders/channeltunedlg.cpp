@@ -132,3 +132,8 @@ int ChannelTuneDlg::getOnPos() {
   return m_OnPos->GetValue();
 }
 
+
+void ChannelTuneDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "rocnet:rocnetnode-setup-en" );
+}
+

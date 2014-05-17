@@ -236,3 +236,8 @@ void RocNetDlg::initNodeList() {
 
 }
 
+
+void RocNetDlg::OnHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "rocnet:rocnet-prot" );
+}
+

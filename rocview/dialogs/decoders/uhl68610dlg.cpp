@@ -376,3 +376,9 @@ void Uhl68610Dlg::onScale( wxCommandEvent& event ) {
 void Uhl68610Dlg::onGap( wxSpinEvent& event ) {
   getFactor();
 }
+
+
+void Uhl68610Dlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "lissy-programming" );
+}
+

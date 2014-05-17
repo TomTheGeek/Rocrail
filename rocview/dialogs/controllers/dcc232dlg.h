@@ -41,6 +41,7 @@ class DCC232Dlg : public dcc232gen
   void evaluate();
   void onOK( wxCommandEvent& event );
   void onCancel( wxCommandEvent& event );
+  void onHelp( wxCommandEvent& event );
   iONode m_Props;
   const char* m_Devices;
 

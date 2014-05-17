@@ -1693,7 +1693,7 @@
                         <property name="Apply">0</property>
                         <property name="Cancel">1</property>
                         <property name="ContextHelp">0</property>
-                        <property name="Help">0</property>
+                        <property name="Help">1</property>
                         <property name="No">0</property>
                         <property name="OK">1</property>
                         <property name="Save">0</property>
@@ -1704,7 +1704,7 @@
                         <event name="OnApplyButtonClick"></event>
                         <event name="OnCancelButtonClick">OnCancel</event>
                         <event name="OnContextHelpButtonClick"></event>
-                        <event name="OnHelpButtonClick"></event>
+                        <event name="OnHelpButtonClick">OnHelp</event>
                         <event name="OnNoButtonClick"></event>
                         <event name="OnOKButtonClick">OnOK</event>
                         <event name="OnSaveButtonClick"></event>

@@ -52,6 +52,7 @@ class ChannelTuneDlg : public ChannelTuneDlgGen
 		void onOnPos( wxScrollEvent& event );
 		void onOnPosRelease( wxScrollEvent& event );
 		void onOK( wxCommandEvent& event );
+		void onHelp( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		ChannelTuneDlg( wxWindow* parent, DecoderBase* decoderbase, int channel, int type, int offpos, int onpos, bool servo );

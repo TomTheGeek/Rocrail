@@ -40,6 +40,7 @@ protected:
 	void OnSublib( wxCommandEvent& event );
 	void OnCancel( wxCommandEvent& event );
 	void OnOK( wxCommandEvent& event );
+	void OnHelp( wxCommandEvent& event );
 	void onNodeListSelected( wxListEvent& event );
 	
   void initLabels();

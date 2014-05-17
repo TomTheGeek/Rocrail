@@ -350,3 +350,8 @@ void MGV141Dlg::evaluateEvent( int type, int low, int sub, int sv, int val, int 
   }
 }
 
+
+void MGV141Dlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "mgv141-programming" );
+}
+

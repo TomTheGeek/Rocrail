@@ -2467,3 +2467,7 @@ void CBusNodeDlg::onReport( wxCommandEvent& event ) {
 }
 
 
+void CBusNodeDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "cbus:flim" );
+}
+

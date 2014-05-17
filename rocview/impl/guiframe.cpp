@@ -110,7 +110,6 @@
 #include "rocview/dialogs/decoders/mgvdlg.h"
 #include "rocview/dialogs/decoders/mgv141dlg.h"
 #include "rocview/dialogs/decoders/dtopswdlg.h"
-#include "rocview/dialogs/decoders/uhl633x0dlg.h"
 #include "rocview/dialogs/decoders/uhl68610dlg.h"
 
 #include "rocview/public/guiapp.h"
@@ -366,7 +365,6 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
     EVT_MENU( ME_Tooltip        , RocGuiFrame::OnTooltip)
     EVT_MENU( ME_BackColor      , RocGuiFrame::OnBackColor)
-    EVT_MENU( ME_UHL_63350      , RocGuiFrame::OnUhl63350)
     EVT_MENU( ME_UHL_68610      , RocGuiFrame::OnUhl68610)
     EVT_MENU( ME_LOCOIO         , RocGuiFrame::OnLocoIO)
     EVT_MENU( ME_MGV            , RocGuiFrame::OnMGV)
@@ -1424,8 +1422,6 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
       m_DTOpSw->event( node );
     else if( m_Uhl68610 != NULL )
       m_Uhl68610->event( node );
-    else if( m_Uhl633x0 != NULL )
-      m_Uhl633x0->event( node );
     else
       m_LNCV->event( node );
   }
@@ -1772,7 +1768,6 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_RocrailIniDlg      = NULL;
   m_RocProDlg          = NULL;
   m_Uhl68610           = NULL;
-  m_Uhl633x0           = NULL;
   m_ModPanel           = NULL;
   m_LocDlgMap          = MapOp.inst();
   m_ThrottleList       = ListOp.inst();
@@ -2133,7 +2128,6 @@ void RocGuiFrame::initFrame() {
   menuPTLN->Append( ME_LOCOIO, wxString(_T("LocoIO")) + wxString(_T("...")), _T("LocoIO") );
   menuPTLN->Append( ME_DTOpSw, wxString(_T("Digitrax")) + wxString(_T("...")), _T("Digitrax") );
   wxMenu *menuUhlenbrock = new wxMenu();
-  //menuUhlenbrock->Append( ME_UHL_63350, _T("Uhlenbrock 63340/63350") + wxString(_T("...")), _T("Uhlenbrock 63340/63350") );
   menuUhlenbrock->Append( ME_UHL_68610, _T("Uhlenbrock 68610") + wxString(_T("...")), _T("Uhlenbrock 68610") );
   menuPTLN->Append( -1, wxString(_T("Uhlenbrock")), menuUhlenbrock );
 
@@ -3801,15 +3795,6 @@ void RocGuiFrame::OnEditActions( wxCommandEvent& event ) {
   dlg->Destroy();
 }
 
-
-void RocGuiFrame::OnUhl63350( wxCommandEvent& event ) {
-  m_Uhl633x0 = new Uhl633x0Dlg(this);
-  if( wxID_OK == m_Uhl633x0->ShowModal() ) {
-    /* Notify RocRail. */
-  }
-  m_Uhl633x0->Destroy();
-  m_Uhl633x0 = NULL;
-}
 
 void RocGuiFrame::OnUhl68610( wxCommandEvent& event ) {
   m_Uhl68610 = new Uhl68610Dlg(this);

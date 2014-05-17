@@ -54,6 +54,7 @@ class DTOpSwDlg : public dtopswdlg
   void onReadAll( wxCommandEvent& event );
   void onWriteAll( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
+  void onHelp( wxCommandEvent& event );
 
 public:
   /** Constructor */

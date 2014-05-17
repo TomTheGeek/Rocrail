@@ -56,7 +56,6 @@
 #include "rocview/dialogs/decoders/dtopswdlg.h"
 #include "rocview/dialogs/rocrailinidialog.h"
 #include "rocview/dialogs/decoders/uhl68610dlg.h"
-#include "rocview/dialogs/decoders/uhl633x0dlg.h"
 #include "rocview/dialogs/powerctrldlg.h"
 #include "rocview/dialogs/widgetspanel.h"
 #include "rocview/dialogs/cmdrecorder.h"
@@ -307,7 +306,6 @@ public:
 
   void OnMGV(wxCommandEvent& event);
   void OnMGV141(wxCommandEvent& event);
-  void OnUhl63350(wxCommandEvent& event);
   void OnUhl68610(wxCommandEvent& event);
   void OnLocoIO(wxCommandEvent& event);
   void OnOpenDecoder(wxCommandEvent& event);
@@ -411,7 +409,6 @@ private:
   DTOpSwDlg* m_DTOpSw;
   RocrailIniDialog* m_RocrailIniDlg;
   Uhl68610Dlg* m_Uhl68610;
-  Uhl633x0Dlg* m_Uhl633x0;
   MGVDlg* m_MGV;
   MGV141Dlg* m_MGV141;
   PowerCtrlDlg* m_PowerCtrl;
@@ -636,7 +633,6 @@ enum
     ME_Feature,
     ME_Survey,
     ME_BackColor,
-    ME_UHL_63350,
     ME_UHL_68610,
     ME_LOCOIO,
     ME_MGV,

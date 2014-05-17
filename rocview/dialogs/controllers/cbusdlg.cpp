@@ -195,3 +195,9 @@ void CbusDlg::OnOK( wxCommandEvent& event ) {
   evaluate();
   EndModal( wxID_OK );
 }
+
+
+void CbusDlg::OnHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "cbus" );
+}
+

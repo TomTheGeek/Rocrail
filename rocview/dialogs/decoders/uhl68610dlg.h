@@ -46,6 +46,7 @@ public:
   void onWrite( wxCommandEvent& event );
   void onCancel( wxCommandEvent& event );
   void onOK( wxCommandEvent& event );
+  void onHelp( wxCommandEvent& event );
   void event( iONode event );
   void onScale( wxCommandEvent& event );
   void onGap( wxSpinEvent& event );
