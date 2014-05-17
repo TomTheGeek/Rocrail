@@ -63,9 +63,8 @@ BEGIN_EVENT_TABLE( Hsi88CntrlDlg, wxDialog )
 
 ////@begin Hsi88CntrlDlg event table entries
     EVT_BUTTON( wxID_OK, Hsi88CntrlDlg::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, Hsi88CntrlDlg::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, Hsi88CntrlDlg::OnHelpClick )
 ////@end Hsi88CntrlDlg event table entries
 
 END_EVENT_TABLE()
@@ -227,21 +226,22 @@ void Hsi88CntrlDlg::CreateControls()
     m_Panel->SetSizer(itemBoxSizer4);
 
     wxFlexGridSizer* itemFlexGridSizer5 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer5->AddGrowableCol(1);
     itemBoxSizer4->Add(itemFlexGridSizer5, 0, wxGROW|wxALL, 5);
 
     m_labIID = new wxStaticText( m_Panel, ID_STATICTEXT_HSI_IID, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer5->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_IID = new wxTextCtrl( m_Panel, ID_TEXTCTRL_HSI_IID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer5->Add(m_IID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labDevice = new wxStaticText( m_Panel, ID_STATICTEXT_HSI_DEVICE, _("Device"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer5->Add(m_labDevice, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     wxArrayString m_DeviceStrings;
     m_Device = new wxComboBox( m_Panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer5->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer5->AddGrowableCol(1);
 
     wxArrayString m_TypeStrings;
     m_TypeStrings.Add(_("&RS232"));
@@ -258,13 +258,13 @@ void Hsi88CntrlDlg::CreateControls()
     itemStaticBoxSizer11->Add(itemFlexGridSizer12, 0, wxGROW, 5);
 
     m_labLeft = new wxStaticText( m_Panel, wxID_STATIC_HSI_LEFT, wxGetTranslation(wxString() + (wxChar) 0x013B + wxT("eft bus")), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer12->Add(m_labLeft, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer12->Add(m_labLeft, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_labMid = new wxStaticText( m_Panel, wxID_STATIC_HSI_MID, _("Middle bus"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer12->Add(m_labMid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer12->Add(m_labMid, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_labRight = new wxStaticText( m_Panel, wxID_STATIC_HSI_RIGHT, _("Right bus"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer12->Add(m_labRight, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer12->Add(m_labRight, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
     m_Left = new wxTextCtrl( m_Panel, ID_TEXTCTRL_HSI_LEFT, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_Left->SetMaxLength(5);
@@ -292,13 +292,16 @@ void Hsi88CntrlDlg::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer22 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer22, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer22, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
     itemStdDialogButtonSizer22->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer22->AddButton(m_Cancel);
+
+    wxButton* itemButton25 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer22->AddButton(itemButton25);
 
     itemStdDialogButtonSizer22->Realize();
 
@@ -358,3 +361,14 @@ wxIcon Hsi88CntrlDlg::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end Hsi88CntrlDlg icon retrieval
 }
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void Hsi88CntrlDlg::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "hsi88" );
+}
+

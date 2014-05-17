@@ -50,6 +50,7 @@ BEGIN_EVENT_TABLE( ECoSCtrlDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_SET_FBADDR, ECoSCtrlDialog::OnButtonSetFbaddrClick )
     EVT_BUTTON( wxID_OK, ECoSCtrlDialog::OnOkClick )
     EVT_BUTTON( wxID_CANCEL, ECoSCtrlDialog::OnCancelClick )
+    EVT_BUTTON( wxID_HELP, ECoSCtrlDialog::OnHelpClick )
 ////@end ECoSCtrlDialog event table entries
 
 END_EVENT_TABLE()
@@ -425,13 +426,16 @@ void ECoSCtrlDialog::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer44 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer44, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer44, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
     itemStdDialogButtonSizer44->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer44->AddButton(m_Cancel);
+
+    wxButton* itemButton47 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer44->AddButton(itemButton47);
 
     itemStdDialogButtonSizer44->Realize();
 
@@ -533,5 +537,22 @@ void ECoSCtrlDialog::OnButtonSetFbaddrClick( wxCommandEvent& event )
   wProgram.setdecaddr( cmd, m_FbAddr->GetValue() );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void ECoSCtrlDialog::OnHelpClick( wxCommandEvent& event )
+{ // ecos, zimocan, z21, mcs2
+  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "cs2:cs2" );
+  else if( StrOp.equals( wDigInt.ecos, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "ecos" );
+  else if( StrOp.equals( wDigInt.z21, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "roco:roco-z21" );
+  else if( StrOp.equals( wDigInt.zimocan, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "zimocan" );
 }
 

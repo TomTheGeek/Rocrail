@@ -51,15 +51,11 @@ BEGIN_EVENT_TABLE( OpenDCCCtrlDlg, wxDialog )
 
 ////@begin OpenDCCCtrlDlg event table entries
     EVT_BUTTON( ID_READCVS, OpenDCCCtrlDlg::OnReadcvsClick )
-
     EVT_BUTTON( ID_WRITECVS, OpenDCCCtrlDlg::OnWritecvsClick )
-
     EVT_BUTTON( wxID_OK, OpenDCCCtrlDlg::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, OpenDCCCtrlDlg::OnCancelClick )
-
     EVT_BUTTON( wxID_APPLY, OpenDCCCtrlDlg::OnApplyClick )
-
+    EVT_BUTTON( wxID_HELP, OpenDCCCtrlDlg::OnHelpClick )
 ////@end OpenDCCCtrlDlg event table entries
     EVT_MENU( PT_EVENT, OpenDCCCtrlDlg::OnPTEvent)
     EVT_TIMER (ME_SOTimer, OpenDCCCtrlDlg::OnTimer)
@@ -903,7 +899,6 @@ void OpenDCCCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer(wxVERTICAL);
     itemBoxSizer5->Add(itemBoxSizer6, 1, wxGROW|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer7->AddGrowableCol(1);
     itemBoxSizer6->Add(itemFlexGridSizer7, 1, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
     m_labIID = new wxStaticText( m_GeneralPanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
@@ -918,8 +913,9 @@ void OpenDCCCtrlDlg::CreateControls()
     m_Device = new wxComboBox( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_DeviceStrings, wxCB_DROPDOWN );
     itemFlexGridSizer7->Add(m_Device, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    itemFlexGridSizer7->AddGrowableCol(1);
+
     wxFlexGridSizer* itemFlexGridSizer12 = new wxFlexGridSizer(0, 3, 0, 0);
-    itemFlexGridSizer12->AddGrowableCol(2);
     itemBoxSizer6->Add(itemFlexGridSizer12, 0, wxGROW|wxALL, 5);
     m_labVersion = new wxStaticText( m_GeneralPanel, wxID_ANY, _("Version"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer12->Add(m_labVersion, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxBOTTOM, 5);
@@ -931,6 +927,8 @@ void OpenDCCCtrlDlg::CreateControls()
     m_Mode = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(100, -1), wxTE_READONLY );
     m_Mode->Enable(false);
     itemFlexGridSizer12->Add(m_Mode, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    itemFlexGridSizer12->AddGrowableCol(2);
 
     wxFlexGridSizer* itemFlexGridSizer16 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer6->Add(itemFlexGridSizer16, 0, wxGROW|wxALL, 5);
@@ -1161,7 +1159,6 @@ void OpenDCCCtrlDlg::CreateControls()
     m_SwitchPanel->SetSizer(itemBoxSizer81);
 
     wxFlexGridSizer* itemFlexGridSizer82 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer82->AddGrowableCol(1);
     itemBoxSizer81->Add(itemFlexGridSizer82, 0, wxGROW|wxALL, 5);
     m_labSwitchCommands = new wxStaticText( m_SwitchPanel, wxID_ANY, _("Command repetitions"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer82->Add(m_labSwitchCommands, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -1175,6 +1172,8 @@ void OpenDCCCtrlDlg::CreateControls()
     m_SwitchTime = new wxSpinCtrl( m_SwitchPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
     itemFlexGridSizer82->Add(m_SwitchTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemFlexGridSizer82->AddGrowableCol(1);
+
     m_SwitchInvert = new wxCheckBox( m_SwitchPanel, wxID_ANY, _("Invert commands"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SwitchInvert->SetValue(false);
     itemBoxSizer81->Add(m_SwitchInvert, 0, wxALIGN_LEFT|wxALL, 5);
@@ -1185,7 +1184,7 @@ void OpenDCCCtrlDlg::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer88 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer88, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer88, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer88->AddButton(m_OK);
 
@@ -1194,6 +1193,9 @@ void OpenDCCCtrlDlg::CreateControls()
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer88->AddButton(m_Apply);
+
+    wxButton* itemButton92 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer88->AddButton(itemButton92);
 
     itemStdDialogButtonSizer88->Realize();
 
@@ -1310,5 +1312,15 @@ void OpenDCCCtrlDlg::OnReadcvsClick( wxCommandEvent& event )
   m_TimerCount = 0;
   sendGet(so_version);
   startProgress();
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void OpenDCCCtrlDlg::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "opendcc" );
 }
 

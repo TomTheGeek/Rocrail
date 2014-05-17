@@ -62,9 +62,8 @@ BEGIN_EVENT_TABLE( BarJuTCntrlDlg, wxDialog )
 
 ////@begin BarJuTCntrlDlg event table entries
     EVT_BUTTON( wxID_OK, BarJuTCntrlDlg::OnOKClick )
-
     EVT_BUTTON( wxID_CANCEL, BarJuTCntrlDlg::OnCANCELClick )
-
+    EVT_BUTTON( wxID_HELP, BarJuTCntrlDlg::OnHelpClick )
 ////@end BarJuTCntrlDlg event table entries
 
 END_EVENT_TABLE()
@@ -194,12 +193,15 @@ void BarJuTCntrlDlg::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer10 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer10, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer10, 0, wxGROW|wxALL, 5);
     wxButton* itemButton11 = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer10->AddButton(itemButton11);
 
     wxButton* itemButton12 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer10->AddButton(itemButton12);
+
+    wxButton* itemButton13 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer10->AddButton(itemButton13);
 
     itemStdDialogButtonSizer10->Realize();
 
@@ -260,4 +262,14 @@ wxIcon BarJuTCntrlDlg::GetIconResource( const wxString& name )
 }
 
 
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void BarJuTCntrlDlg::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "barjut" );
+}
 

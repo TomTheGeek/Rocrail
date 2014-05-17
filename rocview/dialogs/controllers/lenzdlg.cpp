@@ -46,11 +46,9 @@ BEGIN_EVENT_TABLE( LenzDlg, wxDialog )
 
 ////@begin LenzDlg event table entries
     EVT_RADIOBOX( ID_LENZTYPE, LenzDlg::OnLenztypeSelected )
-
     EVT_BUTTON( wxID_OK, LenzDlg::OnOkClick )
-
     EVT_BUTTON( wxID_CANCEL, LenzDlg::OnCancelClick )
-
+    EVT_BUTTON( wxID_HELP, LenzDlg::OnHelpClick )
 ////@end LenzDlg event table entries
 
 END_EVENT_TABLE()
@@ -297,7 +295,6 @@ void LenzDlg::CreateControls()
     itemBoxSizer4->Add(itemBoxSizer5, 0, wxALIGN_TOP|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer6 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer6->AddGrowableCol(1);
     itemBoxSizer5->Add(itemFlexGridSizer6, 0, wxGROW, 5);
 
     m_labIID = new wxStaticText( m_MainPanel, wxID_ANY, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -324,6 +321,8 @@ void LenzDlg::CreateControls()
 
     m_Port = new wxSpinCtrl( m_MainPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(120, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer6->Add(m_Port, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    itemFlexGridSizer6->AddGrowableCol(1);
 
     wxArrayString m_BPSStrings;
     m_BPSStrings.Add(_("&9600"));
@@ -378,7 +377,6 @@ void LenzDlg::CreateControls()
     itemStaticBoxSizer19->Add(m_V2, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer24->AddGrowableCol(1);
     itemStaticBoxSizer19->Add(itemFlexGridSizer24, 0, wxALIGN_LEFT, 5);
 
     m_labSwitchTime = new wxStaticText( m_MainPanel, wxID_ANY, _("Switch time (ms)"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -387,14 +385,19 @@ void LenzDlg::CreateControls()
     m_SwitchTime = new wxSpinCtrl( m_MainPanel, wxID_ANY, _T("250"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 1000, 250 );
     itemFlexGridSizer24->Add(m_SwitchTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
+    itemFlexGridSizer24->AddGrowableCol(1);
+
     wxStdDialogButtonSizer* itemStdDialogButtonSizer27 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer27, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer27, 0, wxGROW|wxALL, 5);
     wxButton* itemButton28 = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer27->AddButton(itemButton28);
 
     wxButton* itemButton29 = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer27->AddButton(itemButton29);
+
+    wxButton* itemButton30 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer27->AddButton(itemButton30);
 
     itemStdDialogButtonSizer27->Realize();
 
@@ -480,5 +483,16 @@ void LenzDlg::OnLenztypeSelected( wxCommandEvent& event )
 
   m_BPS->Enable(true);
   m_HardwareFlow->Enable(true);
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void LenzDlg::OnHelpClick( wxCommandEvent& event )
+{
+  if( StrOp.equals( wDigInt.xpressnet, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "xpressnet" );
 }
 

@@ -72,6 +72,7 @@ BEGIN_EVENT_TABLE( LocoNetCtrlDlg, wxDialog )
     EVT_COMBOBOX( ID_COMBOBOX_LOCONET_CMDSTN, LocoNetCtrlDlg::OnComboboxLoconetCmdstnSelected )
     EVT_BUTTON( wxID_OK, LocoNetCtrlDlg::OnOkClick )
     EVT_BUTTON( wxID_CANCEL, LocoNetCtrlDlg::OnCancelClick )
+    EVT_BUTTON( wxID_HELP, LocoNetCtrlDlg::OnHelpClick )
 ////@end LocoNetCtrlDlg event table entries
 
 END_EVENT_TABLE()
@@ -650,13 +651,16 @@ void LocoNetCtrlDlg::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer60 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer60, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer60, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
     itemStdDialogButtonSizer60->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer60->AddButton(m_Cancel);
+
+    wxButton* itemButton63 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer60->AddButton(itemButton63);
 
     itemStdDialogButtonSizer60->Realize();
 
@@ -799,3 +803,14 @@ void LocoNetCtrlDlg::initSublib()
     //m_UseDouble->Enable(false);
   }
 }
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void LocoNetCtrlDlg::OnHelpClick( wxCommandEvent& event )
+{
+  wxGetApp().openLink( "loconet-cs" );
+}
+
