@@ -12,52 +12,55 @@
 # Description:       Starts the Rocrail Daemon
 ### END INIT INFO
 
-rocraild_BIN=/opt/rocrail/rocrail
-rocraild_PID=/tmp/rocraild.pid
-rocraild_SH=/opt/rocrail/rocraild.sh
+rocrail_DIR=/opt/rocrail
+rocrail_PID=$(ps -C rocrail -o pid=)
 
-if [ ! -x $rocraild_BIN ] ; then
-  echo -n "Rocrail not installed ! "
+if [ ! -x $rocrail_DIR/rocrail ] ; then
+  echo Rocrail is not installed
   exit 5
 fi
 
 case "$1" in
-  start)
-  if [ ! -e $rocraild_PID ] ; then
-    echo "Starting Rocrail"
+    start)
+  if [ -n "$rocrail_PID" ] ; then
+    $0 status
   else
-    echo "rocraild.pid already exists ! "
-    exit 5
+    echo "Starting Rocrail (> $rocrail_DIR/nohup.out)"
+    cd $rocrail_DIR
+    su -l root -c "rm -f $rocrail_DIR/nohup.out"
+    su -l root -c "nohup $rocrail_DIR/rocrail -l $rocrail_DIR > $rocrail_DIR/nohup.out 2>&1 &"
   fi
-   su - root -c "$rocraild_SH"
   ;;
-  stop)
-  if [ -e $rocraild_PID ] ; then
-    echo "Shutting down Rocrail"
+    stop)
+  if [ -n "$rocrail_PID" ] ; then
+    echo Shutting down Rocrail
+          su -l root -c "kill $rocrail_PID"
   else
-    echo "Rocrail not running or missing PID File ! "
-    exit 5
+    $0 status
   fi
-  su - root -c "kill `head $rocraild_PID`"
-  su - root -c "rm $rocraild_PID"
   ;;
-  restart)
+    restart)
   $0 stop
   sleep 1
   $0 start
   ;;
-  status)
-  PROCESSCOUNT=$( ps -ef | grep -v grep | grep -cw rocrail )
-  if [ "$PROCESSCOUNT" -gt 0 ] ; then
-    ROCRAILPID=$( more $rocraild_PID )
-          echo "Rocrail is up and running ! (PID $ROCRAILPID)"
-      else
-          echo "Rocrail is not running ! "
-          exit 5
+    status)
+  if [ -n "$rocrail_PID" ] ; then
+                echo Rocrail is up and running with PID $rocrail_PID
+    exit 4
+        else
+                echo Rocrail is not running
+                exit 5
   fi
   ;;
-*)
-  echo "Usage: $0 {start|stop|restart|status}"
+    deltrace)
+        $0 stop
+        sleep 1
+  echo Erase Trace-Files
+  rm -f $rocrail_DIR/*.trc
+        $0 start
+        ;;
+    *)
+  echo Usage: $0 {start|stop|restart|status|deltrace}
   exit 1
-
 esac
