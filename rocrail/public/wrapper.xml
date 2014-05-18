@@ -465,6 +465,7 @@
       <const name="xnmm" vt="string" val="xnmm"/>
       <const name="rocomp" vt="string" val="rocomp"/>
       <const name="zimocan" vt="string" val="zimocan"/>
+      <const name="ucons88" vt="string" val="ucons88"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
@@ -813,6 +814,15 @@
         <var name="io" vt="int" defval="0" range="0-16777215" remark="A high bit means input port type."/>
       </io8255>
           
+      <!-- uConS88 -->
+      <ucons88 remark="uConS88 init" wrappername="uConS88">
+        <var name="host" vt="string" defval="192.168.1.88" remark="µCon-S88-Master IP address" />
+        <var name="port" vt="int" defval="11082" remark="µCon-S88-Master port" />
+        <var name="fbB1" vt="int" defval="5" remark="µCon-S88-Master number of modules of 16 inputs on port 1" />
+        <var name="fbB2" vt="int" defval="0" remark="µCon-S88-Master number of modules of 16 inputs on port 2" />
+        <var name="fbB3" vt="int" defval="0" remark="µCon-S88-Master number of modules of 16 inputs on port 3" />
+      </ucons88>
+
     </digint>
     <tcp remark="Client service port." wrappername="Tcp">
       <var name="port" vt="int" defval="8051" range="1-65535"/>

@@ -54,6 +54,7 @@
 #include "rocview/dialogs/controllers/bidibdlg.h"
 #include "rocview/dialogs/controllers/rocnetdlg.h"
 #include "rocview/dialogs/controllers/cbusdlg.h"
+#include "rocview/dialogs/controllers/ucons88dlg.h"
 
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -628,6 +629,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.sprog, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.srcp, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.tamsmc, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.ucons88, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.vcs, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.xnmm, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.xpressnet, wxConvUTF8 ) );
@@ -2155,6 +2157,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 57600, wDigInt.cts, devices);
   else if( StrOp.equals( wDigInt.z21, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
+  else if( StrOp.equals( wDigInt.ucons88, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new uConS88Dlg(this,m_Controller,devices);
   else
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 0, NULL, devices);
 

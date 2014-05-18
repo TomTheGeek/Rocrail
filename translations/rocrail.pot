@@ -7079,3 +7079,9 @@ msgstr ""
 msgid "Free previous block on enter"
 msgstr ""
 
+#. 
+# id="buslength"
+#, c-format
+msgid "Bus %d length"
+msgstr ""
+

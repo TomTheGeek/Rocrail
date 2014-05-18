@@ -128,7 +128,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OU
 	$(OUTDIR)$(FS)rmx$(SHAREDSUFFIX) $(OUTDIR)$(FS)massoth$(SHAREDSUFFIX) $(OUTDIR)$(FS)tamsmc$(SHAREDSUFFIX) $(OUTDIR)$(FS)muet$(SHAREDSUFFIX) $(OUTDIR)$(FS)bidib$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(OUTDIR)$(FS)perir$(SHAREDSUFFIX) $(OUTDIR)$(FS)editspro$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)infracar$(SHAREDSUFFIX) $(OUTDIR)$(FS)cti$(SHAREDSUFFIX) $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)z21$(SHAREDSUFFIX) \
-	$(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX)
+	$(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX) $(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX)
 	
 
 # ------------------------------------------------------------
@@ -220,6 +220,8 @@ $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)rocomp.o $(COMMONOBJS) $(R
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)rocomp.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX): $(ZIMOCANOBJS) $(TMPOUTDIR)$(FS)zimocan.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)zimocan.o $(ZIMOCANOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)ucons88.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)ucons88.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -332,6 +334,7 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX)
+	-$(REMOVE) $(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocdigs$(FS)rocdigs.xml ..$(FS)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)common$(FS)version.xml impl$(FS)version.c svnLog
 
@@ -379,4 +382,5 @@ install:
 	-cp -p $(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX) $(DESTDIR)
 	

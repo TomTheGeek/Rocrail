@@ -27884,4 +27884,7 @@
   <Msg id="freeblockonenter"> 
     <en txt="Free previous block on enter"/> 
   </Msg>
+  <Msg id="buslength">
+    <en txt="Bus %d length"/>
+  </Msg>
 </Messages>
