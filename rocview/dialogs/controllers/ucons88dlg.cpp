@@ -67,15 +67,9 @@ void uConS88Dlg::initLabels() {
 
   m_S88BusBox->GetStaticBox()->SetLabel( _T("S88 ") + wxGetApp().getMsg( "bus" ) );
 
-  char* val = StrOp.fmt( wxGetApp().getMsg( "buslength" ), 1 );
-  m_labBus1->SetLabel( val );
-  StrOp.free( val );
-  val = StrOp.fmt( wxGetApp().getMsg( "buslength" ), 2 );
-  m_labBus2->SetLabel( val );
-  StrOp.free( val );
-  val = StrOp.fmt( wxGetApp().getMsg( "buslength" ), 3 );
-  m_labBus3->SetLabel( val );
-  StrOp.free( val );
+  m_labBus1->SetLabel( wxString::Format(wxGetApp().getMsg( "buslength" ), 1) );
+  m_labBus2->SetLabel( wxString::Format(wxGetApp().getMsg( "buslength" ), 2) );
+  m_labBus3->SetLabel( wxString::Format(wxGetApp().getMsg( "buslength" ), 3) );
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
