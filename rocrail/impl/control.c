@@ -1415,7 +1415,7 @@ static void __checkActions( iOControl control, int seconds ) {
               }
             }
             else {
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "action state does not match: [%s-%s]",
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "action state does not match: [%s-%s]",
                   wActionCtrl.getstate( action ), state );
             }
             action = wSystemActions.nextactionctrl( system, action );
