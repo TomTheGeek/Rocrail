@@ -596,5 +596,11 @@ void GenericCtrlDlg::OnHelpClick( wxCommandEvent& event )
     wxGetApp().openLink( "p50x-tams" );
   else if( StrOp.equals( wDigInt.massoth, wDigInt.getlib( m_Props ) ) )
     wxGetApp().openLink( "massoth" );
+  else if( StrOp.equals( wDigInt.p50, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "6050" );
+  else if( StrOp.equals( wDigInt.roco, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "roco-cs" );
+  else if( StrOp.equals( wDigInt.easydcc, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "easydcc" );
 }
 

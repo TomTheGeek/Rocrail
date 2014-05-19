@@ -270,6 +270,9 @@ wxIcon BarJuTCntrlDlg::GetIconResource( const wxString& name )
 
 void BarJuTCntrlDlg::OnHelpClick( wxCommandEvent& event )
 {
-  wxGetApp().openLink( "barjut" );
+  if( StrOp.equals( wDigInt.barjut, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "barjut" );
+  else if( StrOp.equals( wDigInt.sprog, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "sprog" );
 }
 
