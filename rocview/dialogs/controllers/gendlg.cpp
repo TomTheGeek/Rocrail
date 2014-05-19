@@ -69,6 +69,8 @@ BEGIN_EVENT_TABLE( GenericCtrlDlg, wxDialog )
 
     EVT_BUTTON( wxID_CANCEL, GenericCtrlDlg::OnCancelClick )
 
+    EVT_BUTTON( wxID_HELP, GenericCtrlDlg::OnHelpClick )
+
 ////@end GenericCtrlDlg event table entries
 
 END_EVENT_TABLE()
@@ -493,13 +495,16 @@ void GenericCtrlDlg::CreateControls()
 
     wxStdDialogButtonSizer* itemStdDialogButtonSizer46 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer46, 0, wxALIGN_RIGHT|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer46, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
     itemStdDialogButtonSizer46->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStdDialogButtonSizer46->AddButton(m_Cancel);
+
+    wxButton* itemButton49 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer46->AddButton(itemButton49);
 
     itemStdDialogButtonSizer46->Realize();
 
@@ -574,5 +579,22 @@ void GenericCtrlDlg::OnButtonSetFbaddrClick( wxCommandEvent& event )
   wProgram.setdecaddr( cmd, m_FbAddr->GetValue() );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+}
+
+
+/*!
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
+ */
+
+void GenericCtrlDlg::OnHelpClick( wxCommandEvent& event )
+{
+  if( StrOp.equals( wDigInt.vcs, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "vcs" );
+  else if( StrOp.equals( wDigInt.p50x, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "intellibox" );
+  else if( StrOp.equals( wDigInt.tamsmc, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "p50x-tams" );
+  else if( StrOp.equals( wDigInt.massoth, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "massoth" );
 }
 
