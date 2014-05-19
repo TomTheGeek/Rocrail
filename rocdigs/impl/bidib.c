@@ -1958,12 +1958,14 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata, byte* path) {
       msgdata[0] = FEATURE_GEN_WATCHDOG;
       data->subWrite((obj)bidib, data->defaultmain->path, MSG_FEATURE_GET, msgdata, 1, data->defaultmain);
     }
-    if( data->defaultbooster == NULL && StrOp.find(classname, wBiDiBnode.class_booster) != NULL ) {
+    if( StrOp.find(classname, wBiDiBnode.class_booster) != NULL ) {
       byte msgdata[32];
-      data->defaultbooster = node;
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, wBiDiBnode.class_booster);
       msgdata[0] = 0;
       data->subWrite((obj)bidib, node->path, MSG_BOOST_QUERY, msgdata, 0, node);
+    }
+    if( data->defaultbooster == NULL && StrOp.find(classname, wBiDiBnode.class_booster) != NULL ) {
+      data->defaultbooster = node;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "setting node %s as default %s", uidKey, wBiDiBnode.class_booster);
     }
     if( data->defaultprog == NULL && StrOp.find(classname, wBiDiBnode.class_dcc_prog) != NULL ) {
       data->defaultprog = node;
