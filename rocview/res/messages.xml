@@ -22212,7 +22212,7 @@
     <sl txt="Vozlišča"/>
     <en_GB txt="Nodes"/>
     <da txt="Noder"/>
-    <pt_BR txt="Entroncamentos"/>
+    <pt_BR txt="Nós"/>
     <fi txt="Kohdat"/>
     <en_CA txt="Nodes"/>
     <pl txt="Węzły"/>
@@ -22684,7 +22684,7 @@
     <zh_CN txt="在配置CBUS节点前装载Rocrail服务器设置。"/>
     <sl txt="Prosim zaženite nastavitve Rocrail strežnika pred nastavljanjem CBUS vozlišč."/>
     <en_GB txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
-    <pt_BR txt="Por favor carregue as configurações do servidor Rocrail antes de configurar os entroncamentos CBUS."/>
+    <pt_BR txt="Por favor carregue as configurações do servidor Rocrail antes de configurar os nós CBUS."/>
     <sv txt="Vänligen ladda Rocrails serverinställningar innan konfigurering av CBUS noder."/>
     <fi txt="Lataa Rocrail-palvelimen asetukset ennen CBUS-noodien konfigurointia."/>
     <en_CA txt="Please load the Rocrail server settings before configuring CBUS nodes."/>
@@ -22706,7 +22706,7 @@
     <zh_CN txt="节点"/>
     <sl txt="Vozlišče"/>
     <en_GB txt="Node"/>
-    <pt_BR txt="Entroncamento"/>
+    <pt_BR txt="Nó"/>
     <fi txt="Noodi"/>
     <en_CA txt="Node"/>
     <pl txt="Węzeł"/>
@@ -23818,7 +23818,7 @@
     <sv txt="Nod nr."/>
     <zh_CN txt="在交轨点附近"/>
     <sl txt="Vozlišče št."/>
-    <pt_BR txt="Número do entroncamento"/>
+    <pt_BR txt="Número do nó"/>
     <en_GB txt="Node Nr."/>
     <fi txt="Noodi nro"/>
     <fr txt="numero du noeud"/>
@@ -27000,7 +27000,7 @@
     <en txt="Shutdown RocNet node %d?"/>
     <nl txt="RocNet node %d afsluiten?"/>
     <de txt="RocNet-Knoten %d herunterfahren?"/>
-    <pt_BR txt="Desligar entroncamento %d do RocNet?"/>
+    <pt_BR txt="Desligar nó %d do RocNet?"/>
     <it txt="Spegnere il nodo RocNet %d?"/>
     <sl txt="Izključim RocNet vozlišče %d?"/>
     <sv txt="Stäng av RocNet nod %d?"/>
@@ -27016,7 +27016,7 @@
     <en txt="Shutdown all RocNet nodes?"/>
     <nl txt="Alle RocNet nodes afsluiten?"/>
     <de txt="Alle RocNet-Knoten herunterfahren"/>
-    <pt_BR txt="Desligar todos os entroncamentos do RocNet?"/>
+    <pt_BR txt="Desligar todos os nós do RocNet?"/>
     <it txt="Spegnere tutti i nodi RocNet?"/>
     <sl txt="Izključim vse RocNet vozlišča?"/>
     <sv txt="Stänga av alla RocNet noder?"/>
@@ -27031,7 +27031,7 @@
   <Msg id="updatenode">
     <en txt="Update RocNet node %d to revision %d?"/>
     <nl txt="RocNet node %d bijwerken met revisie %d?"/>
-    <pt_BR txt="Atualizar o entroncamento %d do RocNet para revisão %d?"/>
+    <pt_BR txt="Atualizar o nó %d do RocNet para revisão %d?"/>
     <en_GB txt="Update RocNet node %d to revision %d?"/>
     <it txt="Aggiornare il nodo RocNet %d alla versione %d?"/>
     <ru txt="Обновить RocNet узел  %d до версии %d?"/>
@@ -27126,7 +27126,7 @@
     <en_GB txt="Nodemap"/>
     <it txt="Mappa nodo"/>
     <nl txt="Knooppunten"/>
-    <pt_BR txt="Mapa de entroncamentos"/>
+    <pt_BR txt="Mapa de nós"/>
     <ru txt="Nodemap"/>
     <sl txt="Karta vozlišč"/>
     <sr_latin txt="Mapa čvorišta"/>
@@ -27551,7 +27551,7 @@
   </Msg>
   <Msg id="verticaltoolbar">
     <en txt="Vertical toolbar"/>
-    <de txt="Vertikale Symbolleiste"/>
+    <de txt="Vertikale Werkzeugleiste"/>
     <nl txt="Verticale werkbalk"/>
     <pl txt="Pionowy pasek narzędzi"/>
     <pt_BR txt="Barra de ferramentas vertical"/>
@@ -27850,6 +27850,7 @@
     <nl txt="Neemt nu op"/>
     <sl txt="Snemanje"/>
     <pt_BR txt="Gravando"/>
+    <sr_latin txt="Snimanje"/>
   </Msg>
   <Msg id="stopped">
     <en txt="Stopped"/>
@@ -27858,6 +27859,7 @@
     <nl txt="Gestopt"/>
     <sl txt="Ustavljeno"/>
     <pt_BR txt="Parado"/>
+    <sr_latin txt="Zaustavljeno"/>
   </Msg>
   <Msg id="paused">
     <en txt="Paused"/>
@@ -27866,6 +27868,7 @@
     <nl txt="Gepauzeerd"/>
     <sl txt="Premor"/>
     <pt_BR txt="Pausado"/>
+    <sr_latin txt="Pauzirano"/>
   </Msg>
   <Msg id="playing">
     <en txt="Playing"/>
@@ -27874,17 +27877,34 @@
     <nl txt="Speelt af"/>
     <sl txt="Predvajanje"/>
     <pt_BR txt="Reproduzindo"/>
+    <sr_latin txt="Pušta se"/>
   </Msg>
   <Msg id="shutdownquestion">
     <en txt="Shutdown the Rocrail server too?"/>
+    <de txt="Auch den Rocrail-Server herunterfahren?"/>
+    <nl txt="De Rocrail server ook beëindigen?"/>
+    <pt_BR txt="Desligar o servidor Rocrail também?"/>
+    <sl txt="Ustavim tudi Rocrail strežnik?"/>
+    <sr_latin txt="Zatvori i Rocrail server?"/>
   </Msg>
   <Msg id="toolbar">
     <en txt="Toolbar"/>
+    <de txt="Werkzeugleiste"/>
+    <nl txt="Werkbalk"/>
+    <pt_BR txt="Barra de ferramentas"/>
+    <sl txt="Orodna vrstica"/>
   </Msg>
-  <Msg id="freeblockonenter"> 
-    <en txt="Free previous block on enter"/> 
+  <Msg id="freeblockonenter">
+    <en txt="Free previous block on enter"/>
+    <de txt="Vorherigen Block bei Enter freimelden"/>
+    <nl txt="Geef vorige block vrij bij enter"/>
+    <pt_BR txt="Liberar bloco anterior quando entrar"/>
+    <sl txt="Sprosti prejšnji odsek ob vhodu"/>
   </Msg>
   <Msg id="buslength">
     <en txt="Bus %d length"/>
+    <nl txt="Bus %d lengte"/>
+    <pt_BR txt="Comprimento do barramento %d"/>
+    <sl txt="Dolžina vodila %d"/>
   </Msg>
 </Messages>
