@@ -2097,6 +2097,15 @@ void BidibIdentDlg::onUsernameSet( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onHelp( wxCommandEvent& event ) {
-  wxGetApp().openLink( "bidib:bidib-config" );
+  switch( m_Notebook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "bidib:bidib-config", "index" ); break;
+  case 1: wxGetApp().openLink( "bidib:bidib-config", "features" ); break;
+  case 2: wxGetApp().openLink( "bidib:bidib-config", "accessory" ); break;
+  case 3: wxGetApp().openLink( "bidib:bidib-config", "portsetup" ); break;
+  case 4: wxGetApp().openLink( "bidib:bidib-config", "channelsetup" ); break;
+  case 5: wxGetApp().openLink( "bidib:bidib-config", "macro" ); break;
+  case 6: wxGetApp().openLink( "bidib:bidib-config", "firmwareupdate" ); break;
+  default: wxGetApp().openLink( "bidib:bidib-config" ); break;
+  }
 }
 

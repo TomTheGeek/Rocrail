@@ -2469,13 +2469,18 @@ void CBusNodeDlg::onReport( wxCommandEvent& event ) {
 
 void CBusNodeDlg::onHelp( wxCommandEvent& event ) {
   switch( m_NoteBook->GetSelection() ) {
-  case 5: wxGetApp().openLink( "can-gca1e" ); break;
-  case 6: wxGetApp().openLink( "can-gca2" ); break;
-  case 7: wxGetApp().openLink( "can-gc4" ); break;
-  case 8: wxGetApp().openLink( "can-gc6" ); break;
-  case 9: wxGetApp().openLink( "can-gc7" ); break;
-  case 10: wxGetApp().openLink( "can-gc8" ); break;
-  case 11: wxGetApp().openLink( "can-gcln" ); break;
+  case 0: wxGetApp().openLink( "cbus:flim", "nodenumber" ); break;
+  case 1: wxGetApp().openLink( "cbus:flim", "index" ); break;
+  case 2: wxGetApp().openLink( "cbus:flim", "variables" ); break;
+  case 3: wxGetApp().openLink( "cbus:flim", "events" ); break;
+  case 4: wxGetApp().openLink( "cbus:flim", "firmware" ); break;
+  case 5: wxGetApp().openLink( "can-gca1e", "setup" ); break;
+  case 6: wxGetApp().openLink( "can-gca2", "setup" ); break;
+  case 7: wxGetApp().openLink( "can-gc4", "setup" ); break;
+  case 8: wxGetApp().openLink( "can-gc6", "setup" ); break;
+  case 9: wxGetApp().openLink( "can-gc7", "setup" ); break;
+  case 10: wxGetApp().openLink( "can-gc8", "setup" ); break;
+  case 11: wxGetApp().openLink( "can-gcln", "setup" ); break;
   default: wxGetApp().openLink( "cbus:flim" ); break;
   }
 }
