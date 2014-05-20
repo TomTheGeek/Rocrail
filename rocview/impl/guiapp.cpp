@@ -352,7 +352,7 @@ void RocGui::openLink( const char* pagename, const char* section ) {
   const char* lang = wGui.getlang(wxGetApp().getIni());
   char* pagefilename = NULL;
 
-  if( !(StrOp.equals( wGui.lang_german, lang ) || StrOp.equals( wGui.lang_italien, lang ) || StrOp.equals( wGui.lang_dutch, lang )) )
+  if( !( StrOp.equals( wGui.lang_german, lang ) || StrOp.equals( wGui.lang_italien, lang ) ) )
     lang = wGui.lang_english;
 
   if( section == NULL )
