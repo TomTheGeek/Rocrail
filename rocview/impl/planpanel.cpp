@@ -176,6 +176,7 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_AddRoadFBack    , PlanPanel::addFBack )
 
   EVT_MENU( ME_PlanProps , PlanPanel::OnPanelProps )
+  EVT_MENU( ME_PanelHelp , PlanPanel::OnPanelHelp )
   EVT_MENU( ME_PlanColor , PlanPanel::OnBackColor )
   EVT_MENU( ME_ModProps , PlanPanel::OnModProps )
   EVT_MENU( ME_AddPlan   , PlanPanel::OnAddPanel )
@@ -406,6 +407,11 @@ void PlanPanel::OnPanelProps(wxCommandEvent& event) {
     }
     dlg->Destroy();
   }
+}
+
+
+void PlanPanel::OnPanelHelp(wxCommandEvent& event) {
+  wxGetApp().openLink( "track-diagram" );
 }
 
 
@@ -1125,6 +1131,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       }
       menu.Append( ME_PlanColor, wxGetApp().getMenu("panelcolor") );
       menu.Append( ME_PlanProps, wxGetApp().getMenu("properties") );
+      menu.Append( ME_PanelHelp, wxGetApp().getMenu("help") );
       PopupMenu(&menu, event.GetX(), event.GetY() );
     }
 }

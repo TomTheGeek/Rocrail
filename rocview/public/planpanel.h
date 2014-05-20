@@ -92,6 +92,7 @@ public:
   void OnRotate(wxCommandEvent& event);
   void removeItemFromList( iONode item );
   void OnPanelProps(wxCommandEvent& event);
+  void OnPanelHelp(wxCommandEvent& event);
   void OnModProps(wxCommandEvent& event);
   BasePanel* updateZLevel(iONode zlevel);
   void OnAddPanel(wxCommandEvent& event);
@@ -204,6 +205,7 @@ enum {
   ME_AddSelTab,
   ME_AddText,
   ME_PlanProps,
+  ME_PanelHelp,
   ME_ModProps,
   ME_AddPlan,
   ME_PanelSelect,
