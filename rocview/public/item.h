@@ -54,6 +54,7 @@ public:
   void OnMouseLeave(wxMouseEvent& event);
   void OnPopup(wxMouseEvent& event);
   void OnProps(wxCommandEvent& event);
+  void OnHelp(wxCommandEvent& event);
   void OnRotate(wxCommandEvent& event);
   void OnSelect(wxCommandEvent& event);
   void OnType(wxCommandEvent& event);

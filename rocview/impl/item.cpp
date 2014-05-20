@@ -114,6 +114,7 @@ static double PI25DT = 3.141592653589793238462643;
 enum {
     // menu items
     ME_Props = 1,
+    ME_ItemHelp,
     ME_Rotate,
     ME_North,
     ME_East,
@@ -193,6 +194,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_LEFT_DCLICK(Symbol::OnLeftDClick  )
 
   EVT_MENU     (ME_Props  , Symbol::OnProps  )
+  EVT_MENU     (ME_ItemHelp  , Symbol::OnHelp  )
   EVT_MENU     (ME_Loc    , Symbol::OnLoc    )
   EVT_MENU     (ME_UnLoc  , Symbol::OnUnLoc  )
   EVT_MENU     (ME_PanelSelect , Symbol::OnSelect )
@@ -1885,6 +1887,8 @@ void Symbol::OnPopup(wxMouseEvent& event)
     if( !StrOp.equals( wStage.name(), NodeOp.getName(m_Props) ))
       mi->Enable( !wxGetApp().getFrame()->isAutoMode() || !wxGetApp().isRestrictedEdit() );
 
+    menu.Append( ME_ItemHelp , wxGetApp().getMenu("help") );
+
     if( wxGetApp().getFrame()->isEditMode() ) {
       menu.Append( ME_Delete, wxGetApp().getMenu("delete") );
 
@@ -2318,6 +2322,32 @@ void Symbol::OnInfo(wxCommandEvent& event) {
     StrOp.free(msg);
   }
 }
+
+void Symbol::OnHelp(wxCommandEvent& event) {
+  if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "block" );
+  else if( StrOp.equals( wSwitch.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "switch" );
+  else if( StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "signal" );
+  else if( StrOp.equals( wFeedback.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "sensor" );
+  else if( StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "tracks" );
+  else if( StrOp.equals( wStage.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "stage" );
+  else if( StrOp.equals( wTurntable.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "turntable" );
+  else if( StrOp.equals( wOutput.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "output" );
+  else if( StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "text" );
+  else if( StrOp.equals( wSelTab.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "seltab" );
+  else if( StrOp.equals( wRoute.name(), NodeOp.getName( m_Props ) ) )
+    wxGetApp().openLink( "route" );
+}
+
 
 void Symbol::OnProps(wxCommandEvent& event) {
   bool refresh = true;
