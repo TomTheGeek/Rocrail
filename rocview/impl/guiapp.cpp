@@ -348,18 +348,20 @@ wxString RocGui::getMenu( const char* key ) {
 wxString RocGui::getTip( const char* key ) {
   return wxString(ResOp.getTip( m_Res, key ),wxConvUTF8);
 }
-void RocGui::openLink( const char* pagename ) {
+void RocGui::openLink( const char* pagename, const char* section ) {
   const char* lang = wGui.getlang(wxGetApp().getIni());
   char* pagefilename = NULL;
-  if( StrOp.equals( wGui.lang_german, lang ) )
-    pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-de", pagename);
-  else if( StrOp.equals( wGui.lang_italien, lang ) )
-    pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-it", pagename);
-  else if( StrOp.equals( wGui.lang_dutch, lang ) )
-    pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-nl", pagename);
+
+  if( !(StrOp.equals( wGui.lang_german, lang ) || StrOp.equals( wGui.lang_italien, lang ) || StrOp.equals( wGui.lang_dutch, lang )) )
+    lang = wGui.lang_english;
+
+  if( section == NULL )
+    pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-%s", pagename, lang);
   else
-    pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-en", pagename);
+    pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-%s#%s", pagename, lang, section);
+
   wxLaunchDefaultBrowser(wxString(pagefilename,wxConvUTF8 ), wxBROWSER_NEW_WINDOW );
+  StrOp.free(pagefilename);
 }
 
 

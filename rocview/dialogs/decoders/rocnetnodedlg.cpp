@@ -1837,6 +1837,15 @@ void RocnetNodeDlg::onChannelTest( wxCommandEvent& event ) {
 
 
 void RocnetNodeDlg::onHelp( wxCommandEvent& event ) {
-  wxGetApp().openLink( "rocnet:rocnetnode-setup" );
+  switch( m_NodeBook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "rocnet:rocnetnode-setup", "index" ); break;
+  case 1: wxGetApp().openLink( "rocnet:rocnetnode-setup", "rocnet" ); break;
+  case 2: wxGetApp().openLink( "rocnet:rocnetnode-setup", "options" ); break;
+  case 3: wxGetApp().openLink( "rocnet:rocnetnode-setup", "portsetup" ); break;
+  case 4: wxGetApp().openLink( "rocnet:rocnetnode-setup", "channelsetup" ); break;
+  case 5: wxGetApp().openLink( "rocnet:rocnetnode-setup", "macro" ); break;
+  case 6: wxGetApp().openLink( "rocnet:rocnetnode-setup", "update" ); break;
+  default: wxGetApp().openLink( "rocnet:rocnetnode-setup" ); break;
+  }
 }
 
