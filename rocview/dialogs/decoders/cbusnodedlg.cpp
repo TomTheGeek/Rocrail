@@ -2468,6 +2468,15 @@ void CBusNodeDlg::onReport( wxCommandEvent& event ) {
 
 
 void CBusNodeDlg::onHelp( wxCommandEvent& event ) {
-  wxGetApp().openLink( "cbus:flim" );
+  switch( m_NoteBook->GetSelection() ) {
+  case 5: wxGetApp().openLink( "can-gca1e" ); break;
+  case 6: wxGetApp().openLink( "can-gca2" ); break;
+  case 7: wxGetApp().openLink( "can-gc4" ); break;
+  case 8: wxGetApp().openLink( "can-gc6" ); break;
+  case 9: wxGetApp().openLink( "can-gc7" ); break;
+  case 10: wxGetApp().openLink( "can-gc8" ); break;
+  case 11: wxGetApp().openLink( "can-gcln" ); break;
+  default: wxGetApp().openLink( "cbus:flim" ); break;
+  }
 }
 
