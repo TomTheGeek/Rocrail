@@ -2714,7 +2714,7 @@ void BlockDialog::OnHelpClick( wxCommandEvent& event )
   case 4: wxGetApp().openLink( "block-details" ); break;
   case 5: wxGetApp().openLink( "block-routes" ); break;
   case 6: wxGetApp().openLink( "block-int" ); break;
-  case 7: wxGetApp().openLink( "block_permissions" ); break;
+  case 7: wxGetApp().openLink( "block-permissions" ); break;
   default: wxGetApp().openLink( "block" ); break;
   }
 }
