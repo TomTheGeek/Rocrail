@@ -132,7 +132,6 @@ RocrailIniDialog::RocrailIniDialog( wxWindow* parent, iONode props )
   initLabels();
   initValues();
 
-
   m_GeneralPanel->GetSizer()->Layout();
   m_TracePanel->GetSizer()->Layout();
   m_ServicePanel->GetSizer()->Layout();
@@ -503,6 +502,7 @@ void RocrailIniDialog::initValues() {
 
   // Trace
   m_Debug->SetValue( wTrace.isdebug( trace ) );
+  m_Debug->Enable( wTrace.isdebug( trace ) ? true:false );
   m_Info->SetValue( wTrace.isinfo( trace ) );
   m_Calc->SetValue( wTrace.iscalc( trace ) );
   m_Byte->SetValue( wTrace.isbyte( trace ) );
