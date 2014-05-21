@@ -271,6 +271,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( wxID_HELP         , RocGuiFrame::OnHelp)
     EVT_MENU( ME_RUG            , RocGuiFrame::OnRUG)
     EVT_MENU( ME_GCA            , RocGuiFrame::OnGCA)
+    EVT_MENU( ME_ROCNETHELP     , RocGuiFrame::OnRocnetHelp)
     EVT_MENU( ME_OPENDCC        , RocGuiFrame::OnOpenDCC)
     EVT_MENU( ME_DonKey         , RocGuiFrame::OnDonKey)
     EVT_MENU( ME_DonKeyInfo     , RocGuiFrame::OnDonKeyInfo)
@@ -2164,6 +2165,11 @@ void RocGuiFrame::initFrame() {
       ME_GCA, wxT("Giling Computer Applications..."), wxT("LocoNet - CBus - Interfaces") );
   gca_menuHelp->SetBitmap(*_img_gca);
   menuHelp->Append(gca_menuHelp);
+
+  wxMenuItem *rocnet_menuHelp = new wxMenuItem(menuHelp,
+      ME_ROCNETHELP, wxT("RocNet..."), wxT("RocNetNode on RaspBerryPi(c)") );
+  rocnet_menuHelp->SetBitmap(*_img_rocnet_logo);
+  menuHelp->Append(rocnet_menuHelp);
 
   wxMenuItem *opendcc_menuHelp = new wxMenuItem(menuHelp,
       ME_OPENDCC, wxT("OpenDCC..."), wxT("OpenDCC Z1 - BiDiB") );
@@ -4458,6 +4464,10 @@ void RocGuiFrame::OnRUG(wxCommandEvent& WXUNUSED(event)) {
 
 void RocGuiFrame::OnGCA(wxCommandEvent& WXUNUSED(event)) {
   wxLaunchDefaultBrowser(wxT("http://www.phgiling.net"), wxBROWSER_NEW_WINDOW );
+}
+
+void RocGuiFrame::OnRocnetHelp(wxCommandEvent& WXUNUSED(event)) {
+  wxGetApp().openLink( "rocnet:rocnetnode" );
 }
 
 void RocGuiFrame::OnOpenDCC(wxCommandEvent& WXUNUSED(event)) {

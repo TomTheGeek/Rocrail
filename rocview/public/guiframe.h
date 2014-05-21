@@ -114,6 +114,7 @@ public:
   void OnHelp(wxCommandEvent& event);
   void OnRUG(wxCommandEvent& event);
   void OnGCA(wxCommandEvent& event);
+  void OnRocnetHelp(wxCommandEvent& event);
   void OnOpenDCC(wxCommandEvent& event);
   void OnTranslations(wxCommandEvent& event);
   void OnBug(wxCommandEvent& event);
@@ -630,6 +631,7 @@ enum
     NEWUPDATES_EVENT,
     ME_RUG,
     ME_GCA,
+    ME_ROCNETHELP,
     ME_OPENDCC,
     ME_Translations,
     ME_Bug,
