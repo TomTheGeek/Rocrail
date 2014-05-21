@@ -4806,6 +4806,7 @@ BitmapButton::BitmapButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitm
   m_Parent = parent;
   this->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BitmapButton::OnLeftDown ), NULL, this );
   this->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( BitmapButton::OnLeftUp ), NULL, this );
+  this->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( BitmapButton::OnRightUp ), NULL, this );
 }
 
 
@@ -4821,6 +4822,28 @@ void BitmapButton::OnLeftUp(wxMouseEvent& event) {
     dlg->Destroy();
   }
 }
+
+void BitmapButton::OnMenu( wxCommandEvent& event ) {
+  int menuItem = event.GetId();
+  if( menuItem == 1001) {
+    wxGetApp().getFrame()->OnLocProps(event);
+  }
+  else if( menuItem == 1002) {
+    wxGetApp().openLink( "loc-tab" );
+  }
+}
+
+
+void BitmapButton::OnRightUp(wxMouseEvent& event) {
+  if( m_LC != NULL && m_LC->getLocProps() != NULL ) {
+    wxMenu menu( wxString(wLoc.getid( m_LC->getLocProps() ),wxConvUTF8) );
+    menu.Append( 1001, wxGetApp().getMenu("properties") );
+    menu.Append( 1002, wxGetApp().getMenu("help") );
+    menu.Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BitmapButton::OnMenu ), NULL, this );
+    PopupMenu(&menu, event.GetX(), event.GetY() );
+  }
+}
+
 void BitmapButton::OnLeftDown(wxMouseEvent& event) {
   if( m_LC != NULL && m_LC->getLocProps() != NULL ) {
     wxTextDataObject my_data(_T("moveto:") + wxString(wLoc.getid( m_LC->getLocProps() ),wxConvUTF8)+_T("::"));
@@ -5030,7 +5053,7 @@ void RocGuiFrame::OnLocAssignConsist(wxCommandEvent& event) {
 
 
 void RocGuiFrame::OnLocoHelp(wxCommandEvent& event) {
-  wxGetApp().openLink( "loc" );
+  wxGetApp().openLink( "loc-tab" );
 }
 
 

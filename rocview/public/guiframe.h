@@ -73,6 +73,8 @@ public:
       long style = wxBU_AUTODRAW, const wxValidator& validator = wxDefaultValidator, const wxString& name = _T("button"));
   void OnLeftDown(wxMouseEvent& event);
   void OnLeftUp(wxMouseEvent& event);
+  void OnRightUp(wxMouseEvent& event);
+  void OnMenu(wxCommandEvent& event);
   void setLC(LC* lc) {m_LC = lc;};
 private:
   LC*  m_LC;
