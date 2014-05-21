@@ -1343,13 +1343,13 @@ static void _tick( iOAction inst, int seconds ) {
 
   if( wAction.istimed(data->action) ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-        "action [%s] random=%d every=%d enabled=%d action=%d:%02d.%02d local=%d:%02d.%02d",
+        "action [%s] random=%d every=%d enabled=%d action=%d:%02d.%02d local=%d:%02d.%02d ticker=%d randomsecs=%d",
         wAction.getid(data->action), wAction.israndom(data->action), wAction.isevery(data->action), data->enabled,
         wAction.gethour(data->action), wAction.getmin(data->action), wAction.getsec(data->action),
-        lTime->tm_hour, lTime->tm_min, lTime->tm_sec);
+        lTime->tm_hour, lTime->tm_min, lTime->tm_sec, data->ticker, data->randomsecs);
 
     if( wAction.israndom(data->action) ) {
-      if( data->randomsecs == data->ticker ) {
+      if( data->randomsecs <= data->ticker ) {
         _exec( inst, NULL );
 
         int secs = wAction.gethour(data->action) * 60 * 60 + wAction.getmin(data->action) * 60 + wAction.getsec(data->action);
