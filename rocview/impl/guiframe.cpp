@@ -428,6 +428,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU     (ME_GridLocDeActivate, RocGuiFrame::OnLocDeActivate)
     EVT_MENU     (ME_GridLocAssignConsist , RocGuiFrame::OnLocAssignConsist  )
     EVT_MENU     (ME_GridLocReleaseConsist, RocGuiFrame::OnLocReleaseConsist  )
+    EVT_MENU     (ME_LocoHelp, RocGuiFrame::OnLocoHelp  )
 
     EVT_MENU( ME_F1 , RocGuiFrame::OnButton)
     EVT_MENU( ME_F2 , RocGuiFrame::OnButton)
@@ -4927,6 +4928,7 @@ void RocGuiFrame::OnCellRightClick( wxGridEvent& event ) {
     menu.AppendSeparator();
     menu.Append( ME_GridLocAssignConsist, wxGetApp().getMenu("assigntrain"), wxGetApp().getTip("assigntrain") );
     menu.Append( ME_GridLocReleaseConsist, wxGetApp().getMenu("releasetrain"), wxGetApp().getTip("releasetrain") );
+    menu.Append( ME_LocoHelp, wxGetApp().getMenu("help"), wxGetApp().getTip("help") );
     PopupMenu(&menu );
   }
   else {
@@ -5024,6 +5026,11 @@ void RocGuiFrame::OnLocAssignConsist(wxCommandEvent& event) {
       cmd->base.del(cmd);
     }
   }
+}
+
+
+void RocGuiFrame::OnLocoHelp(wxCommandEvent& event) {
+  wxGetApp().openLink( "loc" );
 }
 
 

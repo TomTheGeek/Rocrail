@@ -844,6 +844,9 @@ void CV::OnButton(wxCommandEvent& event)
       doCV( wProgram.get, 67, 0 );
     }
   }
+  else if( event.GetEventObject() == m_CVHelp ) {
+    wxGetApp().openLink( "pt" );
+  }
   else {
     TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "default doCV" );
     doCV( event.GetId() );
@@ -1158,6 +1161,7 @@ bool CV::Create()
     m_SpeedCurve = NULL;
     m_loadFile = NULL;
     m_saveFile = NULL;
+    m_CVHelp = NULL;
 
     m_CVMainBox = NULL;
     m_CVSubBox1 = NULL;
@@ -1451,6 +1455,8 @@ void CV::CreateControls() {
   buttonSizer1->Add(m_SpeedCurve, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
   m_Config = new wxButton( m_ItemPanel, -1, _("Config"), wxDefaultPosition, wxDefaultSize, 0 );
   buttonSizer1->Add(m_Config, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
+  m_CVHelp = new wxButton( m_ItemPanel, -1, _("Help"), wxDefaultPosition, wxDefaultSize, 0 );
+  buttonSizer1->Add(m_CVHelp, 0, wxALIGN_CENTER_VERTICAL|wxALL, 1);
 
   wxFlexGridSizer* buttonSizer2 = new wxFlexGridSizer(0,3,0,0);
   m_PanelMainBox->Add(buttonSizer2, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);

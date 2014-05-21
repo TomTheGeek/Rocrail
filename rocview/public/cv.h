@@ -246,6 +246,7 @@ private:
     wxButton* m_CopyFrom;
     wxButton* m_WriteAll;
     wxButton* m_ReadAll;
+    wxButton* m_CVHelp;
 
     wxStaticText* m_labTable;
     wxGrid*       m_CVTable;

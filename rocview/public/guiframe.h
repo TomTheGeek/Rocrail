@@ -233,6 +233,7 @@ public:
   void OnLocDeActivate(wxCommandEvent& event);
   void OnLocAssignConsist(wxCommandEvent& event);
   void OnLocReleaseConsist(wxCommandEvent& event);
+  void OnLocoHelp(wxCommandEvent& event);
 
   void OnPanelProps(wxCommandEvent& event);
   void OnAddPanel(wxCommandEvent& event);
@@ -557,6 +558,7 @@ enum
     ME_GridLocDeActivate,
     ME_GridLocAssignConsist,
     ME_GridLocReleaseConsist,
+    ME_LocoHelp,
     UPDATE_ACTIVELOCS_EVENT,
     UPDATE_LOC_IMAGE_EVENT,
     CV_EVENT,
