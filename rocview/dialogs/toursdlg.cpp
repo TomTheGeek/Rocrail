@@ -30,6 +30,7 @@
 #endif
 
 #include "rocview/public/guiapp.h"
+#include "rocview/dialogs/scheduledialog.h"
 
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -69,6 +70,7 @@ ToursDlg::ToursDlg( wxWindow* parent, iONode tour, bool save, const char* startb
   m_SchedulesPanel->GetSizer()->Layout();
 
   m_TourBook->Fit();
+  m_TourBook->SetSelection(0);
 
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
@@ -101,6 +103,9 @@ void ToursDlg::initLabels() {
   // Schedules
   m_EntryAdd->SetLabel( wxGetApp().getMsg( "add" ) );
   m_EntryDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_Up->SetLabel( wxGetApp().getMsg( "up" ) );
+  m_Down->SetLabel( wxGetApp().getMsg( "down" ) );
+  m_ScheduleProps->SetLabel( wxGetApp().getMsg( "properties" ) + wxT("...") );
 
   // Buttons
   m_DefaultButtonsOK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -135,6 +140,7 @@ void ToursDlg::initIndex() {
       for( int i = 0; i < cnt; i++ ) {
         iONode tour = NodeOp.getChild( tourlist, i );
         const char* id = wTour.getid( tour );
+        TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "initIndex add [%s] (%d of %d)", id, i, cnt );
         if( id != NULL ) {
           ListOp.add(list, (obj)tour);
         }
@@ -482,5 +488,83 @@ void ToursDlg::onShowAll( wxCommandEvent& event ){
 
 void ToursDlg::onHelp( wxCommandEvent& event ) {
   wxGetApp().openLink( "tours" );
+}
+
+
+void ToursDlg::onScheduleProps( wxCommandEvent& event ) {
+  int sel = m_EntryList->GetSelection();
+  if( sel != wxNOT_FOUND ) {
+    char* scid = StrOp.dup((const char*)m_EntryList->GetStringSelection().mb_str(wxConvUTF8));
+    iONode model = wxGetApp().getModel();
+
+    iONode sclist = wPlan.getsclist( model );
+    TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "properties for %s...", scid );
+    if( sclist != NULL ) {
+      int cnt = NodeOp.getChildCnt( sclist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sc = NodeOp.getChild( sclist, i );
+        if( StrOp.equals( wSchedule.getid( sc ), scid) ) {
+          ScheduleDialog*  dlg = new ScheduleDialog(this, sc );
+          if( wxID_OK == dlg->ShowModal() ) {
+            /* Notify RocRail. */
+          }
+          dlg->Destroy();
+          break;
+        }
+      }
+    }
+    StrOp.free(scid);
+  }
+  else
+    TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "no selection..." );
+}
+
+
+void ToursDlg::onUp( wxCommandEvent& event ) {
+  int sel = m_EntryList->GetSelection();
+  if( sel != wxNOT_FOUND && sel != 0 ) {
+    m_EntryList->Insert(m_EntryList->GetString(sel), sel-1);
+    m_EntryList->SetSelection(sel-1);
+    m_EntryList->Delete(sel+1);
+    onEntrySelect(event);
+  }
+}
+
+
+void ToursDlg::onDown( wxCommandEvent& event ) {
+  int sel = m_EntryList->GetSelection();
+  if( sel != wxNOT_FOUND && sel != (m_EntryList->GetCount() - 1) ) {
+    m_EntryList->Insert(m_EntryList->GetString(sel), sel+2);
+    m_EntryList->SetSelection(sel+1);
+    m_EntryList->Delete(sel);
+    onEntrySelect(event);
+  }
+}
+
+
+void ToursDlg::onCopy( wxCommandEvent& event ) {
+  if( m_Props != NULL ) {
+    iONode model = wxGetApp().getModel();
+    if( model != NULL ) {
+      iONode tourlist = wPlan.gettourlist( model );
+      if( tourlist == NULL ) {
+        tourlist = NodeOp.inst( wTourList.name(), model, ELEMENT_NODE );
+        NodeOp.addChild( model, tourlist );
+      }
+
+      if( tourlist != NULL ) {
+        iONode tourcopy = (iONode)NodeOp.base.clone( m_Props );
+        char* id = StrOp.fmt( "%s (copy)", wTour.getid(tourcopy));
+        wTour.setid(tourcopy, id);
+        StrOp.free(id);
+        NodeOp.addChild( tourlist, tourcopy );
+        int cnt = NodeOp.getChildCnt( tourlist );
+        TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "copied tour [%s] (cnt=%d)", wTour.getid(tourcopy), cnt );
+        initIndex();
+      }
+
+    }
+  }
+
 }
 

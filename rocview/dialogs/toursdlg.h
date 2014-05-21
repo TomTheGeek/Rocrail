@@ -61,6 +61,10 @@ public:
   void onOK( wxCommandEvent& event );
   void onShowAll( wxCommandEvent& event );
   void onHelp( wxCommandEvent& event );
+  void onScheduleProps( wxCommandEvent& event );
+  void onUp( wxCommandEvent& event );
+  void onDown( wxCommandEvent& event );
+  void onCopy( wxCommandEvent& event );
 
   static bool isFirst(iONode tour, const char* startblock);
 
