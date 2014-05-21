@@ -2151,7 +2151,7 @@ void RocGuiFrame::initFrame() {
   help_menuHelp->SetBitmap(*_img_manual);
   menuHelp->Append(help_menuHelp);
 
-  wxMenuItem *rug_menuHelp = new wxMenuItem(menuHelp, ME_RUG, wxGetApp().getMenu("usergroup"), wxGetApp().getTip("usergroup") );
+  wxMenuItem *rug_menuHelp = new wxMenuItem(menuHelp, ME_RUG, wxT("Forum") );
   rug_menuHelp->SetBitmap(*_img_rug);
   menuHelp->Append(rug_menuHelp);
 
@@ -4453,7 +4453,7 @@ void RocGuiFrame::OnHelp(wxCommandEvent& WXUNUSED(event)) {
 }
 
 void RocGuiFrame::OnRUG(wxCommandEvent& WXUNUSED(event)) {
-  wxLaunchDefaultBrowser(wxGetApp().getMsg("rug"), wxBROWSER_NEW_WINDOW );
+  wxLaunchDefaultBrowser(wxT("http://forum.rocrail.net"), wxBROWSER_NEW_WINDOW );
 }
 
 void RocGuiFrame::OnGCA(wxCommandEvent& WXUNUSED(event)) {
