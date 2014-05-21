@@ -154,6 +154,7 @@ ScheduleDialog::ScheduleDialog( wxWindow* parent, iONode p_Props, bool save, con
     initSchedule();
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_SCHEDULE_DESTINATIONS );
     wxPostEvent( this, event );
+    m_NoteBook->SetSelection(1);
   }
 
 }
