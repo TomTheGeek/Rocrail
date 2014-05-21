@@ -76,18 +76,32 @@ BEGIN_EVENT_TABLE( TimedActions, wxDialog )
 ////@begin TimedActions event table entries
     EVT_LIST_ITEM_SELECTED( ID_LISTCTRL, TimedActions::OnListctrlSelected )
     EVT_LIST_COL_CLICK( ID_LISTCTRL, TimedActions::OnListctrlColLeftClick )
+
     EVT_TEXT_ENTER( ID_AC_IDNAME, TimedActions::OnApplyClick )
+
     EVT_BUTTON( ID_BT_ADD, TimedActions::OnBtAddClick )
+
     EVT_BUTTON( ID_BT_DEL, TimedActions::OnBtDelClick )
+
     EVT_BUTTON( ID_BUTTON_AC_DOC, TimedActions::OnButtonAcDocClick )
+
     EVT_CHOICE( ID_ACTIONS_TYPE, TimedActions::OnActionsTypeSelected )
+
     EVT_BUTTON( ID_ACTIONS_EXEC_CMD, TimedActions::OnActionsExecCmdClick )
+
+    EVT_CHECKBOX( ID_ACTION_RANDOM, TimedActions::OnActionRandomClick )
+
     EVT_LISTBOX( ID_USELIST, TimedActions::OnUselistSelected )
     EVT_LISTBOX_DCLICK( ID_USELIST, TimedActions::OnUselistDoubleClicked )
+
     EVT_BUTTON( wxID_OK, TimedActions::OnOkClick )
+
     EVT_BUTTON( wxID_CANCEL, TimedActions::OnCancelClick )
+
     EVT_BUTTON( wxID_APPLY, TimedActions::OnApplyClick )
+
     EVT_BUTTON( wxID_HELP, TimedActions::OnHelpClick )
+
 ////@end TimedActions event table entries
 
 END_EVENT_TABLE()
@@ -233,6 +247,7 @@ void TimedActions::initValues() {
   m_Sec->SetValue( wAction.getsec( m_Props) );
   m_Random->SetValue(wAction.israndom( m_Props )?true:false);
   m_Every->SetValue(wAction.isevery( m_Props )?true:false);
+  m_Every->Enable(!m_Random->IsChecked());
   m_ActTime->SetValue( wAction.getactiontime( m_Props) );
   m_Command->SetValue( wxString( wAction.getcmd( m_Props), wxConvUTF8) );
   m_Parameter->SetValue( wxString( wAction.getparam( m_Props), wxConvUTF8) );
@@ -669,7 +684,7 @@ void TimedActions::CreateControls()
     m_Every->SetValue(false);
     itemBoxSizer34->Add(m_Every, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_Random = new wxCheckBox( m_DefinitionPanel, wxID_ANY, _("Random"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Random = new wxCheckBox( m_DefinitionPanel, ID_ACTION_RANDOM, _("Random"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Random->SetValue(false);
     itemBoxSizer34->Add(m_Random, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
@@ -1163,5 +1178,15 @@ void TimedActions::OnButtonAcDocClick( wxCommandEvent& event )
 void TimedActions::OnHelpClick( wxCommandEvent& event )
 {
   wxGetApp().openLink( "actions" );
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_ACTION_RANDOM
+ */
+
+void TimedActions::OnActionRandomClick( wxCommandEvent& event )
+{
+  m_Every->Enable(!m_Random->IsChecked());
 }
 

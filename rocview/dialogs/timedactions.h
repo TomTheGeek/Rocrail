@@ -52,6 +52,7 @@ class wxSpinCtrl;
 #define ID_ACTIONS_TYPE 10195
 #define ID_COMBOBOX 10371
 #define ID_ACTIONS_EXEC_CMD 10245
+#define ID_ACTION_RANDOM 10441
 #define ID_USEPANEL 10405
 #define ID_USELIST 10406
 #define ID_PANEL_INT 10399
@@ -123,6 +124,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONS_EXEC_CMD
     void OnActionsExecCmdClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_ACTION_RANDOM
+    void OnActionRandomClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_USELIST
     void OnUselistSelected( wxCommandEvent& event );
