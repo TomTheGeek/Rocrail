@@ -1554,7 +1554,7 @@ void RocGui::cleanupOldModel() {
 
 void RocGui::sendToRocrail( iONode cmd, bool disconnect ) {
   char* strCmd = NodeOp.base.toString( cmd );
-  sendToRocrail( strCmd, false, disconnect );
+  sendToRocrail( strCmd, false, disconnect, false );
   StrOp.free( strCmd );
 
   if( m_RCon != NULL ) {
@@ -1603,8 +1603,8 @@ bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect, bool sho
     TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "connecting... waitloops=%d", waitloops);
 
     if( m_Frame != NULL ) {
-      wxCursor cursor = wxCursor(wxCURSOR_WAIT);
-      m_Frame->SetCursor( cursor );
+      //wxCursor cursor = wxCursor(wxCURSOR_WAIT);
+      //m_Frame->SetCursor( cursor );
     }
 
     while( m_RCon == NULL && waitloops > 0 ) {
@@ -1615,16 +1615,21 @@ bool RocGui::sendToRocrail( char* szCmd, bool wait4rr, bool disconnect, bool sho
     }
 
     if( m_Frame != NULL ) {
-      wxCursor cursor = wxCursor(wxCURSOR_ARROW);
-      m_Frame->SetCursor( cursor );
+      //wxCursor cursor = wxCursor(wxCURSOR_ARROW);
+      //m_Frame->SetCursor( cursor );
     }
 
     if( m_RCon != NULL ) {
       m_bOffline = false;
       RConOp.setCallback( m_RCon, &rocrailCallback, (obj)this );
-      char* val = StrOp.fmt( "%s:%d", m_Host, m_Port );
-      m_Frame->SetStatusText( wxString(val,wxConvUTF8), status_rcon );
-      StrOp.free(val);
+      if( m_Frame != NULL ) {
+        char* val = StrOp.fmt( "%s:%d", m_Host, m_Port );
+        wxCommandEvent* evt = new wxCommandEvent( wxEVT_COMMAND_MENU_SELECTED, ME_SetStatusText );
+        evt->SetString(wxString(val,wxConvUTF8));
+        evt->SetExtraLong(status_rcon);
+        wxPostEvent( m_Frame, *evt );
+        StrOp.free(val);
+      }
     }
     else {
       // show popup with message
