@@ -45,6 +45,7 @@ class Clock : public wxPanel{
     void OnAdjustTime(wxCommandEvent& event);
     void OnFreezeTime(wxCommandEvent& event);
     void OnResumeTime(wxCommandEvent& event);
+    void OnHelp(wxCommandEvent& event);
     void SyncClock( iONode node );
     void stopTimer();
     void calculate();
@@ -76,6 +77,7 @@ enum {
   ME_AdjustTime = 201,
   ME_FreezeTime,
   ME_ResumeTime,
+  ME_ClockHelp,
 };
 
 #endif

@@ -65,6 +65,7 @@ BEGIN_EVENT_TABLE(Clock, wxPanel)
   EVT_MENU( ME_AdjustTime , Clock::OnAdjustTime )
   EVT_MENU( ME_FreezeTime , Clock::OnFreezeTime )
   EVT_MENU( ME_ResumeTime , Clock::OnResumeTime )
+  EVT_MENU( ME_ClockHelp  , Clock::OnHelp )
 END_EVENT_TABLE()
 
 Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_devider, int clocktype, bool showsecondhand)
@@ -136,6 +137,7 @@ void Clock::OnPopup(wxMouseEvent& event) {
   menu.Append( ME_AdjustTime, wxGetApp().getMenu("adjusttime") );
   menu.Append( ME_FreezeTime, wxGetApp().getMenu("freezetime") );
   menu.Append( ME_ResumeTime, wxGetApp().getMenu("resumetime") );
+  menu.Append( ME_ClockHelp, wxGetApp().getMenu("help") );
   PopupMenu(&menu, event.GetX(), event.GetY() );
 }
 
@@ -175,6 +177,10 @@ void Clock::OnResumeTime(wxCommandEvent& event) {
   iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
   wClock.setcmd( tick, wClock.go );
   wxGetApp().sendToRocrail( tick, false );
+}
+
+void Clock::OnHelp(wxCommandEvent& event) {
+  wxGetApp().openLink( "clock-adjust" );
 }
 
 void Clock::OnPaint(wxPaintEvent& event)
