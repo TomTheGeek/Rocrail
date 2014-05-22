@@ -46,6 +46,7 @@
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocview/public/guiapp.h"
 
@@ -136,6 +137,14 @@ void TrackDialog::initLabels() {
       for( int i = 0; i < cnt; i++ ) {
         iONode fb = NodeOp.getChild( fblist, i );
         ListOp.add(list, (obj)wFeedback.getid( fb ));
+      }
+    }
+    iONode colist = wPlan.getcolist( model );
+    if( colist != NULL ) {
+      int cnt = NodeOp.getChildCnt( colist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode co = NodeOp.getChild( colist, i );
+        ListOp.add(list, (obj)wOutput.getid( co ));
       }
     }
 

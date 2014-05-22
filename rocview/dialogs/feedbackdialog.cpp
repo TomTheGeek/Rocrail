@@ -49,6 +49,7 @@
 #include "rocrail/wrapper/public/FeedbackList.h"
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -190,6 +191,14 @@ void FeedbackDialog::initLabels() {
         iONode fb = NodeOp.getChild( fblist, i );
         //m_BlockID->Append( wxString(wFeedback.getid( fb ),wxConvUTF8), fb );
         ListOp.add(list, (obj)wFeedback.getid( fb ));
+      }
+    }
+    iONode colist = wPlan.getcolist( model );
+    if( colist != NULL ) {
+      int cnt = NodeOp.getChildCnt( colist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode co = NodeOp.getChild( colist, i );
+        ListOp.add(list, (obj)wOutput.getid( co ));
       }
     }
 

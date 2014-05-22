@@ -1740,7 +1740,7 @@ void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
                StrOp.equals( nodeName, wFeedback.name() ) || StrOp.equals( nodeName, wSwitch.name() ) ) {
         TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999,
             "feedback [%s] block event for id=[%s]", wFeedback.getid(node), item->getId() );
-        item->blockEvent( wFeedback.getid(node));
+        item->blockEvent( wItem.getid(node));
       }
     }
     tablenode = (wxNode*)m_ChildTable->Next();
@@ -1965,7 +1965,7 @@ void PlanPanel::modelEvent( iONode node ) {
       event.SetClientData( node->base.clone( node ) );
       wxPostEvent( this, event );
     }
-    if( StrOp.equals( wFeedback.name(), name ) ) {
+    if( StrOp.equals( wFeedback.name(), name ) || StrOp.equals( wOutput.name(), name ) ) {
       // could be invisible feedback for a turntable...
       TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999, "feedback event item=[%s]", key );
       iONode ini = wGui.getplanpanel(wxGetApp().getIni());
@@ -2023,6 +2023,18 @@ bool PlanPanel::isBlockOccupied( const char* id ) {
       }
     }
   }
+
+  list = wPlan.getcolist( model );
+  if( list != NULL ) {
+    int cnt = NodeOp.getChildCnt( list );
+    for( int i = 0; i < cnt; i++ ) {
+      iONode node = NodeOp.getChild( list, i );
+      if( id != NULL && StrOp.equals( id, wItem.getid(node) ) ) {
+        return StrOp.equals( wOutput.on, wOutput.getstate(node) );
+      }
+    }
+  }
+
   return false;
 }
 
