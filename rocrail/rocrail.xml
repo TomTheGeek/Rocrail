@@ -58,6 +58,7 @@
     <fun name="listThreads" vt="void" remark=""/>
     <fun name="getLibPath" vt="const char*" remark="Path to the rocrail libraries."/>
     <fun name="getImgPath" vt="const char*" remark="Path to images."/>
+    <fun name="getIconPath" vt="const char*" remark="Path to icons."/>
     <fun name="getrevno" vt="int"/>
     <fun name="isCreateModplan" vt="Boolean"/>
     <fun name="isRunAtStartup" vt="Boolean"/>

@@ -764,10 +764,9 @@ static void __callback( obj inst, iONode nodeA ) {
         if( wDataReq.getfilename(nodeA) != NULL && StrOp.len(wDataReq.getfilename(nodeA)) > 0 ) {
           iOFile f = NULL;
           Boolean smallimage = (wDataReq.gettype(nodeA) == wDataReq.smallimage) ? True:False;
-          char* filename = StrOp.fmt( "%s%c%s", AppOp.getImgPath(),
-              SystemOp.getFileSeparator(), imageFilename );
-          char* sfilename = StrOp.fmt( "%s%csmall%c%s", AppOp.getImgPath(),
-              SystemOp.getFileSeparator(), SystemOp.getFileSeparator(), imageFilename );
+          char* filename = StrOp.fmt( "%s%c%s", AppOp.getImgPath(), SystemOp.getFileSeparator(), imageFilename );
+          char* sfilename = StrOp.fmt( "%s%csmall%c%s", AppOp.getImgPath(), SystemOp.getFileSeparator(), SystemOp.getFileSeparator(), imageFilename );
+          char* ifilename = StrOp.fmt( "%s%c%s", AppOp.getIconPath(), SystemOp.getFileSeparator(), imageFilename );
 
           if( !wRocRail.isfsutf8(AppOp.getIni()) ) {
             if( smallimage && FileOp.exist( sfilename ) ) {
@@ -779,6 +778,9 @@ static void __callback( obj inst, iONode nodeA ) {
               char* tmp = filename;
               filename = SystemOp.utf2latin(filename);
               StrOp.free(tmp);
+              tmp = ifilename;
+              ifilename = SystemOp.utf2latin(ifilename);
+              StrOp.free(tmp);
             }
           }
 
@@ -786,9 +788,12 @@ static void __callback( obj inst, iONode nodeA ) {
             f = FileOp.inst( sfilename, OPEN_READONLY);
           else if(FileOp.exist( filename ))
             f = FileOp.inst( filename, OPEN_READONLY);
+          else if(FileOp.exist( ifilename ))
+            f = FileOp.inst( ifilename, OPEN_READONLY);
 
           StrOp.free(filename);
           StrOp.free(sfilename);
+          StrOp.free(ifilename);
 
           if( f != NULL ) {
             int   size    = FileOp.size(f);

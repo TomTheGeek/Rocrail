@@ -185,6 +185,11 @@ static const char* _getImgPath( void ) {
   return NULL;
 }
 
+static const char* _getIconPath( void ) {
+  if( __appinst != NULL )
+    return wRocRail.geticonpath(AppOp.getIni());
+}
+
 static int _getrevno( void ) {
   if( __appinst != NULL ) {
     iOAppData data = Data(__appinst);

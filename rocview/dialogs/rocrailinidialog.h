@@ -239,6 +239,8 @@ public:
     wxTextCtrl* m_LibPath;
     wxStaticText* m_labImgPath;
     wxTextCtrl* m_ImgPath;
+    wxStaticText* m_labIconPath;
+    wxTextCtrl* m_IconPath;
     wxStaticText* m_labIssuesPath;
     wxTextCtrl* m_IssuePath;
     wxStaticText* m_labSoundPath;

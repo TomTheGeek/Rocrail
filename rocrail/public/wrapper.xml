@@ -264,6 +264,7 @@
     <var name="libpath" vt="string" defval="." range="*" remark="Location of the rocrail libraries."/>
     <var name="issuepath" vt="string" defval="issues" range="*" remark="Location of the reported issues."/>
     <var name="imgpath" vt="string" defval="images" range="*" remark="Location of (loco)images."/>
+    <var name="iconpath" vt="string" defval="icons" range="*" remark="Location of (function)icons."/>
     <var name="soundpath" vt="string" defval="sounds" range="*" remark="Location of (loco)sounds."/>
     <var name="soundplayer" vt="string" defval="" range="*" remark="Sound player program."/>
     <var name="soundplayerlocation" vt="bool" defval="false" remark="Add loco location as second parameter."/>
