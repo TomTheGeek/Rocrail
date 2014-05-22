@@ -167,13 +167,14 @@ static void __checkAction( iOBlock inst, const char* state ) {
 
       iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
       if( Action != NULL ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block action [%s-%s]", data->id, data->locId );
         wActionCtrl.setbkid(action, data->id);
         wActionCtrl.setlcid(action, data->locId);
         ActionOp.exec(Action, action);
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "action state does not match: [%s-%s]",
           wActionCtrl.getstate( action ), state );
     }
 

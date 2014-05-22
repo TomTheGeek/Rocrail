@@ -86,6 +86,7 @@ static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
         resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
       else if( SystemOp.getProperty(startV+1) != NULL )
         resolvedStr = StrOp.cat( resolvedStr, SystemOp.getProperty(startV+1) );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "try to resolve [%s] [%s]", startV+1, resolvedStr);
 
       tmpStr = endV + 1;
       startV = strchr( tmpStr, delimiter );

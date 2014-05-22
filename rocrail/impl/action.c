@@ -655,7 +655,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       wText.setload(cmd, wActionCtrl.getload(actionctrl));
       wText.setvolt(cmd, wActionCtrl.getvolt(actionctrl));
       wText.settemp(cmd, wActionCtrl.gettemp(actionctrl));
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting text [%s] to [%s]", id, cmdStr );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting text [%s] to [%s] lcid=[%s]", id, cmdStr, wActionCtrl.getlcid(actionctrl) );
       TextOp.base.event( tx, cmd );
     }
   }

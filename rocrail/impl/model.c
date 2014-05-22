@@ -2817,9 +2817,11 @@ static iOLoc _getLocByIdent( iOModel inst, const char* ident1, const char* ident
 
     if( onlyFirstIdent ) {
       if( LocOp.matchIdent(loc, ident1, NULL, NULL, NULL) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco [%s] [%s]=[%s]", LocOp.getId(loc), ident1, LocOp.getIdent(loc) );
         return loc;
       }
       else if( LocOp.getAddress(loc) > 0 && StrOp.equals(locoAddrStr, ident1) ) {
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s ident=%s", LocOp.getId(loc), locoAddrStr );
         return loc;
       }
     }

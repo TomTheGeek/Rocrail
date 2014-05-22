@@ -302,19 +302,19 @@ static Boolean _matchIdent( struct OOperator* inst, const char* ident1, const ch
   while( StrTokOp.hasMoreTokens(tok) ) {
     iOCar car = ModelOp.getCar(AppOp.getModel(), StrTokOp.nextToken(tok) );
     if( car != NULL ) {
-      if( ident1 != NULL && StrOp.equals(ident1, CarOp.getIdent(car) ) ) {
+      if( ident1 != NULL && StrOp.len(ident1) > 0 && StrOp.equals(ident1, CarOp.getIdent(car) ) ) {
         match = True;
         break;
       }
-      else if( ident2 != NULL && StrOp.equals(ident2, CarOp.getIdent(car) ) ) {
+      else if( ident2 != NULL && StrOp.len(ident2) > 0 && StrOp.equals(ident2, CarOp.getIdent(car) ) ) {
         match = True;
         break;
       }
-      else if( ident3 != NULL && StrOp.equals(ident3, CarOp.getIdent(car) ) ) {
+      else if( ident3 != NULL && StrOp.len(ident3) > 0 && StrOp.equals(ident3, CarOp.getIdent(car) ) ) {
         match = True;
         break;
       }
-      else if( ident4 != NULL && StrOp.equals(ident4, CarOp.getIdent(car) ) ) {
+      else if( ident4 != NULL && StrOp.len(ident4) > 0 && StrOp.equals(ident4, CarOp.getIdent(car) ) ) {
         match = True;
         break;
       }

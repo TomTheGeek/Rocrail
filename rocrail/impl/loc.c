@@ -3615,13 +3615,13 @@ static Boolean _matchIdent( iOLoc loc, const char* ident, const char* ident2, co
   iOLocData data = Data(loc);
   Boolean match = False;
 
-  if( StrOp.equals( wLoc.getidentifier( data->props ), ident) )
+  if( ident != NULL && StrOp.len(ident) > 0 && StrOp.equals( wLoc.getidentifier( data->props ), ident) )
     match = True;
-  else if( ident2 != NULL && StrOp.equals( wLoc.getidentifier( data->props ), ident2) )
+  else if( ident2 != NULL && StrOp.len(ident2) > 0 && StrOp.equals( wLoc.getidentifier( data->props ), ident2) )
     match = True;
-  else if( ident3 != NULL && StrOp.equals( wLoc.getidentifier( data->props ), ident3) )
+  else if( ident3 != NULL && StrOp.len(ident3) > 0 && StrOp.equals( wLoc.getidentifier( data->props ), ident3) )
     match = True;
-  else if( ident4 != NULL && StrOp.equals( wLoc.getidentifier( data->props ), ident4) )
+  else if( ident4 != NULL && StrOp.len(ident4) > 0 && StrOp.equals( wLoc.getidentifier( data->props ), ident4) )
     match = True;
   else {
     /* check consist */
@@ -3630,19 +3630,19 @@ static Boolean _matchIdent( iOLoc loc, const char* ident, const char* ident2, co
       const char* tok = StrTokOp.nextToken( consist );
       iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL, False );
       if( consistloc != NULL ) {
-        if( StrOp.equals( ident, LocOp.getIdent(consistloc) ) ) {
+        if( ident != NULL && StrOp.len(ident) > 0 && StrOp.equals( ident, LocOp.getIdent(consistloc) ) ) {
           match = True;
           break;
         }
-        else if( ident2 != NULL && StrOp.equals( ident2, LocOp.getIdent(consistloc) ) ) {
+        else if( ident2 != NULL && StrOp.len(ident2) > 0 && StrOp.equals( ident2, LocOp.getIdent(consistloc) ) ) {
           match = True;
           break;
         }
-        else if( ident3 != NULL && StrOp.equals( ident3, LocOp.getIdent(consistloc) ) ) {
+        else if( ident3 != NULL && StrOp.len(ident3) > 0 && StrOp.equals( ident3, LocOp.getIdent(consistloc) ) ) {
           match = True;
           break;
         }
-        else if( ident4 != NULL && StrOp.equals( ident4, LocOp.getIdent(consistloc) ) ) {
+        else if( ident4 != NULL && StrOp.len(ident4) > 0 && StrOp.equals( ident4, LocOp.getIdent(consistloc) ) ) {
           match = True;
           break;
         }
