@@ -1737,7 +1737,9 @@ void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
     }
     else if(wPlanPanel.isprocessblockevents(ini)) {
       if( StrOp.equals( nodeName, wTrack.name() ) || StrOp.equals( nodeName, wSignal.name() ) ||
-               StrOp.equals( nodeName, wFeedback.name() ) || StrOp.equals( nodeName, wSwitch.name() ) ) {
+          StrOp.equals( nodeName, wFeedback.name() ) || StrOp.equals( nodeName, wSwitch.name() ) ||
+          StrOp.equals( nodeName, wOutput.name() ))
+      {
         TraceOp.trc( "plan", TRCLEVEL_DEBUG, __LINE__, 9999,
             "feedback [%s] block event for id=[%s]", wFeedback.getid(node), item->getId() );
         item->blockEvent( wItem.getid(node));

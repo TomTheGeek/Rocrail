@@ -738,7 +738,8 @@ void Symbol::OnPaint(wxPaintEvent& event)
 
     if( wPlanPanel.isprocessblockevents(ini) ) {
       if( StrOp.equals( NodeOp.getName(m_Props), wTrack.name() ) || StrOp.equals( NodeOp.getName(m_Props), wSignal.name() ) ||
-          StrOp.equals( NodeOp.getName(m_Props), wFeedback.name() ) || StrOp.equals( NodeOp.getName(m_Props), wSwitch.name() ) )
+          StrOp.equals( NodeOp.getName(m_Props), wFeedback.name() ) || StrOp.equals( NodeOp.getName(m_Props), wSwitch.name() )  ||
+          StrOp.equals( NodeOp.getName(m_Props), wOutput.name() ) )
       {
         if( StrOp.len( wItem.getblockid( m_Props )) > 0 ) {
           occupied = m_PlanPanel->isBlockOccupied( wItem.getblockid( m_Props ) );
