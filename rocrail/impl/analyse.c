@@ -5270,6 +5270,16 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
 
     else { /* elements which do not change travel direction */
 
+      if( StrOp.equals( type, wOutput.name() ) ) {
+        /* outputs with svg# 0 or 1 are buttons -> no orientation
+                        svg# 4 treated as straight -> directions handled below
+        */
+        int svgNo = wOutput.getsvgtype( item ) ;
+        if( ( svgNo == 0 ) || ( svgNo == 1 ) ) {
+          return travel;
+        }
+      }
+
       if( isTrackNo3( item ) ) {
         /* accessory track #3 is a 1x1 bridge (90° crossing) -> direction always straight */
         return travel;
@@ -6384,11 +6394,31 @@ static int setBlockidForListItems( iOAnalyse inst, iOList routeFrag, int first, 
     }
     else if( StrOp.equals( typ, wSignal.name() ) ) {
       iOSignal signal = ModelOp.getSignal( data->model, wItem.getid(item) );
-      node = FBackOp.base.properties(signal);
+      node = SignalOp.base.properties(signal);
       const char* blockid = wItem.getblockid(node);
       /* only set blockid if not already set */
       if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
         wSignal.setblockid(node, blid);
+        modifications++;
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s]",
+            blid, NodeOp.getName(item), wItem.getid(item) );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] skipped because already [%s]",
+            blid, NodeOp.getName(item), wItem.getid(item), blockid );
+        if( ! StrOp.equals( blid, blockid ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setblockid: [%s] for [%s][%s] skipped. It is not equal to current entry [%s]",
+              blid, NodeOp.getName(item), wItem.getid(item), blockid );
+        }
+      }
+    }
+    else if( StrOp.equals( typ, wOutput.name() ) ) {
+      iOOutput output = ModelOp.getOutput( data->model, wItem.getid(item) );
+      node = OutputOp.base.properties(output);
+      const char* blockid = wItem.getblockid(node);
+      /* only set blockid if not already set */
+      if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
+        wOutput.setblockid(node, blid);
         modifications++;
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s]",
             blid, NodeOp.getName(item), wItem.getid(item) );
@@ -6416,9 +6446,6 @@ static int setBlockidForListItems( iOAnalyse inst, iOList routeFrag, int first, 
              ! isSingleTrackRRCrossing( item ) 
            ) {
       /* switch has a blockid, but we do not set it */
-    }
-    else if( StrOp.equals( typ, wOutput.name() ) ) {
-      /* output has a blockid, but we do not set it */
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "sBidFLI: setblockid [%s] for [%s][%s] UNKNOWN/UNEXPECTED",
@@ -7169,6 +7196,32 @@ static int __analyseAllLists(iOAnalyse inst) {
           }
         }
       }
+      else if( StrOp.equals( typ, wOutput.name() ) ) {
+        iOOutput output = ModelOp.getOutput( data->model, wItem.getid(item) );
+        node = OutputOp.base.properties(output);
+        const char* blockid = wItem.getblockid(node);
+        /* only set blockid if not already set */
+        if( ( blockid == NULL ) || ( StrOp.len( blockid ) == 0 ) ) {
+          if( bkaIsAsb ) {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because bkaIsAsb",
+                bka, NodeOp.getName(item), wItem.getid(item) );
+          }
+          else {
+            wOutput.setblockid(node, bka);
+            modifications++;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s]",
+                bka, NodeOp.getName(item), wItem.getid(item) );
+          }
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] skipped because already [%s]",
+              bka, NodeOp.getName(item), wItem.getid(item), blockid );
+          if( ! StrOp.equals( bka, blockid ) ) {
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "INFO: setblockid [%s] for [%s][%s] skipped. It is not equal to current entry [%s]",
+                bka, NodeOp.getName(item), wItem.getid(item), blockid );
+          }
+        }
+      }
       else if( StrOp.equals( typ, wBlock.name() ) ) {
         /* blocks have no blockid */
       }
@@ -7180,9 +7233,6 @@ static int __analyseAllLists(iOAnalyse inst) {
       }
       else if( StrOp.equals( typ, wSwitch.name() ) ) {
         /* switches have no blockid */
-      }
-      else if( StrOp.equals( typ, wOutput.name() ) ) {
-        /* output has a blockid, but we do not set it */
       }
       else {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "anaAll item loop2: setblockid [%s] for [%s][%s] UNKNOWN/UNEXPECTED", bka, NodeOp.getName(item), wItem.getid(item) );
@@ -7255,6 +7305,7 @@ static int __generateRoutes(iOAnalyse inst) {
     removedIDs += _cleanupAutogenRouteids( wPlan.getswlist(data->plan) );
     removedIDs += _cleanupAutogenRouteids( wPlan.getsglist(data->plan) );
     removedIDs += _cleanupAutogenRouteids( wPlan.getfblist(data->plan) );
+    removedIDs += _cleanupAutogenRouteids( wPlan.getcolist(data->plan) );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Removed %d autogen-routeids in plan", removedIDs );
   }
 
@@ -7405,6 +7456,7 @@ static int __generateRoutes(iOAnalyse inst) {
       if( StrOp.equals( NodeOp.getName(item), wTrack.name()) ||
           StrOp.equals( NodeOp.getName(item), wFeedback.name()) ||
           StrOp.equals( NodeOp.getName(item), wSignal.name()) ||
+          StrOp.equals( NodeOp.getName(item), wOutput.name()) ||
           isSingleTrackRRCrossing(item) ||
           isSimpleCrossing(item)
         ) {
@@ -7435,6 +7487,11 @@ static int __generateRoutes(iOAnalyse inst) {
         if( StrOp.equals( NodeOp.getName(item), wSignal.name()) ) {
           iOSignal track = ModelOp.getSignal( data->model, wItem.getid(item) );
           tracknode = SignalOp.base.properties(track);
+        }
+
+        if( StrOp.equals( NodeOp.getName(item), wOutput.name()) ) {
+          iOOutput track = ModelOp.getOutput( data->model, wItem.getid(item) );
+          tracknode = OutputOp.base.properties(track);
         }
 
         if( isSingleTrackRRCrossing(item) || isSimpleCrossing(item) ) {
@@ -8763,6 +8820,7 @@ static Boolean _cleanExtended(iOAnalyse inst) {
         modifications += invalidBlockidCheck( inst, wPlan.getswlist(data->plan), True );
         modifications += invalidBlockidCheck( inst, wPlan.getsglist(data->plan), True );
         modifications += invalidBlockidCheck( inst, wPlan.getfblist(data->plan), True );
+        modifications += invalidBlockidCheck( inst, wPlan.getcolist(data->plan), True );
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid clean: %d invalid entries cleaned", modifications );
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid blockid clean: %s entries modified", (modifications == 0)?"no":"some" );
 
@@ -8773,7 +8831,7 @@ static Boolean _cleanExtended(iOAnalyse inst) {
         modifications += invalidRouteidsCheck( inst, wPlan.getswlist(data->plan), True );
         modifications += invalidRouteidsCheck( inst, wPlan.getsglist(data->plan), True );
         modifications += invalidRouteidsCheck( inst, wPlan.getfblist(data->plan), True );
-
+        modifications += invalidRouteidsCheck( inst, wPlan.getcolist(data->plan), True );
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid clean: %d invalid entries cleaned", modifications );
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " Invalid routeid clean: %s entries modified", (modifications == 0)?"no":"some" );
 
@@ -9570,6 +9628,7 @@ static int _cleanup(iOAnalyse inst) {
     modifications += _cleanupAutogenRouteids( wPlan.getswlist(data->plan) );
     modifications += _cleanupAutogenRouteids( wPlan.getsglist(data->plan) );
     modifications += _cleanupAutogenRouteids( wPlan.getfblist(data->plan) );
+    modifications += _cleanupAutogenRouteids( wPlan.getcolist(data->plan) );
   }
 
   if( data->resetBlockId ) {
@@ -9577,8 +9636,8 @@ static int _cleanup(iOAnalyse inst) {
     modifications += _resetBlockids( wPlan.getswlist(data->plan) );
     modifications += _resetBlockids( wPlan.getsglist(data->plan) );
     modifications += _resetBlockids( wPlan.getfblist(data->plan) );
+    modifications += _resetBlockids( wPlan.getcolist(data->plan) );
   }
-
 
   if( data->resetSignalBlockAssignment ) {
     /* remove signal assignments of blocks */
