@@ -135,6 +135,7 @@
     <var name="rendergc" vt="bool" defval="true"/>
     <var name="showlocoimage" vt="bool" defval="true"/>
     <var name="gridfontsizeadjust" vt="int" defval="0"/>
+    <var name="helpurl" vt="string" defval="http://wiki.rocrail.net" remark="WikiOnAStick: http://localhost:8800"/>
     <workspaces cardinality="1" wrappername="WorkSpaces">
       <workspace cardinality="n" wrappername="WorkSpace">
         <var name="title" vt="string" defval="New"/>

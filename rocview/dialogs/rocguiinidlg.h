@@ -233,6 +233,8 @@ public:
     wxCheckBox* m_Info;
     wxStaticBoxSizer* m_TraceFileBox;
     wxTextCtrl* m_TraceFile;
+    wxStaticBox* m_HelpBox;
+    wxTextCtrl* m_HelpURL;
     wxPanel* m_PTpanel;
     wxStaticText* m_labCVnrs;
     wxTextCtrl* m_CVnrs;

@@ -350,15 +350,16 @@ wxString RocGui::getTip( const char* key ) {
 }
 void RocGui::openLink( const char* pagename, const char* section ) {
   const char* lang = wGui.getlang(wxGetApp().getIni());
+  const char* url = wGui.gethelpurl(wxGetApp().getIni());
   char* pagefilename = NULL;
 
   if( !( StrOp.equals( wGui.lang_german, lang ) || StrOp.equals( wGui.lang_italien, lang ) ) )
     lang = wGui.lang_english;
 
   if( section == NULL )
-    pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-%s", pagename, lang);
+    pagefilename = StrOp.fmt("%s/doku.php?id=%s-%s", url, pagename, lang);
   else
-    pagefilename = StrOp.fmt("http://wiki.rocrail.net/doku.php?id=%s-%s#%s", pagename, lang, section);
+    pagefilename = StrOp.fmt("%s/doku.php?id=%s-%s#%s", url, pagename, lang, section);
 
   wxLaunchDefaultBrowser(wxString(pagefilename,wxConvUTF8 ), wxBROWSER_NEW_WINDOW );
   StrOp.free(pagefilename);
