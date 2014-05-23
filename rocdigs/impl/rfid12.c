@@ -281,7 +281,7 @@ static void __RFIDTicker( void* threadinst ) {
   while( data->run ) {
     int i = 0;
     for( i = 0; i < 8; i++ ) {
-      if( data->readerTick[i] > 0 && (SystemOp.getTick() - data->readerTick[i]) > 250 ) {
+      if( data->readerTick[i] > 0 && (SystemOp.getTick() - data->readerTick[i]) > 50 ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setstate( evt, False );
         wFeedback.setaddr( evt, i + 1 + data->fboffset );
@@ -296,10 +296,10 @@ static void __RFIDTicker( void* threadinst ) {
         
         data->readerTick[i] = 0;
       }
-      ThreadOp.sleep( 100 );
+      ThreadOp.sleep( 10 );
     }
     
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 10 );
   };
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RFID ticker ended." );
