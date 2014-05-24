@@ -1883,6 +1883,8 @@ static void __motorPWM( void* threadinst ) {
 
   }
 
+  __writePort(rocnetnode, IO_RELAIS, 0, IO_DIRECT );
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM stopped" );
 
 }
