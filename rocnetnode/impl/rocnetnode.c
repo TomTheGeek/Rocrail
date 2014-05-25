@@ -1214,6 +1214,9 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
         data->ports[port]->ackpending = False;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor %d acknowleged from %d to %d", port, sndr, rcpt );
       }
+      else if( rn[RN_PACKET_DATA + 0] == RN_SENSORID_REPORT ) {
+        data->rfidAck = True;
+      }
     }
     break;
 
@@ -1619,6 +1622,25 @@ static void __writePort(iORocNetNode rocnetnode, int port, int value, int iotype
     raspiWriteRegI2C(data->i2cdescriptor, 0x20+i2caddr, (shift > 7) ? 0x13:0x12, wdata8);
     MutexOp.post( data->i2cmux );
   }
+}
+
+
+static void __rfidAckWD( void* threadinst ) {
+  iOThread         th         = (iOThread)threadinst;
+  iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
+  iORocNetNodeData data       = Data(rocnetnode);
+  data->rfidAck = True;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet rfidAckWD started" );
+  while( data->run ) {
+    if( !data->rfidAck && (SystemOp.getTick() - data->rfidAckTimer) > 25 ) {
+      /* resend */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "resend RFID report %s", data->lastrfid );
+      __sendRN(rocnetnode, data->rfidMsg);
+    }
+    ThreadOp.sleep(10);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet rfidAckWD stopped" );
 }
 
 
@@ -2593,6 +2615,13 @@ static void __listener( obj inst, iONode nodeC, int level ) {
           msg[RN_PACKET_DATA+4+i] = ident[i];
         StrOp.fmtb(data->lastrfid, "%s", ident);
       }
+
+      if( wFeedback.isstate(nodeC) ) {
+        MemOp.copy( data->rfidMsg, msg, 128);
+        data->rfidAckTimer = SystemOp.getTick();
+        data->rfidAck = False;
+      }
+
       __sendRN((iORocNetNode)inst, msg);
     }
     NodeOp.base.del(nodeC);
@@ -3295,6 +3324,8 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   ThreadOp.start( data->scanner );
   data->pwm = ThreadOp.inst( "rnpwm", &__pwm, __RocNetNode );
   ThreadOp.start( data->pwm );
+  data->rfidAckWD = ThreadOp.inst( "rnpwm", &__rfidAckWD, __RocNetNode );
+  ThreadOp.start( data->rfidAckWD );
   data->macroprocessor = ThreadOp.inst( "rnmacro", &__macroProcessor, __RocNetNode );
   ThreadOp.start( data->macroprocessor );
 

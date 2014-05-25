@@ -23,7 +23,7 @@
 <Project name="RocNetNode" title="RocNet Node" docname="rocnetnodeapi">
 
 
-  <object name="RocNetNode" use="node,trace,thread,socket,mutex" include="$rocint/public/digint">
+  <object name="RocNetNode" use="node,trace,thread,socket,mutex,map,list" include="$rocint/public/digint">
     <struct name="RocMouse" typedef="*iORocMouse">
       <var name="ioaddr" vt="int"/>
       <var name="adaddr" vt="int"/>
@@ -185,6 +185,10 @@
       <var name="motorPWM" vt="iOThread"/>
       <var name="fchanged" vt="int"/>
       <var name="fn[32]" vt="Boolean"/>
+      <var name="rfidMsg[128]" vt="byte"/>
+      <var name="rfidAck" vt="Boolean"/>
+      <var name="rfidAckTimer" vt="unsigned long"/>
+      <var name="rfidAckWD" vt="iOThread"/>
       </data>
   </object>
 

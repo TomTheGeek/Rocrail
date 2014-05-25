@@ -1506,14 +1506,14 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
 
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
-    if( data->sack ) {
+    if( data->sack || action == RN_SENSORID_REPORT ) {
       rnReply = allocMem(32);
       rnReply[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
       rnReceipientAddresToPacket( sndr, rnReply, data->seven );
       rnSenderAddresToPacket( wRocNet.getid(data->rnini), rnReply, data->seven );
       rnReply[RN_PACKET_ACTION] = RN_STATIONARY_ACK;
       rnReply[RN_PACKET_LEN] = 2;
-      rnReply[RN_PACKET_DATA+0] = RN_SENSOR_REPORT;
+      rnReply[RN_PACKET_DATA+0] = action;
       rnReply[RN_PACKET_DATA+1] = addr;
     }
     break;
