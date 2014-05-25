@@ -960,6 +960,7 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
   if( actionType != RN_ACTIONTYPE_EVENT ) {
     return NULL;
   }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluateMobile action=%d", action);
 
   switch( action ) {
   case RN_MOBILE_ROCMOUSE:
@@ -1051,6 +1052,15 @@ static byte* __evaluateMobile( iOrocNet rocnet, byte* rn ) {
         data->listenerFun( data->listenerObj, nodeFn, TRCLEVEL_INFO );
       }
 
+    }
+    break;
+
+  case RN_MOBILE_VELOCITY:
+  case RN_MOBILE_FUNCTIONS:
+    if( data->watchdog != NULL ) {
+      byte* rnwd = allocMem(8+rn[RN_PACKET_LEN]);
+      MemOp.copy( rnwd, rn, 8+rn[RN_PACKET_LEN]);
+      ThreadOp.post( data->watchdog, (obj)rnwd );
     }
     break;
   }
