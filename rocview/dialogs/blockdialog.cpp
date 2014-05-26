@@ -2707,7 +2707,7 @@ void BlockDialog::onDoc( wxCommandEvent& event )
 void BlockDialog::OnHelpClick( wxCommandEvent& event )
 {
   switch( m_Notebook->GetSelection() ) {
-  case 0: wxGetApp().openLink( "block" ); break;
+  case 0: wxGetApp().openLink( "block-index" ); break;
   case 1: wxGetApp().openLink( "block-gen" ); break;
   case 2: wxGetApp().openLink( "block" ); break; // Position
   case 3: wxGetApp().openLink( "block-signals" ); break;
