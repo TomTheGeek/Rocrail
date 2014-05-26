@@ -63,6 +63,7 @@ class wxSpinCtrl;
 #define ID_LISTCTRLINDEX_FB 10407
 #define ID_BUTTON_FB_NEW 10015
 #define ID_BUTTON_FB_DELETE 10016
+#define ID_BUTTON_FB_AUTOADDR 10442
 #define ID_BUTTON_FB_DOC 10353
 #define ID_PANEL_FB_GENERAL 10017
 #define wxID_STATIC_FB_ID 10018
@@ -147,6 +148,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FB_DELETE
     void OnButtonFbDeleteClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FB_AUTOADDR
+    void OnButtonFbAutoaddrClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_FB_DOC
     void OnButtonFbDocClick( wxCommandEvent& event );
 
@@ -191,6 +195,7 @@ public:
     wxListCtrl* m_List2;
     wxButton* m_New;
     wxButton* m_Delete;
+    wxButton* m_AutoAdressing;
     wxButton* m_Doc;
     wxPanel* m_General;
     wxStaticText* m_LabelId;
