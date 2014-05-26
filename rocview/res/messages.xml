@@ -22827,7 +22827,7 @@
   <Msg id="set">
     <en txt="Set"/>
     <nl txt="Stel in"/>
-    <de txt="Setzen"/>
+    <de txt="Einstellen"/>
     <en_AU txt="Set"/>
     <fr txt="Définir"/>
     <ca txt="Estableix"/>
@@ -24048,7 +24048,7 @@
   <Msg id="every">
     <en txt="every"/>
     <nl txt="iedere"/>
-    <de txt="alle"/>
+    <de txt="Jede"/>
     <es txt="cada"/>
     <it txt="ogni"/>
     <sr_latin txt="svaki"/>
@@ -27893,6 +27893,7 @@
     <nl txt="Werkbalk"/>
     <pt_BR txt="Barra de ferramentas"/>
     <sl txt="Orodna vrstica"/>
+    <sr_latin txt="Traka alata"/>
   </Msg>
   <Msg id="freeblockonenter">
     <en txt="Free previous block on enter"/>
@@ -27900,11 +27901,14 @@
     <nl txt="Geef vorige block vrij bij enter"/>
     <pt_BR txt="Liberar bloco anterior quando entrar"/>
     <sl txt="Sprosti prejšnji odsek ob vhodu"/>
+    <sr_latin txt="Oslobodi prethodni blok pri ulasku"/>
   </Msg>
   <Msg id="buslength">
     <en txt="Bus %d length"/>
     <nl txt="Bus %d lengte"/>
     <pt_BR txt="Comprimento do barramento %d"/>
     <sl txt="Dolžina vodila %d"/>
+    <de txt="Bus %d Länge"/>
+    <sr_latin txt="Dužina Bus-a %d"/>
   </Msg>
 </Messages>
