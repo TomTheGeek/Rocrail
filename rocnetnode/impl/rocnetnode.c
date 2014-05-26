@@ -1214,9 +1214,10 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
         data->ports[port]->ackpending = False;
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor %d acknowleged from %d to %d", port, sndr, rcpt );
       }
-      else if( rn[RN_PACKET_DATA + 0] == RN_SENSORID_REPORT ) {
-        data->rfidAck = True;
-      }
+    }
+    else if( rn[RN_PACKET_DATA + 0] == RN_SENSORID_REPORT ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensorID acknowleged from %d to %d", sndr, rcpt );
+      data->rfidAck = True;
     }
     break;
 

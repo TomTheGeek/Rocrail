@@ -1517,6 +1517,7 @@ static byte* __evaluateSensor( iOrocNet rocnet, byte* rn ) {
     data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
 
     if( data->sack || action == RN_SENSORID_REPORT ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "acknowledge sensor event..." );
       rnReply = allocMem(32);
       rnReply[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
       rnReceipientAddresToPacket( sndr, rnReply, data->seven );
