@@ -1023,7 +1023,7 @@ void FeedbackDialog::OnListctrlindexFbColLeftClick( wxListEvent& event )
 void FeedbackDialog::OnHelpClick( wxCommandEvent& event )
 {
   switch( m_Notebook->GetSelection() ) {
-  case 0: wxGetApp().openLink( "sensor" ); break;
+  case 0: wxGetApp().openLink( "sensor-index" ); break;
   case 1: wxGetApp().openLink( "sensor-gen" ); break;
   case 2: wxGetApp().openLink( "sensor" ); break; // Position
   case 3: wxGetApp().openLink( "sensor-int" ); break;
