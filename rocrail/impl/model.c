@@ -2569,6 +2569,7 @@ static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean genera
           wLoc.setspcnt( lc, 128 );
           wLoc.setprot( lc, addr > 127 ? wLoc.prot_L:wLoc.prot_N );
         }
+        wLoc.setfncnt( lc, 28 );
         wLoc.setaddr( lc, addr );
         StrOp.fmtb( identifier, "%d", addr );
         wLoc.setidentifier( lc, identifier );
