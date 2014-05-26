@@ -2060,6 +2060,24 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
         TraceOp.trc( "renderer", TRCLEVEL_DEBUG, __LINE__, 9999, "picture [%s]", pixpath );
         m_Bitmap = new wxBitmap(wxString(pixpath,wxConvUTF8), wxBITMAP_TYPE_PNG);
 
+        float bmpW = m_Bitmap->GetWidth();
+        float bmpH = m_Bitmap->GetHeight();
+        float txtW = wText.getcx(m_Props) * 32;
+        float txtH = wText.getcy(m_Props) * 32;
+        float scaleW = bmpW / txtW;
+        float scaleH = bmpH / txtH;
+        float scale = 0;
+        if( scaleW > scaleH ) {
+          scale = scaleW;
+        }
+        else {
+          scale = scaleH;
+        }
+        wxImage img = m_Bitmap->ConvertToImage();
+        delete m_Bitmap;
+        img = img.Scale( (bmpW/scale), (bmpH/scale) );
+        m_Bitmap = new wxBitmap(img);
+
         if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.east ) ) {
           TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "rotate [%s]", pixpath );
           wxImage img = m_Bitmap->ConvertToImage();
