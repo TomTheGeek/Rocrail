@@ -379,16 +379,16 @@ static Boolean __setstat1byte(struct __lnslot* slot, int slotnr, byte stat) {
 
   slot[slotnr].format = 0;
 
-  if( stat & DEC_MODE_128 == DEC_MODE_128 ) {
+  if( (stat & DEC_MODE_128) == DEC_MODE_128 ) {
     slot[slotnr].steps = 128;
   }
-  else if( stat & DEC_MODE_28 == DEC_MODE_28 ) {
+  else if( (stat & DEC_MODE_28) == DEC_MODE_28 ) {
     slot[slotnr].steps = 28;
   }
-  else if( stat & DEC_MODE_14 == DEC_MODE_14 ) {
+  else if( (stat & DEC_MODE_14) == DEC_MODE_14 ) {
     slot[slotnr].steps = 14;
   }
-  else if( stat & DEC_MODE_28TRI == DEC_MODE_28TRI )  {
+  else if( (stat & DEC_MODE_28TRI) == DEC_MODE_28TRI )  {
     slot[slotnr].format = 1;
     slot[slotnr].steps = 28;
   }

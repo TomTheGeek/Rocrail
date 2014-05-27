@@ -188,6 +188,7 @@ static const char* _getImgPath( void ) {
 static const char* _getIconPath( void ) {
   if( __appinst != NULL )
     return wRocRail.geticonpath(AppOp.getIni());
+  return NULL;
 }
 
 static int _getrevno( void ) {
