@@ -829,6 +829,7 @@
     <struct name="rnreq" typedef="*iORNreq">
       <var name="req" vt="byte*"/>
       <var name="timer" vt="long"/>
+      <var name="retry" vt="int"/>
       <var name="ack" vt="Boolean"/>
     </struct>
     <struct name="mouse" typedef="*iOMouse">

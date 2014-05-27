@@ -1717,8 +1717,9 @@ static void __watchdog( void* threadinst ) {
       int group = rn[RN_PACKET_GROUP];
       int actionType = rnActionTypeFromPacket(rn);
       int sndr = rnSenderAddrFromPacket(rn, data->seven);
+      int rcpt = rnReceipientAddrFromPacket(rn, data->seven);
 
-      if( actionType == RN_ACTIONTYPE_REQUEST ) {
+      if( actionType == RN_ACTIONTYPE_REQUEST && rcpt > 0 ) {
         Boolean newReq = True;
         for( i = 0; i < size; i++ ) {
           iORNreq req = (iORNreq)ListOp.get( data->AckList, i );
@@ -1780,8 +1781,16 @@ static void __watchdog( void* threadinst ) {
         byte* rncopy = allocMem(8+req->req[RN_PACKET_LEN]);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "request %d of %d timeout: resend", i, size );
         req->timer = SystemOp.getTick();
-        MemOp.copy(rncopy, req->req, 8+req->req[RN_PACKET_LEN]);
-        ThreadOp.post( data->writer, (obj)rncopy );
+        req->retry++;
+        if( req->retry <= 5 ) {
+          MemOp.copy(rncopy, req->req, 8+req->req[RN_PACKET_LEN]);
+          ThreadOp.post( data->writer, (obj)rncopy );
+        }
+        else {
+          /* give up*/
+          req->ack = True;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "request %d is not acknowledged", i );
+        }
       }
     }
 
