@@ -2840,6 +2840,7 @@
         <const name="signal_green" vt="string" val="green"/>
         <const name="signal_white" vt="string" val="white"/>
         <const name="block_unlock" vt="string" val="unlock"/>
+        <const name="block_reserve" vt="string" val="reserve"/>
         <const name="block_setloc" vt="string" val="setloco"/>
         <const name="block_schedule" vt="string" val="schedule"/>
         <const name="block_schedule_manual" vt="string" val="schedule_manual"/>

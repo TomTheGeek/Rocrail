@@ -807,8 +807,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         }
       }
       else if( StrOp.equals( wAction.loco_go, wAction.getcmd( data->action ) ) ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action: loco_go %s ",
-            bl->getLoc(bl));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action: loco_go %s ", bl->getLoc(bl));
 
         iOLoc lc = ModelOp.getLoc( model, bl->getLoc(bl), NULL, False);
         if( lc != NULL ) {
@@ -823,6 +822,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         iOLoc lc = ModelOp.getLoc( model, bl->getLoc(bl), NULL, False);
         if( lc != NULL ) {
           LocOp.dispatch(lc);
+        }
+      }
+      else if( StrOp.equals(wAction.block_reserve, wAction.getcmd(data->action) ) ) {
+        bl = ModelOp.getBlock( model, wAction.getoid( data->action ) );
+        if( bl != NULL ) {
+          bl->lock( bl, wActionCtrl.getlcid(actionctrl), NULL, NULL, False, False, False, 0);
         }
       }
     }
