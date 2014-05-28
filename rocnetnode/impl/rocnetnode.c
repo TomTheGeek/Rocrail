@@ -1218,6 +1218,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
     else if( rn[RN_PACKET_DATA + 0] == RN_SENSORID_REPORT ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensorID acknowleged from %d to %d", sndr, rcpt );
       data->rfidAck = True;
+      data->rfidAckRetry = 0;
     }
     break;
 
@@ -1630,14 +1631,25 @@ static void __rfidAckWD( void* threadinst ) {
   iOThread         th         = (iOThread)threadinst;
   iORocNetNode     rocnetnode = (iORocNetNode)ThreadOp.getParm( th );
   iORocNetNodeData data       = Data(rocnetnode);
+  data->rfidAckRetry = 0;
   data->rfidAck = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "RocNet rfidAckWD started" );
   while( data->run ) {
     if( !data->rfidAck && (SystemOp.getTick() - data->rfidAckTimer) > 25 ) {
       /* resend */
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "resend RFID report %s", data->lastrfid );
-      __sendRN(rocnetnode, data->rfidMsg);
+      data->rfidAckRetry++;
+      if( data->rfidAckRetry <= 4 ) {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "resend RFID report %s", data->lastrfid );
+        __sendRN(rocnetnode, data->rfidMsg);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "stop the motor; the RFID report %s is not acknowledged", data->lastrfid );
+        data->Vraw = 0;
+        data->rfidAckRetry = 0;
+        data->rfidAck = True;
+        __errorReport(rocnetnode, RN_ERROR_RC_RFID, RN_ERROR_RS_ACK, 0);
+      }
     }
     ThreadOp.sleep(10);
   }
@@ -2621,6 +2633,7 @@ static void __listener( obj inst, iONode nodeC, int level ) {
         MemOp.copy( data->rfidMsg, msg, 128);
         data->rfidAckTimer = SystemOp.getTick();
         data->rfidAck = False;
+        data->rfidAckRetry = 0;
       }
 
       __sendRN((iORocNetNode)inst, msg);

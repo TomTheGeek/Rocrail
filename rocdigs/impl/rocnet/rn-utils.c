@@ -118,6 +118,8 @@ const char* rnGetRC(int rc) {
     return "GPIO";
   case RN_ERROR_RC_I2C:
     return "I2C";
+  case RN_ERROR_RC_RFID:
+    return "RFID";
   }
   return "unknown";
 }
@@ -130,6 +132,8 @@ const char* rnGetRS(int rs) {
     return "write";
   case RN_ERROR_RS_READ:
     return "read";
+  case RN_ERROR_RS_ACK:
+    return "acknowledge";
   }
   return "unknown";
 }

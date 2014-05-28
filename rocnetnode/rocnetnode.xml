@@ -187,6 +187,7 @@
       <var name="fn[32]" vt="Boolean"/>
       <var name="rfidMsg[128]" vt="byte"/>
       <var name="rfidAck" vt="Boolean"/>
+      <var name="rfidAckRetry" vt="int"/>
       <var name="rfidAckTimer" vt="unsigned long"/>
       <var name="rfidAckWD" vt="iOThread"/>
       </data>

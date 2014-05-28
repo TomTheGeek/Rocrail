@@ -164,10 +164,12 @@
 
 #define RN_ERROR_RC_IO 1
 #define RN_ERROR_RC_I2C 2
+#define RN_ERROR_RC_RFID 3
 
 #define RN_ERROR_RS_SETUP 1
 #define RN_ERROR_RS_WRITE 2
 #define RN_ERROR_RS_READ  3
+#define RN_ERROR_RS_ACK   4
 
 
 #endif /*ROCNETCONST_H_*/
