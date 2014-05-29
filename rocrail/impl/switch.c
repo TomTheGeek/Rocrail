@@ -335,7 +335,9 @@ static void __normalizeAddr( int* addr, int* port ) {
   if( *addr > 0 && *port == 0 ) {
     /* flat */
     l_addr = (*addr / 8) + 1;
-    l_port = (*addr % 8) / 2 + 1;
+    l_port = (*addr % 8) / 2;
+    if( (*addr % 8) % 2 > 0 )
+      l_port++;
   }
   else if( *addr == 0 && *port > 0 ) {
     /* port */
@@ -445,11 +447,19 @@ static const char* __checkFbState( iOSwitch inst ) {
 
 static Boolean __isSet(obj inst, const char* strState) {
   iOSwitchData data = Data(inst);
+  Boolean inv  = wSwitch.isinv( data->props );
   Boolean isSet = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
     "is switch[%s] set? current state [%s], compare state [%s]",
     SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
+
+  if( inv ) {
+    if( StrOp.equals( wSwitch.straight, strState ) )
+      strState = wSwitch.turnout;
+    else if( StrOp.equals( wSwitch.turnout, strState ) )
+      strState = wSwitch.straight;
+  }
 
   if( !StrOp.equals( strState, wSwitch.getstate( data->props) ) ) {
     if( wSwitch.isfbset(data->props) ) {
@@ -1595,7 +1605,9 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       __normalizeAddr( &addr2, &port2 );
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "switch [%s] addr=%d port=%d (addr1=%d port1=%d addr2=%d port2=%d)", SwitchOp.getId(inst), addr, port, addr1, port1, addr2, port2 );
+          "switch [%s] reported addr=%d port=%d (addr1=%d(%d) port1=%d(%d) addr2=%d(%d) port2=%d(%d))", SwitchOp.getId(inst),
+          addr, port, addr1, wSwitch.getaddr1( data->props ), port1, wSwitch.getport1( data->props ),
+          addr2, wSwitch.getaddr2( data->props ), port2, wSwitch.getport2( data->props ) );
       if( addr == addr1 && port == port1 ) {
         if( inv )
           data->fieldState1 = StrOp.equals( state, wSwitch.turnout ) ? 0:1;
