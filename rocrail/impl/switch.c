@@ -1953,6 +1953,7 @@ static iOSwitch _inst( iONode props ) {
     );
 
   wSwitch.settesting( data->props, False);
+  wSwitch.setwantedstate( data->props, wSwitch.getstate(data->props) );
 
   if( data->accctrl != NULL && wAccessoryCtrl.isactive(data->accctrl) ) {
     data->accThread = ThreadOp.inst( data->id, &__accThread, sw );
