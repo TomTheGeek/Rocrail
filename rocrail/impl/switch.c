@@ -335,7 +335,7 @@ static void __normalizeAddr( int* addr, int* port ) {
   if( *addr > 0 && *port == 0 ) {
     /* flat */
     l_addr = (*addr / 8) + 1;
-    l_port = (*addr % 8) / 2;
+    l_port = (*addr % 8) / 2 + 1;
     if( (*addr % 8) % 2 > 0 )
       l_port++;
   }
@@ -447,21 +447,9 @@ static const char* __checkFbState( iOSwitch inst ) {
 
 static Boolean __isSet(obj inst, const char* strState) {
   iOSwitchData data = Data(inst);
-  Boolean inv  = wSwitch.isinv( data->props );
   Boolean isSet = True;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-    "is switch[%s] set? current state [%s], compare state [%s]",
-    SwitchOp.getId( (iOSwitch)inst ), wSwitch.getstate( data->props), strState );
-
-  if( inv ) {
-    if( StrOp.equals( wSwitch.straight, strState ) )
-      strState = wSwitch.turnout;
-    else if( StrOp.equals( wSwitch.turnout, strState ) )
-      strState = wSwitch.straight;
-  }
-
-  if( !StrOp.equals( strState, wSwitch.getstate( data->props) ) ) {
+  if( !StrOp.equals( strState, wSwitch.getwantedstate( data->props) ) ) {
     if( wSwitch.isfbset(data->props) ) {
       wSwitch.setstate( data->props, strState);
     }
@@ -469,6 +457,11 @@ static Boolean __isSet(obj inst, const char* strState) {
       isSet = False;
     }
   }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+    "switch[%s] isSet=%s wanted state [%s], reported state [%s] isfbset=%s",
+    SwitchOp.getId( (iOSwitch)inst ), isSet?"true":"false", wSwitch.getwantedstate( data->props), strState, wSwitch.isfbset(data->props)?"true":"false" );
+
   return isSet;
 }
 
@@ -780,7 +773,9 @@ static Boolean _isSet( iOSwitch inst ) {
     }
     else {
       /* check fieldstate */
-      isSet = StrOp.equals(wSwitch.getstate(data->props), wSwitch.getfieldstate(data->props));
+      isSet = StrOp.equals(wSwitch.getwantedstate(data->props), wSwitch.getfieldstate(data->props));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch[%s] isSet=%s wanted=%s field=%s",
+          SwitchOp.getId( inst ), isSet?"true":"false", wSwitch.getwantedstate(data->props), wSwitch.getfieldstate(data->props) );
     }
   }
   else {
@@ -1069,6 +1064,8 @@ static Boolean __doCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, 
 
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Switch [%s] will be set to [%s,%d,%d]",
                  SwitchOp.getId( inst ), state, wSwitch.issinglegate( o->props ), wSwitch.getgate1( o->props ) );
+  wSwitch.setwantedstate( o->props, state );
+
 
   if( iid != NULL )
     wSwitch.setiid( nodeA, iid );
@@ -1605,8 +1602,8 @@ static void _event( iOSwitch inst, iONode nodeC ) {
       __normalizeAddr( &addr2, &port2 );
 
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "switch [%s] reported addr=%d port=%d (addr1=%d(%d) port1=%d(%d) addr2=%d(%d) port2=%d(%d))", SwitchOp.getId(inst),
-          addr, port, addr1, wSwitch.getaddr1( data->props ), port1, wSwitch.getport1( data->props ),
+          "switch [%s] reported addr=%d port=%d state=%s (addr1=%d(%d) port1=%d(%d) addr2=%d(%d) port2=%d(%d))", SwitchOp.getId(inst),
+          addr, port, state, addr1, wSwitch.getaddr1( data->props ), port1, wSwitch.getport1( data->props ),
           addr2, wSwitch.getaddr2( data->props ), port2, wSwitch.getport2( data->props ) );
       if( addr == addr1 && port == port1 ) {
         if( inv )
@@ -1694,7 +1691,7 @@ static void _event( iOSwitch inst, iONode nodeC ) {
 
       if( wSwitch.isfbusefield(data->props ) ) {
         /*const char* strState = wSwitch.getstate( data->props);*/
-        Boolean isSet = __isSet((obj)inst, state);
+        Boolean isSet = __isSet((obj)inst, wSwitch.getstate( data->props));
         wSwitch.setset( nodeD, isSet );
 
         if( isSet ) {
