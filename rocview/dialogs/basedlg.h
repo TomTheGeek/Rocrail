@@ -17,7 +17,7 @@ class BaseDialog
 public:
   BaseDialog();
   void doDoc( wxCommandEvent& event, const char* xslName );
-  bool existID( wxWindow* dlg, iONode list, iONode props, wxString id );
+  static bool existID( wxWindow* dlg, iONode list, iONode props, wxString id );
   void initList(wxListCtrl* list, wxWindow* parent, bool showPos=true, bool showAddr=true, bool showLen=false,
       bool showShow=true, bool showType=false, bool showTime=false);
   void fillIndex( iONode Items, bool sort=false);

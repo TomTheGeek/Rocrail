@@ -31,6 +31,7 @@
 
 #include "rocview/public/guiapp.h"
 #include "rocview/dialogs/scheduledialog.h"
+#include "rocview/dialogs/basedlg.h"
 
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -558,10 +559,15 @@ void ToursDlg::onCopy( wxCommandEvent& event ) {
         char* id = StrOp.fmt( "%s (copy)", wTour.getid(tourcopy));
         wTour.setid(tourcopy, id);
         StrOp.free(id);
-        NodeOp.addChild( tourlist, tourcopy );
-        int cnt = NodeOp.getChildCnt( tourlist );
-        TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "copied tour [%s] (cnt=%d)", wTour.getid(tourcopy), cnt );
-        initIndex();
+        if( !BaseDialog::existID( this, tourlist, m_Props, wxString(wTour.getid( tourcopy ),wxConvUTF8) ) ) {
+          NodeOp.addChild( tourlist, tourcopy );
+          int cnt = NodeOp.getChildCnt( tourlist );
+          TraceOp.trc( "tourdlg", TRCLEVEL_INFO, __LINE__, 9999, "copied tour [%s] (cnt=%d)", wTour.getid(tourcopy), cnt );
+          initIndex();
+        }
+        else {
+          NodeOp.base.del(tourcopy);
+        }
       }
 
     }

@@ -1203,12 +1203,17 @@ void TimedActions::OnButtonCopyClick( wxCommandEvent& event )
       if( aclist != NULL ) {
         iONode accopy = (iONode)NodeOp.base.clone( m_Props );
         char* id = StrOp.fmt( "%s (copy)", wAction.getid(accopy));
-        wTour.setid(accopy, id);
+        wAction.setid(accopy, id);
         StrOp.free(id);
-        NodeOp.addChild( aclist, accopy );
-        int cnt = NodeOp.getChildCnt( aclist );
-        TraceOp.trc( "actiondlg", TRCLEVEL_INFO, __LINE__, 9999, "copied action [%s] (cnt=%d)", wAction.getid(accopy), cnt );
-        initIndex();
+        if( !existID( this, aclist, m_Props, wxString(wAction.getid( accopy ),wxConvUTF8) ) ) {
+          NodeOp.addChild( aclist, accopy );
+          int cnt = NodeOp.getChildCnt( aclist );
+          TraceOp.trc( "actiondlg", TRCLEVEL_INFO, __LINE__, 9999, "copied action [%s] (cnt=%d)", wAction.getid(accopy), cnt );
+          initIndex();
+        }
+        else {
+          NodeOp.base.del(accopy);
+        }
       }
 
     }
