@@ -23,7 +23,7 @@
 #ifndef LNMON_H_
 #define LNMON_H_
 
-void traceLocoNet(byte* msg);
+void traceLocoNet(byte* msg, Boolean GBM16xn);
 
 
 #endif /*LNMON_H_*/

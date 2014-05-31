@@ -302,7 +302,7 @@ static Boolean _transact( iOLocoNet loconet, byte* out, int outsize, byte* in, i
           *insize = data->lnRead( (obj)loconet, in );
           if( *insize > 0 ) {
             data->rcvpkg++;
-            traceLocoNet(in);
+            traceLocoNet(in, data->GBM16xn);
             TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "*** transact dump:" );
             TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)in, *insize );
             if( waitforOPC_OK > 0 && in[0] == waitforOPC_OK ) {
@@ -583,6 +583,7 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
   int addr         = ( (msg[1]&0x1F) * 128 ) + msg[2];
   int boardaddr    = addr/16;
   int locoaddr     = 0;
+  Boolean locodirection = False;
   const char* zone = "";
   Boolean present  = False;
   Boolean enter    = (msg[1] & 0x20) != 0 ? True:False;
@@ -605,7 +606,15 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
     locoaddr=msg[4];
   else
     locoaddr=msg[3]*128+msg[4];
+    
+  if( data->GBM16xn ) {
+    if (locoaddr&0x1000)
+       locodirection = True;
+    else
+       locodirection = False;
 
+    locoaddr = locoaddr & 0x00FF;
+  }
   switch (type) {
   case OPC_MULTI_SENSE_POWER:
     __powerMultiSenseMessage(loconet, msg);
@@ -635,6 +644,8 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
     if( present ) {
       StrOp.fmtb(ident, "%d", locoaddr);
       wFeedback.setidentifier( nodeC, ident );
+      if( data->GBM16xn )
+        wFeedback.setdirection(nodeC, locodirection);
     }
     wFeedback.setstate( nodeC, present );
 /*
@@ -642,8 +653,8 @@ D0 20 06 7D 01 75
 loconet  0549 Transponder [7] [present] in section [96] zone [D] decoder address [1]
  */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-        "BDL[%d] RX[%d] zone [%s] reports [%s] of decoder address [%d]",
-        boardaddr, addr, zone, present?"present":"absend", locoaddr );
+        "BDL[%d] RX[%d] zone [%s] reports [%s] of decoder address [%d] direction [%s]" ,
+        boardaddr, addr, zone, present?"present":"absend", locoaddr, data->GBM16xn ? (locodirection? "fwd":"rev"):"-" );
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
@@ -1078,7 +1089,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
   int port = 0;
 
   data->rcvpkg++;
-  traceLocoNet(rsp);
+  traceLocoNet(rsp, data->GBM16xn);
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "*** read dump:" );
   TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)rsp, size );
 
@@ -2637,6 +2648,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->swretry = wLocoNet.getswretry(data->loconet);
   data->swsleep = wLocoNet.getswsleep(data->loconet);
   data->resetLissy = wLocoNet.isresetlissy(data->loconet);
+  data->GBM16xn = wLocoNet.isGBM16xn(data->loconet);
 
   data->didSensorQuery = False;
 

@@ -213,7 +213,7 @@ static const char* __convertToMixed( int addressLow, int addressHigh)
  * @param l Message to parse
  * @return String representation
  */
-void traceLocoNet(byte* msg) {
+void traceLocoNet(byte* msg, Boolean GBM16xn) {
 
     Boolean showStatus = False;   /* show track status in this message? */
 
@@ -765,6 +765,9 @@ void traceLocoNet(byte* msg) {
           addr=msg[4];
         else
           addr=msg[3]*128+msg[4];
+				
+				if( GBM16xn )
+          addr=addr&0x00ff;
 
         switch (type) {
         case OPC_MULTI_SENSE_POWER:

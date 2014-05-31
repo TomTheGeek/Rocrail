@@ -148,6 +148,7 @@ public:
     wxRadioBox* m_SubLib;
     wxCheckBox* m_Flow;
     wxCheckBox* m_IgnorePowerCmds;
+    wxCheckBox* m_GBM16xn;
     wxPanel* m_OptionsPanel;
     wxComboBox* m_CmdStn;
     wxCheckListBox* m_OptionsList;

@@ -676,6 +676,7 @@
       <var name="swsleep" vt="int"/>
       <var name="lissyReset" vt="iOThread"/>
       <var name="resetLissy" vt="Boolean"/>
+      <var name="GBM16xn" vt="Boolean"/>
       </data>
   </object>
 
