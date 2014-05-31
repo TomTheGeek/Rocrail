@@ -54,6 +54,8 @@
 #define ME_GC2Timer 4711
 #define ME_ReportTimer 4712
 
+static char ms_IID[32] = {'\0'};
+
 CBusNodeDlg::CBusNodeDlg( wxWindow* parent ):cbusnodedlggen( parent )
 {
   initLabels();
@@ -81,6 +83,8 @@ void CBusNodeDlg::initLabels() {
   m_CANID = 0;
   m_CBus = NodeOp.inst(wCBus.name(), NULL, ELEMENT_NODE);
   m_bReporting = false;
+  m_IID->SetValue( wxString(ms_IID,wxConvUTF8) );
+
 
   /*TEST
   iONode node = NodeOp.inst(wCBusNode.name(),m_CBus,ELEMENT_NODE);
@@ -573,6 +577,7 @@ void CBusNodeDlg::onSetPage(wxCommandEvent& event) {
 
 void CBusNodeDlg::onOK( wxCommandEvent& event )
 {
+  StrOp.copy( ms_IID, m_IID->GetValue().mb_str(wxConvUTF8));
   if( m_CBus != NULL ) {
     NodeOp.base.del(m_CBus);
   }
