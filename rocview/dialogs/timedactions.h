@@ -46,6 +46,7 @@ class wxSpinCtrl;
 #define ID_LISTCTRL 10412
 #define ID_AC_IDNAME 10321
 #define ID_BT_ADD 10217
+#define ID_BUTTON_COPY 10443
 #define ID_BT_DEL 10218
 #define ID_BUTTON_AC_DOC 10143
 #define ID_DEFINITIONPANEL 10404
@@ -113,6 +114,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BT_ADD
     void OnBtAddClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_COPY
+    void OnButtonCopyClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BT_DEL
     void OnBtDelClick( wxCommandEvent& event );
 
@@ -163,6 +167,7 @@ public:
     wxListCtrl* m_TimedActions;
     wxTextCtrl* m_ActionID;
     wxButton* m_Add;
+    wxButton* m_Copy;
     wxButton* m_Del;
     wxButton* m_Doc;
     wxPanel* m_DefinitionPanel;

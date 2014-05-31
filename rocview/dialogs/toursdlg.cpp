@@ -102,6 +102,7 @@ void ToursDlg::initLabels() {
 
   // Schedules
   m_EntryAdd->SetLabel( wxGetApp().getMsg( "add" ) );
+  m_Copy->SetLabel( wxGetApp().getMsg( "copy" ) );
   m_EntryDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
   m_Up->SetLabel( wxGetApp().getMsg( "up" ) );
   m_Down->SetLabel( wxGetApp().getMsg( "down" ) );
