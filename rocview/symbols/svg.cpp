@@ -343,10 +343,10 @@ iOMap svgReader::readSvgSymbols( const char* path, iOMap map, const char* themes
       obj o = MapOp.get( symbolMap, key );
       if( o == NULL ) {
         char* pathfileName = StrOp.fmt( "%s%c%s", newpath, SystemOp.getFileSeparator(), fileName );
-        long size = FileOp.fileSize( pathfileName );
-        char* svgStr = (char*)allocMem( size+1 );
         iOFile f = FileOp.inst( pathfileName, OPEN_READONLY );
         if( f != NULL ) {
+          long size = FileOp.fileSize( pathfileName );
+          char* svgStr = (char*)allocMem( size+1 );
           TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "reading %s", pathfileName );
           FileOp.read( f, svgStr, size );
           FileOp.base.del( f );
@@ -358,6 +358,7 @@ iOMap svgReader::readSvgSymbols( const char* path, iOMap map, const char* themes
           else {
             TraceOp.trc( "svg", TRCLEVEL_WARNING, __LINE__, 9999, "invalid svg symbol [%s]", pathfileName );
           }
+          freeMem(svgStr);
         }
         else {
           TraceOp.trc( "svg", TRCLEVEL_WARNING, __LINE__, 9999, "could not open svg symbol [%s]", pathfileName );
