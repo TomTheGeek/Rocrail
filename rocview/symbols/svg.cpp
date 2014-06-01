@@ -346,16 +346,21 @@ iOMap svgReader::readSvgSymbols( const char* path, iOMap map, const char* themes
         long size = FileOp.fileSize( pathfileName );
         char* svgStr = (char*)allocMem( size+1 );
         iOFile f = FileOp.inst( pathfileName, OPEN_READONLY );
-        TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "reading %s", pathfileName );
-        FileOp.read( f, svgStr, size );
-        FileOp.base.del( f );
-        svgSymbol* sym = parseSvgSymbol( svgStr );
-        if(sym != NULL) {
-          TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "add [%s] to symbolMap", key );
-          MapOp.put( symbolMap, key, (obj)sym );
+        if( f != NULL ) {
+          TraceOp.trc( "svg", TRCLEVEL_PARSE, __LINE__, 9999, "reading %s", pathfileName );
+          FileOp.read( f, svgStr, size );
+          FileOp.base.del( f );
+          svgSymbol* sym = parseSvgSymbol( svgStr );
+          if(sym != NULL) {
+            TraceOp.trc( "svg", TRCLEVEL_DEBUG, __LINE__, 9999, "add [%s] to symbolMap", key );
+            MapOp.put( symbolMap, key, (obj)sym );
+          }
+          else {
+            TraceOp.trc( "svg", TRCLEVEL_WARNING, __LINE__, 9999, "invalid svg symbol [%s]", pathfileName );
+          }
         }
         else {
-          TraceOp.trc( "svg", TRCLEVEL_WARNING, __LINE__, 9999, "invalid svg symbol [%s]", pathfileName );
+          TraceOp.trc( "svg", TRCLEVEL_WARNING, __LINE__, 9999, "could not open svg symbol [%s]", pathfileName );
         }
         StrOp.free(pathfileName);
       }
