@@ -2606,6 +2606,31 @@ static iONode _getDec( iOModel inst, const char* id ) {
   return NULL;
 }
 
+static iOCar _getCarByAddress( iOModel inst, int addr, const char* iid ) {
+  iOModelData o = Data(inst);
+
+  iOCar car = (iOCar)MapOp.first( o->carMap );
+  while( car != NULL ) {
+    if( CarOp.getAddress(car) == addr ) {
+      if( iid != NULL && StrOp.len(iid) > 0 ) {
+        const char* cariid = wCar.getiid(CarOp.base.properties(car));
+        if( cariid != NULL && StrOp.len(cariid) > 0 ) {
+          if( !StrOp.equals(iid, cariid) ) {
+            car = (iOCar)MapOp.next( o->carMap );
+            continue;
+          }
+        }
+        return car;
+      }
+    }
+    car = (iOCar)MapOp.next( o->carMap );
+  };
+
+  return NULL;
+}
+
+
+
 static iOCar _getCarByIdent( iOModel inst, const char* ident ) {
   iOModelData o = Data(inst);
   iOCar carAddr = NULL;
@@ -3676,7 +3701,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     const char* ident = wLoc.getidentifier( nodeC );
     const char* cmd = wLoc.getcmd( nodeC );
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco event: %d", addr);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco/Car event: %d", addr);
 
     iOLoc lc = ModelOp.getLocByAddress(inst, addr, iid);
 
@@ -3686,6 +3711,7 @@ static void _event( iOModel inst, iONode nodeC ) {
     }
 
     if( lc != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco event for [%s]", LocOp.base.id(lc) );
       LocOp.base.event( lc, nodeC );
     }
     else {
@@ -3700,8 +3726,17 @@ static void _event( iOModel inst, iONode nodeC ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s with addr=%d", ident, addr );
         }
       }
-      if( lc == NULL )
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "UNKNOWN LC %d", addr );
+      if( lc == NULL ) {
+        iOCar car = ModelOp.getCar(inst, id);
+        if( car == NULL )
+          car = ModelOp.getCarByAddress(inst, addr, iid);
+        if( car == NULL )
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "UNKNOWN loco/car by addr=%d", addr );
+        else {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "car event for [%s]", CarOp.base.id(car) );
+          CarOp.base.event( car, nodeC );
+        }
+      }
       /* Cleanup Node3 */
     }
     nodeC->base.del(nodeC);

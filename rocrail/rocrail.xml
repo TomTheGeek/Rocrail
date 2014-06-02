@@ -924,6 +924,11 @@
       <param name="decaddr" vt="int" remark="Loc decoder address to search for"/>
       <param name="iid" vt="const char*" remark="Optional IID"/>
     </fun>
+    <fun name="getCarByAddress" vt="iOCar">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="decaddr" vt="int" remark="Car decoder address to search for"/>
+      <param name="iid" vt="const char*" remark="Optional IID"/>
+    </fun>
     <fun name="getLocByIdent" vt="iOLoc">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="ident1" vt="const char*" remark="Loc identifier to search for"/>
@@ -2142,6 +2147,9 @@
       <param name="inst" vt="this" remark="Car instance"/>
     </fun>
     <fun name="getWeight" vt="int">
+      <param name="inst" vt="this" remark="Car instance"/>
+    </fun>
+    <fun name="getAddress" vt="int">
       <param name="inst" vt="this" remark="Car instance"/>
     </fun>
     <fun name="setLocality" vt="void">

@@ -338,6 +338,11 @@ static void _addWaybill( struct OCar* inst ,iONode waybill ) {
   iOCarData data = Data(inst);
 }
 
+static int _getAddress( iOCar car ) {
+  iOCarData data = Data(car);
+  return wCar.getaddr( data->props );
+}
+
 
 /**  */
 static const char* _getIdent( struct OCar* inst ) {
