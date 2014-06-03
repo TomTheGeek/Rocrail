@@ -1452,7 +1452,7 @@ static void __transactor( void* threadinst ) {
         else if( in[3] == 0x03 )
           csname = "Control Plus";
         else if( in[3] == 0x10 )
-          csname = "S88XpressNetLi";
+          csname = "Multimaus or S88XpressNetLi";
 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Command Station: %s version: %d.%d [%s]",
             csname, (in[2] & 0xF0)/16 , (in[2] & 0x0F), data->iid);
