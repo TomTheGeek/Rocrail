@@ -138,7 +138,28 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
     gc->SetFont(font,*wxBLACK);
 
     if( icon != NULL ) {
-      dc.DrawBitmap(*icon, (buttonWidth-icon->GetWidth())/2, (buttonHeight-icon->GetHeight())/2, true);
+      float bmpW = icon->GetWidth();
+      float bmpH = icon->GetHeight();
+      float txtW = buttonWidth-4;
+      float txtH = buttonHeight-4;
+      float scaleW = bmpW / txtW;
+      float scaleH = bmpH / txtH;
+      float scale = 0;
+      if( scaleW > scaleH ) {
+        scale = scaleW;
+      }
+      else {
+        scale = scaleH;
+      }
+
+      if( scale != 0 ) {
+        wxImage img = icon->ConvertToImage();
+        delete icon;
+        img = img.Scale( (bmpW/scale), (bmpH/scale), wxIMAGE_QUALITY_NORMAL );
+        icon = new wxBitmap(img);
+      }
+
+      dc.DrawBitmap(*icon, (buttonWidth - icon->GetWidth())/2, (buttonHeight - icon->GetHeight())/2, true);
     }
     else {
       double width;
