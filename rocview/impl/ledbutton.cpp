@@ -140,10 +140,10 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
     if( icon != NULL ) {
       float bmpW = icon->GetWidth();
       float bmpH = icon->GetHeight();
-      float txtW = buttonWidth-4;
-      float txtH = buttonHeight-4;
-      float scaleW = bmpW / txtW;
-      float scaleH = bmpH / txtH;
+      float butW = buttonWidth-4;
+      float butH = buttonHeight-4;
+      float scaleW = bmpW / butW;
+      float scaleH = bmpH / butH;
       float scale = 0;
       if( scaleW > scaleH ) {
         scale = scaleW;
@@ -152,7 +152,7 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
         scale = scaleH;
       }
 
-      if( scale != 0 ) {
+      if( (int)scale != 0 ) {
         wxImage img = icon->ConvertToImage();
         delete icon;
         img = img.Scale( (bmpW/scale), (bmpH/scale), wxIMAGE_QUALITY_NORMAL );
