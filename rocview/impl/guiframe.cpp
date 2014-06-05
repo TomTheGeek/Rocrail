@@ -2452,7 +2452,7 @@ void RocGuiFrame::create() {
   wxBitmap m_LocImageBitmap(wxNullBitmap);
   m_LocImage = NULL;
   if( wGui.isshowlocoimage(m_Ini) ) {
-    m_LocImage = new BitmapButton( m_ActiveLocsPanel, -1, m_LocImageBitmap, wxDefaultPosition, wxSize(250,88), wxBU_AUTODRAW|wxBU_EXACTFIT );
+    m_LocImage = new BitmapButton( m_ActiveLocsPanel, -1, m_LocImageBitmap, wxDefaultPosition, wxSize(250,MAXLOCOIMAGE_HEIGHT+8), wxBU_AUTODRAW|wxBU_EXACTFIT );
     activeLocsSizer->Add(m_LocImage, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
   }
 
@@ -4870,7 +4870,7 @@ void BitmapButton::OnLeftDown(wxMouseEvent& event) {
   }
 }
 
-#define MAXHEIGHT 80
+
 void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
   // Get copied node:
   iONode lc = (iONode)event.GetClientData();
@@ -4895,12 +4895,12 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
             //m_LocImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
             wxImage img(wxString(pixpath,wxConvUTF8), bmptype);
 
-            if( img.GetHeight() > MAXHEIGHT ) {
+            if( img.GetHeight() > MAXLOCOIMAGE_HEIGHT ) {
               int h = img.GetHeight();
               int w = img.GetWidth();
-              float scale = (float)h / (float)MAXHEIGHT;
+              float scale = (float)h / (float)MAXLOCOIMAGE_HEIGHT;
               float width = (float)w / scale;
-              wxBitmap bmp(img.Scale((int)width, MAXHEIGHT, wxIMAGE_QUALITY_NORMAL));
+              wxBitmap bmp(img.Scale((int)width, MAXLOCOIMAGE_HEIGHT, wxIMAGE_QUALITY_NORMAL));
               m_LocImage->SetBitmapLabel( bmp );
             }
             else {
@@ -5554,5 +5554,4 @@ void RocGuiFrame::OnRocguiIni(wxCommandEvent& event) {
   }
   dlg->Destroy();
 }
-
 

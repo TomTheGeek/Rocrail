@@ -714,5 +714,6 @@ enum {
 #define LOCO_VIEW_TRAIN 0x40
 #define LOCO_VIEW_ALLSEL 0x80
 
+#define MAXLOCOIMAGE_HEIGHT 60
 
 #endif
