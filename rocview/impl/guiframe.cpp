@@ -117,6 +117,7 @@
 #include "rocview/public/routedlg.h"
 #include "rocview/public/item.h"
 #include "rocview/public/jssupport.h"
+#include "rocview/public/cellrenderer.h"
 
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/RRCon.h"
@@ -1328,6 +1329,10 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         }
 
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_DESTBLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
+
+        if( wLoc.getimage( lc ) != NULL && StrOp.len(wLoc.getimage( lc )) > 0 ) {
+          m_ActiveLocs->SetCellRenderer(i, LOC_COL_IMAGE, new CellRenderer(wLoc.getimage( lc )) );
+        }
       }
       ListOp.base.del( list );
 
@@ -1351,6 +1356,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
   }
 
   m_ActiveLocs->AutoSizeColumns(false);
+  m_ActiveLocs->AutoSizeColumn(LOC_COL_IMAGE);
   /*
   m_ActiveLocs->FitInside();
   m_ActiveLocs->UpdateDimensions();
@@ -2452,7 +2458,7 @@ void RocGuiFrame::create() {
 
   m_ActiveLocs = new wxGrid( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
   m_ActiveLocs->SetRowLabelSize(0);
-  m_ActiveLocs->CreateGrid(1, 7, wxGrid::wxGridSelectRows);
+  m_ActiveLocs->CreateGrid(1, 8, wxGrid::wxGridSelectRows);
 
   wxFont* fontHeader = new wxFont( m_ActiveLocs->GetLabelFont() );
   fontHeader->SetPointSize( (int)(fontHeader->GetPointSize() + wGui.getgridfontsizeadjust(m_Ini) ) );
@@ -2471,6 +2477,7 @@ void RocGuiFrame::create() {
   m_ActiveLocs->SetColLabelValue(LOC_COL_MODE, wxGetApp().getMsg("mode") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_DESTBLOCK, wxGetApp().getMsg("destination") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_CONSIST, wxGetApp().getMsg("train") );
+  m_ActiveLocs->SetColLabelValue(LOC_COL_IMAGE, wxGetApp().getMsg("image") );
   m_ActiveLocs->AutoSizeColumns();
   m_ActiveLocs->AutoSizeRows();
 
