@@ -35,6 +35,7 @@
 
 #include "rocs/public/node.h"
 #include "rocview/public/clock.h"
+#include "rocview/public/meter.h"
 #include "rocview/public/ledbutton.h"
 #include "rocview/public/slider.h"
 
@@ -104,6 +105,7 @@ private:
 #endif
 
     Clock* m_Clock;
+    Meter* m_Meter;
 
     bool m_bFn;
     bool m_bFx[32];

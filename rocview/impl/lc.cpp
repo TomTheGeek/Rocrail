@@ -977,10 +977,16 @@ void LC::CreateControls() {
   if( !StrOp.equals( wGui.clock_none, clocktype ) ) {
     TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating clock...");
     m_Clock = new Clock(m_Parent, -1, 0, 0, 2, 1, type, wGui.isshowsecondhand( wxGetApp().getIni() ));
-    m_SliderSizer->Add(m_Clock, 0, (type==3?0:wxALIGN_CENTER_VERTICAL)|wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
+    m_MainSizer->Add(m_Clock, 0, (type==3?0:wxALIGN_CENTER_VERTICAL)|wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
   }
   else {
     m_Clock = NULL;
+  }
+
+  if( false ) {
+    TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating meter...");
+    m_Meter = new Meter(m_Parent, -1, 0, 0);
+    m_MainSizer->Add(m_Meter, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
   }
 
 }
