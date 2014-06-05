@@ -180,7 +180,7 @@
     <sl txt="Prekliči" tip="Prekliči dialog."/>
   </Msg>
   <Msg id="on">
-    <de txt="ein"/>
+    <de txt="Ein"/>
     <en txt="on"/>
     <nl txt="ingeschakeld"/>
     <sv txt="på"/>
@@ -958,7 +958,7 @@
     <en txt="Init field" accel="0" tip="Initialize switches according the track plan."/>
     <nl txt="Init veld" accel="8" tip="Zet de wissels zoals ze in het spoorplan staan."/>
     <sv txt="Initialisera fält" accel="8" tip="Initialisera växlar enligt spårplan"/>
-    <fr txt="Positionner les aiguillages" accel="0" tip="Positionner les aiguillages selon le plan."/>
+    <fr txt="Champs d'initialisation" accel="0" tip="Positionner les aiguillages selon le plan."/>
     <tr txt="Makasları hazırla" accel="0" tip="Ray diyagramına göre demiryolu makaslarını başlangıç durumuna getir."/>
     <es txt="Iniciar maqueta" accel="0" tip="Inicializar conmutadores de acuerdo al plan de seguimiento"/>
     <it txt="Campo di inizializzazione" tip="Inizializza i deviatoi secondo il tracciato"/>
@@ -7701,7 +7701,7 @@
     <pl txt="Max. liczba klientów"/>
   </Msg>
   <Msg id="switchtime">
-    <de txt="Weichenschaltzeit (ms)"/>
+    <de txt="Schaltzeit (ms)"/>
     <en txt="Switch time (ms)"/>
     <nl txt="Schakeltijd"/>
     <sv txt="Växeltid (ms)"/>
@@ -27886,6 +27886,7 @@
     <pt_BR txt="Desligar o servidor Rocrail também?"/>
     <sl txt="Ustavim tudi Rocrail strežnik?"/>
     <sr_latin txt="Zatvori i Rocrail server?"/>
+    <it txt="Chiudere anche il server Rocrail?"/>
   </Msg>
   <Msg id="toolbar">
     <en txt="Toolbar"/>
@@ -27894,6 +27895,7 @@
     <pt_BR txt="Barra de ferramentas"/>
     <sl txt="Orodna vrstica"/>
     <sr_latin txt="Traka alata"/>
+    <it txt="Barra degli strumenti"/>
   </Msg>
   <Msg id="freeblockonenter">
     <en txt="Free previous block on enter"/>
@@ -27902,6 +27904,7 @@
     <pt_BR txt="Liberar bloco anterior quando entrar"/>
     <sl txt="Sprosti prejšnji odsek ob vhodu"/>
     <sr_latin txt="Oslobodi prethodni blok pri ulasku"/>
+    <it txt="Liberare il blocco precedente all'ENTER"/>
   </Msg>
   <Msg id="buslength">
     <en txt="Bus %d length"/>
@@ -27910,5 +27913,6 @@
     <sl txt="Dolžina vodila %d"/>
     <de txt="Bus %d Länge"/>
     <sr_latin txt="Dužina Bus-a %d"/>
+    <it txt="Lunghezza bus %d"/>
   </Msg>
 </Messages>
