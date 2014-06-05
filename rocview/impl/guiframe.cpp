@@ -4870,6 +4870,7 @@ void BitmapButton::OnLeftDown(wxMouseEvent& event) {
   }
 }
 
+#define MAXHEIGHT 80
 void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
   // Get copied node:
   iONode lc = (iONode)event.GetClientData();
@@ -4890,8 +4891,23 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
         StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( lc ) ) );
 
         if( FileOp.exist(pixpath)) {
-          if( m_LocImage != NULL )
-            m_LocImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+          if( m_LocImage != NULL ) {
+            //m_LocImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+            wxImage img(wxString(pixpath,wxConvUTF8), bmptype);
+
+            if( img.GetHeight() > MAXHEIGHT ) {
+              int h = img.GetHeight();
+              int w = img.GetWidth();
+              float scale = (float)h / (float)MAXHEIGHT;
+              float width = (float)w / scale;
+              wxBitmap bmp(img.Scale((int)width, MAXHEIGHT, wxIMAGE_QUALITY_NORMAL));
+              m_LocImage->SetBitmapLabel( bmp );
+            }
+            else {
+              m_LocImage->SetBitmapLabel( wxBitmap(img) );
+            }
+          }
+
         }
         else {
           m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
