@@ -52,6 +52,7 @@ void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRe
   if( imageName != NULL && StrOp.len(imageName) > 0 ) {
     updateImage(rect);
     dc.DrawBitmap(*imageBitmap, rect.x, rect.y);
+    grid.AutoSizeColumn(col);
   }
 }
 
