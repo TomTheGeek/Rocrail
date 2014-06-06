@@ -191,7 +191,7 @@ void Meter::OnPaint(wxPaintEvent& event) {
     gc->DrawText( wxT("15"), b * 18.0, b * 55.0 );
     gc->DrawText( wxT("30"), b * 18.0, b * 35.0 );
     gc->DrawText( wxT("45"), b * 27.0, b * 20.0 );
-    gc->DrawText( wxT("60"), b * 42.0, b * 14.0 );
+    gc->DrawText( wxT("60"), b * 45.0, b * 14.0 );
     gc->DrawText( wxT("75"), b * 64.0, b * 20.0 );
     gc->DrawText( wxT("90"), b * 72.0, b * 35.0 );
     gc->DrawText( wxT("105"), b * 68.0, b * 55.0 );
