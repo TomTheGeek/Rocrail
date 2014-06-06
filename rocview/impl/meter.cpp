@@ -94,7 +94,7 @@ void Meter::OnPaint(wxPaintEvent& event) {
 
 #if defined __WIN32
   //Background workaround
-  gc->SetBrush(m_Parent->GetBackgroundColour());
+  gc->SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
   gc->DrawRectangle(0, 0, width, height);
 #endif
 
