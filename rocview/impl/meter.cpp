@@ -114,7 +114,7 @@ void Meter::OnPaint(wxPaintEvent& event) {
 
   wxGraphicsPath platePath = gc->CreatePath();
   platePath.AddArc(width/2, width/2, width/2-8, getRadians(126), getRadians(56), true);
-  wxPen grayPen( wxColour(100, 100, 100), wxPENSTYLE_SHORT_DASH );
+  wxPen grayPen( wxColour(100, 100, 100), wxSHORT_DASH );
   grayPen.SetWidth(1);
   gc->SetPen( grayPen );
   gc->StrokePath(platePath);
