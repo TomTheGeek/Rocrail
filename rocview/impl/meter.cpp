@@ -42,7 +42,7 @@
 #include "rocview/public/meter.h"
 
 Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
-                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(110,110), wxBORDER_NONE)
+                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(80,80), wxBORDER_NONE)
 {
   m_Parent = parent;
   Connect( wxEVT_PAINT, wxPaintEventHandler( Meter::OnPaint ) );
@@ -57,6 +57,11 @@ static int modulal(int val)
     val +=360;
   }while(val<0);
   return val;
+}
+
+static double getRadians( double degrees ) {
+  static double PI= 3.14159265358979;
+  return (degrees / 360) * (2.0 * PI);
 }
 
 
@@ -146,6 +151,13 @@ void Meter::OnPaint(wxPaintEvent& event) {
   gc->SetPen( platePen );
   gc->StrokePath(platePath);
 
+  platePath = gc->CreatePath();
+  platePath.AddArc(width/2, width/2, width/2-8, getRadians(240), getRadians(120), true);
+  platePen.SetWidth(1);
+  gc->SetPen( platePen );
+  gc->StrokePath(platePath);
+
+
   double b = width / 100.0;
   wxFont font(9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
   gc->SetFont(font,*wxBLACK);
@@ -167,11 +179,14 @@ void Meter::drawNeedle(wxGraphicsContext* gc, double c, double speed, bool erase
 
   wxGraphicsPath path = gc->CreatePath();
   path.MoveToPoint(c, c);
-  path.AddLineToPoint(c + 0.90 * c * cos(speed), c - 0.90 * c * sin(speed));
+  path.AddLineToPoint(c + 0.80 * c * cos(speed), c - 0.80 * c * sin(speed));
   gc->StrokePath(path);
 
-  gc->SetBrush(*wxRED_BRUSH);
-  gc->DrawEllipse(c-2, c-2, 4, 4);
+  wxPen blackPen( wxColour(0, 0, 0), wxSOLID );
+  blackPen.SetWidth(1);
+  gc->SetPen( blackPen );
+  gc->SetBrush(*wxBLACK_BRUSH);
+  gc->DrawEllipse(c-3, c-3, 6, 6);
 
 }
 

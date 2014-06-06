@@ -87,7 +87,7 @@ void CellRenderer::updateImage(const wxRect& rect) {
       int w = img.GetWidth();
       float scale = (float)h / (float)rect.height;
       float width = (float)w / scale;
-      imageBitmap = new wxBitmap(img.Scale((int)width, rect.height, wxIMAGE_QUALITY_NORMAL));
+      imageBitmap = new wxBitmap(img.Scale((int)width, rect.height, wxIMAGE_QUALITY_HIGH));
     }
     else {
       imageBitmap = new wxBitmap(img);

@@ -2073,10 +2073,13 @@ void SymbolRenderer::drawText( wxPaintDC& dc, bool occupied, const char* ori ) {
         else {
           scale = scaleH;
         }
-        wxImage img = m_Bitmap->ConvertToImage();
-        delete m_Bitmap;
-        img = img.Scale( (bmpW/scale), (bmpH/scale) );
-        m_Bitmap = new wxBitmap(img);
+
+        if( scale > .5 ) {
+          wxImage img = m_Bitmap->ConvertToImage();
+          delete m_Bitmap;
+          img = img.Scale( (bmpW/scale), (bmpH/scale), wxIMAGE_QUALITY_HIGH );
+          m_Bitmap = new wxBitmap(img);
+        }
 
         if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.east ) ) {
           TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "rotate [%s]", pixpath );

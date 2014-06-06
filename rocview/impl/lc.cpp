@@ -983,10 +983,13 @@ void LC::CreateControls() {
     m_Clock = NULL;
   }
 
-  if( false ) {
+  if( wGui.isshowspeedometer( wxGetApp().getIni() ) ) {
     TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating meter...");
     m_Meter = new Meter(m_Parent, -1, 0, 0);
-    m_MainSizer->Add(m_Meter, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
+    m_MainSizer->Add(m_Meter, 0, wxALIGN_TOP|wxALL, 2);
+  }
+  else {
+    m_Meter = NULL;
   }
 
 }
