@@ -35,10 +35,11 @@ class Meter : public wxPanel{
     Meter(wxWindow *parent, wxWindowID id, int x, int y);
     void OnPaint(wxPaintEvent& event);
     void drawNeedle(wxGraphicsContext* gc, double c, bool erase=false);
-    void setSpeed(int speed);
+    void setSpeed(int speed, int maxspeed=0);
   private:
     wxWindow* m_Parent;
     int m_iSpeed;
+    int m_iMaxSpeed;
     double speed;
 
 };

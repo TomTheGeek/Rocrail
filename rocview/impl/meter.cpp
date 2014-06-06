@@ -61,6 +61,7 @@ Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
 {
   m_Parent = parent;
   m_iSpeed = 0;
+  m_iMaxSpeed = 240;
   speed = 216;
   speed = ((modulal((90 - speed)) * M_PI) / 180);
 
@@ -174,15 +175,28 @@ void Meter::OnPaint(wxPaintEvent& event) {
 
   wxFont font(fontsize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
   gc->SetFont(font,*wxBLACK);
-  gc->DrawText( wxT("0"), b * 30.0, b * 70.0 );
-  gc->DrawText( wxT("30"), b * 18.0, b * 55.0 );
-  gc->DrawText( wxT("60"), b * 18.0, b * 35.0 );
-  gc->DrawText( wxT("90"), b * 27.0, b * 20.0 );
-  gc->DrawText( wxT("120"), b * 42.0, b * 14.0 );
-  gc->DrawText( wxT("150"), b * 60.0, b * 20.0 );
-  gc->DrawText( wxT("180"), b * 68.0, b * 35.0 );
-  gc->DrawText( wxT("210"), b * 68.0, b * 55.0 );
-  gc->DrawText( wxT("240"), b * 60.0, b * 70.0 );
+  if( m_iMaxSpeed > 120 ) {
+    gc->DrawText( wxT("0"), b * 30.0, b * 70.0 );
+    gc->DrawText( wxT("30"), b * 18.0, b * 55.0 );
+    gc->DrawText( wxT("60"), b * 18.0, b * 35.0 );
+    gc->DrawText( wxT("90"), b * 27.0, b * 20.0 );
+    gc->DrawText( wxT("120"), b * 42.0, b * 14.0 );
+    gc->DrawText( wxT("150"), b * 60.0, b * 20.0 );
+    gc->DrawText( wxT("180"), b * 68.0, b * 35.0 );
+    gc->DrawText( wxT("210"), b * 68.0, b * 55.0 );
+    gc->DrawText( wxT("240"), b * 60.0, b * 70.0 );
+  }
+  else {
+    gc->DrawText( wxT("0"), b * 30.0, b * 70.0 );
+    gc->DrawText( wxT("15"), b * 18.0, b * 55.0 );
+    gc->DrawText( wxT("30"), b * 18.0, b * 35.0 );
+    gc->DrawText( wxT("45"), b * 27.0, b * 20.0 );
+    gc->DrawText( wxT("60"), b * 42.0, b * 14.0 );
+    gc->DrawText( wxT("75"), b * 64.0, b * 20.0 );
+    gc->DrawText( wxT("90"), b * 72.0, b * 35.0 );
+    gc->DrawText( wxT("105"), b * 68.0, b * 55.0 );
+    gc->DrawText( wxT("120"), b * 60.0, b * 70.0 );
+  }
 
   drawNeedle(gc, c);
 
@@ -212,26 +226,45 @@ void Meter::drawNeedle(wxGraphicsContext* gc, double c, bool erase) {
 
 
 
-void Meter::setSpeed(int iSpeed) {
+void Meter::setSpeed(int iSpeed, int maxspeed) {
   /*
   speed = 90; // 175
-  speed = 143.0; // 240
-  speed = 216; // 0
+  speed = 143.0; // 240 (120)
+  speed = 216; // 0 (0)
   speed = 270; // 45
-  speed = 0; // 120
-  speed = 360; // 120
+  speed = 0; // 120 (60)
+  speed = 360; // 120 (60)
   */
+  if( maxspeed > 0 )
+    m_iMaxSpeed = maxspeed;
+
   m_iSpeed = iSpeed;
-  if( iSpeed <= 120 ) {
-    double step = (360.0-216.0) / 120.0;
-    speed = 216.0 + step*iSpeed;
+
+  if( m_iMaxSpeed > 120 ) {
+    if( iSpeed <= 120 ) {
+      double step = (360.0-216.0) / 120.0;
+      speed = 216.0 + step*iSpeed;
+    }
+    else {
+      if( iSpeed > 240 )
+        iSpeed = 240;
+      double step = 143.0 / 120.0;
+      speed = step*(iSpeed-120);
+    }
   }
   else {
-    if( iSpeed > 240 )
-      iSpeed = 240;
-    double step = 143.0 / 120.0;
-    speed = step*(iSpeed-120);
+    if( iSpeed <= 60 ) {
+      double step = (360.0-216.0) / 60.0;
+      speed = 216.0 + step*iSpeed;
+    }
+    else {
+      if( iSpeed > 120 )
+        iSpeed = 120;
+      double step = 143.0 / 60.0;
+      speed = step*(iSpeed-60);
+    }
   }
+
   speed = ((modulal((90 - speed)) * M_PI) / 180);
   Refresh(true);
 }

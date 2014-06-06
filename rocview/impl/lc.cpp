@@ -126,7 +126,7 @@ void LC::setLocProps( iONode props ) {
     value.Printf( _T("%d"), m_iSpeed );
     m_V->SetValue( value );
     if( m_Meter != NULL ) {
-      m_Meter->setSpeed(m_iSpeed);
+      m_Meter->setSpeed(m_iSpeed, wLoc.getV_max(m_LocProps) );
     }
     m_bDir = wLoc.isdir(m_LocProps)?true:false;
 
