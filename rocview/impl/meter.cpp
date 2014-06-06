@@ -174,6 +174,10 @@ void Meter::OnPaint(wxPaintEvent& event) {
   gc->DrawText( wxT("60"), b * 18.0, b * 35.0 );
   gc->DrawText( wxT("90"), b * 27.0, b * 20.0 );
   gc->DrawText( wxT("120"), b * 42.0, b * 14.0 );
+  gc->DrawText( wxT("150"), b * 60.0, b * 20.0 );
+  gc->DrawText( wxT("180"), b * 68.0, b * 35.0 );
+  gc->DrawText( wxT("210"), b * 68.0, b * 55.0 );
+  gc->DrawText( wxT("240"), b * 60.0, b * 70.0 );
 
   drawNeedle(gc, c);
 
