@@ -167,7 +167,12 @@ void Meter::OnPaint(wxPaintEvent& event) {
 
 
   double b = width / 100.0;
-  wxFont font(9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+  int fontsize = 7;
+#if defined __APPLE__
+  fontsize = 9;
+#endif
+
+  wxFont font(fontsize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
   gc->SetFont(font,*wxBLACK);
   gc->DrawText( wxT("0"), b * 30.0, b * 70.0 );
   gc->DrawText( wxT("30"), b * 18.0, b * 55.0 );
