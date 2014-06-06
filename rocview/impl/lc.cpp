@@ -125,6 +125,9 @@ void LC::setLocProps( iONode props ) {
     wxString value;
     value.Printf( _T("%d"), m_iSpeed );
     m_V->SetValue( value );
+    if( m_Meter != NULL ) {
+      m_Meter->setSpeed(m_iSpeed);
+    }
     m_bDir = wLoc.isdir(m_LocProps)?true:false;
 
     m_Dir->SetLabel( m_bDir?_T(">>"):_T("<<") );
@@ -147,6 +150,9 @@ void LC::speedCmd(bool sendCmd)
 
   TraceOp.trc( "lc", TRCLEVEL_DEBUG, __LINE__, 9999, "speedCmd" );
   m_V->SetValue( wxString::Format(wxT("%d"), m_iSpeed) );
+  if( m_Meter != NULL ) {
+    m_Meter->setSpeed(m_iSpeed);
+  }
 
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, wLoc.getid( m_LocProps ) );
@@ -321,6 +327,9 @@ bool LC::updateLoc( iONode node ) {
         wxString value;
         value.Printf( _T("%d"), m_iSpeed );
         m_V->SetValue( value );
+        if( m_Meter != NULL ) {
+          m_Meter->setSpeed(m_iSpeed);
+        }
 
         TraceOp.trc( "lc", TRCLEVEL_DEBUG, __LINE__, 9999, "velocity update %d", m_iSpeed );
 
