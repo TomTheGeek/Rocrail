@@ -7085,3 +7085,9 @@ msgstr ""
 msgid "Bus %d length"
 msgstr ""
 
+#. 
+# id="speedometer"
+#, c-format
+msgid "Speedometer"
+msgstr ""
+

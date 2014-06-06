@@ -41,16 +41,6 @@
 
 #include "rocview/public/meter.h"
 
-Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
-                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(80,80), wxBORDER_NONE)
-{
-  m_Parent = parent;
-  Connect( wxEVT_PAINT, wxPaintEventHandler( Meter::OnPaint ) );
-  //Disconnect( wxEVT_PAINT, wxPaintEventHandler( MyPanel1::OnPaint ) );
-  TraceOp.trc( "meter", TRCLEVEL_INFO, __LINE__, 9999, "meter instantiated" );
-}
-
-
 static int modulal(int val)
 {
   do{
@@ -62,6 +52,21 @@ static int modulal(int val)
 static double getRadians( double degrees ) {
   static double PI= 3.14159265358979;
   return (degrees / 360) * (2.0 * PI);
+}
+
+
+
+Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
+                  : wxPanel(parent, id,  wxPoint(x, y), wxSize(110,110), wxBORDER_NONE)
+{
+  m_Parent = parent;
+  m_iSpeed = 0;
+  speed = 216;
+  speed = ((modulal((90 - speed)) * M_PI) / 180);
+
+  Connect( wxEVT_PAINT, wxPaintEventHandler( Meter::OnPaint ) );
+  //Disconnect( wxEVT_PAINT, wxPaintEventHandler( MyPanel1::OnPaint ) );
+  TraceOp.trc( "meter", TRCLEVEL_INFO, __LINE__, 9999, "meter instantiated" );
 }
 
 
@@ -107,8 +112,16 @@ void Meter::OnPaint(wxPaintEvent& event) {
   gc->DrawEllipse(0, 0, width-1, width-1);
 
 
-  int i;
   wxGraphicsPath platePath = gc->CreatePath();
+  platePath.AddArc(width/2, width/2, width/2-8, getRadians(126), getRadians(56), true);
+  wxPen grayPen( wxColour(100, 100, 100), wxPENSTYLE_SHORT_DASH );
+  grayPen.SetWidth(1);
+  gc->SetPen( grayPen );
+  gc->StrokePath(platePath);
+
+
+  int i;
+  platePath = gc->CreatePath();
   wxPen platePen( wxColour(0, 0, 0), wxSOLID );
   for (i = 0; i < 25; i++) {
     double k = ((modulal((90 - (i * 6))) * M_PI) / 180);
@@ -151,27 +164,25 @@ void Meter::OnPaint(wxPaintEvent& event) {
   gc->SetPen( platePen );
   gc->StrokePath(platePath);
 
-  platePath = gc->CreatePath();
-  platePath.AddArc(width/2, width/2, width/2-8, getRadians(240), getRadians(120), true);
-  platePen.SetWidth(1);
-  gc->SetPen( platePen );
-  gc->StrokePath(platePath);
 
 
   double b = width / 100.0;
   wxFont font(9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
   gc->SetFont(font,*wxBLACK);
-  gc->DrawText( wxT("0"), b * 25.0, b * 70.0 );
+  gc->DrawText( wxT("0"), b * 30.0, b * 70.0 );
+  gc->DrawText( wxT("30"), b * 18.0, b * 55.0 );
+  gc->DrawText( wxT("60"), b * 18.0, b * 35.0 );
+  gc->DrawText( wxT("90"), b * 27.0, b * 20.0 );
+  gc->DrawText( wxT("120"), b * 42.0, b * 14.0 );
 
-  double speed = 36;
-  drawNeedle(gc, c, ((modulal((90 - (speed * 6))) * M_PI) / 180));
+  drawNeedle(gc, c);
 
   delete gc;
 
 }
 
 
-void Meter::drawNeedle(wxGraphicsContext* gc, double c, double speed, bool erase) {
+void Meter::drawNeedle(wxGraphicsContext* gc, double c, bool erase) {
   gc->SetBrush( erase?*wxWHITE_BRUSH:wxColour(255, 0, 0) );
   wxPen redPen( erase?wxColour(255, 255, 255):wxColour(255, 0, 0), wxSOLID );
   redPen.SetWidth(2);
@@ -185,11 +196,34 @@ void Meter::drawNeedle(wxGraphicsContext* gc, double c, double speed, bool erase
   wxPen blackPen( wxColour(0, 0, 0), wxSOLID );
   blackPen.SetWidth(1);
   gc->SetPen( blackPen );
-  gc->SetBrush(*wxBLACK_BRUSH);
-  gc->DrawEllipse(c-3, c-3, 6, 6);
+  gc->SetBrush(*wxGREY_BRUSH);
+  gc->DrawEllipse(c-4, c-4, 8, 8);
 
 }
 
 
 
+void Meter::setSpeed(int iSpeed) {
+  /*
+  speed = 90; // 175
+  speed = 143.0; // 240
+  speed = 216; // 0
+  speed = 270; // 45
+  speed = 0; // 120
+  speed = 360; // 120
+  */
+  m_iSpeed = iSpeed;
+  if( iSpeed <= 120 ) {
+    double step = (360.0-216.0) / 120.0;
+    speed = 216.0 + step*iSpeed;
+  }
+  else {
+    if( iSpeed > 240 )
+      iSpeed = 240;
+    double step = 143.0 / 120.0;
+    speed = step*(iSpeed-120);
+  }
+  speed = ((modulal((90 - speed)) * M_PI) / 180);
+  Refresh(true);
+}
 

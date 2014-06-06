@@ -375,6 +375,9 @@ void LC::OnSlider(wxScrollEvent& event)
   }
   else if ( event.GetEventObject() == m_Vslider ) {
     m_V->SetValue( wxString::Format(wxT("%d"), m_Vslider->GetValue()) );
+    if( m_Meter != NULL ) {
+      m_Meter->setSpeed(m_Vslider->GetValue());
+    }
   }
 }
 
@@ -974,23 +977,24 @@ void LC::CreateControls() {
   else if( StrOp.equals( wGui.clock_digital, clocktype ) )
     type = 3;
 
+  if( wGui.isshowspeedometer( wxGetApp().getIni() ) ) {
+    TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating meter...");
+    m_Meter = new Meter(m_Parent, -1, 0, 0);
+    m_MainSizer->Add(m_Meter, 0, wxALIGN_TOP|wxALL|wxFIXED_MINSIZE, 2);
+  }
+  else {
+    m_Meter = NULL;
+  }
+
   if( !StrOp.equals( wGui.clock_none, clocktype ) ) {
     TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating clock...");
     m_Clock = new Clock(m_Parent, -1, 0, 0, 2, 1, type, wGui.isshowsecondhand( wxGetApp().getIni() ));
-    m_MainSizer->Add(m_Clock, 0, (type==3?0:wxALIGN_CENTER_VERTICAL)|wxALIGN_CENTER_HORIZONTAL|wxALL, 2);
+    m_MainSizer->Add(m_Clock, 0, (type==3?0:wxALIGN_CENTER_VERTICAL)|wxALIGN_CENTER_HORIZONTAL|wxALL|wxFIXED_MINSIZE, 2);
   }
   else {
     m_Clock = NULL;
   }
 
-  if( wGui.isshowspeedometer( wxGetApp().getIni() ) ) {
-    TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating meter...");
-    m_Meter = new Meter(m_Parent, -1, 0, 0);
-    m_MainSizer->Add(m_Meter, 0, wxALIGN_TOP|wxALL, 2);
-  }
-  else {
-    m_Meter = NULL;
-  }
 
 }
 

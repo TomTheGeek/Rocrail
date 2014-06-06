@@ -27915,4 +27915,7 @@
     <sr_latin txt="Dužina Bus-a %d"/>
     <it txt="Lunghezza bus %d"/>
   </Msg>
+  <Msg id="speedometer">
+    <en txt="Speedometer"/>
+  </Msg>
 </Messages>
