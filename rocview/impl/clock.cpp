@@ -323,7 +323,7 @@ void Clock::drawNewClock() {
 
 #if defined __WIN32
   //Background workaround
-  gc->SetBrush(this->GetBackgroundColour());
+  gc->SetBrush(m_Parent->GetBackgroundColour());
   gc->DrawRectangle(0, 0, width, height);
 #endif
 
