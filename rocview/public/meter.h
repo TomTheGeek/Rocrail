@@ -34,9 +34,10 @@ class Meter : public wxPanel{
   public:
     Meter(wxWindow *parent, wxWindowID id, int x, int y);
     void OnPaint(wxPaintEvent& event);
+    void OnPopup(wxMouseEvent& event);
     void setSpeed(int speed, int maxspeed=0, int runtime=0);
     void Timer(wxTimerEvent& event);
-
+    void OnMenu( wxCommandEvent& event );
   private:
     void drawNeedle(wxGraphicsContext* gc, double c, bool erase=false);
     wxWindow* m_Parent;
@@ -47,5 +48,10 @@ class Meter : public wxPanel{
     double speed;
 
 };
+
+enum {
+  ME_MeterHelp = 201
+};
+
 
 #endif

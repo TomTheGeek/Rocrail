@@ -39,6 +39,8 @@
 #include "rocs/public/trace.h"
 #include "rocs/public/file.h"
 
+#include "rocview/public/guiapp.h"
+
 #include "rocview/public/meter.h"
 
 static int modulal(int val)
@@ -68,6 +70,8 @@ Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
   SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 
   Connect( wxEVT_PAINT, wxPaintEventHandler( Meter::OnPaint ) );
+  Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( Meter::OnPopup ) );
+  Connect( wxEVT_MENU, wxCommandEventHandler( Meter::OnMenu ) );
   //Connect( wxEVT_TIMER, wxTimerEventHandler( Meter::Timer ) );
   //Disconnect( wxEVT_PAINT, wxPaintEventHandler( MyPanel1::OnPaint ) );
 /*
@@ -303,3 +307,20 @@ void Meter::Timer(wxTimerEvent& WXUNUSED(event))
 {
   Refresh(false);
 }
+
+
+void Meter::OnPopup(wxMouseEvent& event) {
+
+  wxMenu menu( wxGetApp().getMenu("speedometer") );
+  menu.Append( ME_MeterHelp, wxGetApp().getMenu("help") );
+  PopupMenu(&menu, event.GetX(), event.GetY() );
+}
+
+
+void Meter::OnMenu( wxCommandEvent& event ) {
+  int menuItem = event.GetId();
+  if( menuItem == ME_MeterHelp ) {
+    wxGetApp().openLink( "loc-tab", "mainthrottle" );
+  }
+}
+
