@@ -70,6 +70,7 @@ LEDButton::LEDButton(wxWindow* parent, wxString text, int width, int height, boo
   this->useLED = useLED;
   this->textOnly = textOnly;
   this->icon = NULL;
+  SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 }
 
 
