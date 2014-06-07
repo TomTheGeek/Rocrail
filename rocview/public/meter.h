@@ -21,7 +21,7 @@
 #ifndef __Meter_H__
 #define __Meter_H__
 
-#define ID_WXTIMER  999
+#define ID_METERTIMER  998
 #define TIMER   1000
 
 #include <wx/datetime.h>
@@ -34,10 +34,14 @@ class Meter : public wxPanel{
   public:
     Meter(wxWindow *parent, wxWindowID id, int x, int y);
     void OnPaint(wxPaintEvent& event);
-    void drawNeedle(wxGraphicsContext* gc, double c, bool erase=false);
-    void setSpeed(int speed, int maxspeed=0);
+    void setSpeed(int speed, int maxspeed=0, int runtime=0);
+    void Timer(wxTimerEvent& event);
+
   private:
+    void drawNeedle(wxGraphicsContext* gc, double c, bool erase=false);
     wxWindow* m_Parent;
+    wxTimer *WxTimer;
+    int m_iRunTime;
     int m_iSpeed;
     int m_iMaxSpeed;
     double speed;

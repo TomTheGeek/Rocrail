@@ -60,6 +60,7 @@ Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
                   : wxPanel(parent, id,  wxPoint(x, y), wxSize(110,110), wxBORDER_NONE)
 {
   m_Parent = parent;
+  m_iRunTime = 0;
   m_iSpeed = 0;
   m_iMaxSpeed = 240;
   speed = 216;
@@ -67,7 +68,13 @@ Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
   SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
 
   Connect( wxEVT_PAINT, wxPaintEventHandler( Meter::OnPaint ) );
+  //Connect( wxEVT_TIMER, wxTimerEventHandler( Meter::Timer ) );
   //Disconnect( wxEVT_PAINT, wxPaintEventHandler( MyPanel1::OnPaint ) );
+/*
+  WxTimer = new wxTimer();
+  WxTimer->SetOwner(this, ID_METERTIMER);
+  WxTimer->Start(TIMER);
+*/
   TraceOp.trc( "meter", TRCLEVEL_INFO, __LINE__, 9999, "meter instantiated" );
 }
 
@@ -202,6 +209,21 @@ void Meter::OnPaint(wxPaintEvent& event) {
     gc->DrawText( wxT("120"), b * 60.0, b * 70.0 );
   }
 
+  wxString str = wxString::Format( wxT("%04d:%02d.%02d"),
+      m_iRunTime/3600, (m_iRunTime%3600)/60, (m_iRunTime%3600)%60 );
+
+  wxFont fontRT(fontsize-1, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+  gc->SetFont(fontRT,*wxBLACK);
+
+  double w = 0;
+  double h = 0;
+  double descent = 0;
+  double externalLeading = 0;
+  gc->GetTextExtent( str,(wxDouble*)&w,(wxDouble*)&h,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+
+  gc->DrawText( str, (width-w)/2, b * 82.0 );
+
+
   drawNeedle(gc, c);
 
   delete gc;
@@ -230,7 +252,7 @@ void Meter::drawNeedle(wxGraphicsContext* gc, double c, bool erase) {
 
 
 
-void Meter::setSpeed(int iSpeed, int maxspeed) {
+void Meter::setSpeed(int iSpeed, int maxspeed, int runtime) {
   /*
   speed = 90; // 175
   speed = 143.0; // 240 (120)
@@ -241,6 +263,9 @@ void Meter::setSpeed(int iSpeed, int maxspeed) {
   */
   if( maxspeed > 0 )
     m_iMaxSpeed = maxspeed;
+
+  if( runtime > 0 )
+    m_iRunTime = runtime;
 
   m_iSpeed = iSpeed;
 
@@ -273,3 +298,8 @@ void Meter::setSpeed(int iSpeed, int maxspeed) {
   Refresh(true);
 }
 
+
+void Meter::Timer(wxTimerEvent& WXUNUSED(event))
+{
+  Refresh(false);
+}

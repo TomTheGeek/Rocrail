@@ -126,7 +126,7 @@ void LC::setLocProps( iONode props ) {
     value.Printf( _T("%d"), m_iSpeed );
     m_V->SetValue( value );
     if( m_Meter != NULL ) {
-      m_Meter->setSpeed(m_iSpeed, wLoc.getV_max(m_LocProps) );
+      m_Meter->setSpeed(m_iSpeed, wLoc.getV_max(m_LocProps), wLoc.getruntime(m_LocProps) );
     }
     m_bDir = wLoc.isdir(m_LocProps)?true:false;
 
@@ -151,7 +151,7 @@ void LC::speedCmd(bool sendCmd)
   TraceOp.trc( "lc", TRCLEVEL_DEBUG, __LINE__, 9999, "speedCmd" );
   m_V->SetValue( wxString::Format(wxT("%d"), m_iSpeed) );
   if( m_Meter != NULL ) {
-    m_Meter->setSpeed(m_iSpeed);
+    m_Meter->setSpeed(m_iSpeed, wLoc.getV_max(m_LocProps), wLoc.getruntime(m_LocProps));
   }
 
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
@@ -328,7 +328,7 @@ bool LC::updateLoc( iONode node ) {
         value.Printf( _T("%d"), m_iSpeed );
         m_V->SetValue( value );
         if( m_Meter != NULL ) {
-          m_Meter->setSpeed(m_iSpeed);
+          m_Meter->setSpeed(m_iSpeed, wLoc.getV_max(m_LocProps), wLoc.getruntime(m_LocProps));
         }
 
         TraceOp.trc( "lc", TRCLEVEL_DEBUG, __LINE__, 9999, "velocity update %d", m_iSpeed );
@@ -385,7 +385,7 @@ void LC::OnSlider(wxScrollEvent& event)
   else if ( event.GetEventObject() == m_Vslider ) {
     m_V->SetValue( wxString::Format(wxT("%d"), m_Vslider->GetValue()) );
     if( m_Meter != NULL ) {
-      m_Meter->setSpeed(m_Vslider->GetValue());
+      m_Meter->setSpeed(m_Vslider->GetValue(), wLoc.getV_max(m_LocProps), wLoc.getruntime(m_LocProps));
     }
   }
 }
