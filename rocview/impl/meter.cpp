@@ -77,7 +77,7 @@ Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y, int p_devider)
 
   Connect( wxEVT_PAINT, wxPaintEventHandler( Meter::OnPaint ) );
   Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( Meter::OnPopup ) );
-  Connect( wxEVT_MENU, wxCommandEventHandler( Meter::OnMenu ) );
+  Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Meter::OnMenu ) );
   Connect( wxEVT_TIMER, wxTimerEventHandler( Meter::Timer ) );
   //Disconnect( wxEVT_PAINT, wxPaintEventHandler( MyPanel1::OnPaint ) );
 
