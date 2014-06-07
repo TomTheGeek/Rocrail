@@ -2485,6 +2485,8 @@ void RocGuiFrame::create() {
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating LocPanel..." );
   m_LCPanel = new wxPanel( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+  m_LCPanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
+
   m_LC = NULL;
   m_LC = new LC( m_LCPanel );
   activeLocsSizer->Add(m_LCPanel, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);

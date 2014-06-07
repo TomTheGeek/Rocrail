@@ -64,6 +64,7 @@ Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
   m_iMaxSpeed = 240;
   speed = 216;
   speed = ((modulal((90 - speed)) * M_PI) / 180);
+  SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
 
   Connect( wxEVT_PAINT, wxPaintEventHandler( Meter::OnPaint ) );
   //Disconnect( wxEVT_PAINT, wxPaintEventHandler( MyPanel1::OnPaint ) );
