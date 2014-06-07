@@ -39,6 +39,8 @@
 #include "rocs/public/trace.h"
 #include "rocs/public/file.h"
 
+#include "rocrail/wrapper/public/Clock.h"
+
 #include "rocview/public/guiapp.h"
 
 #include "rocview/public/meter.h"
@@ -58,7 +60,7 @@ static double getRadians( double degrees ) {
 
 
 
-Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
+Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y, int p_devider)
                   : wxPanel(parent, id,  wxPoint(x, y), wxSize(110,110), wxBORDER_NONE)
 {
   m_Parent = parent;
@@ -67,18 +69,33 @@ Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
   m_iMaxSpeed = 240;
   speed = 216;
   speed = ((modulal((90 - speed)) * M_PI) / 180);
+  run   = true;
+  deviderchanged = false;
+
+
   SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 
   Connect( wxEVT_PAINT, wxPaintEventHandler( Meter::OnPaint ) );
   Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( Meter::OnPopup ) );
   Connect( wxEVT_MENU, wxCommandEventHandler( Meter::OnMenu ) );
-  //Connect( wxEVT_TIMER, wxTimerEventHandler( Meter::Timer ) );
+  Connect( wxEVT_TIMER, wxTimerEventHandler( Meter::Timer ) );
   //Disconnect( wxEVT_PAINT, wxPaintEventHandler( MyPanel1::OnPaint ) );
-/*
+
+  devider = p_devider;
+  if( devider <= 0 )
+    devider = 1;
+
+
+  datetime = new wxDateTime();
+  datetime->SetToCurrent();
+  ltime = datetime->GetTimeNow();
+
   WxTimer = new wxTimer();
   WxTimer->SetOwner(this, ID_METERTIMER);
-  WxTimer->Start(TIMER);
-*/
+  WxTimer->Start(TIMER/devider);
+
+  calculate();
+
   TraceOp.trc( "meter", TRCLEVEL_INFO, __LINE__, 9999, "meter instantiated" );
 }
 
@@ -227,6 +244,13 @@ void Meter::OnPaint(wxPaintEvent& event) {
 
   gc->DrawText( str, (width-w)/2, b * 82.0 );
 
+  wxString timestring = wxString::Format(_T("%02d%c%02d"), hours, second?':':' ', minutes);
+  second = !second;
+  wxFont fontTM(fontsize+2, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+  gc->SetFont(fontTM,*wxBLACK);
+  gc->GetTextExtent( timestring,(wxDouble*)&w,(wxDouble*)&h,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+  gc->DrawText( timestring, (width-w)/2, b * 32.0 );
+
 
   drawNeedle(gc, c);
 
@@ -305,7 +329,20 @@ void Meter::setSpeed(int iSpeed, int maxspeed, int runtime) {
 
 void Meter::Timer(wxTimerEvent& WXUNUSED(event))
 {
-  Refresh(false);
+  if( deviderchanged ) {
+    deviderchanged = false;
+    if( this->devider <= 10 ) {
+      WxTimer->Start(TIMER/devider);
+    }
+    else {
+      WxTimer->Start((TIMER*60)/devider);
+    }
+  }
+
+  if( run ) {
+    calculate();
+    Refresh(false);
+  }
 }
 
 
@@ -322,5 +359,53 @@ void Meter::OnMenu( wxCommandEvent& event ) {
   if( menuItem == ME_MeterHelp ) {
     wxGetApp().openLink( "loc-tab", "mainthrottle" );
   }
+}
+
+void Meter::SyncClock(iONode node) {
+  if( StrOp.equals( wClock.getcmd(node), wClock.freeze )) {
+    run = false;
+  }
+  else if( StrOp.equals( wClock.getcmd(node), wClock.go )) {
+    run = true;
+    SetDevider( wClock.getdivider(node) );
+    SetTime( wClock.gettime(node) );
+  }
+  else {
+    SetDevider( wClock.getdivider(node) );
+    SetTime( wClock.gettime(node) );
+    //m_Temp = wClock.gettemp(node);
+  }
+}
+
+
+void Meter::SetDevider(int p_devider) {
+  if( devider != p_devider ) {
+    devider = p_devider;
+    TraceOp.trc( "meter", TRCLEVEL_INFO, __LINE__, 9999, "devider set to %d.", devider );
+  }
+  deviderchanged = true;
+}
+
+void Meter::SetTime(long p_time) {
+  //ltime = (p_time / 60) * 60; // Filter out the seconds.
+  ltime = p_time; // Filter out the seconds.
+  if( run ) {
+    calculate();
+    Refresh(true);
+  }
+}
+
+void Meter::calculate() {
+  if( 1 ) {
+    ltime++;
+    datetime->Set( ltime );
+  }
+  else {
+    ltime = wxDateTime::GetTimeNow();
+    datetime->Set( ltime );
+  }
+
+  hours   = datetime->GetHour();
+  minutes = datetime->GetMinute();
 }
 

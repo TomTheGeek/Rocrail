@@ -79,6 +79,8 @@ void LC::init() {
 void LC::SyncClock( iONode node ) {
   if(m_Clock != NULL)
     m_Clock->SyncClock( node );
+  if(m_Meter != NULL)
+    m_Meter->SyncClock( node );
 }
 
 
@@ -988,7 +990,7 @@ void LC::CreateControls() {
 
   if( wGui.isshowspeedometer( wxGetApp().getIni() ) ) {
     TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating meter...");
-    m_Meter = new Meter(m_Parent, -1, 0, 0);
+    m_Meter = new Meter(m_Parent, -1, 0, 0, 1);
     m_MainSizer->Add(m_Meter, 0, wxALIGN_TOP|wxALL|wxFIXED_MINSIZE, 2);
   }
   else {
