@@ -330,6 +330,9 @@ void Clock::drawNewClock() {
   if( height < width )
     width = height;
 
+  if( width < 110 )
+    width = 110;
+
   double c = width/2;
 
   wxPen borderPen( wxColour(0, 0, 0), wxSOLID );
