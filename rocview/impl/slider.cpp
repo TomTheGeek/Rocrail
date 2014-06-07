@@ -78,6 +78,7 @@ Slider::Slider(wxWindow* parent, int width, int height)
   SystemOp.inst();
   PrevFocusWindow = NULL;
   Step = (double)ThumbRange / (double)Max;
+  SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
   TraceOp.trc( "slider", TRCLEVEL_INFO, __LINE__, 9999, "Height=%d Step=%f ThumbPos=%d ThumbRange=%d", Height, Step, ThumbPos, ThumbRange );
 }
 

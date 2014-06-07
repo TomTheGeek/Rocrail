@@ -65,7 +65,7 @@ Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y)
   m_iMaxSpeed = 240;
   speed = 216;
   speed = ((modulal((90 - speed)) * M_PI) / 180);
-  SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
+  SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 
   Connect( wxEVT_PAINT, wxPaintEventHandler( Meter::OnPaint ) );
   //Connect( wxEVT_TIMER, wxTimerEventHandler( Meter::Timer ) );
@@ -102,7 +102,7 @@ void Meter::OnPaint(wxPaintEvent& event) {
 
 #if defined __WIN32
   //Background workaround
-  gc->SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
+  gc->SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
   gc->DrawRectangle(0, 0, width, height);
 #endif
 

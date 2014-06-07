@@ -80,8 +80,8 @@ Clock::Clock(wxWindow *parent, wxWindowID id, int x, int y,int handwidth, int p_
   m_Logo  = _img_logo;
   m_Temp = 20;
 
-	int clockpicwidth = 100;
-  SetSize(wxSize(clockpicwidth, clockpicwidth));
+  SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+
   type = clocktype;
 
   devider = p_devider;
@@ -323,7 +323,7 @@ void Clock::drawNewClock() {
 
 #if defined __WIN32
   //Background workaround
-  gc->SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
+  gc->SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
   gc->DrawRectangle(0, 0, width, height);
 #endif
 
