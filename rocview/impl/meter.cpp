@@ -203,6 +203,8 @@ void Meter::OnPaint(wxPaintEvent& event) {
   int fontsize = 7;
 #if defined __APPLE__
   fontsize = 9;
+#elif defined __linux__
+  fontsize = 8;
 #endif
 
   wxFont font(fontsize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
