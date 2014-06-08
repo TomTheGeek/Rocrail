@@ -42,6 +42,7 @@
 #include "rocrail/wrapper/public/Clock.h"
 
 #include "rocview/public/guiapp.h"
+#include "rocview/dialogs/clockdialog.h"
 
 #include "rocview/public/meter.h"
 
@@ -71,6 +72,7 @@ Meter::Meter(wxWindow *parent, wxWindowID id, int x, int y, int p_devider)
   speed = ((modulal((90 - speed)) * M_PI) / 180);
   run   = true;
   deviderchanged = false;
+  m_Temp = 20;
 
 
   SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
@@ -351,6 +353,9 @@ void Meter::Timer(wxTimerEvent& WXUNUSED(event))
 void Meter::OnPopup(wxMouseEvent& event) {
 
   wxMenu menu( wxGetApp().getMenu("speedometer") );
+  menu.Append( ME_MeterAdjustTime, wxGetApp().getMenu("adjusttime") );
+  menu.Append( ME_MeterFreezeTime, wxGetApp().getMenu("freezetime") );
+  menu.Append( ME_MeterResumeTime, wxGetApp().getMenu("resumetime") );
   menu.Append( ME_MeterHelp, wxGetApp().getMenu("help") );
   PopupMenu(&menu, event.GetX(), event.GetY() );
 }
@@ -361,7 +366,44 @@ void Meter::OnMenu( wxCommandEvent& event ) {
   if( menuItem == ME_MeterHelp ) {
     wxGetApp().openLink( "loc-tab", "mainthrottle" );
   }
+
+  else if( menuItem == ME_MeterAdjustTime ) {
+    ClockDialog* dlg = new ClockDialog( this );
+    dlg->setClock( devider, datetime->GetHour(), datetime->GetMinute(), m_Temp );
+    if( wxID_OK == dlg->ShowModal() ) {
+      int hour, minute;
+      dlg->getClock( &devider, &hour, &minute, &m_Temp );
+
+      datetime->SetHour( hour );
+      datetime->SetMinute( minute );
+      datetime->SetSecond( 0 );
+
+      ltime = datetime->GetTicks();
+
+      // send to rocrail
+      iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+      wClock.setdivider( tick, devider );
+      wClock.settime( tick, ltime );
+      wClock.settemp( tick, m_Temp );
+      wxGetApp().sendToRocrail( tick, false );
+    }
+  }
+
+  else if( menuItem == ME_MeterFreezeTime ) {
+    // send to rocrail
+    iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+    wClock.setcmd( tick, wClock.freeze );
+    wxGetApp().sendToRocrail( tick, false );
+  }
+
+  else if( menuItem == ME_MeterResumeTime ) {
+    // send to rocrail
+    iONode tick = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
+    wClock.setcmd( tick, wClock.go );
+    wxGetApp().sendToRocrail( tick, false );
+  }
 }
+
 
 void Meter::SyncClock(iONode node) {
   if( StrOp.equals( wClock.getcmd(node), wClock.freeze )) {
@@ -375,8 +417,13 @@ void Meter::SyncClock(iONode node) {
   else {
     SetDevider( wClock.getdivider(node) );
     SetTime( wClock.gettime(node) );
-    //m_Temp = wClock.gettemp(node);
+    m_Temp = wClock.gettemp(node);
   }
+}
+
+
+void Meter::stopTimer() {
+  WxTimer->Stop();
 }
 
 

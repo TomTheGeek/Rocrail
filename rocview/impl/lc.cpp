@@ -87,6 +87,8 @@ void LC::SyncClock( iONode node ) {
 void LC::stopTimer() {
   if(m_Clock != NULL)
     m_Clock->stopTimer();
+  if(m_Meter != NULL)
+    m_Meter->stopTimer();
 }
 
 

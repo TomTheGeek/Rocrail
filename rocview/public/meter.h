@@ -41,6 +41,7 @@ class Meter : public wxPanel{
     void SyncClock( iONode node );
     void SetDevider(int devider);
     void SetTime(long rocrailtime);
+    void stopTimer();
 
   private:
     void drawNeedle(wxGraphicsContext* gc, double c, bool erase=false);
@@ -59,11 +60,15 @@ class Meter : public wxPanel{
     bool deviderchanged;
     bool run;
     int hours, minutes;
+    int m_Temp;
 
 };
 
 enum {
-  ME_MeterHelp = 201
+  ME_MeterAdjustTime = 201,
+  ME_MeterFreezeTime,
+  ME_MeterResumeTime,
+  ME_MeterHelp
 };
 
 
