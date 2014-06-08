@@ -129,8 +129,6 @@ void Meter::OnPaint(wxPaintEvent& event) {
   gc->DrawRectangle(0, 0, width, height);
 #endif
 
-  TraceOp.trc( "meter", TRCLEVEL_INFO, __LINE__, 9999, "width=%d height=%d", width, height );
-
   if( height < width )
     width = height;
 
