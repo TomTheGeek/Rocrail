@@ -764,7 +764,9 @@ void LocoNetCtrlDlg::initSublib()
     m_Host->Enable(false);
     m_LocalIP->Enable(false);
     m_Port->Enable(false);
-    m_Flow->Enable(true);
+    if( m_SubLib->GetSelection() == 6 )
+      m_Flow->SetValue(false);
+    m_Flow->Enable( m_SubLib->GetSelection() == 0 ? true:false);
     //m_UseSeq->Enable(false);
     //m_UseDouble->Enable(false);
   }
