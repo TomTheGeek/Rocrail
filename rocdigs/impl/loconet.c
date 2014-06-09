@@ -302,7 +302,8 @@ static Boolean _transact( iOLocoNet loconet, byte* out, int outsize, byte* in, i
           *insize = data->lnRead( (obj)loconet, in );
           if( *insize > 0 ) {
             data->rcvpkg++;
-            traceLocoNet(in, data->GBM16xn);
+            if( data->monitor )
+              traceLocoNet(in, data->GBM16xn);
             TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "*** transact dump:" );
             TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)in, *insize );
             if( waitforOPC_OK > 0 && in[0] == waitforOPC_OK ) {
@@ -1089,7 +1090,8 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
   int port = 0;
 
   data->rcvpkg++;
-  traceLocoNet(rsp, data->GBM16xn);
+  if( data->monitor )
+    traceLocoNet(rsp, data->GBM16xn);
   TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "*** read dump:" );
   TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)rsp, size );
 
@@ -2649,6 +2651,7 @@ static struct OLocoNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->swsleep = wLocoNet.getswsleep(data->loconet);
   data->resetLissy = wLocoNet.isresetlissy(data->loconet);
   data->GBM16xn = wLocoNet.isGBM16xn(data->loconet);
+  data->monitor = wLocoNet.ismonitor(data->loconet);
 
   data->didSensorQuery = False;
 
