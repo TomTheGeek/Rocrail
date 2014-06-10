@@ -101,7 +101,6 @@ class wxSpinCtrl;
 #define ID_TEXTCTRL_SW_ADDRESS1 10025
 #define wxID_STATIC_SW_PORT1 10026
 #define ID_TEXTCTRL_SW_PORT1 10027
-#define wxID_STATIC_SW_GATE 10328
 #define ID_SWITCH_SINGLEGATE 10314
 #define ID_CHECKBOX_SW_INVERT1 10029
 #define wxID_STATIC_SW_ADDRESS2 10030
@@ -321,6 +320,8 @@ public:
     wxSpinCtrl* m_Param2;
     wxStaticText* m_labValue2;
     wxSpinCtrl* m_Value2;
+    wxStaticText* m_labGate2;
+    wxRadioBox* m_Gate2;
     wxCheckBox* m_Invert2;
     wxCheckBox* m_ActDelay;
     wxTextCtrl* m_Delay;
