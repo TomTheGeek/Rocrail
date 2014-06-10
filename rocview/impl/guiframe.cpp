@@ -2279,7 +2279,7 @@ void RocGuiFrame::initFrame() {
 
     m_ScaleComboBox = NULL;
     if( !wGui.isverticaltoolbar(m_Ini) ) {
-      m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, NULL, wxTE_PROCESS_ENTER );
+      m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(75,-1), 0, NULL, wxTE_PROCESS_ENTER );
       m_ScaleComboBox->Append(_T("10"));
       m_ScaleComboBox->Append(_T("20"));
       m_ScaleComboBox->Append(_T("25"));
