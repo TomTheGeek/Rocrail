@@ -27917,5 +27917,9 @@
   </Msg>
   <Msg id="speedometer">
     <en txt="Speedometer"/>
+    <nl txt="Snelheidsmeter"/>
+    <pt_BR txt="Indicador de velocidade"/>
+    <sl txt="Merilnik hitrosti"/>
+    <sr_latin txt="Brzinometar"/>
   </Msg>
 </Messages>
