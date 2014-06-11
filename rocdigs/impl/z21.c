@@ -1092,7 +1092,7 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
     /* RailCom */
     else if( packet[packetIdx+2] == 0x88 ) {
       int addr  = (packet[packetIdx+4] & 0x3F) * 256 + packet[packetIdx+5];
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RailCom detecetd loco %d (global)", addr);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "RailCom detected address=%d (global)", addr);
     }
 
     /* Loco info */
