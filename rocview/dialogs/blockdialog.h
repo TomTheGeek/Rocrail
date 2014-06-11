@@ -457,6 +457,7 @@ public:
     iONode m_fbEvents[5];
     const char* m_FromBlockID;
     const char* m_ByRouteID;
+    int m_iRouteSelection;
 };
 
 #define ROUTE_ALL "all enter +"

@@ -150,6 +150,8 @@ BlockDialog::BlockDialog( wxWindow* parent, iONode p_Props, bool save )
   Create(parent, -1, wxGetApp().getMsg("blocktable") );
   m_Props = p_Props;
   m_bSave = save;
+  m_iRouteSelection = 0;
+
   initLabels();
 
   m_IndexPanel->GetSizer()->Layout();
@@ -500,6 +502,7 @@ bool BlockDialog::initIndex() {
 void BlockDialog::initValues() {
   char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("block").mb_str(wxConvUTF8), wBlock.getid( m_Props ) );
   SetTitle( wxString(title,wxConvUTF8) );
+  TraceOp.trc( "blockdlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues: %s", title );
   StrOp.free( title );
 
   // General
@@ -728,6 +731,12 @@ void BlockDialog::initValues() {
       ListOp.base.del(list);
 
     }
+  }
+
+  if(m_Routes->GetCount() > m_iRouteSelection) {
+    m_Routes->SetSelection(m_iRouteSelection);
+    TraceOp.trc( "blockdlg", TRCLEVEL_INFO, __LINE__, 9999, "RouteSelection=%d", m_iRouteSelection );
+    initSensors();
   }
 
   // Interface
@@ -2280,6 +2289,8 @@ void BlockDialog::OnButtonBkSignalRClick( wxCommandEvent& event )
 
 void BlockDialog::OnListboxBkRoutesSelected( wxCommandEvent& event )
 {
+  m_iRouteSelection = m_Routes->GetSelection();
+  TraceOp.trc( "blockdlg", TRCLEVEL_INFO, __LINE__, 9999, "RouteSelection=%d", m_iRouteSelection );
   initSensors();
 }
 
@@ -2671,6 +2682,10 @@ void BlockDialog::OnButtonBlockActionsClick( wxCommandEvent& event )
 
 void BlockDialog::OnListctrlindexBkSelected( wxListEvent& event )
 {
+  if( m_Props != getSelection(event.GetIndex()) ) {
+    m_iRouteSelection = 0;
+    TraceOp.trc( "blockdlg", TRCLEVEL_INFO, __LINE__, 9999, "RouteSelection=%d", m_iRouteSelection );
+  }
   m_Props = getSelection(event.GetIndex());
   initValues();
 }
