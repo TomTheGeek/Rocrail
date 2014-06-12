@@ -158,16 +158,17 @@ class BidibIdentDlgGen : public wxDialog
 		wxSpinCtrl* m_ConfigV;
 		wxSpinCtrl* m_ConfigS;
 		wxRadioBox* m_PortType;
-		wxStaticBoxSizer* m_PortBox;
-		wxSpinCtrl* m_ServoPort;
-		wxStaticText* m_lanPortTimer;
-		wxSpinCtrl* m_PortTimer;
-		wxRadioBox* m_PortIOSelection;
-		wxButton* m_ServoGet;
-		wxButton* m_PortSet;
 		wxStaticBoxSizer* m_ServoTestBox;
 		wxButton* m_ServoLeftTest;
 		wxButton* m_ServoRightTest;
+		wxStaticBoxSizer* m_PortBox;
+		wxSpinCtrl* m_ServoPort;
+		wxStaticBoxSizer* m_PortIOConfigBox;
+		wxRadioBox* m_PortIOSelection;
+		wxStaticText* m_lanPortTimer;
+		wxSpinCtrl* m_PortTimer;
+		wxButton* m_ServoGet;
+		wxButton* m_PortSet;
 		wxPanel* m_MacroPanel;
 		wxStaticText* m_labMacroList;
 		wxListBox* m_MacroList;
@@ -255,11 +256,11 @@ class BidibIdentDlgGen : public wxDialog
 		virtual void onConfigS( wxSpinEvent& event ) { event.Skip(); }
 		virtual void onConfigStxt( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortType( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onServoLeftTest( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onServoRightTest( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onServoPort( wxSpinEvent& event ) { event.Skip(); }
 		virtual void onServoGet( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPortSet( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onServoLeftTest( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onServoRightTest( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onMacroList( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onMacroLineSelected( wxGridEvent& event ) { event.Skip(); }
 		virtual void onMacroEveryMinute( wxCommandEvent& event ) { event.Skip(); }

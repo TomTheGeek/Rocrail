@@ -578,6 +578,21 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	m_PortType->SetSelection( 5 );
 	bSizer11->Add( m_PortType, 0, wxALL, 5 );
 	
+	m_ServoTestBox = new wxStaticBoxSizer( new wxStaticBox( m_ServoPanel, wxID_ANY, wxT("Test") ), wxVERTICAL );
+	
+	m_ServoLeftTest = new wxButton( m_ServoPanel, wxID_ANY, wxT("ON"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_ServoTestBox->Add( m_ServoLeftTest, 0, wxALL, 5 );
+	
+	m_ServoRightTest = new wxButton( m_ServoPanel, wxID_ANY, wxT("OFF"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_ServoTestBox->Add( m_ServoRightTest, 0, wxALL, 5 );
+	
+	bSizer11->Add( m_ServoTestBox, 0, wxALL, 5 );
+	
+	bSizer10->Add( bSizer11, 0, 0, 5 );
+	
+	wxBoxSizer* bSizer25;
+	bSizer25 = new wxBoxSizer( wxVERTICAL );
+	
 	m_PortBox = new wxStaticBoxSizer( new wxStaticBox( m_ServoPanel, wxID_ANY, wxT("Port") ), wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer21;
@@ -588,26 +603,31 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	m_ServoPort = new wxSpinCtrl( m_ServoPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 0, 127, 0 );
 	fgSizer21->Add( m_ServoPort, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
-	m_lanPortTimer = new wxStaticText( m_ServoPanel, wxID_ANY, wxT("Timer"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_lanPortTimer->Wrap( -1 );
-	m_lanPortTimer->Enable( false );
-	
-	fgSizer21->Add( m_lanPortTimer, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
-	
-	m_PortTimer = new wxSpinCtrl( m_ServoPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 0, 1000, 0 );
-	m_PortTimer->Enable( false );
-	
-	fgSizer21->Add( m_PortTimer, 0, wxALL, 5 );
-	
 	m_PortBox->Add( fgSizer21, 1, wxEXPAND, 5 );
+	
+	m_PortIOConfigBox = new wxStaticBoxSizer( new wxStaticBox( m_ServoPanel, wxID_ANY, wxT("Config") ), wxVERTICAL );
 	
 	wxString m_PortIOSelectionChoices[] = { wxT("Output"), wxT("Pulse"), wxT("Input") };
 	int m_PortIOSelectionNChoices = sizeof( m_PortIOSelectionChoices ) / sizeof( wxString );
 	m_PortIOSelection = new wxRadioBox( m_ServoPanel, wxID_ANY, wxT("I/O"), wxDefaultPosition, wxDefaultSize, m_PortIOSelectionNChoices, m_PortIOSelectionChoices, 1, wxRA_SPECIFY_ROWS );
 	m_PortIOSelection->SetSelection( 0 );
-	m_PortIOSelection->Enable( false );
+	m_PortIOConfigBox->Add( m_PortIOSelection, 0, wxALL, 5 );
 	
-	m_PortBox->Add( m_PortIOSelection, 0, wxALL, 5 );
+	wxFlexGridSizer* fgSizer22;
+	fgSizer22 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer22->SetFlexibleDirection( wxBOTH );
+	fgSizer22->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_lanPortTimer = new wxStaticText( m_ServoPanel, wxID_ANY, wxT("Timer"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_lanPortTimer->Wrap( -1 );
+	fgSizer22->Add( m_lanPortTimer, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	
+	m_PortTimer = new wxSpinCtrl( m_ServoPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), wxSP_ARROW_KEYS, 0, 1000, 0 );
+	fgSizer22->Add( m_PortTimer, 0, wxALL, 5 );
+	
+	m_PortIOConfigBox->Add( fgSizer22, 0, 0, 5 );
+	
+	m_PortBox->Add( m_PortIOConfigBox, 0, wxALL, 5 );
 	
 	wxBoxSizer* bSizer46;
 	bSizer46 = new wxBoxSizer( wxHORIZONTAL );
@@ -620,19 +640,9 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	
 	m_PortBox->Add( bSizer46, 0, 0, 5 );
 	
-	bSizer11->Add( m_PortBox, 0, wxALL, 5 );
+	bSizer25->Add( m_PortBox, 0, wxALL, 5 );
 	
-	bSizer10->Add( bSizer11, 0, 0, 5 );
-	
-	m_ServoTestBox = new wxStaticBoxSizer( new wxStaticBox( m_ServoPanel, wxID_ANY, wxT("Test") ), wxVERTICAL );
-	
-	m_ServoLeftTest = new wxButton( m_ServoPanel, wxID_ANY, wxT("ON"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_ServoTestBox->Add( m_ServoLeftTest, 0, wxALL, 5 );
-	
-	m_ServoRightTest = new wxButton( m_ServoPanel, wxID_ANY, wxT("OFF"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_ServoTestBox->Add( m_ServoRightTest, 0, wxALL, 5 );
-	
-	bSizer10->Add( m_ServoTestBox, 0, wxALL, 5 );
+	bSizer10->Add( bSizer25, 1, wxEXPAND, 5 );
 	
 	m_ServoPanel->SetSizer( bSizer10 );
 	m_ServoPanel->Layout();
@@ -935,11 +945,11 @@ BidibIdentDlgGen::BidibIdentDlgGen( wxWindow* parent, wxWindowID id, const wxStr
 	m_ConfigS->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( BidibIdentDlgGen::onConfigS ), NULL, this );
 	m_ConfigS->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( BidibIdentDlgGen::onConfigStxt ), NULL, this );
 	m_PortType->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( BidibIdentDlgGen::onPortType ), NULL, this );
+	m_ServoLeftTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoLeftTest ), NULL, this );
+	m_ServoRightTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoRightTest ), NULL, this );
 	m_ServoPort->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( BidibIdentDlgGen::onServoPort ), NULL, this );
 	m_ServoGet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoGet ), NULL, this );
 	m_PortSet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onPortSet ), NULL, this );
-	m_ServoLeftTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoLeftTest ), NULL, this );
-	m_ServoRightTest->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoRightTest ), NULL, this );
 	m_MacroList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( BidibIdentDlgGen::onMacroList ), NULL, this );
 	m_MacroLines->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( BidibIdentDlgGen::onMacroLineSelected ), NULL, this );
 	m_MacroStart30->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onMacroEveryMinute ), NULL, this );
@@ -1001,11 +1011,11 @@ BidibIdentDlgGen::~BidibIdentDlgGen()
 	m_ConfigS->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( BidibIdentDlgGen::onConfigS ), NULL, this );
 	m_ConfigS->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( BidibIdentDlgGen::onConfigStxt ), NULL, this );
 	m_PortType->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( BidibIdentDlgGen::onPortType ), NULL, this );
+	m_ServoLeftTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoLeftTest ), NULL, this );
+	m_ServoRightTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoRightTest ), NULL, this );
 	m_ServoPort->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( BidibIdentDlgGen::onServoPort ), NULL, this );
 	m_ServoGet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoGet ), NULL, this );
 	m_PortSet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onPortSet ), NULL, this );
-	m_ServoLeftTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoLeftTest ), NULL, this );
-	m_ServoRightTest->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onServoRightTest ), NULL, this );
 	m_MacroList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( BidibIdentDlgGen::onMacroList ), NULL, this );
 	m_MacroLines->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( BidibIdentDlgGen::onMacroLineSelected ), NULL, this );
 	m_MacroStart30->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( BidibIdentDlgGen::onMacroEveryMinute ), NULL, this );

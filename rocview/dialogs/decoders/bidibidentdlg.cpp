@@ -772,7 +772,7 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     Refresh();
 
     m_UpdatePanel->Enable(wBiDiBnode.isfwup(bidibnode)?true:false);
-    m_PortIOSelection->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
+    m_PortIOConfigBox->Show(wBiDiBnode.isiocfg(bidibnode)?true:false);
 
   }
   else {
