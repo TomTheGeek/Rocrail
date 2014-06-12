@@ -771,6 +771,9 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     GetSizer()->SetSizeHints(this);
     Refresh();
 
+    m_UpdatePanel->Enable(wBiDiBnode.isfwup(bidibnode)?true:false);
+    m_PortIOSelection->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
+
   }
   else {
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"node not found: %s", uid );

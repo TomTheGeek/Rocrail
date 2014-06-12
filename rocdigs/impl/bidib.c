@@ -1985,6 +1985,8 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata, byte* path) {
       data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
       msgdata[0] = FEATURE_CTRL_LPORT_COUNT;
       data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
+      msgdata[0] = FEATURE_SPORT_CONFIG_AVAILABLE;
+      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
     }
 
     if(True) {
@@ -1994,6 +1996,8 @@ static iOBiDiBNode __addNode(iOBiDiB bidib, byte* pdata, byte* path) {
       data->subWrite((obj)bidib, node->path, MSG_STRING_GET, msgdata, 2, node);
       msgdata[1] = 1;
       data->subWrite((obj)bidib, node->path, MSG_STRING_GET, msgdata, 2, node);
+      msgdata[0] = FEATURE_FW_UPDATE_MODE;
+      data->subWrite((obj)bidib, node->path, MSG_FEATURE_GET, msgdata, 1, node);
     }
 
     StrOp.free(classname);
@@ -2032,6 +2036,16 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
 
       if( feature == FEATURE_FW_UPDATE_MODE ) {
         bidibnode->fwup = (value ? True:False);
+        if( child!= NULL ) {
+          wBiDiBnode.setfwup(child, bidibnode->fwup);
+        }
+      }
+
+      if( feature == FEATURE_SPORT_CONFIG_AVAILABLE ) {
+        bidibnode->iocfg = (value ? True:False);
+        if( child!= NULL ) {
+          wBiDiBnode.setiocfg(child, bidibnode->iocfg);
+        }
       }
 
       if( feature == FEATURE_GEN_WATCHDOG ) {

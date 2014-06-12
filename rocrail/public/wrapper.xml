@@ -599,6 +599,8 @@
           <var name="parentkey" vt="string" defval=""/>
           <var name="productname" vt="string" defval=""/>
           <var name="username" vt="string" defval=""/>
+          <var name="iocfg" vt="bool" defval="false" remark="Port config flag."/>
+          <var name="fwup" vt="bool" defval="false" remark="Firmware update flag."/>
         </bidibnode>
       </bidib>
 
@@ -1595,7 +1597,7 @@
         <var name="frogtimer" vt="int" defval="0" range="0-1000" required="false" remark="If set to zero the wiring event is used."/>
 
         <var name="singlegate" vt="bool" defval="false"/>
-        <var name="gatevalue" vt="int" defval="-1" range="0-1" required="false"/>
+        <var name="gatevalue" vt="int" defval="2" range="0-2" required="false" remark="0=red 1=green 2=both"/>
         <var name="inv" vt="bool" defval="false" remark="Switch inverted. (Software wiring correction)"/>
         <var name="inv2" vt="bool" defval="false" remark="Switch inverted. (Software wiring correction)"/>
 

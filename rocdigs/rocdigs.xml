@@ -1305,6 +1305,7 @@
       <var name="stat" vt="int"/>
       <var name="shortcut" vt="Boolean"/>
       <var name="fwup" vt="Boolean"/>
+      <var name="iocfg" vt="Boolean"/>
       <var name="conf_void" vt="int"/>
       <var name="conf_freeze" vt="int"/>
       <var name="conf_signal" vt="int"/>
