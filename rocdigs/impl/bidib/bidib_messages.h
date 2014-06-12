@@ -57,8 +57,9 @@
 //            2014-01-22 V0.16 kw  added MSG_BM_DYN_STATE, MSG_CS_PROG, MSG_CS_PROG_STATE, FEATURE_BM_DYN_STATE_INTERVAL
 //            2014-02-07           added MSG_ACCESSORY_NOTIFY
 //            2014-02-08 V0.17 kw  fixed some typos; removed MSG_PRG_CV_*; moved MSG_CS_PROG
-//                                 added BIDIB_CS_PROG_QUERY, removed t_bidib_macro_state
+//                                 added MSG_CS_PROG_QUERY, removed t_bidib_macro_state
 //                                 added FEATURE_GEN_POM_REPEAT
+//            2014-06-11       kw  added FEATURE_GEN_START_STATE
 //
 //===============================================================================
 //
@@ -634,6 +635,7 @@ typedef struct                              // t_bidib_cs_pom
 #define FEATURE_GEN_DRIVE_BUS              107  // 1: this node drive the dcc bus.
 #define FEATURE_GEN_LOK_LOST_DETECT        108  // 1: command station annouces lost loco
 #define FEATURE_GEN_NOTIFY_DRIVE_MANUAL    109  // 1: dcc gen reports manual operation
+#define FEATURE_GEN_START_STATE            110  // 1: power up state, 0=off, 1=on
 
 #define FEATURE_STRING_SIZE                252  // length of user strings, 0:n.a (default); allowed 8..24
 #define FEATURE_RELEVANT_PID_BITS          253  // how many bits of 'vendor32' are relevant for PID (default 16, LSB aligned)

@@ -284,6 +284,7 @@ const char* bidibGetFeatureName(int feature) {
   if( feature == FEATURE_GEN_DRIVE_BUS ) return "DCC bus driver";
   if( feature == FEATURE_GEN_LOK_LOST_DETECT ) return "Loco lost detection";
   if( feature == FEATURE_GEN_NOTIFY_DRIVE_MANUAL ) return "Manual drive notification";
+  if( feature == FEATURE_GEN_START_STATE ) return "Power up state";
 
   if( feature == FEATURE_FW_UPDATE_MODE ) return "firmware update mode";
   if( feature == FEATURE_EXTENSION ) return "reserved for future expansion";
