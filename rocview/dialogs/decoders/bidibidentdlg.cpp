@@ -683,7 +683,7 @@ const char* BidibIdentDlg::GetProductName(int vid, int pid, char** www) {
     *www = (char*)wProduct.geturl(product);
     return wProduct.getdesc(product);
   }
-  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"product key=% not found", key );
+  TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"product key=%s not found", key );
   *www = (char*)"http://www.bidib.org/support/product_id.html";
   return "Unknown product.";
 }
@@ -772,7 +772,9 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     Refresh();
 
     m_UpdatePanel->Enable(wBiDiBnode.isfwup(bidibnode)?true:false);
-    m_PortIOConfigBox->Show(wBiDiBnode.isiocfg(bidibnode)?true:false);
+    m_PortIOSelection->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
+    //m_labPortTimer->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
+    m_PortTimer->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
 
   }
   else {
