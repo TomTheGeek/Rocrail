@@ -414,7 +414,7 @@ void BidibIdentDlg::initLabels() {
 
   // Port setup
   m_PortType->SetLabel(wxGetApp().getMsg( "type" ));
-  m_PortType->SetString( 0, wxGetApp().getMsg( "default" ) );
+  m_PortType->SetString( 0, wxGetApp().getMsg( "switch" ) );
   m_PortType->SetString( 1, wxGetApp().getMsg( "lights" ) );
   m_PortType->SetString( 2, wxGetApp().getMsg( "servo" ) );
   m_PortType->SetString( 3, wxGetApp().getMsg( "sound" ) );
@@ -422,6 +422,9 @@ void BidibIdentDlg::initLabels() {
   m_PortType->SetString( 5, wxGetApp().getMsg( "analog" ) );
   m_PortType->SetString( 6, wxGetApp().getMsg( "macro" ) );
   m_PortBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "port" ));
+  m_labPortNumber->SetLabel(wxGetApp().getMsg( "number" ));
+  m_PortIOConfigBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "properties" ));
+  m_labPortTimer->SetLabel(wxGetApp().getMsg( "timer" ));
   m_ServoGet->SetLabel(wxGetApp().getMsg( "get" ));
   m_PortSet->SetLabel(wxGetApp().getMsg( "set" ));
   m_ServoTestBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "test" ));
@@ -775,7 +778,7 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     m_PortIOSelection->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
     //m_labPortTimer->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
     m_PortTimer->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
-
+    //m_PortIOConfigBox->Show(true);
   }
   else {
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"node not found: %s", uid );
@@ -1098,7 +1101,8 @@ void BidibIdentDlg::onServoGet( wxCommandEvent& event ) {
     wProgram.setcv( cmd, m_ServoPort->GetValue() );
     wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
     wProgram.setlntype(cmd, wProgram.lntype_bidib);
-    wProgram.setporttype(cmd, wProgram.porttype_servo);
+    wProgram.setporttype(cmd, m_PortType->GetSelection());
+    // ToDo: Input or output???
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }

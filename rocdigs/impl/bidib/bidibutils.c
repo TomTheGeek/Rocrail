@@ -255,14 +255,14 @@ const char* bidibGetFeatureName(int feature) {
 
 
   /* Control */
-  if( feature == FEATURE_CTRL_INPUT_COUNT ) return "input count";
+  if( feature == FEATURE_CTRL_INPUT_COUNT ) return "input port count";
   if( feature == FEATURE_CTRL_INPUT_NOTIFY ) return "input notify";
-  if( feature == FEATURE_CTRL_SPORT_COUNT ) return "short port count";
-  if( feature == FEATURE_CTRL_LPORT_COUNT ) return "long port count";
-  if( feature == FEATURE_CTRL_SERVO_COUNT ) return "servo count";
-  if( feature == FEATURE_CTRL_SOUND_COUNT ) return "sound count";
-  if( feature == FEATURE_CTRL_MOTOR_COUNT ) return "motor count";
-  if( feature == FEATURE_CTRL_ANALOG_COUNT ) return "analog count";
+  if( feature == FEATURE_CTRL_SPORT_COUNT ) return "switch port count";
+  if( feature == FEATURE_CTRL_LPORT_COUNT ) return "light port count";
+  if( feature == FEATURE_CTRL_SERVO_COUNT ) return "servo port count";
+  if( feature == FEATURE_CTRL_SOUND_COUNT ) return "sound port count";
+  if( feature == FEATURE_CTRL_MOTOR_COUNT ) return "motor port count";
+  if( feature == FEATURE_CTRL_ANALOG_COUNT ) return "analog port count";
   if( feature == FEATURE_CTRL_STRETCH_DIMM ) return "time stretch for dimming";
   if( feature == FEATURE_CTRL_MAC_LEVEL ) return "MAC level";
   if( feature == FEATURE_CTRL_MAC_SAVE ) return "MAC save";
