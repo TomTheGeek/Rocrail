@@ -7097,3 +7097,9 @@ msgstr ""
 msgid "Switch"
 msgstr ""
 
+#. 
+# id="backlight"
+#, c-format
+msgid "Backlight"
+msgstr ""
+

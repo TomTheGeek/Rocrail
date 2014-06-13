@@ -439,6 +439,7 @@ void BidibIdentDlg::initLabels() {
   m_PortType->SetString( 4, wxGetApp().getMsg( "motor" ) );
   m_PortType->SetString( 5, wxGetApp().getMsg( "analog" ) );
   m_PortType->SetString( 6, wxGetApp().getMsg( "macro" ) );
+  m_PortType->SetString( 7, wxGetApp().getMsg( "backlight" ) );
   m_PortBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "port" ));
   m_labPortNumber->SetLabel(wxGetApp().getMsg( "number" ));
   m_PortIOConfigBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "properties" ));
@@ -794,7 +795,6 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
 
     m_UpdatePanel->Enable(wBiDiBnode.isfwup(bidibnode)?true:false);
     m_PortIOSelection->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
-    //m_labPortTimer->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
     m_PortTimer->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
 
   }
@@ -1276,6 +1276,8 @@ void BidibIdentDlg::onConfigStxt( wxCommandEvent& event ) {
 
 
 void BidibIdentDlg::onPortType( wxCommandEvent& event ) {
+  m_PortIOSelection->Enable( (wBiDiBnode.isiocfg(bidibnode) && m_PortType->GetSelection()==0) ? true:false);
+  m_PortTimer->Enable( (wBiDiBnode.isiocfg(bidibnode) && m_PortType->GetSelection()==0) ? true:false);
 }
 
 

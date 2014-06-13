@@ -27925,4 +27925,7 @@
   <Msg id="switch">
     <en txt="Switch"/>
   </Msg>
+  <Msg id="backlight">
+    <en txt="Backlight"/>
+  </Msg>
 </Messages>

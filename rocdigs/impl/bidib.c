@@ -1117,7 +1117,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           data->subWrite((obj)inst, bidibnode->path, MSG_FEATURE_GETALL, NULL, 0, bidibnode);
         }
         else if( wProgram.getcmd( node ) == wProgram.nvset ) {
-          msgdata[0] = wProgram.getporttype(node);
+          int porttype = wProgram.getporttype(node);
+          if( porttype > 6 )
+            porttype--; /* 6 was already set as macro */
+          msgdata[0] = porttype;
           msgdata[1] = wProgram.getcv(node);
           msgdata[2] = wProgram.getval1(node);
           msgdata[3] = wProgram.getval2(node);
@@ -1126,7 +1129,10 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_SET, msgdata, 6, bidibnode);
         }
         else if( wProgram.getcmd( node ) == wProgram.nvget ) {
-          msgdata[0] = wProgram.getporttype(node);
+          int porttype = wProgram.getporttype(node);
+          if( porttype > 6 )
+            porttype--; /* 6 was already set as macro */
+          msgdata[0] = porttype;
           msgdata[1] = wProgram.getcv(node);
           data->subWrite((obj)inst, bidibnode->path, MSG_LC_CONFIG_GET, msgdata, 2, bidibnode);
         }
@@ -2428,7 +2434,10 @@ static void __handleConfig(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
     wProgram.setcmd( node, wProgram.nvget );
     wProgram.setiid( node, data->iid );
     wProgram.setlntype(node, wProgram.lntype_bidib);
-    wProgram.setporttype(node, pdata[0]);
+    if( pdata[0] >= 6 ) /* macro already had type 6 */
+      wProgram.setporttype(node, pdata[0]+1);
+    else
+      wProgram.setporttype(node, pdata[0]);
     wProgram.setmodid(node, bidibnode->uid);
     wProgram.setcv(node, pdata[1]);
     wProgram.setval1(node, pdata[2]);

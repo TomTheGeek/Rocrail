@@ -1102,6 +1102,7 @@
     <const name="porttype_motor" vt="int" val="4"/>
     <const name="porttype_analog" vt="int" val="5"/>
     <const name="porttype_macro" vt="int" val="6"/>
+    <const name="porttype_backlight" vt="int" val="7" remark="BiDiB uses 6 for this type but it will be corrected in the bidib library."/>
     <var name="porttype" vt="int" defval="0" remark="Port type"/>
     <var name="lncv" vt="bool" defval="false"/>
     <var name="filename" vt="string" defval=""/>

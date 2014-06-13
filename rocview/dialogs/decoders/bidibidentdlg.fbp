@@ -6718,7 +6718,7 @@
                                                 <property name="proportion">0</property>
                                                 <object class="wxRadioBox" expanded="0">
                                                     <property name="bg"></property>
-                                                    <property name="choices">&quot;Standard&quot; &quot;Light&quot; &quot;Servo&quot; &quot;Sound&quot; &quot;Motor&quot; &quot;Analog&quot; &quot;Macro&quot;</property>
+                                                    <property name="choices">&quot;Standard&quot; &quot;Light&quot; &quot;Servo&quot; &quot;Sound&quot; &quot;Motor&quot; &quot;Analog&quot; &quot;Macro&quot; &quot;Backlight&quot;</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
                                                     <property name="enabled">1</property>
