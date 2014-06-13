@@ -207,15 +207,33 @@ void BidibIdentDlg::event(iONode node) {
   }
   else if(  wProgram.getcmd( node ) == wProgram.nvget ) {
     eventUpdate = true;
-    m_PortType->SetSelection(wProgram.getporttype(node));
-    m_ServoLeft->SetValue( wProgram.getval1(node));
-    m_ServoRight->SetValue( wProgram.getval2(node));
-    m_ServoSpeed->SetValue( wProgram.getval3(node));
-    m_ServoReserved->SetValue( wProgram.getval4(node));
-    m_ConfigL->SetValue( wProgram.getval1(node));
-    m_ConfigR->SetValue( wProgram.getval2(node));
-    m_ConfigV->SetValue( wProgram.getval3(node));
-    m_ConfigS->SetValue( wProgram.getval4(node));
+    int porttype = wProgram.getporttype(node);
+    m_PortType->SetSelection(porttype);
+    if( porttype == 0 ) {
+      // SPORT
+      m_PortIOSelection->SetSelection(wProgram.getval1(node));
+      m_PortTimer->SetValue(wProgram.getval2(node));
+      m_ServoLeft->SetValue( 0);
+      m_ServoRight->SetValue( 0);
+      m_ServoSpeed->SetValue( 0);
+      m_ServoReserved->SetValue( 0);
+      m_ConfigL->SetValue( 0);
+      m_ConfigR->SetValue( 0);
+      m_ConfigV->SetValue( 0);
+      m_ConfigS->SetValue( 0);
+    }
+    else {
+      m_PortIOSelection->SetSelection(0);
+      m_PortTimer->SetValue(0);
+      m_ServoLeft->SetValue( wProgram.getval1(node));
+      m_ServoRight->SetValue( wProgram.getval2(node));
+      m_ServoSpeed->SetValue( wProgram.getval3(node));
+      m_ServoReserved->SetValue( wProgram.getval4(node));
+      m_ConfigL->SetValue( wProgram.getval1(node));
+      m_ConfigR->SetValue( wProgram.getval2(node));
+      m_ConfigV->SetValue( wProgram.getval3(node));
+      m_ConfigS->SetValue( wProgram.getval4(node));
+    }
     eventUpdate = false;
     NodeOp.base.del(node);
   }
@@ -778,7 +796,7 @@ void BidibIdentDlg::onTreeSelChanged( wxTreeEvent& event ) {
     m_PortIOSelection->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
     //m_labPortTimer->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
     m_PortTimer->Enable(wBiDiBnode.isiocfg(bidibnode)?true:false);
-    //m_PortIOConfigBox->Show(true);
+
   }
   else {
     TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"node not found: %s", uid );
@@ -1124,7 +1142,7 @@ void BidibIdentDlg::onServoSet(bool overwrite) {
     configS = m_ConfigS->GetValue();
     configV = m_ConfigV->GetValue();
 
-    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"servo set L=%d R=%d V=%d S=%d",
+    TraceOp.trc( "bidibident", TRCLEVEL_INFO, __LINE__, 9999,"port set L=%d R=%d V=%d S=%d",
         configL, configR, configV, configS );
     if( bidibnode != NULL ) {
       iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
@@ -1134,10 +1152,18 @@ void BidibIdentDlg::onServoSet(bool overwrite) {
       wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
       wProgram.setlntype(cmd, wProgram.lntype_bidib);
       wProgram.setporttype(cmd, m_PortType->GetSelection());
-      wProgram.setval1(cmd, configL);
-      wProgram.setval2(cmd, configR);
-      wProgram.setval3(cmd, configV);
-      wProgram.setval4(cmd, 0);
+      if( m_PortType->GetSelection() == 0 ) {
+        wProgram.setval1(cmd, m_PortIOSelection->GetSelection());
+        wProgram.setval2(cmd, m_PortTimer->GetValue());
+        wProgram.setval3(cmd, 0);
+        wProgram.setval4(cmd, 0);
+      }
+      else {
+        wProgram.setval1(cmd, configL);
+        wProgram.setval2(cmd, configR);
+        wProgram.setval3(cmd, configV);
+        wProgram.setval4(cmd, 0);
+      }
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
