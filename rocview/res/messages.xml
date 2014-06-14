@@ -27922,9 +27922,6 @@
     <sl txt="Merilnik hitrosti"/>
     <sr_latin txt="Brzinometar"/>
   </Msg>
-  <Msg id="switch">
-    <en txt="Switch"/>
-  </Msg>
   <Msg id="backlight">
     <en txt="Backlight"/>
   </Msg>
