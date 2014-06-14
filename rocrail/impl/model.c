@@ -1975,7 +1975,8 @@ static void __startAllLocosRunner( void* threadinst ) {
     Boolean lcgo = True;
     if( resume && !LocOp.isResumeAutomode(loc) )
       lcgo = False;
-
+    if( LocOp.isManually(loc) )
+      lcgo = False;
 
     if( lcgo && data->pendingstartallvirtual && LocOp.govirtual( loc ) ) {
       ThreadOp.sleep( 10 + gap * 1000 );

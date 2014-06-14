@@ -7092,12 +7092,6 @@ msgid "Speedometer"
 msgstr ""
 
 #. 
-# id="switch"
-#, c-format
-msgid "Switch"
-msgstr ""
-
-#. 
 # id="backlight"
 #, c-format
 msgid "Backlight"

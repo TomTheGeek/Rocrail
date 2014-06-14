@@ -704,6 +704,9 @@
     <fun name="fifoTop" vt="void">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>
+    <fun name="isManually" vt="Boolean">
+      <param name="inst" vt="this" remark="Loc instance"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>

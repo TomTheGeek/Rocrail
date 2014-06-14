@@ -72,6 +72,7 @@ class wxGrid;
 #define ID_BUTTON_IMPORTLOCOS 10253
 #define ID_LOC_ONRESTOREFX 10432
 #define ID_LOC_RESTORESPEED 10434
+#define ID_LOC_MANUALLY 10328
 #define ID_LOC_SHOW 10433
 #define ID_PANEL_GENERAL 10004
 #define wxID_STATIC_ID 10017
@@ -248,6 +249,9 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_LOC_RESTORESPEED
     void OnRestoreSpeedClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_LOC_MANUALLY
+    void OnLocManuallyClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_LOC_SHOW
     void OnShowClick( wxCommandEvent& event );
 
@@ -386,6 +390,7 @@ public:
     wxCheckBox* m_GuestImport;
     wxCheckBox* m_RestoreFx;
     wxCheckBox* m_RestoreSpeed;
+    wxCheckBox* m_LocManually;
     wxCheckBox* m_Show;
     wxStaticText* m_labTrain;
     wxTextCtrl* m_Train;
