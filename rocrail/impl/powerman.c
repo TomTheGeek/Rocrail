@@ -389,19 +389,57 @@ static void __initBoosters( iOPowerMan inst ) {
   MutexOp.post(data->boostermapmux);
 }
 
+
+static const char* _getBooster4Block(iOPowerMan inst, const char* blockid) {
+  iOPowerManData data = Data(inst);
+  iONode booster = wBoosterList.getbooster(data->props);
+  while( booster != NULL ) {
+    const char* blockids = wBooster.getblockids(booster);
+
+    if( blockids != NULL && StrOp.len( blockids ) > 0 ) {
+      iOStrTok tok = StrTokOp.inst( blockids, ',' );
+
+      /* iterate all blockid's */
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        const char* id = StrTokOp.nextToken( tok );
+        if( StrOp.equals(blockid, id )) {
+          StrTokOp.base.del(tok);
+          return wBooster.getid(booster);
+        }
+      };
+      StrTokOp.base.del(tok);
+    }
+    booster = wBoosterList.nextbooster(data->props, booster);
+  };
+  return NULL;
+}
+
+
 static Boolean _cmd(iOPowerMan inst, iONode cmd) {
   iOPowerManData data = Data(inst);
   iOModel model = AppOp.getModel();
   iOControl control = AppOp.getControl();
   const char* boosterid = wPwrCmd.getid(cmd);
+  const char* blockid   = wPwrCmd.getblockid(cmd);
 
   if( !StrOp.equals( wPwrCmd.name(), NodeOp.getName(cmd))) {
     /* Ignore */
+    cmd->base.del(cmd);
     return False;
   }
 
-  TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "%s=%s booster=%s",
-      NodeOp.getName(cmd), wPwrCmd.getcmd(cmd), boosterid==NULL?"-":boosterid);
+  if( blockid != NULL && StrOp.len( blockid ) > 0 ) {
+    /* try to find the linked booster */
+    boosterid = PowerManOp.getBooster4Block(inst, blockid);
+    if( boosterid == NULL ) {
+      cmd->base.del(cmd);
+      return False;
+    }
+  }
+
+  TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "%s=%s booster=%s (block=%s)",
+      NodeOp.getName(cmd), wPwrCmd.getcmd(cmd), boosterid==NULL?"-":boosterid, blockid==NULL?"-":blockid);
+
 
   if( boosterid == NULL || StrOp.len( boosterid ) == 0 ) {
     iONode booster = (iONode)MapOp.first( data->boostermap );

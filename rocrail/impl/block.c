@@ -645,8 +645,12 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
         data->ghost = True;
 
         if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
+          iOControl control = AppOp.getControl();
           /* power off */
-          AppOp.stop();
+          if( !ControlOp.power4Block(control, data->id, False) )
+            AppOp.stop();
+          if( wCtrl.iscloseonghost(wRocRail.getctrl( AppOp.getIni() ) ) )
+            wBlock.setstate( data->props, wBlock.closed );
         }
         if( wCtrl.isebreakatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
           /* power off */

@@ -1640,6 +1640,18 @@ static void _setBoosters(iOControl control, iONode ini) {
 }
 
 
+static Boolean _power4Block(iOControl control, const char* blockid, Boolean on) {
+  iOControlData data = Data(control);
+  if( data->powerman == NULL )
+    return False;
+  else {
+    iONode cmd = NodeOp.inst(wPwrCmd.name(), NULL, ELEMENT_NODE);
+    wPwrCmd.setblockid(cmd, blockid);
+    wPwrCmd.setcmd(cmd, on?wPwrCmd.on:wPwrCmd.off);
+    return PowerManOp.cmd(data->powerman, cmd );
+  }
+}
+
 
 static iOControl _inst( Boolean nocom ) {
     iOControl     control = allocMem( sizeof( struct OControl ) );
