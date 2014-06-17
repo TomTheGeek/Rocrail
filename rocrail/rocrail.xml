@@ -363,6 +363,10 @@
       <param name="blockid" vt="const char*"/>
       <param name="power" vt="Boolean"/>
     </fun>
+    <fun name="hasBlockPower" vt="Boolean">
+      <param name="inst" vt="this" remark="Control instance"/>
+      <param name="blockid" vt="const char*"/>
+    </fun>
     <fun name="getR2Rnet" vt="iOR2Rnet">
       <param name="inst" vt="this" remark="Control instance"/>
     </fun>
@@ -2274,6 +2278,10 @@
       <param name="mod" vt="iONode" remark="Modify node"/>
     </fun>
     <fun name="getBooster4Block" vt="const char*">
+      <param name="inst" vt="this" remark="PowerMan instance"/>
+      <param name="blockid" vt="const char*"/>
+    </fun>
+    <fun name="hasBlockPower" vt="Boolean">
       <param name="inst" vt="this" remark="PowerMan instance"/>
       <param name="blockid" vt="const char*"/>
     </fun>

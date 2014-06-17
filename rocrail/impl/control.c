@@ -1653,6 +1653,16 @@ static Boolean _power4Block(iOControl control, const char* blockid, Boolean on) 
 }
 
 
+static Boolean _hasBlockPower(iOControl control, const char* blockid) {
+  iOControlData data = Data(control);
+  if( data->powerman == NULL )
+    return True;
+  else {
+    return PowerManOp.hasBlockPower(data->powerman, blockid );
+  }
+}
+
+
 static iOControl _inst( Boolean nocom ) {
     iOControl     control = allocMem( sizeof( struct OControl ) );
     iOControlData data    = allocMem( sizeof( struct OControlData ) );

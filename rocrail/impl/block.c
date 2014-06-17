@@ -1664,6 +1664,11 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
     }
   }
   else {
+    iOControl control = AppOp.getControl();
+    if( !ControlOp.hasBlockPower(control, data->id) ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block [%s] has no power; locking is rejected", data->id );
+      return False;
+    }
 
     /* wait only 10ms for getting the mutex: */
     if( !MutexOp.trywait( data->muxLock, 10 ) ) {

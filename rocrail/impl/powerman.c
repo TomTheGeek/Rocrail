@@ -415,6 +415,34 @@ static const char* _getBooster4Block(iOPowerMan inst, const char* blockid) {
 }
 
 
+static Boolean _hasBlockPower(iOPowerMan inst, const char* blockid) {
+  iOPowerManData data = Data(inst);
+  iONode booster = wBoosterList.getbooster(data->props);
+  while( booster != NULL ) {
+    const char* blockids = wBooster.getblockids(booster);
+
+    if( blockids != NULL && StrOp.len( blockids ) > 0 ) {
+      iOStrTok tok = StrTokOp.inst( blockids, ',' );
+
+      /* iterate all blockid's */
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        const char* id = StrTokOp.nextToken( tok );
+        if( StrOp.equals(blockid, id )) {
+          StrTokOp.base.del(tok);
+          if( wBooster.isdoesreport(booster) )
+            return wBooster.ispower(booster);
+          else
+            return True;
+        }
+      };
+      StrTokOp.base.del(tok);
+    }
+    booster = wBoosterList.nextbooster(data->props, booster);
+  };
+  return True;
+}
+
+
 static Boolean _cmd(iOPowerMan inst, iONode cmd) {
   iOPowerManData data = Data(inst);
   iOModel model = AppOp.getModel();
