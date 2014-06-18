@@ -650,7 +650,14 @@ void PowerManDlg::onActions( wxCommandEvent& event )
 
 
 void PowerManDlg::OnHelp( wxCommandEvent& event ) {
-  wxGetApp().openLink( "powerman" );
+  switch( m_BoosterBook->GetSelection() ) {
+  case 0: wxGetApp().openLink( "powerman", "index" ); break;
+  case 1: wxGetApp().openLink( "powerman", "general" ); break;
+  case 2: wxGetApp().openLink( "powerman", "modules" ); break;
+  case 3: wxGetApp().openLink( "powerman", "blocks" ); break;
+  case 4: wxGetApp().openLink( "powerman", "details" ); break;
+  default: wxGetApp().openLink( "powerman" ); break;
+  }
 }
 
 void PowerManDlg::setSelection(const char* ID) {
