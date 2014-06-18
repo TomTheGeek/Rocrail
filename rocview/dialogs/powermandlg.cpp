@@ -52,10 +52,14 @@
 #include "rocs/public/strtok.h"
 
 
+static bool m_bInvertSortOrder;
+
+
 PowerManDlg::PowerManDlg( wxWindow* parent ):powermandlggen( parent )
 {
   m_Props = NULL;
   m_SortCol  = 0;
+  m_bInvertSortOrder = false;
   initLabels();
 
   m_IndexPanel->GetSizer()->Layout();
@@ -252,7 +256,7 @@ static int __sortID(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.getid( a );
     const char* idB = wItem.getid( b );
-    return strcmp( idA, idB );
+    return m_bInvertSortOrder ? strcmp( idB, idA ):strcmp( idA, idB );
 }
 static int __sortDistrict(obj* _a, obj* _b)
 {
@@ -260,16 +264,16 @@ static int __sortDistrict(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wBooster.getdistrict( a );
     const char* idB = wBooster.getdistrict( b );
-    return strcmp( idA, idB );
+    return m_bInvertSortOrder ? strcmp( idB, idA ):strcmp( idA, idB );
 }
 static int __sortUID(obj* _a, obj* _b)
 {
     iONode a = (iONode)*_a;
     iONode b = (iONode)*_b;
     if( wBooster.getuid(a) > wBooster.getuid(b) )
-      return 1;
+      return m_bInvertSortOrder ? -1:1;
     if( wBooster.getuid(a) < wBooster.getuid(b) )
-      return -1;
+      return m_bInvertSortOrder ? 1:-1;
     return 0;
 }
 
@@ -369,6 +373,10 @@ void PowerManDlg::onBoosterSelect( wxListEvent& event ){
 
 
 void PowerManDlg::onBoosterListColumn( wxListEvent& event ) {
+  if( m_SortCol == event.GetColumn() )
+    m_bInvertSortOrder = !m_bInvertSortOrder;
+  else
+    m_bInvertSortOrder = false;
   m_SortCol = event.GetColumn();
   initIndex();
 }
