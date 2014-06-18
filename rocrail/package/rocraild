@@ -28,7 +28,7 @@ case "$1" in
     echo "Starting Rocrail (> $rocrail_DIR/nohup.out)"
     cd $rocrail_DIR
     su -l root -c "rm -f $rocrail_DIR/nohup.out"
-    su -l root -c "nohup $rocrail_DIR/rocrail -l $rocrail_DIR > $rocrail_DIR/nohup.out 2>&1 &"
+    nohup $rocrail_DIR/rocrail -l $rocrail_DIR > $rocrail_DIR/nohup.out 2>&1 &
   fi
   ;;
     stop)
