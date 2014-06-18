@@ -40,6 +40,9 @@
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/BlockList.h"
+#include "rocrail/wrapper/public/StageList.h"
+#include "rocrail/wrapper/public/TurntableList.h"
+#include "rocrail/wrapper/public/SelTabList.h"
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/OutputList.h"
 #include "rocrail/wrapper/public/Feedback.h"
@@ -123,23 +126,47 @@ void PowerManDlg::initLabels() {
   iONode model = wxGetApp().getModel();
   iOList list = ListOp.inst();
   if( model != NULL ) {
+    int cnt = 0;
     iONode bklist = wPlan.getbklist( model );
+    iONode sblist = wPlan.getsblist( model );
+    iONode ttlist = wPlan.getttlist( model );
+    iONode fylist = wPlan.getseltablist( model );
     if( bklist != NULL ) {
-      int cnt = NodeOp.getChildCnt( bklist );
+      cnt = NodeOp.getChildCnt( bklist );
       for( int i = 0; i < cnt; i++ ) {
         iONode bk = NodeOp.getChild( bklist, i );
-        const char* id = wBlock.getid( bk );
-        if( id != NULL ) {
-          ListOp.add(list, (obj)id);
-        }
-      }
-      ListOp.sort(list, &__sortStr);
-      cnt = ListOp.size( list );
-      for( int i = 0; i < cnt; i++ ) {
-        const char* id = (const char*)ListOp.get( list, i );
-        m_BlocksCombo->Append( wxString(id,wxConvUTF8) );
+        ListOp.add(list, (obj)wItem.getid( bk ));
       }
     }
+    if( sblist != NULL ) {
+      cnt = NodeOp.getChildCnt( sblist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode sb = NodeOp.getChild( sblist, i );
+        ListOp.add(list, (obj)wItem.getid( sb ));
+      }
+    }
+    if( ttlist != NULL ) {
+      cnt = NodeOp.getChildCnt( ttlist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode tt = NodeOp.getChild( ttlist, i );
+        ListOp.add(list, (obj)wItem.getid( tt ));
+      }
+    }
+    if( fylist != NULL ) {
+      cnt = NodeOp.getChildCnt( fylist );
+      for( int i = 0; i < cnt; i++ ) {
+        iONode fy = NodeOp.getChild( fylist, i );
+        ListOp.add(list, (obj)wItem.getid( fy ));
+      }
+    }
+
+    ListOp.sort(list, &__sortStr);
+    cnt = ListOp.size( list );
+    for( int i = 0; i < cnt; i++ ) {
+      const char* id = (const char*)ListOp.get( list, i );
+      m_BlocksCombo->Append( wxString(id,wxConvUTF8) );
+    }
+
   }
   /* clean up the temp. list */
   ListOp.base.del(list);
