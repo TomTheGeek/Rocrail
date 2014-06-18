@@ -27,14 +27,14 @@ case "$1" in
   else
     echo "Starting Rocrail (> $rocrail_DIR/nohup.out)"
     cd $rocrail_DIR
-    su -l root -c "rm -f $rocrail_DIR/nohup.out"
+    rm -f $rocrail_DIR/nohup.out
     nohup $rocrail_DIR/rocrail -l $rocrail_DIR > $rocrail_DIR/nohup.out 2>&1 &
   fi
   ;;
     stop)
   if [ -n "$rocrail_PID" ] ; then
     echo Shutting down Rocrail
-          su -l root -c "kill $rocrail_PID"
+          kill $rocrail_PID
   else
     $0 status
   fi
@@ -46,20 +46,20 @@ case "$1" in
   ;;
     status)
   if [ -n "$rocrail_PID" ] ; then
-                echo Rocrail is up and running with PID $rocrail_PID
+    echo Rocrail is up and running with PID $rocrail_PID
     exit 4
-        else
-                echo Rocrail is not running
-                exit 5
+  else
+    echo Rocrail is not running
+    exit 5
   fi
   ;;
     deltrace)
-        $0 stop
-        sleep 1
-  echo Erase Trace-Files
-  rm -f $rocrail_DIR/*.trc
-        $0 start
-        ;;
+    $0 stop
+    sleep 1
+    echo Erase Trace-Files
+    rm -f $rocrail_DIR/*.trc
+    $0 start
+  ;;
     *)
   echo Usage: $0 {start|stop|restart|status|deltrace}
   exit 1
