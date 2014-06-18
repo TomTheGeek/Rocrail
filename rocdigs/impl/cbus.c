@@ -1344,7 +1344,7 @@ static void __heartBeat( void* threadinst ) {
 
   /* try to get the system status: */
   while( data->run ) {
-    if( data->heartbeaton ) {
+    if( data->heartbeaton && data->connOK && data->buson ) {
       byte cmd[8];
       byte* frame = allocMem(64);
       cmd[0] = OPC_ACK;

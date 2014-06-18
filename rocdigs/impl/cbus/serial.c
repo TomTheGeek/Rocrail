@@ -112,10 +112,21 @@ void serialDisconnect( obj inst ) {
 
 Boolean serialRead ( obj inst, unsigned char *frame, int len ) {
   iOCBUSData data = Data(inst);
-  if( !data->dummyio )
-    return data->serial == NULL ? False:SerialOp.read(data->serial, (char*)frame, len);
-  else
-    return False;
+  if( !data->dummyio && data->serial != NULL ) {
+    int available = SerialOp.available(data->serial);
+    if( available > 0 ) {
+      return SerialOp.read(data->serial, (char*)frame, len);
+    }
+    else if( available == -1 || SerialOp.getRc(data->serial) > 0 ) {
+      /* device error */
+      data->connOK = False;
+      serialDisconnect(inst);
+      TraceOp.trc( "bidibserial", TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
+    }
+
+  }
+
+  return False;
 }
 
 
@@ -135,9 +146,19 @@ Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
 
 Boolean serialAvailable( obj inst ) {
   iOCBUSData data = Data(inst);
-  if( !data->dummyio )
-    return data->serial == NULL ? False:SerialOp.available(data->serial);
-  else
-    return False;
+  if( !data->dummyio && data->serial != NULL ) {
+    int available = SerialOp.available(data->serial);
+    if( available > 0 ) {
+      return True;
+    }
+    else if( available == -1 || SerialOp.getRc(data->serial) > 0 ) {
+      /* device error */
+      data->connOK = False;
+      serialDisconnect(inst);
+      TraceOp.trc( "bidibserial", TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
+    }
+
+  }
+  return False;
 }
 
