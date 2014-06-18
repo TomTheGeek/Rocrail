@@ -2739,6 +2739,12 @@ static iONode __findFreeTrack(iIBlockBase inst, const char* locId) {
 static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, const char* routeid, Boolean crossing, Boolean reset, Boolean reverse, int indelay ) {
   iOTTData data = Data(inst);
   Boolean ok = False;
+  iOControl control = AppOp.getControl();
+
+  if( !ControlOp.hasBlockPower(control, wTurntable.getid(data->props)) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "turntable [%s] has no power; locking is rejected", wTurntable.getid(data->props) );
+    return False;
+  }
 
   /* wait only 10ms for getting the mutex: */
   if( !MutexOp.trywait( data->muxLock, 10 ) ) {

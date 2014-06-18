@@ -1013,6 +1013,12 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
   Boolean        ok = True;
   Boolean   manager = False;
 
+  iOControl control = AppOp.getControl();
+  if( !ControlOp.hasBlockPower(control, inst->base.id(inst)) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "fiddleyard [%s] has no power; locking is rejected", inst->base.id(inst) );
+    return False;
+  }
+
   /* wait only 10ms for getting the mutex: */
   if( !MutexOp.trywait( data->muxLock, 10 ) ) {
     return False;

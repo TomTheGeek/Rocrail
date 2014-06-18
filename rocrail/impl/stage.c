@@ -1139,11 +1139,18 @@ static Boolean _link( iIBlockBase inst ,iIBlockBase linkto ) {
 /**  */
 static Boolean _lock( iIBlockBase inst ,const char* locid ,const char* blockid ,const char* routeid ,Boolean crossing ,Boolean reset ,Boolean reverse ,int indelay ) {
   iOStageData data = Data(inst);
+  iOControl control = AppOp.getControl();
 
   if( data->locId != NULL && StrOp.equals( data->locId, locid) ) {
     /* already locked by this ID */
     return True;
   }
+
+  if( !ControlOp.hasBlockPower(control, data->id) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "stageblock [%s] has no power; locking is rejected", data->id );
+    return False;
+  }
+
 
   if( !StageOp.isFree(inst, locid) ) {
     return False;
