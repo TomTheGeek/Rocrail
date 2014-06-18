@@ -430,7 +430,7 @@ static Boolean _hasBlockPower(iOPowerMan inst, const char* blockid) {
         const char* id = StrTokOp.nextToken( tok );
         if( StrOp.equals(blockid, id )) {
           StrTokOp.base.del(tok);
-          if( wBooster.isdoesreport(booster) )
+          if( wBooster.isdoesreport(booster) || (wBooster.getpowerfb(booster) != NULL && StrOp.len(wBooster.getpowerfb(booster)) > 0 ) )
             return wBooster.ispower(booster);
           else
             return True;
