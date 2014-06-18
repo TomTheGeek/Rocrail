@@ -233,6 +233,7 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,const char*
             wBooster.getid(pwbooster), wBooster.getdistrict(scbooster) );
     wPwrEvent.setid( pwrevent, wBooster.getid(pwbooster) );
     wPwrEvent.setpower( pwrevent, pulse );
+    wBooster.setpower(pwbooster, pulse);
     if( !pulse ) {
       iONode pwrcmd = NodeOp.inst( wPwrCmd.name(), NULL, ELEMENT_NODE );
       wPwrCmd.setid( pwrcmd, wBooster.getid(pwbooster) );
