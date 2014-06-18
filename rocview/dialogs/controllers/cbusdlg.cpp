@@ -130,6 +130,7 @@ void CbusDlg::initValues() {
   m_CommandAck->SetValue( wCBus.iscommandack(cbusini) ? true:false);
   m_FonFof->SetValue( wCBus.isfonfof(cbusini) ? true:false);
   m_HeartBeat->SetValue( wCBus.isheartbeat(cbusini) ? true:false);
+  m_HeartBeatEvent->SetValue( wCBus.getheartbeatevent(cbusini));
   m_CTS->SetValue( StrOp.equals( wDigInt.cts, wDigInt.getflow( m_Props ) ) ? true:false );
 }
 
@@ -164,6 +165,7 @@ void CbusDlg::evaluate() {
   wCBus.setcommandack(cbusini, m_CommandAck->IsChecked()?True:False);
   wCBus.setfonfof(cbusini, m_FonFof->IsChecked()?True:False);
   wCBus.setheartbeat(cbusini, m_HeartBeat->IsChecked()?True:False);
+  wCBus.setheartbeatevent(cbusini, m_HeartBeatEvent->GetValue());
   wDigInt.setflow( m_Props, m_CTS->IsChecked() ? wDigInt.cts:wDigInt.none );
 
 }

@@ -189,7 +189,7 @@ void cbusMon(byte* frame, int opc) {
       char char4  = HEXA2Byte(frame + OFFSET_D5 + offset);
       char char5  = HEXA2Byte(frame + OFFSET_D6 + offset);
       char char6  = HEXA2Byte(frame + OFFSET_D7 + offset);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "[%03d] evaluate OPC=0x%02X data=%02X%02X%02X%02X%02X%02X%02X",
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "[%03d] evaluate OPC=0x%02X data=%02X%02X%02X%02X%02X%02X%02X",
           canid, opc, char0&0xFF, char1&0xFF, char2&0xFF, char3&0xFF, char4&0xFF, char5&0xFF, char6&0xFF );
     }
     break;

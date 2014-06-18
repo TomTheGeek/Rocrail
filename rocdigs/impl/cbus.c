@@ -1338,7 +1338,7 @@ static void __heartBeat( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOCBUS cbus = (iOCBUS)ThreadOp.getParm( th );
   iOCBUSData data = Data(cbus);
-
+  Boolean on = True;
   ThreadOp.sleep(5000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CBUS heartbeat runner started." );
 
@@ -1347,9 +1347,14 @@ static void __heartBeat( void* threadinst ) {
     if( data->heartbeaton && data->connOK && data->buson ) {
       byte cmd[8];
       byte* frame = allocMem(64);
-      cmd[0] = OPC_ACK;
-      makeFrame(frame, PRIORITY_NORMAL, cmd, 0, data->cid, False );
+      cmd[0] = on ? OPC_ACON:OPC_ACOF;
+      cmd[1] = 0;
+      cmd[2] = 0;
+      cmd[3] = data->heartbeatevent / 256;
+      cmd[4] = data->heartbeatevent % 256;
+      makeFrame(frame, PRIORITY_NORMAL, cmd, 4, data->cid, False );
       ThreadOp.post(data->writer, (obj)frame);
+      on = !on;
     }
     ThreadOp.sleep(1000);
   };
@@ -2433,6 +2438,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->commandAck  = wCBus.iscommandack(data->cbusini);
   data->heartbeaton = wCBus.isheartbeat(data->cbusini);
+  data->heartbeatevent = wCBus.getheartbeatevent(data->cbusini);
 
   if( data->purgetime < 1 || data->purgetime > 19 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "purgetime out of range: %d, reset to 10", data->purgetime );
@@ -2455,7 +2461,7 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purgetime     = %d", data->purgetime );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dummy I/O     = %s", data->dummyio ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command ack   = %s", data->commandAck ? "yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "heart beat    = %s", data->heartbeaton ? "yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "heart beat    = %s:%d", data->heartbeaton ? "yes":"no", data->heartbeatevent );
 
 
   /* choose interface: */
@@ -2489,8 +2495,10 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
     data->keep = ThreadOp.inst( "keeper", &__keep, __CBUS );
     ThreadOp.start( data->keep );
 
-    data->heartbeat = ThreadOp.inst( "heartbeat", &__heartBeat, __CBUS );
-    ThreadOp.start( data->heartbeat );
+    if( data->heartbeaton ) {
+      data->heartbeat = ThreadOp.inst( "heartbeat", &__heartBeat, __CBUS );
+      ThreadOp.start( data->heartbeat );
+    }
 
     if( data->stress ) {
       data->stressRunner = ThreadOp.inst( "cbstress", &__stressRunner, __CBUS );

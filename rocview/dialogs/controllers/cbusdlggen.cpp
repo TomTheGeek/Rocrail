@@ -114,8 +114,19 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	m_OptionsBox->Add( m_FonFof, 0, wxRIGHT|wxLEFT, 5 );
 	
+	wxFlexGridSizer* fgSizer42;
+	fgSizer42 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer42->SetFlexibleDirection( wxBOTH );
+	fgSizer42->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
 	m_HeartBeat = new wxCheckBox( this, wxID_ANY, wxT("Heart Beat"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_OptionsBox->Add( m_HeartBeat, 0, wxRIGHT|wxLEFT, 5 );
+	m_HeartBeat->SetValue(true); 
+	fgSizer42->Add( m_HeartBeat, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	m_HeartBeatEvent = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 4712 );
+	fgSizer42->Add( m_HeartBeatEvent, 0, wxBOTTOM|wxRIGHT, 5 );
+	
+	m_OptionsBox->Add( fgSizer42, 0, 0, 5 );
 	
 	wxFlexGridSizer* fgSizer41;
 	fgSizer41 = new wxFlexGridSizer( 0, 2, 0, 0 );

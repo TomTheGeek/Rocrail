@@ -56,6 +56,7 @@ class cbusdlggen : public wxDialog
 		wxCheckBox* m_CommandAck;
 		wxCheckBox* m_FonFof;
 		wxCheckBox* m_HeartBeat;
+		wxSpinCtrl* m_HeartBeatEvent;
 		wxStaticText* m_labSOD;
 		wxSpinCtrl* m_SOD;
 		wxStaticText* m_labSwTime;
