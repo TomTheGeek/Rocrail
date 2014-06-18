@@ -104,38 +104,31 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	m_FastClock = new wxCheckBox( this, wxID_ANY, wxT("Fast clock"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_FastClock->SetValue(true); 
-	m_OptionsBox->Add( m_FastClock, 0, wxRIGHT|wxLEFT, 5 );
+	m_OptionsBox->Add( m_FastClock, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_CommandAck = new wxCheckBox( this, wxID_ANY, wxT("Command Ack"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_OptionsBox->Add( m_CommandAck, 0, wxRIGHT|wxLEFT, 5 );
+	m_OptionsBox->Add( m_CommandAck, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	m_FonFof = new wxCheckBox( this, wxID_ANY, wxT("FONFOF"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_FonFof->Enable( false );
 	
-	m_OptionsBox->Add( m_FonFof, 0, wxRIGHT|wxLEFT, 5 );
-	
-	wxFlexGridSizer* fgSizer42;
-	fgSizer42 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer42->SetFlexibleDirection( wxBOTH );
-	fgSizer42->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_HeartBeat = new wxCheckBox( this, wxID_ANY, wxT("Heart Beat"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_HeartBeat->SetValue(true); 
-	fgSizer42->Add( m_HeartBeat, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
-	
-	m_HeartBeatEvent = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 4712 );
-	fgSizer42->Add( m_HeartBeatEvent, 0, wxBOTTOM|wxRIGHT, 5 );
-	
-	m_OptionsBox->Add( fgSizer42, 0, 0, 5 );
+	m_OptionsBox->Add( m_FonFof, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	
 	wxFlexGridSizer* fgSizer41;
 	fgSizer41 = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizer41->SetFlexibleDirection( wxBOTH );
 	fgSizer41->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
+	m_HeartBeat = new wxCheckBox( this, wxID_ANY, wxT("Heart Beat"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_HeartBeat->SetValue(true); 
+	fgSizer41->Add( m_HeartBeat, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	m_HeartBeatEvent = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 4712 );
+	fgSizer41->Add( m_HeartBeatEvent, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	
 	m_labSOD = new wxStaticText( this, wxID_ANY, wxT("SoD"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labSOD->Wrap( -1 );
-	fgSizer41->Add( m_labSOD, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxRIGHT|wxLEFT, 5 );
+	fgSizer41->Add( m_labSOD, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT|wxALIGN_RIGHT, 5 );
 	
 	m_SOD = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer41->Add( m_SOD, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT, 5 );
@@ -161,7 +154,7 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_LoaderTime = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 10, 100, 50 );
 	fgSizer41->Add( m_LoaderTime, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	m_OptionsBox->Add( fgSizer41, 1, wxEXPAND, 5 );
+	m_OptionsBox->Add( fgSizer41, 0, 0, 5 );
 	
 	bSizer4->Add( m_OptionsBox, 0, wxALL, 5 );
 	

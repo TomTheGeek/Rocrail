@@ -1028,7 +1028,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxRIGHT|wxLEFT</property>
+                                            <property name="flag">wxTOP|wxRIGHT|wxLEFT</property>
                                             <property name="proportion">0</property>
                                             <object class="wxCheckBox" expanded="1">
                                                 <property name="bg"></property>
@@ -1085,7 +1085,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxRIGHT|wxLEFT</property>
+                                            <property name="flag">wxTOP|wxRIGHT|wxLEFT</property>
                                             <property name="proportion">0</property>
                                             <object class="wxCheckBox" expanded="1">
                                                 <property name="bg"></property>
@@ -1142,7 +1142,7 @@
                                         </object>
                                         <object class="sizeritem" expanded="1">
                                             <property name="border">5</property>
-                                            <property name="flag">wxRIGHT|wxLEFT</property>
+                                            <property name="flag">wxTOP|wxRIGHT|wxLEFT</property>
                                             <property name="proportion">0</property>
                                             <object class="wxCheckBox" expanded="1">
                                                 <property name="bg"></property>
@@ -1208,14 +1208,14 @@
                                                 <property name="growablerows"></property>
                                                 <property name="hgap">0</property>
                                                 <property name="minimum_size"></property>
-                                                <property name="name">fgSizer42</property>
+                                                <property name="name">fgSizer41</property>
                                                 <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                                 <property name="permission">none</property>
                                                 <property name="rows">0</property>
                                                 <property name="vgap">0</property>
                                                 <object class="sizeritem" expanded="1">
                                                     <property name="border">5</property>
-                                                    <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT</property>
+                                                    <property name="flag">wxTOP|wxRIGHT|wxLEFT</property>
                                                     <property name="proportion">0</property>
                                                     <object class="wxCheckBox" expanded="1">
                                                         <property name="bg"></property>
@@ -1272,7 +1272,7 @@
                                                 </object>
                                                 <object class="sizeritem" expanded="1">
                                                     <property name="border">5</property>
-                                                    <property name="flag">wxBOTTOM|wxRIGHT</property>
+                                                    <property name="flag">wxTOP|wxRIGHT|wxLEFT</property>
                                                     <property name="proportion">0</property>
                                                     <object class="wxSpinCtrl" expanded="1">
                                                         <property name="bg"></property>
@@ -1330,27 +1330,9 @@
                                                         <event name="OnUpdateUI"></event>
                                                     </object>
                                                 </object>
-                                            </object>
-                                        </object>
-                                        <object class="sizeritem" expanded="1">
-                                            <property name="border">5</property>
-                                            <property name="flag">wxEXPAND</property>
-                                            <property name="proportion">1</property>
-                                            <object class="wxFlexGridSizer" expanded="1">
-                                                <property name="cols">2</property>
-                                                <property name="flexible_direction">wxBOTH</property>
-                                                <property name="growablecols"></property>
-                                                <property name="growablerows"></property>
-                                                <property name="hgap">0</property>
-                                                <property name="minimum_size"></property>
-                                                <property name="name">fgSizer41</property>
-                                                <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
-                                                <property name="permission">none</property>
-                                                <property name="rows">0</property>
-                                                <property name="vgap">0</property>
                                                 <object class="sizeritem" expanded="1">
                                                     <property name="border">5</property>
-                                                    <property name="flag">wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxTOP|wxRIGHT|wxLEFT</property>
+                                                    <property name="flag">wxALIGN_CENTER_VERTICAL|wxTOP|wxRIGHT|wxLEFT|wxALIGN_RIGHT</property>
                                                     <property name="proportion">0</property>
                                                     <object class="wxStaticText" expanded="1">
                                                         <property name="bg"></property>
