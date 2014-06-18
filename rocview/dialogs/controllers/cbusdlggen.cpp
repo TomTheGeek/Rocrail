@@ -86,9 +86,9 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_Port = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
 	fgSizer5->Add( m_Port, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	bSizer8->Add( fgSizer5, 1, wxEXPAND, 5 );
+	bSizer8->Add( fgSizer5, 0, 0, 5 );
 	
-	bSizer3->Add( bSizer8, 1, 0, 5 );
+	bSizer3->Add( bSizer8, 0, 0, 5 );
 	
 	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer3->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
@@ -152,11 +152,11 @@ cbusdlggen::cbusdlggen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	m_OptionsBox->Add( fgSizer41, 1, wxEXPAND, 5 );
 	
-	bSizer4->Add( m_OptionsBox, 1, wxALL, 5 );
+	bSizer4->Add( m_OptionsBox, 0, wxALL, 5 );
 	
-	bSizer3->Add( bSizer4, 1, 0, 5 );
+	bSizer3->Add( bSizer4, 0, 0, 5 );
 	
-	bSizer6->Add( bSizer3, 0, wxEXPAND, 5 );
+	bSizer6->Add( bSizer3, 0, 0, 5 );
 	
 	m_StdButton = new wxStdDialogButtonSizer();
 	m_StdButtonOK = new wxButton( this, wxID_OK );
