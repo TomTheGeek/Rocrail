@@ -44,6 +44,7 @@ class PowerManDlg : public powermandlggen
   int m_TabAlign;
   int m_SetPage;
   iONode m_Props;
+  int m_SortCol;
 
 protected:
 	// Handlers for powermandlggen events.
@@ -57,11 +58,16 @@ protected:
 	void OnCancel( wxCommandEvent& event );
 	void OnOK( wxCommandEvent& event );
   void onSetPage( wxCommandEvent& event );
-  void onBoosterSelect( wxCommandEvent& event );
+  void onBoosterListColumn( wxListEvent& event );
+  void onBoosterSelect( wxListEvent& event );
   void onBlockSelect( wxCommandEvent& event );
   void onModuleSelect( wxCommandEvent& event );
   void onActions( wxCommandEvent& event );
   void OnHelp( wxCommandEvent& event );
+  void setSelection(const char* ID);
+  int findID( const char* ID );
+
+
 public:
 	/** Constructor */
 	PowerManDlg( wxWindow* parent );
