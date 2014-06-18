@@ -27925,4 +27925,7 @@
   <Msg id="backlight">
     <en txt="Backlight"/>
   </Msg>
+  <Msg id="heartbeat">
+    <en txt="Heartbeat"/>
+  </Msg>
 </Messages>

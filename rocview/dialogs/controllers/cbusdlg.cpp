@@ -68,6 +68,7 @@ void CbusDlg::initLabels() {
   m_OptionsBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "options" ) );
   m_ShortEvents->SetLabel( wxGetApp().getMsg( "shortevents" ) );
   m_FastClock->SetLabel( wxGetApp().getMsg( "fastclock" ) );
+  m_HeartBeat->SetLabel( wxGetApp().getMsg( "heartbeat" ) );
   m_labSwTime->SetLabel( wxGetApp().getMsg( "switchtime" ) );
   m_labPurgetime->SetLabel( wxGetApp().getMsg( "purgetime" ) );
   m_labLoaderTime->SetLabel( wxGetApp().getMsg( "loadertime" ) );

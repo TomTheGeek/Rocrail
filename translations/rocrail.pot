@@ -7097,3 +7097,9 @@ msgstr ""
 msgid "Backlight"
 msgstr ""
 
+#. 
+# id="heartbeat"
+#, c-format
+msgid "Heartbeat"
+msgstr ""
+
