@@ -430,8 +430,13 @@ static Boolean _hasBlockPower(iOPowerMan inst, const char* blockid) {
         const char* id = StrTokOp.nextToken( tok );
         if( StrOp.equals(blockid, id )) {
           StrTokOp.base.del(tok);
-          if( wBooster.isdoesreport(booster) || (wBooster.getpowerfb(booster) != NULL && StrOp.len(wBooster.getpowerfb(booster)) > 0 ) )
+          if( wBooster.isdoesreport(booster) || (wBooster.getpowerfb(booster) != NULL && StrOp.len(wBooster.getpowerfb(booster)) > 0 ) ) {
+            if( !wBooster.ispower(booster) ) {
+              TraceOp.trc(name, TRCLEVEL_USER1, __LINE__, 9999, "booster %s if OFF in district %s",
+                  wBooster.getid(booster), wBooster.getdistrict(booster) );
+            }
             return wBooster.ispower(booster);
+          }
           else
             return True;
         }
