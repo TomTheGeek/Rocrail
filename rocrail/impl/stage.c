@@ -475,20 +475,24 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
       }
     }
     else if( data->locId == NULL && puls ) {
-      if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
-        /* power off */
-        AppOp.stop();
-      }
-      /* broadcast ghost state */
-      {
-        iONode nodeD = (iONode)NodeOp.base.clone(data->props);
-        wStage.setstate( nodeD, wBlock.ghost );
-        AppOp.broadcastEvent( nodeD );
-        __checkAction((iOStage)inst, "ghost");
-      }
+      if( ModelOp.isAuto( AppOp.getModel() ) ) {
+        if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
+          iOControl control = AppOp.getControl();
+          /* power off */
+          if( !ControlOp.power4Block(control, data->id, False) )
+            AppOp.stop();
+        }
+        /* broadcast ghost state */
+        {
+          iONode nodeD = (iONode)NodeOp.base.clone(data->props);
+          wStage.setstate( nodeD, wBlock.ghost );
+          AppOp.broadcastEvent( nodeD );
+          __checkAction((iOStage)inst, "ghost");
+        }
 
-      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Ghost train in staging block %s, fbid=%s, ident=%s, wait4enter=%d",
-          data->id, id, ident, data->wait4enter );
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Ghost train in staging block %s, fbid=%s, ident=%s, wait4enter=%d",
+            data->id, id, ident, data->wait4enter );
+      }
     }
   }
 
