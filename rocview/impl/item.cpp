@@ -3000,6 +3000,12 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       occupied = isEntering ? 3:occupied;
       occupied = StrOp.equals(wBlock.closed,wStage.getstate( node ))?4:occupied;
     }
+    // Ghost
+    else if( StrOp.equals( wBlock.ghost, wStage.getstate( node ) ) ) {
+      wStage.setstate( m_Props, wStage.getstate( node ) );
+      l_locidStr = StrOp.fmt( "%s GHOST", wStage.getid( m_Props ) );
+      occupied = 5;
+    }
     else {
       wStage.setstate( m_Props, wStage.getstate( node ) );
       occupied = StrOp.equals(wBlock.closed,wStage.getstate( node ))?4:occupied;
@@ -3014,7 +3020,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     else if( nrlocos > 0 )
       l_locidStr = StrOp.fmt( "%s [%d]%s",
           wStage.getid( node ), nrlocos, StrOp.equals(wBlock.closed,wStage.getexitstate(m_Props))?"<":"" );
-    else
+    else if( occupied != 5)
       l_locidStr = StrOp.fmt( "%s %s", wStage.getid( node ), StrOp.equals(wBlock.closed,wStage.getexitstate(m_Props))?"<":"" );
 
     m_Renderer->setLabel( l_locidStr, occupied, false );

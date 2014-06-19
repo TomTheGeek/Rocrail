@@ -738,6 +738,7 @@ void SymbolRenderer::initSym() {
       m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_res );
       m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_ent );
       m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_closed );
+      m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, stagetype::stage_ghost );
     }
   }
   else if( StrOp.equals( wSelTab.name(), nodeName ) ) {
@@ -1763,6 +1764,10 @@ void SymbolRenderer::drawStage( wxPaintDC& dc, bool occupied, const char* ori ) 
   else if( m_SvgSym5!=NULL && m_iOccupied == 4 ) {
     /* closed state */
     drawSvgSym(dc, m_SvgSym5, ori);
+  }
+  else if( m_SvgSym6!=NULL && m_iOccupied == 5 ) {
+    /* ghost state */
+    drawSvgSym(dc, m_SvgSym6, ori);
   }
 
   if( StrOp.len(m_Label) > 0 ) {

@@ -476,11 +476,19 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
     }
     else if( data->locId == NULL && puls ) {
       if( ModelOp.isAuto( AppOp.getModel() ) ) {
+        data->ghost = True;
+
         if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
           iOControl control = AppOp.getControl();
           /* power off */
           if( !ControlOp.power4Block(control, data->id, False) )
             AppOp.stop();
+          if( wCtrl.iscloseonghost(wRocRail.getctrl( AppOp.getIni() ) ) )
+            wStage.setstate( data->props, wBlock.closed );
+        }
+        if( wCtrl.isebreakatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
+          /* power off */
+          AppOp.ebreak();
         }
         /* broadcast ghost state */
         {
@@ -492,6 +500,15 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
 
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Ghost train in staging block %s, fbid=%s, ident=%s, wait4enter=%d",
             data->id, id, ident, data->wait4enter );
+      }
+    }
+    else if( data->locId == NULL && !puls && data->ghost ) {
+      data->ghost = False;
+      /* broadcast state */
+      {
+        iONode nodeD = (iONode)NodeOp.base.clone(data->props);
+        wStage.setstate( nodeD, wStage.getstate( data->props ) );
+        AppOp.broadcastEvent( nodeD );
       }
     }
   }
