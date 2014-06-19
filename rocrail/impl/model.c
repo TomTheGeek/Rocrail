@@ -2572,6 +2572,10 @@ static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean genera
         }
         wLoc.setfncnt( lc, 28 );
         wLoc.setaddr( lc, addr );
+        wLoc.setV_max( lc, 100 );
+        wLoc.setV_mid( lc, 50 );
+        wLoc.setV_min( lc, 10 );
+        wLoc.setV_mode( lc, wLoc.V_mode_percent );
         StrOp.fmtb( identifier, "%d", addr );
         wLoc.setidentifier( lc, identifier );
         wLoc.setshow( lc, True );
