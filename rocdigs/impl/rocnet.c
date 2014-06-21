@@ -1580,6 +1580,7 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
       rnReply = rocnetParseOutput( rocnet, rn );
       if( actionType == RN_ACTIONTYPE_EVENT) {
         char key[32] = {'\0'};
+        int state = rn[RN_PACKET_DATA + 0] & 0xFF;
         iONode rnnode = NULL;
         iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
         StrOp.fmtb( key, "%d-%d", rn[RN_PACKET_NETID], sndr);
@@ -1590,8 +1591,9 @@ static void __evaluateRN( iOrocNet rocnet, byte* rn ) {
 
         wSwitch.setbus( nodeC, sndr );
         wSwitch.setaddr1( nodeC, port );
-        wSwitch.setaddr1( nodeC, port );
-        wSwitch.setstate( nodeC, (rn[RN_PACKET_DATA + 0] == 0) ?"straight":"turnout" );
+        wSwitch.setstate( nodeC, state == 0 ?"straight":"turnout" );
+        wSwitch.setgatevalue( nodeC, state );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "bus=%d port=%d state=%d -> %s", sndr, port, state, wSwitch.getstate(nodeC) );
         wSwitch.setporttype( nodeC, rn[RN_PACKET_DATA + 1] & 0x0F );
         if( data->iid != NULL )
           wSwitch.setiid( nodeC, data->iid );

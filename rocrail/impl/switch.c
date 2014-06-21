@@ -910,7 +910,7 @@ static int __checkCmd( iOSwitch inst, iONode nodeA, Boolean update, int extra, i
   if( SwitchOp.isLocked(inst, NULL, wSwitch.ismanualcmd( nodeA )) ) {
     if( lcid == NULL || !StrOp.equals( lcid, o->lockedId ) || StrOp.len(lcid) == 0 ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch [%s] is locked by [%s]: reject any commands from others",
-                   SwitchOp.getId( inst ), o->lockedId );
+                   SwitchOp.getId( inst ), o->lockedId != NULL ? o->lockedId:wSwitch.getblockid(o->props));
       if( wSwitch.isforcecmd( nodeA ) || wSwitch.isinitfield(nodeA) ) {
         TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "switch [%s] command [%s] is forced%s",
                      SwitchOp.getId( inst ), wSwitch.getcmd(nodeA), wSwitch.isinitfield(nodeA)?" by init field":"" );
@@ -1672,7 +1672,8 @@ static void _event( iOSwitch inst, iONode nodeC ) {
 
     wSwitch.setfieldstate( data->props, wSwitch.getstate(data->props) );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] field state=%s", SwitchOp.getId(inst), wSwitch.getstate( data->props) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] field state=%s gatevalue=%d",
+        SwitchOp.getId(inst), wSwitch.getstate( data->props), wSwitch.getgatevalue(nodeC) );
 
     __checkAction( inst );
 
