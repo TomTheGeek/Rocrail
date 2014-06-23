@@ -264,9 +264,13 @@ public:
     wxSpinCtrl* m_GPSY;
     wxStaticText* m_labGPSZ;
     wxSpinCtrl* m_GPSZ;
-    wxStaticBox* m_GPSOptions;
-    wxStaticText* m_labGPSTolerance;
-    wxSpinCtrl* m_GPSTolerance;
+    wxStaticBox* m_GPSTolerance;
+    wxStaticText* m_labGPSToleranceX;
+    wxSpinCtrl* m_GPSToleranceX;
+    wxStaticText* m_labGPSToleranceY;
+    wxSpinCtrl* m_GPSToleranceY;
+    wxStaticText* m_labGPSToleranceZ;
+    wxSpinCtrl* m_GPSToleranceZ;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

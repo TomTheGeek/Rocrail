@@ -1924,7 +1924,9 @@
         <var name="gpsx" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
         <var name="gpsy" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
         <var name="gpsz" vt="int" defval="0" range="0-*" remark="Z-Position in the plan."/>
-        <var name="gpstol" vt="int" defval="0" range="0-*" remark="Tolerance."/>
+        <var name="gpstolx" vt="int" defval="0" range="0-*" remark="Tolerance."/>
+        <var name="gpstoly" vt="int" defval="0" range="0-*" remark="Tolerance."/>
+        <var name="gpstolz" vt="int" defval="0" range="0-*" remark="Tolerance."/>
         <var name="gpstime" vt="int" defval="0" range="0-*" remark="Time in ms."/>
         <var name="gpssid" vt="int" defval="0" range="0-*" remark="SendID."/>
         <actionctrl cardinality="n"/>

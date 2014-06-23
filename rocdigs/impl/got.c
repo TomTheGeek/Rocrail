@@ -296,6 +296,7 @@ static void __reader( void* threadinst ) {
       StrTokOp.base.del(tok);
 
       if( valid ) {
+        char ident[32];
         iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setgpstime( nodeC, t );
         wFeedback.setgpssid( nodeC, sid );
@@ -307,6 +308,8 @@ static void __reader( void* threadinst ) {
           wFeedback.setiid( nodeC, data->iid );
         wFeedback.setstate( nodeC, True );
 
+        StrOp.fmtb(ident, "%d", sid);
+        wFeedback.setidentifier( nodeC, ident);
         data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
       }
     }

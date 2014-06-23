@@ -723,15 +723,17 @@ static Boolean _hasShortcut( iOFBack inst ) {
 static Boolean _isAtGPSPos( iOFBack inst, int sid, int xx, int yy, int zz ) {
   iOFBackData data = Data(inst);
   if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_gps ) {
-    int x   = wFeedback.getgpsx(data->props);
-    int y   = wFeedback.getgpsy(data->props);
-    int z   = wFeedback.getgpsz(data->props);
-    int tol = wFeedback.getgpstol(data->props);
-    if( abs(xx-x) > tol )
+    int x = wFeedback.getgpsx(data->props);
+    int y = wFeedback.getgpsy(data->props);
+    int z = wFeedback.getgpsz(data->props);
+    int tolx = wFeedback.getgpstolx(data->props);
+    int toly = wFeedback.getgpstoly(data->props);
+    int tolz = wFeedback.getgpstolz(data->props);
+    if( abs(xx-x) > tolx )
       return False;
-    if( abs(yy-y) > tol )
+    if( abs(yy-y) > toly )
       return False;
-    if( abs(zz-z) > tol )
+    if( abs(zz-z) > tolz )
       return False;
     return True;
   }

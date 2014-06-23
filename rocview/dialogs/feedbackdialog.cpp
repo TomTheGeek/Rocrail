@@ -261,8 +261,7 @@ void FeedbackDialog::initLabels() {
 
   // GPS
   m_GPSCoordinates->SetLabel( wxGetApp().getMsg( "coordinates" ) );
-  m_GPSOptions->SetLabel( wxGetApp().getMsg( "options" ) );
-  m_labGPSTolerance->SetLabel( wxGetApp().getMsg( "tolerance" ) );
+  m_GPSTolerance->SetLabel( wxGetApp().getMsg( "tolerance" ) );
 
 
   // Buttons
@@ -368,7 +367,9 @@ void FeedbackDialog::initValues() {
   m_GPSX->SetValue(wFeedback.getgpsx( m_Props ) );
   m_GPSY->SetValue(wFeedback.getgpsy( m_Props ) );
   m_GPSZ->SetValue(wFeedback.getgpsz( m_Props ) );
-  m_GPSTolerance->SetValue(wFeedback.getgpstol( m_Props ) );
+  m_GPSToleranceX->SetValue(wFeedback.getgpstolx( m_Props ) );
+  m_GPSToleranceY->SetValue(wFeedback.getgpstoly( m_Props ) );
+  m_GPSToleranceZ->SetValue(wFeedback.getgpstolz( m_Props ) );
 
   // Action
 
@@ -438,7 +439,9 @@ bool FeedbackDialog::evaluate() {
   wFeedback.setgpsx( m_Props, m_GPSX->GetValue() );
   wFeedback.setgpsy( m_Props, m_GPSY->GetValue() );
   wFeedback.setgpsz( m_Props, m_GPSZ->GetValue() );
-  wFeedback.setgpstol( m_Props, m_GPSTolerance->GetValue() );
+  wFeedback.setgpstolx( m_Props, m_GPSToleranceX->GetValue() );
+  wFeedback.setgpstoly( m_Props, m_GPSToleranceY->GetValue() );
+  wFeedback.setgpstolz( m_Props, m_GPSToleranceZ->GetValue() );
 
 
   // Action
@@ -525,9 +528,13 @@ bool FeedbackDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_GPSY = NULL;
     m_labGPSZ = NULL;
     m_GPSZ = NULL;
-    m_GPSOptions = NULL;
-    m_labGPSTolerance = NULL;
     m_GPSTolerance = NULL;
+    m_labGPSToleranceX = NULL;
+    m_GPSToleranceX = NULL;
+    m_labGPSToleranceY = NULL;
+    m_GPSToleranceY = NULL;
+    m_labGPSToleranceZ = NULL;
+    m_GPSToleranceZ = NULL;
     m_Cancel = NULL;
     m_OK = NULL;
     m_Apply = NULL;
@@ -819,12 +826,12 @@ void FeedbackDialog::CreateControls()
     m_Notebook->AddPage(m_Wiring, _("Wiring"));
 
     m_GPSTab = new wxPanel( m_Notebook, ID_PANEL_FB_GPS, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
-    wxBoxSizer* itemBoxSizer81 = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* itemBoxSizer81 = new wxBoxSizer(wxHORIZONTAL);
     m_GPSTab->SetSizer(itemBoxSizer81);
 
     m_GPSCoordinates = new wxStaticBox(m_GPSTab, wxID_ANY, _("Coordinates"));
     wxStaticBoxSizer* itemStaticBoxSizer82 = new wxStaticBoxSizer(m_GPSCoordinates, wxVERTICAL);
-    itemBoxSizer81->Add(itemStaticBoxSizer82, 0, wxGROW|wxALL, 5);
+    itemBoxSizer81->Add(itemStaticBoxSizer82, 0, wxALIGN_TOP|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer83 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer82->Add(itemFlexGridSizer83, 0, wxALIGN_LEFT, 5);
     m_labGPSX = new wxStaticText( m_GPSTab, wxID_ANY, _("X"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -845,38 +852,50 @@ void FeedbackDialog::CreateControls()
     m_GPSZ = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000000, 0 );
     itemFlexGridSizer83->Add(m_GPSZ, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_GPSOptions = new wxStaticBox(m_GPSTab, wxID_ANY, _("Options"));
-    wxStaticBoxSizer* itemStaticBoxSizer90 = new wxStaticBoxSizer(m_GPSOptions, wxVERTICAL);
-    itemBoxSizer81->Add(itemStaticBoxSizer90, 0, wxGROW|wxALL, 5);
+    m_GPSTolerance = new wxStaticBox(m_GPSTab, wxID_ANY, _("Tolerance"));
+    wxStaticBoxSizer* itemStaticBoxSizer90 = new wxStaticBoxSizer(m_GPSTolerance, wxVERTICAL);
+    itemBoxSizer81->Add(itemStaticBoxSizer90, 0, wxALIGN_TOP|wxALL, 5);
     wxFlexGridSizer* itemFlexGridSizer91 = new wxFlexGridSizer(0, 2, 0, 0);
     itemStaticBoxSizer90->Add(itemFlexGridSizer91, 0, wxALIGN_LEFT, 5);
-    m_labGPSTolerance = new wxStaticText( m_GPSTab, wxID_ANY, _("Tolerance"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer91->Add(m_labGPSTolerance, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_labGPSToleranceX = new wxStaticText( m_GPSTab, wxID_ANY, _("X"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer91->Add(m_labGPSToleranceX, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_GPSTolerance = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
-    itemFlexGridSizer91->Add(m_GPSTolerance, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_GPSToleranceX = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
+    itemFlexGridSizer91->Add(m_GPSToleranceX, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labGPSToleranceY = new wxStaticText( m_GPSTab, wxID_ANY, _("Y"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer91->Add(m_labGPSToleranceY, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_GPSToleranceY = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
+    itemFlexGridSizer91->Add(m_GPSToleranceY, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labGPSToleranceZ = new wxStaticText( m_GPSTab, wxID_ANY, _("Z"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer91->Add(m_labGPSToleranceZ, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_GPSToleranceZ = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
+    itemFlexGridSizer91->Add(m_GPSToleranceZ, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_GPSTab, _("GPS"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer94 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer98 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer94, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer98, 0, wxGROW|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer94->AddButton(m_Cancel);
+    itemStdDialogButtonSizer98->AddButton(m_Cancel);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer94->AddButton(m_OK);
+    itemStdDialogButtonSizer98->AddButton(m_OK);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer94->AddButton(m_Apply);
+    itemStdDialogButtonSizer98->AddButton(m_Apply);
 
-    wxButton* itemButton98 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer94->AddButton(itemButton98);
+    wxButton* itemButton102 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer98->AddButton(itemButton102);
 
-    itemStdDialogButtonSizer94->Realize();
+    itemStdDialogButtonSizer98->Realize();
 
 ////@end FeedbackDialog content construction
 }
