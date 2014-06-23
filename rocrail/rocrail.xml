@@ -478,7 +478,8 @@
       <param name="x" vt="int"/>
       <param name="y" vt="int"/>
       <param name="z" vt="int"/>
-    </fun>
+      <param name="state" vt="Boolean*"/>
+      </fun>
     <data>
       <var name="props" vt="iONode" remark="Feedback properties"/>
       <var name="state" vt="Boolean" remark="Current state"/>
@@ -995,7 +996,8 @@
       <param name="x" vt="int"/>
       <param name="y" vt="int"/>
       <param name="z" vt="int"/>
-    </fun>
+      <param name="state" vt="Boolean*"/>
+      </fun>
     <fun name="getSwitch" vt="iOSwitch">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="SwitchID to search for"/>

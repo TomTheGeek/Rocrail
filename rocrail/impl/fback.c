@@ -721,7 +721,7 @@ static Boolean _hasShortcut( iOFBack inst ) {
 }
 
 
-static Boolean _isAtGPSPos( iOFBack inst, int sid, int xx, int yy, int zz ) {
+static Boolean _isAtGPSPos( iOFBack inst, int sid, int xx, int yy, int zz, Boolean* state ) {
   iOFBackData data = Data(inst);
   if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_gps ) {
     int x = wFeedback.getgpsx(data->props);
@@ -740,11 +740,13 @@ static Boolean _isAtGPSPos( iOFBack inst, int sid, int xx, int yy, int zz ) {
 
     if( sid == wFeedback.getgpssid(data->props) ) {
       /* trigger */
+      *state = False;
       return False;
     }
 
     if( sid != wFeedback.getgpssid(data->props) ) {
       /* load trigger */
+      *state = True;
       wFeedback.setgpssid(data->props, sid);
     }
 
