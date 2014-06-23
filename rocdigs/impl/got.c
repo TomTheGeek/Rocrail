@@ -270,7 +270,6 @@ static void __reader( void* threadinst ) {
     }
 
     if( eol ) {
-      iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
       iOStrTok tok = StrTokOp.inst( msg, ',' );
       int idx = 0;
       int t = 0;
@@ -279,6 +278,7 @@ static void __reader( void* threadinst ) {
       int z = 0;
       int sid = 0;
       int rid = 0;
+      int valid = 0;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "record: [%s]", msg );
       /* report to the Rocrail server */
       while( StrTokOp.hasMoreTokens( tok ) ) {
@@ -286,6 +286,7 @@ static void __reader( void* threadinst ) {
         switch( idx ) {
         case 0: t = val; break;
         case 1: sid = val; break;
+        case 2: valid = val; break;
         case 3: x = val; break;
         case 4: y = val; break;
         case 5: z = val; break;
@@ -295,18 +296,21 @@ static void __reader( void* threadinst ) {
       };
       StrTokOp.base.del(tok);
 
-      wFeedback.setgpstime( nodeC, t );
-      wFeedback.setgpssid( nodeC, sid );
-      wFeedback.setgpsrid( nodeC, rid );
-      wFeedback.setgpsx( nodeC, x );
-      wFeedback.setgpsy( nodeC, y );
-      wFeedback.setgpsz( nodeC, z );
-      wFeedback.setfbtype( nodeC, wFeedback.fbtype_gps );
-      if( data->iid != NULL )
-        wFeedback.setiid( nodeC, data->iid );
-      wFeedback.setstate( nodeC, True );
+      if( valid ) {
+        iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setgpstime( nodeC, t );
+        wFeedback.setgpssid( nodeC, sid );
+        wFeedback.setgpsrid( nodeC, rid );
+        wFeedback.setgpsx( nodeC, x );
+        wFeedback.setgpsy( nodeC, y );
+        wFeedback.setgpsz( nodeC, z );
+        wFeedback.setfbtype( nodeC, wFeedback.fbtype_gps );
+        if( data->iid != NULL )
+          wFeedback.setiid( nodeC, data->iid );
+        wFeedback.setstate( nodeC, True );
 
-      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+        data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+      }
     }
 
     ThreadOp.sleep(10);
