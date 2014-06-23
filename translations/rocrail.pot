@@ -7103,3 +7103,15 @@ msgstr ""
 msgid "Heartbeat"
 msgstr ""
 
+#. 
+# id="tolerance"
+#, c-format
+msgid "Tolerance"
+msgstr ""
+
+#. 
+# id="coordinates"
+#, c-format
+msgid "Coordinates"
+msgstr ""
+

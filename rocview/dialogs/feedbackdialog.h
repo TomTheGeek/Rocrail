@@ -88,6 +88,7 @@ class wxSpinCtrl;
 #define wxID_STATIC_FB_ADDRESS1 10002
 #define ID_FB_TYPE 10396
 #define ID_PANEL_FB_WIRING 10334
+#define ID_PANEL_FB_GPS 10444
 #define SYMBOL_FEEDBACKDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_FEEDBACKDIALOG_TITLE _("Sensors")
 #define SYMBOL_FEEDBACKDIALOG_IDNAME ID_DIALOG_FEEDBACK
@@ -255,6 +256,17 @@ public:
     wxStaticText* m_labCTCGate;
     wxRadioBox* m_CTCGate;
     wxCheckBox* m_AsSwitch;
+    wxPanel* m_GPSTab;
+    wxStaticBox* m_GPSCoordinates;
+    wxStaticText* m_labGPSX;
+    wxSpinCtrl* m_GPSX;
+    wxStaticText* m_labGPSY;
+    wxSpinCtrl* m_GPSY;
+    wxStaticText* m_labGPSZ;
+    wxSpinCtrl* m_GPSZ;
+    wxStaticBox* m_GPSOptions;
+    wxStaticText* m_labGPSTolerance;
+    wxSpinCtrl* m_GPSTolerance;
     wxButton* m_Cancel;
     wxButton* m_OK;
     wxButton* m_Apply;

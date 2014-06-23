@@ -237,7 +237,7 @@ static void __reader( void* threadinst ) {
 
     if( data->socket == NULL ) {
       if( !__connectToGoT(got) ) {
-        ThreadOp.sleep(1000);
+        ThreadOp.sleep(5000);
         continue;
       }
     }
@@ -255,7 +255,8 @@ static void __reader( void* threadinst ) {
     <Level> - The level of the measured ultrasound signal at the receiver. From 0-1000, with
     0 being the lowest.
 
-    55924,11000,1,1190,871,-1435,20104,2059,918,20103,1727,966,20105,1498,999;
+    Time  SID   v x    y   z       RID1             RID2             RID3
+    55924,11000,1,1190,871,-1435,  20104,2059,918,  20103,1727,966,  20105,1498,999;
     */
 
     while( !eol && !SocketOp.isBroken(data->socket) ) {

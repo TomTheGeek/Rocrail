@@ -720,6 +720,25 @@ static Boolean _hasShortcut( iOFBack inst ) {
 }
 
 
+static Boolean _isAtGPSPos( iOFBack inst, int sid, int xx, int yy, int zz ) {
+  iOFBackData data = Data(inst);
+  if( wFeedback.getfbtype(data->props) == wFeedback.fbtype_gps ) {
+    int x   = wFeedback.getgpsx(data->props);
+    int y   = wFeedback.getgpsy(data->props);
+    int z   = wFeedback.getgpsz(data->props);
+    int tol = wFeedback.getgpstol(data->props);
+    if( abs(xx-x) > tol )
+      return False;
+    if( abs(yy-y) > tol )
+      return False;
+    if( abs(zz-z) > tol )
+      return False;
+    return True;
+  }
+  return False;
+}
+
+
 static void _doTimedOff( iOFBack inst ) {
   iOFBackData data = Data(inst);
   if( data->timedoff > 0 ){

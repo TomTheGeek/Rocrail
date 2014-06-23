@@ -472,6 +472,13 @@
     <fun name="hasShortcut" vt="Boolean">
       <param name="inst" vt="this"/>
     </fun>
+    <fun name="isAtGPSPos" vt="Boolean">
+      <param name="inst" vt="this"/>
+      <param name="sid" vt="int"/>
+      <param name="x" vt="int"/>
+      <param name="y" vt="int"/>
+      <param name="z" vt="int"/>
+    </fun>
     <data>
       <var name="props" vt="iONode" remark="Feedback properties"/>
       <var name="state" vt="Boolean" remark="Current state"/>
@@ -981,6 +988,13 @@
     <fun name="getFBack" vt="iOFBack">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="FBackID to search for"/>
+    </fun>
+    <fun name="getGPSSensor" vt="iOFBack">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="sid" vt="int"/>
+      <param name="x" vt="int"/>
+      <param name="y" vt="int"/>
+      <param name="z" vt="int"/>
     </fun>
     <fun name="getSwitch" vt="iOSwitch">
       <param name="inst" vt="this" remark="Model instance"/>

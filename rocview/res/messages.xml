@@ -27928,4 +27928,10 @@
   <Msg id="heartbeat">
     <en txt="Heartbeat"/>
   </Msg>
+  <Msg id="tolerance">
+    <en txt="Tolerance"/>
+  </Msg>
+  <Msg id="coordinates">
+    <en txt="Coordinates"/>
+  </Msg>
 </Messages>

@@ -3098,6 +3098,18 @@ static iOList _getFBStat( iOModel inst ) {
   return list;
 }
 
+static iOFBack _getGPSSensor( iOModel inst, int sid, int x, int y, int z ) {
+  iOModelData data = Data(inst);
+  iOFBack fback = (iOFBack)MapOp.first( data->feedbackMap );
+  while( fback != NULL ) {
+    if( FBackOp.isAtGPSPos( fback, sid, x, y, z ) ) {
+      return fback;
+    }
+    fback = (iOFBack)MapOp.next( data->feedbackMap );
+  }
+  return NULL;
+}
+
 static iOSwitch _getSwitch( iOModel inst, const char* id ) {
   iOModelData o = Data(inst);
   return (iOSwitch)MapOp.get( o->switchMap, id );
@@ -3645,9 +3657,13 @@ static void _event( iOModel inst, iONode nodeC ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match sensor event: [%s] %d:%d uidname=[%s]", iid!=NULL?iid:"", bus, addr, uidname );
 
     if( wFeedback.getfbtype(nodeC) == wFeedback.fbtype_gps ) {
+      iOFBack fb = ModelOp.getGPSSensor( inst, wFeedback.getgpssid(nodeC), wFeedback.getgpsx(nodeC), wFeedback.getgpsy(nodeC), wFeedback.getgpsz(nodeC) );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "GPS event: sid=%d x=%d y=%d z=%d",
           wFeedback.getgpssid(nodeC), wFeedback.getgpsx(nodeC), wFeedback.getgpsy(nodeC), wFeedback.getgpsz(nodeC) );
       /* ToDo: Find the matching sensor location. */
+      if( fb != NULL ) {
+        fb->event(fb, (iONode)NodeOp.base.clone(nodeC));
+      }
       NodeOp.base.del(nodeC);
       return;
     }
