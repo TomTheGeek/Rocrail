@@ -1835,5 +1835,26 @@
       <var name="fbB3" vt="int"/>
     </data>
   </object>
+
+  <object name="GOT" interface="$../rocint/rocint.xml:DigInt" use="node,trace,thread,socket" include="$rocint/public/digint" remark="GamesOnTrack">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="iid" vt="const char*"/>
+      <var name="host" vt="const char*"/>
+      <var name="port" vt="int"/>
+      <var name="socket" vt="iOSocket"/>
+      <var name="run" vt="Boolean"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+      <var name="connOK" vt="Boolean"/>
+    </data>
+  </object>
+
 </Project>
 

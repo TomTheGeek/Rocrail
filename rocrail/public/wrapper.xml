@@ -467,6 +467,7 @@
       <const name="rocomp" vt="string" val="rocomp"/>
       <const name="zimocan" vt="string" val="zimocan"/>
       <const name="ucons88" vt="string" val="ucons88"/>
+      <const name="got" vt="string" val="got"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
@@ -1910,6 +1911,7 @@
         <const name="fbtype_railcom" vt="int" val="4" remark="railcom"/>
         <const name="fbtype_rfid" vt="int" val="5" remark="RFID"/>
         <const name="fbtype_wheelcounter" vt="int" val="6" remark="wheel counter"/>
+        <const name="fbtype_gps" vt="int" val="7" remark="GamesOnTrack"/>
         <var name="fbtype" vt="int" defval="0" remark="feedback type reported by the device"/>
         <var name="info" vt="string" defval="" remark="extra information"/>
         <var name="direction" vt="bool" defval="true" remark="Loc identifier direction"/>
@@ -1919,6 +1921,12 @@
         <var name="shortcut" vt="bool" defval="false" remark="Shortcut reported by the cutout sensor; Red background in Rocview."/>
         <var name="blockid" vt="string" defval="NULL" range="*"/>
         <var name="resetwc" vt="bool" defval="true" remark="Send a reset commando in case of a wheel counter type."/>
+        <var name="gpsx" vt="int" defval="0" range="0-*" remark="X-Position in the plan."/>
+        <var name="gpsy" vt="int" defval="0" range="0-*" remark="Y-Position in the plan."/>
+        <var name="gpsz" vt="int" defval="0" range="0-*" remark="Z-Position in the plan."/>
+        <var name="gpstime" vt="int" defval="0" range="0-*" remark="Time in ms."/>
+        <var name="gpssid" vt="int" defval="0" range="0-*" remark="SendID."/>
+        <var name="gpsrid" vt="int" defval="0" range="0-*" remark="ReceiveID."/>
         <actionctrl cardinality="n"/>
       </fb>
     </fblist>
