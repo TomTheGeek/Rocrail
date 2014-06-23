@@ -1926,7 +1926,6 @@
         <var name="gpsz" vt="int" defval="0" range="0-*" remark="Z-Position in the plan."/>
         <var name="gpstime" vt="int" defval="0" range="0-*" remark="Time in ms."/>
         <var name="gpssid" vt="int" defval="0" range="0-*" remark="SendID."/>
-        <var name="gpsrid" vt="int" defval="0" range="0-*" remark="ReceiveID."/>
         <actionctrl cardinality="n"/>
       </fb>
     </fblist>

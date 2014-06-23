@@ -277,7 +277,6 @@ static void __reader( void* threadinst ) {
       int y = 0;
       int z = 0;
       int sid = 0;
-      int rid = 0;
       int valid = 0;
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "record: [%s]", msg );
       /* report to the Rocrail server */
@@ -290,7 +289,6 @@ static void __reader( void* threadinst ) {
         case 3: x = val; break;
         case 4: y = val; break;
         case 5: z = val; break;
-        case 6: rid = val; break;
         }
         idx++;
       };
@@ -300,7 +298,6 @@ static void __reader( void* threadinst ) {
         iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setgpstime( nodeC, t );
         wFeedback.setgpssid( nodeC, sid );
-        wFeedback.setgpsrid( nodeC, rid );
         wFeedback.setgpsx( nodeC, x );
         wFeedback.setgpsy( nodeC, y );
         wFeedback.setgpsz( nodeC, z );
