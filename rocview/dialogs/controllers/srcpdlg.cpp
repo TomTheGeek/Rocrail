@@ -84,6 +84,14 @@ SRCPCtrlDlg::SRCPCtrlDlg( wxWindow* parent, iONode props, const char* devices )
   Create(parent, -1, wxT("SRCP"));
   m_Props = props;
   m_Devices = devices;
+
+  if( StrOp.equals( wDigInt.got, wDigInt.getlib( m_Props ) ) ) {
+    SetTitle(wxT("GamesOnTrack"));
+    m_BussesPanel->Show(false);
+    m_SubLibBox->Enable(false);
+    m_Device->Enable(false);
+  }
+
   initLabels();
   initValues();
 
@@ -130,28 +138,34 @@ void SRCPCtrlDlg::initValues() {
   else
     m_SubLibBox->SetSelection(0);
 
-  iONode srcpini = wDigInt.getsrcp(m_Props);
-  if( srcpini == NULL ) {
-    srcpini = NodeOp.inst( wSRCP.name(), m_Props, ELEMENT_NODE );
-    NodeOp.addChild(m_Props, srcpini );
-  }
+  if( StrOp.equals( wDigInt.srcp, wDigInt.getlib( m_Props ) ) ) {
+    iONode srcpini = wDigInt.getsrcp(m_Props);
+    if( srcpini == NULL ) {
+      srcpini = NodeOp.inst( wSRCP.name(), m_Props, ELEMENT_NODE );
+      NodeOp.addChild(m_Props, srcpini );
+    }
+    char* val = StrOp.fmt( "%d", wSRCP.getcmdport( srcpini ) );
+    m_CmdPort->SetValue( wxString( val, wxConvUTF8 ) );
+    StrOp.free( val );
 
-  char* val = StrOp.fmt( "%d", wSRCP.getcmdport( srcpini ) );
-  m_CmdPort->SetValue( wxString( val, wxConvUTF8 ) );
-  StrOp.free( val );
-  
-  // Busses
-  m_BusServer->SetValue(wSRCP.getsrcpbus_server( srcpini ));
-  m_GLm->SetValue(wSRCP.getsrcpbusGL_m( srcpini ));
-  m_GLDCCs->SetValue(wSRCP.getsrcpbusGL_ns( srcpini ));
-  m_GLDCCl->SetValue(wSRCP.getsrcpbusGL_nl( srcpini ));
-  m_GLPS->SetValue(wSRCP.getsrcpbusGL_ps( srcpini ));
-  m_GAm->SetValue(wSRCP.getsrcpbusGA_m( srcpini ));
-  m_GAd->SetValue(wSRCP.getsrcpbusGA_n( srcpini ));
-  m_GAPS->SetValue(wSRCP.getsrcpbusGA_ps( srcpini ));
-  m_FBs88->SetValue(wSRCP.getsrcpbusFB_s88( srcpini ));
-  m_FBm6051->SetValue(wSRCP.getsrcpbusFB_m6051( srcpini ));
-  m_FBi8255->SetValue(wSRCP.getsrcpbusFB_i8255( srcpini ));
+    // Busses
+    m_BusServer->SetValue(wSRCP.getsrcpbus_server( srcpini ));
+    m_GLm->SetValue(wSRCP.getsrcpbusGL_m( srcpini ));
+    m_GLDCCs->SetValue(wSRCP.getsrcpbusGL_ns( srcpini ));
+    m_GLDCCl->SetValue(wSRCP.getsrcpbusGL_nl( srcpini ));
+    m_GLPS->SetValue(wSRCP.getsrcpbusGL_ps( srcpini ));
+    m_GAm->SetValue(wSRCP.getsrcpbusGA_m( srcpini ));
+    m_GAd->SetValue(wSRCP.getsrcpbusGA_n( srcpini ));
+    m_GAPS->SetValue(wSRCP.getsrcpbusGA_ps( srcpini ));
+    m_FBs88->SetValue(wSRCP.getsrcpbusFB_s88( srcpini ));
+    m_FBm6051->SetValue(wSRCP.getsrcpbusFB_m6051( srcpini ));
+    m_FBi8255->SetValue(wSRCP.getsrcpbusFB_i8255( srcpini ));
+  }
+  else {
+    char* val = StrOp.fmt( "%d", wDigInt.getport( m_Props ) );
+    m_CmdPort->SetValue( wxString( val, wxConvUTF8 ) );
+    StrOp.free( val );
+  }
 }
 
 
@@ -162,31 +176,35 @@ void SRCPCtrlDlg::evaluate() {
   wDigInt.sethost( m_Props, m_Host->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
 
-  iONode srcpini = wDigInt.getsrcp(m_Props);
-  if( srcpini == NULL ) {
-    srcpini = NodeOp.inst( wSRCP.name(), m_Props, ELEMENT_NODE );
-    NodeOp.addChild(m_Props, srcpini );
-  }
-
-  wSRCP.setcmdport( srcpini, atoi( m_CmdPort->GetValue().mb_str(wxConvUTF8) ) );
-
   if( m_SubLibBox->GetSelection() == 1 )
     wDigInt.setsublib( m_Props, wDigInt.sublib_serial);
   else
     wDigInt.setsublib( m_Props, wDigInt.sublib_tcp);
 
-  // Busses
-  wSRCP.setsrcpbus_server( srcpini, m_BusServer->GetValue( ));
-  wSRCP.setsrcpbusGL_m( srcpini, m_GLm->GetValue( ));
-  wSRCP.setsrcpbusGL_ns( srcpini, m_GLDCCs->GetValue( ));
-  wSRCP.setsrcpbusGL_nl( srcpini, m_GLDCCl->GetValue( ));
-  wSRCP.setsrcpbusGL_ps( srcpini, m_GLPS->GetValue( ));
-  wSRCP.setsrcpbusGA_m( srcpini, m_GAm->GetValue( ));
-  wSRCP.setsrcpbusGA_n( srcpini, m_GAd->GetValue( ));
-  wSRCP.setsrcpbusGA_ps( srcpini, m_GAPS->GetValue( ));
-  wSRCP.setsrcpbusFB_s88( srcpini, m_FBs88->GetValue( ));
-  wSRCP.setsrcpbusFB_m6051( srcpini, m_FBm6051->GetValue( ));
-  wSRCP.setsrcpbusFB_i8255( srcpini, m_FBi8255->GetValue( ));
+  if( StrOp.equals( wDigInt.srcp, wDigInt.getlib( m_Props ) ) ) {
+    iONode srcpini = wDigInt.getsrcp(m_Props);
+    if( srcpini == NULL ) {
+      srcpini = NodeOp.inst( wSRCP.name(), m_Props, ELEMENT_NODE );
+      NodeOp.addChild(m_Props, srcpini );
+    }
+    wSRCP.setcmdport( srcpini, atoi( m_CmdPort->GetValue().mb_str(wxConvUTF8) ) );
+    // Busses
+    wSRCP.setsrcpbus_server( srcpini, m_BusServer->GetValue( ));
+    wSRCP.setsrcpbusGL_m( srcpini, m_GLm->GetValue( ));
+    wSRCP.setsrcpbusGL_ns( srcpini, m_GLDCCs->GetValue( ));
+    wSRCP.setsrcpbusGL_nl( srcpini, m_GLDCCl->GetValue( ));
+    wSRCP.setsrcpbusGL_ps( srcpini, m_GLPS->GetValue( ));
+    wSRCP.setsrcpbusGA_m( srcpini, m_GAm->GetValue( ));
+    wSRCP.setsrcpbusGA_n( srcpini, m_GAd->GetValue( ));
+    wSRCP.setsrcpbusGA_ps( srcpini, m_GAPS->GetValue( ));
+    wSRCP.setsrcpbusFB_s88( srcpini, m_FBs88->GetValue( ));
+    wSRCP.setsrcpbusFB_m6051( srcpini, m_FBm6051->GetValue( ));
+    wSRCP.setsrcpbusFB_i8255( srcpini, m_FBi8255->GetValue( ));
+  }
+  else {
+    wDigInt.setport( m_Props, atoi( m_CmdPort->GetValue().mb_str(wxConvUTF8) ) );
+  }
+
 }
 
 

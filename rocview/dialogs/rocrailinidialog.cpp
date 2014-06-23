@@ -621,6 +621,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.easydcc, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.ecos, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.editspro, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.got, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.hsi88, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.infracar, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.loconet, wxConvUTF8 ) );
@@ -2145,6 +2146,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   if( StrOp.equals( wDigInt.ddx, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new DDXCtrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.srcp, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new SRCPCtrlDlg(this,m_Controller,devices);
+  else if( StrOp.equals( wDigInt.got, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new SRCPCtrlDlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.dinamo, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new DinamoCtrlDlg(this,m_Controller,devices);
