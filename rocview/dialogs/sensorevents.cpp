@@ -75,6 +75,7 @@ void SensorEventsDlg::initLabels() {
   m_EventList->InsertColumn(8, wxGetApp().getMsg( "countedcars" ), wxLIST_FORMAT_RIGHT );
   m_EventList->InsertColumn(9, wxGetApp().getMsg( "load" ), wxLIST_FORMAT_RIGHT );
   m_EventList->InsertColumn(10, wxGetApp().getMsg( "stamp" ), wxLIST_FORMAT_LEFT );
+  m_EventList->InsertColumn(11, wxT( "GPS" ), wxLIST_FORMAT_LEFT );
   m_Refresh->SetLabel(wxGetApp().getMsg( "refresh" ));
   m_Reset->SetLabel(wxGetApp().getMsg( "reset" ));
 }
@@ -272,6 +273,7 @@ void SensorEventsDlg::initValues() {
     m_EventList->SetItem( i, 8, wxString::Format(wxT("%d"), wFeedback.getcountedcars(fbevent) ) );
     m_EventList->SetItem( i, 9, wxString::Format(wxT("%d"), wFeedback.getload(fbevent) ) );
     m_EventList->SetItem( i, 10, wxString(NodeOp.getStr(fbevent, "stamp", ""), wxConvUTF8) );
+    m_EventList->SetItem( i, 11, wxString::Format(wxT("%d,%d,%d"), wFeedback.getgpsx(fbevent), wFeedback.getgpsy(fbevent), wFeedback.getgpsz(fbevent) ) );
     m_EventList->SetItemPtrData(i, (wxUIntPtr)fbevent);
   }
   // resize
