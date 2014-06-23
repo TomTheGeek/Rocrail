@@ -299,7 +299,6 @@ static void __reader( void* threadinst ) {
         char ident[32];
         iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         wFeedback.setgpstime( nodeC, t );
-        wFeedback.setgpssid( nodeC, sid );
         wFeedback.setgpsx( nodeC, x );
         wFeedback.setgpsy( nodeC, y );
         wFeedback.setgpsz( nodeC, z );

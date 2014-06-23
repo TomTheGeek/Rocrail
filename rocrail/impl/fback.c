@@ -689,6 +689,7 @@ static iOFBack _inst( iONode props ) {
     );
 
   NodeOp.removeAttrByName(data->props, "cmd");
+  wFeedback.setgpssid(data->props, 0);
 
   __initCutout(fback);
 
@@ -729,12 +730,24 @@ static Boolean _isAtGPSPos( iOFBack inst, int sid, int xx, int yy, int zz ) {
     int tolx = wFeedback.getgpstolx(data->props);
     int toly = wFeedback.getgpstoly(data->props);
     int tolz = wFeedback.getgpstolz(data->props);
+
     if( abs(xx-x) > tolx )
       return False;
     if( abs(yy-y) > toly )
       return False;
     if( abs(zz-z) > tolz )
       return False;
+
+    if( sid == wFeedback.getgpssid(data->props) ) {
+      /* trigger */
+      return False;
+    }
+
+    if( sid != wFeedback.getgpssid(data->props) ) {
+      /* load trigger */
+      wFeedback.setgpssid(data->props, sid);
+    }
+
     return True;
   }
   return False;
