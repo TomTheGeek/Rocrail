@@ -2269,6 +2269,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
 
   if( cmd != NULL && StrOp.equals(cmd, "nop") ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block %s nop", data->id);
+    NodeOp.base.del(nodeA);
     return True;
   }
 
