@@ -328,7 +328,11 @@ static void __reader( void* threadinst ) {
       msg[idx] = '\0';
     }
 
-    if( eol ) {
+    if( SocketOp.isBroken(data->socket) ) {
+      SocketOp.base.del(data->socket);
+      data->socket = NULL;
+    }
+    else if( eol ) {
       __evaluateRecord(got, msg);
     }
 
