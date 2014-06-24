@@ -196,7 +196,7 @@ static void __stripNewline(char* str) {
 }
 
 /* Create a node from a script line.  */
-static iONode _parseLine(const char* scriptline) {
+static iONode _parseLine(const char* scriptline, Boolean playpause) {
   iONode node = NULL;
 
   if( scriptline != NULL ) {
@@ -244,7 +244,8 @@ static iONode _parseLine(const char* scriptline) {
       else if( StrOp.equalsi( "pause", nodename ) && parm1 != NULL ) {
         int seconds = atoi(parm1);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: pause %d", seconds );
-        ThreadOp.sleep(1000*seconds);
+        if( playpause )
+          ThreadOp.sleep(1000*seconds);
       }
 
       else if( StrOp.equalsi( wLoc.name(), nodename ) && parm1 != NULL && parm2 != NULL ) {
@@ -350,12 +351,12 @@ static iONode _parseLine(const char* scriptline) {
 
 
 /**  */
-static iONode _nextLine(iOScript inst) {
+static iONode _nextLine(iOScript inst, Boolean playpause) {
   iOScriptData data = Data(inst);
   iONode node = NULL;
 
   if( data->pline != NULL ) {
-    node = ScriptOp.parseLine(data->pline);
+    node = ScriptOp.parseLine(data->pline, playpause);
 
     /* prepare next line pointer */
     data->pline = StrOp.findc(data->pline, '\n');
@@ -506,7 +507,7 @@ static void __player( void* threadinst ) {
   while(data->run) {
     ThreadOp.sleep(10);
     if( !data->pause && data->playing ) {
-      iONode node = ScriptOp.nextLine(script);
+      iONode node = ScriptOp.nextLine(script, True);
       if( node != NULL ) {
         if( data->callback != NULL ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "play: %s", NodeOp.getName(node) );

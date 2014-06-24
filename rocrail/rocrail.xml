@@ -2599,10 +2599,12 @@
     </fun>
     <fun name="nextLine" vt="iONode">
       <param name="inst" vt="this"/>
-    </fun>
+      <param name="playpause" vt="Boolean"/>
+      </fun>
     <fun name="parseLine" vt="iONode">
       <param name="scriptline" vt="const char*"/>
-    </fun>
+      <param name="playpause" vt="Boolean"/>
+      </fun>
     <fun name="convertNode" vt="char*">
       <param name="node" vt="iONode"/>
       <param name="addStamp" vt="Boolean"/>
