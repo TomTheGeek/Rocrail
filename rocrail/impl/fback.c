@@ -508,7 +508,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
   __checkAction( inst );
 
   if(!hasListener) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb \"%s\"(%s) ident=%d val=%d count=%d has no listener...",
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fb[%s] (%s) ident=%s val=%d count=%d has no listener...",
                  FBackOp.getId(inst), data->state?"ON":"OFF",
                  wFeedback.getidentifier( nodeC ), wFeedback.getval( nodeC ), data->counter );
   }
@@ -731,21 +731,29 @@ static Boolean _isAtGPSPos( iOFBack inst, int sid, int xx, int yy, int zz, Boole
     int toly = wFeedback.getgpstoly(data->props);
     int tolz = wFeedback.getgpstolz(data->props);
 
-    if( abs(xx-x) > tolx )
+    if( abs(xx-x) > tolx ) {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "X abs(%d-%d)=%d > tolx=%d", xx, x, abs(xx-x), tolx );
       return False;
-    if( abs(yy-y) > toly )
+    }
+    if( abs(yy-y) > toly ) {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Y abs(%d-%d)=%d > toly=%d", yy, y, abs(yy-y), toly );
       return False;
-    if( abs(zz-z) > tolz )
+    }
+    if( abs(zz-z) > tolz ) {
+      TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Z abs(%d-%d)=%d > tolz=%d", zz, z, abs(zz-z), tolz );
       return False;
+    }
 
     if( sid == wFeedback.getgpssid(data->props) ) {
       /* trigger */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sid=%d already reported", sid );
       *state = False;
       return False;
     }
 
     if( sid != wFeedback.getgpssid(data->props) ) {
       /* load trigger */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "report for sid=%d", sid );
       *state = True;
       wFeedback.setgpssid(data->props, sid);
     }

@@ -837,19 +837,19 @@ void FeedbackDialog::CreateControls()
     m_labGPSX = new wxStaticText( m_GPSTab, wxID_ANY, _("X"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer83->Add(m_labGPSX, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_GPSX = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000000, 0 );
+    m_GPSX = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -1000000, 1000000, 0 );
     itemFlexGridSizer83->Add(m_GPSX, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labGPSY = new wxStaticText( m_GPSTab, wxID_ANY, _("Y"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer83->Add(m_labGPSY, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_GPSY = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000000, 0 );
+    m_GPSY = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -1000000, 1000000, 0 );
     itemFlexGridSizer83->Add(m_GPSY, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labGPSZ = new wxStaticText( m_GPSTab, wxID_ANY, _("Z"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer83->Add(m_labGPSZ, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_GPSZ = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000000, 0 );
+    m_GPSZ = new wxSpinCtrl( m_GPSTab, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -1000000, 1000000, 0 );
     itemFlexGridSizer83->Add(m_GPSZ, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_GPSTolerance = new wxStaticBox(m_GPSTab, wxID_ANY, _("Tolerance"));

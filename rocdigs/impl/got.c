@@ -220,6 +220,56 @@ static Boolean __connectToGoT(iOGOT got) {
 }
 
 
+static void __evaluateRecord(iOGOT got, const char* msg) {
+  iOGOTData data = Data(got);
+  iOStrTok tok = StrTokOp.inst( msg, ',' );
+  int idx = 0;
+  int t = 0;
+  int x = 0;
+  int y = 0;
+  int z = 0;
+  int sid = 0;
+  int valid = 0;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "record: [%s]", msg );
+
+  /* report to the Rocrail server */
+  while( StrTokOp.hasMoreTokens( tok ) ) {
+    int val = atoi( StrTokOp.nextToken(tok) );
+    switch( idx ) {
+    case 0: t = val; break;
+    case 1: sid = val; break;
+    case 2: valid = val; break;
+    case 3: x = val; break;
+    case 4: y = val; break;
+    case 5: z = val; break;
+    }
+    idx++;
+  };
+  StrTokOp.base.del(tok);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "t=%d sid=%d x=%d y=%d z=%d", t, sid, x, y, z );
+
+  if( valid ) {
+    char ident[32];
+    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    wFeedback.setgpstime( nodeC, t );
+    wFeedback.setgpssid( nodeC, sid );
+    wFeedback.setgpsx( nodeC, x );
+    wFeedback.setgpsy( nodeC, y );
+    wFeedback.setgpsz( nodeC, z );
+    wFeedback.setfbtype( nodeC, wFeedback.fbtype_gps );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+    wFeedback.setstate( nodeC, True );
+
+    StrOp.fmtb(ident, "%d", sid);
+    wFeedback.setidentifier( nodeC, ident);
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread  th   = (iOThread)threadinst;
   iOGOT     got  = (iOGOT)ThreadOp.getParm( th );
@@ -230,6 +280,11 @@ static void __reader( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GoT reader started." );
 
   ThreadOp.sleep(50); /* resume some time to get it all being setup */
+
+  /* Test:
+  StrOp.copy(msg, "55924,11000,1,1190,871,-1435,20104,2059,918,20103,1727,966,20105,1498,999;");
+  __evaluateRecord(got, msg);
+  */
 
   while( data->run ) {
     int idx = 0;
@@ -264,6 +319,9 @@ static void __reader( void* threadinst ) {
       if( msg[idx] == ';') {
         eol = True;
       }
+      else if( msg[idx] == '\n' || msg[idx] == '\r' || msg[idx] == ' ' ) {
+        /* skip */
+      }
       else {
         idx++;
       }
@@ -271,46 +329,7 @@ static void __reader( void* threadinst ) {
     }
 
     if( eol ) {
-      iOStrTok tok = StrTokOp.inst( msg, ',' );
-      int idx = 0;
-      int t = 0;
-      int x = 0;
-      int y = 0;
-      int z = 0;
-      int sid = 0;
-      int valid = 0;
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "record: [%s]", msg );
-      /* report to the Rocrail server */
-      while( StrTokOp.hasMoreTokens( tok ) ) {
-        int val = atoi( StrTokOp.nextToken(tok) );
-        switch( idx ) {
-        case 0: t = val; break;
-        case 1: sid = val; break;
-        case 2: valid = val; break;
-        case 3: x = val; break;
-        case 4: y = val; break;
-        case 5: z = val; break;
-        }
-        idx++;
-      };
-      StrTokOp.base.del(tok);
-
-      if( valid ) {
-        char ident[32];
-        iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        wFeedback.setgpstime( nodeC, t );
-        wFeedback.setgpsx( nodeC, x );
-        wFeedback.setgpsy( nodeC, y );
-        wFeedback.setgpsz( nodeC, z );
-        wFeedback.setfbtype( nodeC, wFeedback.fbtype_gps );
-        if( data->iid != NULL )
-          wFeedback.setiid( nodeC, data->iid );
-        wFeedback.setstate( nodeC, True );
-
-        StrOp.fmtb(ident, "%d", sid);
-        wFeedback.setidentifier( nodeC, ident);
-        data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
-      }
+      __evaluateRecord(got, msg);
     }
 
     ThreadOp.sleep(10);
