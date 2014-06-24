@@ -1191,6 +1191,13 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
+    else if( StrOp.equals( wBlock.name(), nodeName ) ) {
+      iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+      wBlock.setcmd( cmd, "nop" );
+      wBlock.setid( cmd, wBlock.getid( m_Props ) );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
     else if( StrOp.equals( wSignal.name(), nodeName ) ) {
       iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
       wSignal.setid( cmd, wSignal.getid( m_Props ) );

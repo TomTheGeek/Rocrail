@@ -492,6 +492,7 @@ static void _Stop( struct OScript* inst ) {
   iOScriptData data = Data(inst);
   data->playing = False;
   data->pause = False;
+  data->pline = data->record;
 }
 
 static void __player( void* threadinst ) {
