@@ -59,6 +59,13 @@
     </fun>
   </object>
   
+  <object name="FileUtils" use="list" remark="File utilities.">
+    <fun name="findFile" vt="char*">
+      <param name="directory" vt="const char*"/>
+      <param name="filename" vt="const char*"/>
+    </fun>
+  </object>
+  
 </Project>
 
 
