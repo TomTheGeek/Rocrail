@@ -84,6 +84,7 @@
 #include "rocrail/wrapper/public/Operator.h"
 
 #include "rocutils/public/devices.h"
+#include "rocutils/public/fileutils.h"
 
 typedef iIDigInt (* LPFNROCGETDIGINT)( const iONode ,const iOTrace );
 /* proto types */
@@ -794,6 +795,14 @@ static void __callback( obj inst, iONode nodeA ) {
           StrOp.free(filename);
           StrOp.free(sfilename);
           StrOp.free(ifilename);
+
+          if( f == NULL ) {
+            /* ToDo: Do a recursive search. */
+            char* foundfilename = FileUtilsOp.findFile(AppOp.getImgPath(), imageFilename);
+            if( FileOp.exist( foundfilename ) )
+              f = FileOp.inst( foundfilename, OPEN_READONLY);
+            StrOp.free(foundfilename);
+          }
 
           if( f != NULL ) {
             int   size    = FileOp.size(f);
