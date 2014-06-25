@@ -110,6 +110,7 @@ static char* _findFile( const char* directory ,const char* filename ) {
       StrOp.free(filepath);
       filepath = NULL;
     }
+    DirOp.cleandirlist( listdir );
   }
   return filepath;
 }
