@@ -82,7 +82,7 @@ void CmdRecorder::initLabels() {
   m_Import->SetLabel( wxGetApp().getMsg( "import" ) );
   m_Stamp->SetLabel( wxGetApp().getMsg( "stamp" ) );
   m_Clear->SetLabel( wxGetApp().getMsg( "clearall" ) );
-  m_CreateRoute->SetLabel( wxGetApp().getMsg( "route" ) );
+  m_CreateRoute->SetLabel( wxGetApp().getMsg( "route" ) + wxT("..."));
 }
 
 
@@ -345,21 +345,26 @@ void CmdRecorder::onCreateRoute( wxCommandEvent& event ) {
     }
   }
 
-  char* str = NodeOp.base.toString(route);
-  TraceOp.trc( "cmdrecorder", TRCLEVEL_INFO, __LINE__, 9999, "route: %s", str );
-
-  RouteDialog* dlg = new RouteDialog( this, route, false, true );
-  if( wxID_OK == dlg->ShowModal() ) {
-    if( !wxGetApp().isStayOffline() ) {
-      /* Notify RocRail. */
-      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-      wModelCmd.setcmd( cmd, wModelCmd.modify );
-      NodeOp.addChild( cmd, route );
-      wxGetApp().sendToRocrail( cmd );
-      cmd->base.del(cmd);
+  if( wRoute.getid(route) != NULL && StrOp.len(wRoute.getid(route)) > 0 ) {
+    RouteDialog* dlg = new RouteDialog( this, route, false, true );
+    if( wxID_OK == dlg->ShowModal() ) {
+      if( !wxGetApp().isStayOffline() ) {
+        /* Notify RocRail. */
+        iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+        wModelCmd.setcmd( cmd, wModelCmd.modify );
+        NodeOp.addChild( cmd, route );
+        wxGetApp().sendToRocrail( cmd );
+        cmd->base.del(cmd);
+      }
     }
+    dlg->Destroy();
   }
-  dlg->Destroy();
+  else {
+    char* str = NodeOp.base.toString(route);
+    TraceOp.trc( "cmdrecorder", TRCLEVEL_INFO, __LINE__, 9999, "no valid route: %s", str );
+    StrOp.free(str);
+    NodeOp.base.del(route);
+  }
 
 
 }
