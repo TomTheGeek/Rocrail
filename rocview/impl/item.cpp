@@ -1200,7 +1200,7 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
     }
     else if( StrOp.equals( wStage.name(), nodeName ) ) {
       iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-      wStage.setcmd( cmd, wBlock.nop );
+      wStage.setcmd( cmd, event.ShiftDown() ? wBlock.bsp:wBlock.bsm );
       wStage.setid( cmd, wStage.getid( m_Props ) );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);

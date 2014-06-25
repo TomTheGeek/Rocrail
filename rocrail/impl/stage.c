@@ -231,11 +231,12 @@ static Boolean _cmd( iIBlockBase inst ,iONode cmd ) {
   const char* state     = NULL;
   const char* exitstate = NULL;
 
-  if( command != NULL && StrOp.equals(command, wBlock.nop) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stage %s nop", data->id);
+  if( command != NULL && (StrOp.equals(command, wBlock.nop) || StrOp.equals(command, wBlock.bsp) || StrOp.equals(command, wBlock.bsm) ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stage [%s] cmd=%s", data->id, command);
     NodeOp.base.del(cmd);
     return True;
   }
+
 
   if( NodeOp.findAttr( cmd, "state" ) )
     state = wStage.getstate( cmd );
