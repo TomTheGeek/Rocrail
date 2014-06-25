@@ -2267,7 +2267,7 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   const char* state = wBlock.getstate( nodeA );
   const char* cmd   = wBlock.getcmd( nodeA );
 
-  if( cmd != NULL && StrOp.equals(cmd, "nop") ) {
+  if( cmd != NULL && StrOp.equals(cmd, wBlock.nop) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block %s nop", data->id);
     NodeOp.base.del(nodeA);
     return True;

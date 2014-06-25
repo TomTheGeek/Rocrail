@@ -1193,14 +1193,14 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
     }
     else if( StrOp.equals( wBlock.name(), nodeName ) ) {
       iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-      wBlock.setcmd( cmd, "nop" );
+      wBlock.setcmd( cmd, wBlock.nop );
       wBlock.setid( cmd, wBlock.getid( m_Props ) );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
     else if( StrOp.equals( wStage.name(), nodeName ) ) {
       iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-      wStage.setcmd( cmd, "nop" );
+      wStage.setcmd( cmd, wBlock.nop );
       wStage.setid( cmd, wStage.getid( m_Props ) );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
