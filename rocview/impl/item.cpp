@@ -1193,7 +1193,7 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
     }
     else if( StrOp.equals( wBlock.name(), nodeName ) ) {
       iONode cmd = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-      wBlock.setcmd( cmd, wBlock.nop );
+      wBlock.setcmd( cmd, event.ShiftDown() ? wBlock.bsp:wBlock.bsm );
       wBlock.setid( cmd, wBlock.getid( m_Props ) );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);

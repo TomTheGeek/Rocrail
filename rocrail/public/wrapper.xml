@@ -2086,6 +2086,8 @@
         <const name="resetwc" vt="string" val="resetwc" remark="Reset wheel counter."/>
         <const name="resetfifo" vt="string" val="resetfifo" remark="Reset FiFo list."/>
         <const name="nop" vt="string" val="nop" remark="No operation."/>
+        <const name="bsp" vt="string" val="bsp" remark="Block site plus."/>
+        <const name="bsm" vt="string" val="bsm" remark="Block site min."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="ttid" vt="string" defval="NULL" range="*" remark="Turntable ID."/>
         <incl cardinality="n" wrappername="PermInclude">

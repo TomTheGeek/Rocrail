@@ -294,13 +294,20 @@ void CmdRecorder::onCreateRoute( wxCommandEvent& event ) {
   while(node != NULL) {
     TraceOp.trc( "cmdrecorder", TRCLEVEL_INFO, __LINE__, 9999, "route element: %s", NodeOp.getName(node) );
     if( StrOp.equals(wBlock.name(), NodeOp.getName(node)) || StrOp.equals(wStage.name(), NodeOp.getName(node)) ) {
-      if( wRoute.getbka(route) == NULL )
+      if( wRoute.getbka(route) == NULL ) {
         wRoute.setbka(route, wBlock.getid(node));
+        wRoute.setbkaside(route, True);
+        if( StrOp.equals( wBlock.bsm, wBlock.getcmd(node) ) )
+          wRoute.setbkaside(route, False);
+      }
       else if( wRoute.getbkb(route) == NULL ) {
         char* routeid = StrOp.fmt("[%s]-[%s]", wRoute.getbka(route), wBlock.getid(node) );
         wRoute.setbkb(route, wBlock.getid(node));
         wRoute.setid(route, routeid);
         StrOp.free(routeid);
+        wRoute.setbkbside(route, True);
+        if( StrOp.equals( wBlock.bsm, wBlock.getcmd(node) ) )
+          wRoute.setbkbside(route, False);
       }
       else {
         // Crossing block?
