@@ -137,7 +137,7 @@ class RouteDialog: public wxDialog, public BaseDialog
 
 public:
     /// Constructors
-    RouteDialog( wxWindow* parent, iONode p_Props, bool readonly=false );
+    RouteDialog( wxWindow* parent, iONode p_Props, bool readonly=false, bool standalone=false );
     RouteDialog( );
 
     /// Creation
@@ -370,6 +370,7 @@ public:
     int m_CondNr;
     iOList m_CondList;
     bool m_bReadOnly;
+    bool m_bStandalone;
 };
 
 #endif

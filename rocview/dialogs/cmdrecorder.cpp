@@ -27,6 +27,7 @@
 #include "rocview/symbols/svg.h"
 #include "rocview/public/base.h"
 #include "rocview/res/icons.hpp"
+#include "rocview/dialogs/routedialog.h"
 
 #include "rocview/public/guiapp.h"
 #include "rocrail/public/script.h"
@@ -347,14 +348,19 @@ void CmdRecorder::onCreateRoute( wxCommandEvent& event ) {
   char* str = NodeOp.base.toString(route);
   TraceOp.trc( "cmdrecorder", TRCLEVEL_INFO, __LINE__, 9999, "route: %s", str );
 
-  if( !wxGetApp().isStayOffline() ) {
-    /* Notify RocRail. */
-    iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
-    wModelCmd.setcmd( cmd, wModelCmd.modify );
-    NodeOp.addChild( cmd, route );
-    wxGetApp().sendToRocrail( cmd );
-    cmd->base.del(cmd);
+  RouteDialog* dlg = new RouteDialog( this, route, false, true );
+  if( wxID_OK == dlg->ShowModal() ) {
+    if( !wxGetApp().isStayOffline() ) {
+      /* Notify RocRail. */
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.modify );
+      NodeOp.addChild( cmd, route );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
   }
+  dlg->Destroy();
+
 
 }
 

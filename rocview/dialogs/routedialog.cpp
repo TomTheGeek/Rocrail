@@ -140,13 +140,13 @@ RouteDialog::RouteDialog()
 {
 }
 
-RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props, bool readonly )
+RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props, bool readonly, bool standalone )
 {
   m_TabAlign = wxGetApp().getTabAlign();
   Create(parent, -1, wxGetApp().getMsg("routes") );
   m_Props = p_Props;
   m_bReadOnly = readonly;
-
+  m_bStandalone = standalone;
   m_CondNr = -1;
 
   initLabels();
@@ -168,7 +168,14 @@ RouteDialog::RouteDialog( wxWindow* parent, iONode p_Props, bool readonly )
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 
-  if( initIndex() ) {
+  if( m_Props != NULL && standalone ) {
+    m_IndexPanel->Show(false);
+    m_Apply->Enable(false);
+    initValues();
+    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_ST_GENERAL );
+    wxPostEvent( this, event );
+  }
+  else if( initIndex() ) {
     initValues();
     wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, ID_PANEL_ST_GENERAL );
     wxPostEvent( this, event );
@@ -2132,7 +2139,13 @@ void RouteDialog::OnListboxCommandsSelected( wxCommandEvent& event )
 
 void RouteDialog::OnOkClick( wxCommandEvent& event )
 {
-  OnApplyClick(event);
+  if( m_bStandalone ) {
+    if( !evaluate() )
+      return;
+  }
+  else {
+    OnApplyClick(event);
+  }
   EndModal( wxID_OK );
 }
 
