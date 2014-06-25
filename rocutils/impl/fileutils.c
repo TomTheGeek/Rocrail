@@ -91,6 +91,8 @@ static char* _findFile( const char* directory ,const char* filename ) {
       iDirEntry dir = (iDirEntry)ListOp.get( listdir, i );
       filepath = StrOp.fmt("%s%c%s", directory, SystemOp.getFileSeparator(), dir->name);
       if( StrOp.len(dir->name) == 1 && StrOp.equals(dir->name, ".") || StrOp.len(dir->name) == 2 && StrOp.equals(dir->name, "..") ) {
+        StrOp.free(filepath);
+        filepath = NULL;
         continue;
       }
       else if( FileOp.isDirectory( filepath ) ) {
