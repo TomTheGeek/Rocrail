@@ -1150,6 +1150,7 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
     if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
 
       wFunCmd.setaddr(cmd, wLoc.getaddr( data->props ));
+      useSecAddr = wLoc.isusesecaddr( cmd );
 
       /* The fnchanged attribute is no longer optional and must be set in all cases. */
       fnchanged = wFunCmd.getfnchanged(cmd);
@@ -1444,11 +1445,16 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
 
     }
 
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sending command...V=%d dir=%s",wLoc.getV(cmd), wLoc.isdir(cmd)?"fwd":"rev" );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Sending command...V=%d dir=%s secaddr=%s",
+        wLoc.getV(cmd), wLoc.isdir(cmd)?"fwd":"rev", wLoc.isusesecaddr(cmd)?"true":"false" );
+
     if( cmdFn != NULL ) {
       if( wLoc.getaddr( cmdFn ) == 0 && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props ))) {
         wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
       }
+
+      if( useSecAddr && wLoc.getsecaddr(data->props) > 0  && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props )) )
+        wLoc.setaddr( cmdFn, wLoc.getsecaddr(data->props));
       ControlOp.cmd( control, cmdFn, NULL );
     }
 
@@ -1456,7 +1462,7 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
       wLoc.setaddr( cmd, wLoc.getaddr(data->props) );
     }
 
-    if( useSecAddr && wLoc.getsecaddr(data->props) > 0 )
+    if( useSecAddr && wLoc.getsecaddr(data->props) > 0  && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props )) )
       wLoc.setaddr( cmd, wLoc.getsecaddr(data->props));
     ControlOp.cmd( control, cmd, NULL );
 

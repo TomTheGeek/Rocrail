@@ -439,6 +439,7 @@ void ThrottleDlg::funCmd(int fidx, bool on)
   wFunCmd.setid ( cmd, wLoc.getid( m_Props ) );
   wFunCmd.setgroup ( cmd, group );
   wFunCmd.setfncnt ( cmd, wLoc.getfncnt( m_Props ) );
+  wLoc.setusesecaddr( cmd, m_bSecAddr?True:False );
   char f[32];
   StrOp.fmtb(f, "f%d", fidx);
   NodeOp.setBool(cmd, f, on?True:False);
