@@ -83,36 +83,38 @@ static void* __event( void* inst, const void* evt ) {
 /**  */
 static char* _findFile( const char* directory ,const char* filename ) {
   char* filepath = NULL;
-  iOList listdir = DirOp.listdir( directory, NULL, -1 );
-  if( listdir != NULL ) {
-    int listsize = ListOp.size(listdir);
-    int i = 0;
-    for( i = 0; i < listsize; i++) {
-      iDirEntry dir = (iDirEntry)ListOp.get( listdir, i );
-      filepath = StrOp.fmt("%s%c%s", directory, SystemOp.getFileSeparator(), dir->name);
-      if( StrOp.len(dir->name) == 1 && StrOp.equals(dir->name, ".") || StrOp.len(dir->name) == 2 && StrOp.equals(dir->name, "..") ) {
+  if( FileOp.exist(directory) ) {
+    iOList listdir = DirOp.listdir( directory, NULL, -1 );
+    if( listdir != NULL ) {
+      int listsize = ListOp.size(listdir);
+      int i = 0;
+      for( i = 0; i < listsize; i++) {
+        iDirEntry dir = (iDirEntry)ListOp.get( listdir, i );
+        filepath = StrOp.fmt("%s%c%s", directory, SystemOp.getFileSeparator(), dir->name);
+        if( StrOp.len(dir->name) == 1 && StrOp.equals(dir->name, ".") || StrOp.len(dir->name) == 2 && StrOp.equals(dir->name, "..") ) {
+          StrOp.free(filepath);
+          filepath = NULL;
+          continue;
+        }
+        else if( FileOp.isDirectory( filepath ) ) {
+          char* filepath2 = FileUtilsOp.findFile(filepath, filename);
+          if( filepath2 != NULL ) {
+            StrOp.free(filepath);
+            filepath = filepath2;
+            break;
+          }
+        }
+        else {
+          TraceOp.trc( "findfile", TRCLEVEL_INFO, __LINE__, 9999, "getDirEntry: %s", dir->name );
+          if( StrOp.equals( dir->name, filename ) ) {
+            break;
+          }
+        }
         StrOp.free(filepath);
         filepath = NULL;
-        continue;
       }
-      else if( FileOp.isDirectory( filepath ) ) {
-        char* filepath2 = FileUtilsOp.findFile(filepath, filename);
-        if( filepath2 != NULL ) {
-          StrOp.free(filepath);
-          filepath = filepath2;
-          break;
-        }
-      }
-      else {
-        TraceOp.trc( "findfile", TRCLEVEL_INFO, __LINE__, 9999, "getDirEntry: %s", dir->name );
-        if( StrOp.equals( dir->name, filename ) ) {
-          break;
-        }
-      }
-      StrOp.free(filepath);
-      filepath = NULL;
+      DirOp.cleandirlist( listdir );
     }
-    DirOp.cleandirlist( listdir );
   }
   return filepath;
 }
