@@ -43,7 +43,8 @@ class ThrottleDlg : public ThrottleDlgGen
   bool m_bDir;
   bool m_bFn;
   bool m_bSecAddr;
-  int m_iSpeed;
+  int m_iSpeed1;
+  int m_iSpeed2;
   bool m_bFx[32];
   iOList m_DlgList;
   iOMap m_DlgMap;

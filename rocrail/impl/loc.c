@@ -1151,7 +1151,6 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
     if( StrOp.equals( wFunCmd.name(), NodeOp.getName(cmd )) ) {
 
       wFunCmd.setaddr(cmd, wLoc.getaddr( data->props ));
-      useSecAddr = wLoc.isusesecaddr( cmd );
 
       /* The fnchanged attribute is no longer optional and must be set in all cases. */
       fnchanged = wFunCmd.getfnchanged(cmd);
@@ -1453,9 +1452,6 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
       if( wLoc.getaddr( cmdFn ) == 0 && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props ))) {
         wLoc.setaddr( cmdFn, wLoc.getaddr(data->props) );
       }
-
-      if( useSecAddr && wLoc.getsecaddr(data->props) > 0  && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props )) )
-        wLoc.setaddr( cmdFn, wLoc.getsecaddr(data->props));
       ControlOp.cmd( control, cmdFn, NULL );
     }
 

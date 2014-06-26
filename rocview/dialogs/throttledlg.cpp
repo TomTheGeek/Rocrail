@@ -81,10 +81,10 @@ ThrottleDlg::ThrottleDlg( wxWindow* parent, iOList list, iOMap map, const char* 
     if( m_Props != NULL ) {
       updateImage();
       setFLabels();
-      m_iSpeed = wLoc.getV(m_Props);
-      m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed) );
+      m_iSpeed1 = wLoc.getV(m_Props);
+      m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed1) );
       m_SpeedSlider->SetRange( 0, wLoc.getV_max(m_Props) );
-      m_SpeedSlider->SetValue( m_iSpeed, true );
+      m_SpeedSlider->SetValue( m_iSpeed1, true );
       m_bFn = wLoc.isfn(m_Props)?true:false;
     }
   }
@@ -122,9 +122,10 @@ void ThrottleDlg::modelEvent( iONode evt ) {
 
   if( StrOp.equals( wLoc.name(), et ) ) {
     /* update speed */
-    m_iSpeed = wLoc.getV(evt);
-    m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed) );
-    m_SpeedSlider->SetValue( m_iSpeed );
+    int* iSpeed = m_bSecAddr ? &m_iSpeed2:&m_iSpeed1;
+    *iSpeed = wLoc.getV(evt);
+    m_Speed->SetValue( wxString::Format(wxT("%d"), *iSpeed) );
+    m_SpeedSlider->SetValue( *iSpeed );
 
     /* update direction */
     m_bDir = wLoc.isdir( evt)?true:false;
@@ -198,25 +199,26 @@ bool ThrottleDlg::setFX( iONode node ) {
 
 void ThrottleDlg::onSlider(wxScrollEvent& event) {
   int speed = m_SpeedSlider->GetValue();
-  TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "slider new=%d old=%d steps=%d", speed, m_iSpeed, wLoc.getspcnt(m_Props) );
+  int* iSpeed = m_bSecAddr ? &m_iSpeed2:&m_iSpeed1;
+  TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "slider new=%d old=%d steps=%d", speed, *iSpeed, wLoc.getspcnt(m_Props) );
   if( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK ) {
     if( !wGui.isuseallspeedsteps(wxGetApp().getIni()) && wLoc.getspcnt(m_Props) > 28 ) {
       int step = wLoc.getspcnt(m_Props) / 28;
-      if( speed > m_iSpeed ) {
-        if( speed - m_iSpeed >= step ){
-          m_iSpeed = m_SpeedSlider->GetValue();
+      if( speed > *iSpeed ) {
+        if( speed - *iSpeed >= step ){
+          *iSpeed = m_SpeedSlider->GetValue();
           speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
         }
       }
-      else if( speed < m_iSpeed ) {
-        if( m_iSpeed - speed >= step ){
-          m_iSpeed = m_SpeedSlider->GetValue();
+      else if( speed < *iSpeed ) {
+        if( *iSpeed - speed >= step ){
+          *iSpeed = m_SpeedSlider->GetValue();
           speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
         }
       }
     }
     else {
-      m_iSpeed = m_SpeedSlider->GetValue();
+      *iSpeed = m_SpeedSlider->GetValue();
       speedCmd( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK );
     }
   }
@@ -292,7 +294,7 @@ void ThrottleDlg::setFLabels(iONode p_Props, bool merge, int fmap) {
 
   TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "setFLabels group=%d", m_iFnGroup );
 
-  if( !merge ) {
+  if( !merge || m_bSecAddr) {
     m_F0->SetLabel( _T("lights") );
     m_F0->SetIcon(NULL);
     for( int i = 1; i < 15; i++ ) {
@@ -310,7 +312,6 @@ void ThrottleDlg::setFLabels(iONode p_Props, bool merge, int fmap) {
   for(int i = 0; i < 14; i++ ) {
     m_F[i+1]->setLED ((fx & (0x0001 << i) )?true:false );
   }
-
 
   iONode fundef = wLoc.getfundef( p_Props );
   while( fundef != NULL ) {
@@ -351,6 +352,7 @@ void ThrottleDlg::setFLabels(iONode p_Props, bool merge, int fmap) {
     }
     fundef = wLoc.nextfundef( p_Props, fundef );
   }
+
 }
 
 #define MAXHEIGHT 48
@@ -407,13 +409,16 @@ void ThrottleDlg::speedCmd(bool sendCmd)
     return;
   }
 
-  TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "speedCmd %d", m_iSpeed );
+  TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "speedCmd %d", m_iSpeed1 );
 
-  m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed) );
+  m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed1) );
 
   iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
   wLoc.setid( cmd, wLoc.getid( m_Props ) );
-  wLoc.setV( cmd, m_iSpeed );
+
+  int* iSpeed = m_bSecAddr ? &m_iSpeed2:&m_iSpeed1;
+  wLoc.setV( cmd, *iSpeed );
+
   wLoc.setfn( cmd, m_bFn?True:False );
   wLoc.setdir( cmd, m_bDir?True:False );
   wLoc.setusesecaddr( cmd, m_bSecAddr?True:False );
@@ -441,7 +446,6 @@ void ThrottleDlg::funCmd(int fidx, bool on)
   wFunCmd.setid ( cmd, wLoc.getid( m_Props ) );
   wFunCmd.setgroup ( cmd, group );
   wFunCmd.setfncnt ( cmd, wLoc.getfncnt( m_Props ) );
-  wLoc.setusesecaddr( cmd, m_bSecAddr?True:False );
   char f[32];
   StrOp.fmtb(f, "f%d", fidx);
   NodeOp.setBool(cmd, f, on?True:False);
@@ -466,10 +470,10 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
         m_iFnGroup = 0;
         updateImage();
         setFLabels();
-        m_iSpeed = wLoc.getV(m_Props);
-        m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed) );
+        m_iSpeed1 = wLoc.getV(m_Props);
+        m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed1) );
         m_SpeedSlider->SetRange( 0, wLoc.getV_max(m_Props) );
-        m_SpeedSlider->SetValue( m_iSpeed, true );
+        m_SpeedSlider->SetValue( m_iSpeed1, true );
         m_bFn = wLoc.isfn(m_Props)?true:false;
         m_bSecAddr = false;
         m_SwitchAddr->SetLabel(m_bSecAddr?wxT("2"):wxT("1"));
@@ -494,16 +498,16 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
       m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
 
     if( wGui.isresetspeeddir(wxGetApp().getIni()) ) {
-      m_iSpeed = 0;
-      m_SpeedSlider->SetValue( m_iSpeed, true );
+      m_iSpeed1 = 0;
+      m_SpeedSlider->SetValue( m_iSpeed1, true );
     }
 
     speedCmd(true);
   }
   else if ( event.GetEventObject() == m_Stop ) {
     TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "Stop" );
-    m_iSpeed = 0;
-    m_SpeedSlider->SetValue( m_iSpeed, true );
+    m_iSpeed1 = 0;
+    m_SpeedSlider->SetValue( m_iSpeed1, true );
     speedCmd(true);
   }
   else if ( event.GetEventObject() == m_Break ) {
@@ -527,9 +531,13 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
       m_bSecAddr = !m_bSecAddr;
       m_SwitchAddr->setLED(m_bSecAddr);
       m_SwitchAddr->SetLabel(m_bSecAddr?wxT("2"):wxT("1"));
-      if( !m_bSecAddr ) {
-        m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed) );
-        m_SpeedSlider->SetValue( m_iSpeed, true );
+      if( m_bSecAddr ) {
+        m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed2) );
+        m_SpeedSlider->SetValue( m_iSpeed2, true );
+      }
+      else {
+        m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed1) );
+        m_SpeedSlider->SetValue( m_iSpeed1, true );
       }
     }
   }
