@@ -294,7 +294,7 @@
                                     <object class="CustomControl" expanded="1">
                                         <property name="bg"></property>
                                         <property name="class">LEDButton</property>
-                                        <property name="construction">m_SwitchAddr = new LEDButton(this, wxT(&quot;#1&quot;), 60, 25);</property>
+                                        <property name="construction">m_SwitchAddr = new LEDButton(this, wxT(&quot;1&quot;), 60, 25);</property>
                                         <property name="context_help"></property>
                                         <property name="context_menu">1</property>
                                         <property name="declaration">LEDButton* m_SwitchAddr;</property>

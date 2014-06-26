@@ -642,6 +642,7 @@ static void __broadcastLocoProps( iOLoc inst, const char* cmd, iONode node, cons
   wLoc.setid( node, wLoc.getid( data->props ) );
   wLoc.setdir( node, wLoc.isdir( data->props ) );
   wLoc.setaddr( node, wLoc.getaddr( data->props ) );
+  wLoc.setsecaddr( node, wLoc.getaddr( data->props ) );
   wLoc.setV( node, wLoc.getV( data->props ) );
   wLoc.setplacing( node, wLoc.isplacing( data->props ) );
   wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );

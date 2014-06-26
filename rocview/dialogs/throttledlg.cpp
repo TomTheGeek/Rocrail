@@ -57,6 +57,8 @@ ThrottleDlg::ThrottleDlg( wxWindow* parent, iOList list, iOMap map, const char* 
   this->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ThrottleDlg::onSlider ) );
   this->Connect( wxEVT_DESTROY, wxWindowDestroyEventHandler( ThrottleDlg::onDestroy ) );
 
+  this->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+
   m_Stop->SetLabel( wxGetApp().getMsg( "stop" ) );
   m_Break->SetLabel( wxGetApp().getMsg( "break" ) );
 
@@ -469,6 +471,8 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
         m_SpeedSlider->SetRange( 0, wLoc.getV_max(m_Props) );
         m_SpeedSlider->SetValue( m_iSpeed, true );
         m_bFn = wLoc.isfn(m_Props)?true:false;
+        m_bSecAddr = false;
+        m_SwitchAddr->SetLabel(m_bSecAddr?wxT("2"):wxT("1"));
       }
       else {
         TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "invalid selection" );
@@ -519,9 +523,15 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
   }
   else if ( event.GetEventObject() == m_SwitchAddr ) {
     TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "Switch Address" );
-    m_bSecAddr = !m_bSecAddr;
-    m_SwitchAddr->setLED(m_bSecAddr);
-    m_SwitchAddr->SetLabel(m_bSecAddr?wxT("#2"):wxT("#1"));
+    if( wLoc.getsecaddr(m_Props) > 0 ) {
+      m_bSecAddr = !m_bSecAddr;
+      m_SwitchAddr->setLED(m_bSecAddr);
+      m_SwitchAddr->SetLabel(m_bSecAddr?wxT("2"):wxT("1"));
+      if( !m_bSecAddr ) {
+        m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed) );
+        m_SpeedSlider->SetValue( m_iSpeed, true );
+      }
+    }
   }
   else {
     LEDButton* m_F[15] = {m_F0,m_F1,m_F2,m_F3,m_F4,m_F5,m_F6,m_F7,m_F8,m_F9,m_F10,m_F11,m_F12,m_F13,m_F14};
