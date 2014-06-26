@@ -445,6 +445,7 @@ public:
     wxTextCtrl* m_Bus;
     wxStaticText* m_Label_Address;
     wxTextCtrl* m_Address;
+    wxTextCtrl* m_SecAddress;
     wxStaticText* m_Label_Protocol;
     wxChoice* m_Protocol;
     wxStaticText* m_LabelProtVersion;

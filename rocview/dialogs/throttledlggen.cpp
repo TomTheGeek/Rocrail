@@ -33,10 +33,13 @@ ThrottleDlgGen::ThrottleDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer23 = new wxBoxSizer( wxVERTICAL );
 	
 	m_Speed = new LEDButton(this, wxT("0"), 60, 25, false, true);
-	bSizer23->Add( m_Speed, 0, wxALL, 1 );
+	bSizer23->Add( m_Speed, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 1 );
 	
-	m_SpeedSlider = new Slider(this, 40, 187);
+	m_SpeedSlider = new Slider(this, 40, 156);
 	bSizer23->Add( m_SpeedSlider, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 1 );
+	
+	m_SwitchAddr = new LEDButton(this, wxT("#1"), 60, 25);
+	bSizer23->Add( m_SwitchAddr, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	fgSizer18->Add( bSizer23, 0, wxEXPAND, 5 );
 	

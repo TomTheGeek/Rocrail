@@ -67,6 +67,7 @@ ThrottleDlg::ThrottleDlg( wxWindow* parent, iOList list, iOMap map, const char* 
   m_Props = NULL;
   m_iFnGroup = 0;
   m_bDir = true;
+  m_bSecAddr = false;
   SetTitle(wxGetApp().getMsg( "locctrl" ));
 
   if( StrOp.len( wGui.getdirimagefwd(wxGetApp().getIni()) ) > 0 && StrOp.len( wGui.getdirimagerev(wxGetApp().getIni()) )) {
@@ -413,6 +414,7 @@ void ThrottleDlg::speedCmd(bool sendCmd)
   wLoc.setV( cmd, m_iSpeed );
   wLoc.setfn( cmd, m_bFn?True:False );
   wLoc.setdir( cmd, m_bDir?True:False );
+  wLoc.setusesecaddr( cmd, m_bSecAddr?True:False );
   char* tid = StrOp.fmt("rv%d", SystemOp.getpid() );
   wLoc.setthrottleid( cmd, tid );
   StrOp.free(tid);
@@ -513,6 +515,12 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
     if( m_iFnGroup > 1 )
       m_iFnGroup = 0;
     setFLabels();
+  }
+  else if ( event.GetEventObject() == m_SwitchAddr ) {
+    TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "Switch Address" );
+    m_bSecAddr = !m_bSecAddr;
+    m_SwitchAddr->setLED(m_bSecAddr);
+    m_SwitchAddr->SetLabel(m_bSecAddr?wxT("#2"):wxT("#1"));
   }
   else {
     LEDButton* m_F[15] = {m_F0,m_F1,m_F2,m_F3,m_F4,m_F5,m_F6,m_F7,m_F8,m_F9,m_F10,m_F11,m_F12,m_F13,m_F14};

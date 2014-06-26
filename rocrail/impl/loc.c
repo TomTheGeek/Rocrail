@@ -1107,13 +1107,15 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
   int         V_old    = wLoc.getV(data->props);
   iONode      cmdTD    = NULL;
   iONode      cmdFn    = NULL;
-  int      fnchanged   = -1;
+  int     fnchanged   = -1;
+  Boolean useSecAddr = False;
 
   if( cmd != NULL )
   {
     V_new    = wLoc.getV( cmd );
     V_hint   = wLoc.getV_hint( cmd );
     V_maxkmh = wLoc.getV_maxkmh( cmd );
+    useSecAddr = wLoc.isusesecaddr( cmd );
 
     if( wLoc.isconsistcmd( cmd ) ) {
       /* overwrite id and address */
@@ -1454,6 +1456,8 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
       wLoc.setaddr( cmd, wLoc.getaddr(data->props) );
     }
 
+    if( useSecAddr && wLoc.getsecaddr(data->props) > 0 )
+      wLoc.setaddr( cmd, wLoc.getsecaddr(data->props));
     ControlOp.cmd( control, cmd, NULL );
 
     if( cmdTD != NULL ) {

@@ -2491,6 +2491,8 @@
         <var name="iid" vt="string" defval="NULL" range="*" remark="Interface ID."/>
         <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
         <var name="addr" vt="int" defval="0" range="0-255" required="true" remark="Digital address. (0 == analog)"/>
+        <var name="secaddr" vt="int" defval="0" range="0-255" required="false" remark="Secondary address for coupler systems."/>
+        <var name="usesecaddr" vt="bool" defval="false" remark="Use secondary address for speed commands."/>
         <var name="port" vt="int" defval="0" range="0-*" required="false"
           remark="Block number in the Dinamo system. (Block property)"/>
         <var name="len" vt="int" defval="0" range="0-*" unit="cm" remark="Total length of loc with wagons to check with block length.."/>

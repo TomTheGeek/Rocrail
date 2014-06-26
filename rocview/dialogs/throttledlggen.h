@@ -38,6 +38,7 @@ class ThrottleDlgGen : public wxDialog
 		wxBitmapButton* m_LocoImage;
 		LEDButton* m_Speed;
 		Slider* m_SpeedSlider;
+		LEDButton* m_SwitchAddr;
 		wxStaticLine* m_staticline5;
 		LEDButton* m_F1;
 		LEDButton* m_F2;
