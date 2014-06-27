@@ -27934,4 +27934,7 @@
   <Msg id="coordinates">
     <en txt="Coordinates"/>
   </Msg>
+  <Msg id="virtualtimer">
+    <en txt="Virtual timer"/>
+  </Msg>
 </Messages>

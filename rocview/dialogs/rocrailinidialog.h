@@ -355,6 +355,8 @@ public:
     wxSpinCtrl* m_BlockInitPause;
     wxStaticText* m_labSyncRouteTimeout;
     wxSpinCtrl* m_SyncRouteTimeout;
+    wxStaticText* m_labVirtualTimer;
+    wxSpinCtrl* m_VirtualTimer;
     wxCheckBox* m_ResetFxSp;
     wxCheckBox* m_ProcessSignalEvents;
     wxCheckBox* m_secondNextBlock;

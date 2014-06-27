@@ -850,6 +850,7 @@
       </srcpbus>
     </srcpcon>
     <ctrl wrappername="Ctrl">
+      <var name="virtualtimer" vt="int" defval="1" range="1-*" unit="s" remark="Virtual step time."/>
       <var name="swtimeout" vt="int" defval="250" range="100-1000" unit="ms" remark="Switch activation time."/>
       <var name="initfieldpause" vt="int" defval="500" range="100-5000" unit="ms" remark="Pause between the switch commands."/>
       <var name="initfieldpower" vt="bool" defval="true" remark="Set global power on before init field."/>

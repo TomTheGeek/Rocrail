@@ -285,7 +285,13 @@ static void _setIni( iONode ini ) {
   if( __appinst != NULL ) {
     iOAppData data  = Data(__appinst);
     iONode    trace = wRocRail.gettrace( ini );
+    iONode     ctrl = wRocRail.gettrace( ini );
     iONode curtrace = wRocRail.gettrace( data->ini );
+    iONode  curctrl = wRocRail.getctrl( data->ini );
+
+    if( curctrl != NULL && ctrl != NULL) {
+      wCtrl.setvirtualtimer(curctrl, wCtrl.getvirtualtimer(ctrl));
+    }
 
     if( trace != NULL && curtrace != NULL) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "trace levels changes are activated, other setting at restart..." );

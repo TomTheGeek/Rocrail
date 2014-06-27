@@ -7115,3 +7115,9 @@ msgstr ""
 msgid "Coordinates"
 msgstr ""
 
+#. 
+# id="virtualtimer"
+#, c-format
+msgid "Virtual timer"
+msgstr ""
+

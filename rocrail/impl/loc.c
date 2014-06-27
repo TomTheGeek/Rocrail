@@ -1843,6 +1843,7 @@ static void __runner( void* threadinst ) {
   iOLocData data = Data(loc);
   iOList queueList = ListOp.inst();
   int   tick = 0;
+  int   virtualtick = 0;
   Boolean cnfgsend = False;
   Boolean loccnfg = wCtrl.isloccnfg( AppOp.getIniNode( wCtrl.name() ) );
 
@@ -1960,12 +1961,16 @@ static void __runner( void* threadinst ) {
 
       if( StrOp.equals( wLoc.mode_auto, wLoc.getmode(data->props) ) ) {
         if( data->govirtual && data->driver != NULL ) {
-          if( !data->driver->stepvirtual(data->driver) ) {
-            /* Block type not supported. */
-            iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-            wLoc.setid( cmd, LocOp.getId(loc) );
-            wLoc.setcmd( cmd, wLoc.stop );
-            LocOp.cmd( loc, cmd );
+          virtualtick++;
+          if( virtualtick >= wCtrl.getvirtualtimer( AppOp.getIniNode( wCtrl.name() ) ) ) {
+            virtualtick = 0;
+            if( !data->driver->stepvirtual(data->driver) ) {
+              /* Block type not supported. */
+              iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+              wLoc.setid( cmd, LocOp.getId(loc) );
+              wLoc.setcmd( cmd, wLoc.stop );
+              LocOp.cmd( loc, cmd );
+            }
           }
         }
       }
