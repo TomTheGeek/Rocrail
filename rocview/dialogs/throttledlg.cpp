@@ -511,8 +511,11 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
   }
   else if ( event.GetEventObject() == m_Stop ) {
     TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "Stop" );
-    m_iSpeed1 = 0;
-    m_SpeedSlider->SetValue( m_iSpeed1, true );
+    if( m_bSecAddr )
+      m_iSpeed2 = 0;
+    else
+      m_iSpeed1 = 0;
+    m_SpeedSlider->SetValue( m_bSecAddr?m_iSpeed2:m_iSpeed1, true );
     speedCmd(true);
   }
   else if ( event.GetEventObject() == m_Break ) {
