@@ -115,6 +115,10 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
     gc->SetBrush( *wxWHITE_BRUSH );
   else
     gc->SetBrush( pressedDown ? *wxGREY_BRUSH:(ON?wxBrush(wxColour(255,200,200)):(useLED?wxBrush(wxColour(200,255,200)):wxBrush(wxColour(230,230,230)))) );
+
+  if( !IsEnabled() ) {
+    gc->SetBrush(wxBrush(wxColour(230,230,230)));
+  }
   //gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
   gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 3.0);
 
@@ -136,7 +140,7 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
   }
   else {
     wxFont font(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    gc->SetFont(font,*wxBLACK);
+    gc->SetFont(font,IsEnabled()?*wxBLACK:*wxLIGHT_GREY);
 
     if( icon != NULL ) {
       float bmpW = icon->GetWidth();
@@ -287,7 +291,7 @@ void LEDButton::mouseDown(wxMouseEvent& event)
 }
 void LEDButton::mouseReleased(wxMouseEvent& event)
 {
-  if( textOnly )
+  if( textOnly || !IsEnabled() )
     return;
 
     pressedDown = false;

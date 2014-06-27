@@ -66,6 +66,9 @@ ThrottleDlg::ThrottleDlg( wxWindow* parent, iOList list, iOMap map, const char* 
   m_DlgMap  = map;
   ListOp.add( m_DlgList, (obj)this );
 
+  m_iSpeed1 = 0;
+  m_iSpeed2 = 0;
+
   m_Props = NULL;
   m_iFnGroup = 0;
   m_bDir = true;
@@ -86,6 +89,7 @@ ThrottleDlg::ThrottleDlg( wxWindow* parent, iOList list, iOMap map, const char* 
       m_SpeedSlider->SetRange( 0, wLoc.getV_max(m_Props) );
       m_SpeedSlider->SetValue( m_iSpeed1, true );
       m_bFn = wLoc.isfn(m_Props)?true:false;
+      m_SwitchAddr->Enable(wLoc.getsecaddr(m_Props)>0?true:false);
     }
   }
   else {
@@ -477,6 +481,7 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
         m_bFn = wLoc.isfn(m_Props)?true:false;
         m_bSecAddr = false;
         m_SwitchAddr->SetLabel(m_bSecAddr?wxT("2"):wxT("1"));
+        m_SwitchAddr->Enable(wLoc.getsecaddr(m_Props)>0?true:false);
       }
       else {
         TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "invalid selection" );
