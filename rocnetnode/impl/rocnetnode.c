@@ -1803,7 +1803,8 @@ static void __motorPWM( void* threadinst ) {
   int hall = 0;
   int rpmticks = 0;
   int rpmtime = 0; /* time in 10ms ticks between the Hall pulse */
-
+  int hallcnt = 0;
+  int Vcorr = 0;
 
   ThreadOp.sleep(1000);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Motor PWM started" );
@@ -1861,23 +1862,54 @@ static void __motorPWM( void* threadinst ) {
       __setLightFunction(rocnetnode, 14, !Vdir && lights );
     }
 
-    /* motor rpm Hall */
+    /* motor rpm Hall
+      DC Voltage   Hall Freq.  Rotations   Scale speed
+       2V           3Hz         1           10 kmh
+       6V          10Hz         3.33        35 kmh
+      12V          22Hz         7.33        67 kmh
+      18V          33Hz        10          100 kmh
+     */
     if( Vraw > 0 && __readPort(rocnetnode, data->RPM, IO_DIRECT ) && hall == 0 ) {
+      /* Hall sensor is on */
       hall = 1;
-      rpmtime = rpmticks;
-      rpmticks = 0;
+      hallcnt++;
     }
     else {
       hall = 0;
     }
 
-    if( Vraw > 0 ) {
+    if( Vcurr > 0 ) {
+      /* the loco is running */
       rpmticks++;
+
+      if( rpmticks >= 10 ) {
+        /* counted 1000ms all high hall pulses */
+        int Vtol = 2; /* tolerance */
+
+        /* calculate the correction */
+        int Vhall = (hallcnt * 100) / 33; /* hall speed in kmh */
+        if( (Vcurr-Vtol) > Vhall ) {
+          /* add some speed */
+          Vcorr++;
+        }
+        else if( (Vcurr+Vtol) < Vhall ) {
+          /* subtract some speed */
+          Vcorr--;
+        }
+        rpmticks = 0;
+        hallcnt = 0;
+      }
     }
     else {
+      /* reset all */
       rpmtime = 0;
       rpmticks = 0;
+      hallcnt = 0;
+      Vcorr = 0;
     }
+
+    /* disable Vcorr */
+    Vcorr = 0;
 
     /* check limits */
     if( Vraw > 100 )
@@ -1910,9 +1942,9 @@ static void __motorPWM( void* threadinst ) {
 
     if( Vcurr > 0 )
       __writePort(rocnetnode, data->VPWM, 1, IO_DIRECT );
-    SystemOp.uBusyWait( Vcurr * Vmax );
+    SystemOp.uBusyWait( (Vcurr+Vcorr) * Vmax );
     __writePort(rocnetnode, data->VPWM, 0, IO_DIRECT );
-    SystemOp.uBusyWait( (((100-Vmax)+100) - Vcurr) * 100 );
+    SystemOp.uBusyWait( (((100-Vmax)+100) - (Vcurr+Vcorr)) * 100 );
 
     Vloop++;
 

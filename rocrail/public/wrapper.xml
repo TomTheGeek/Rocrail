@@ -2528,6 +2528,7 @@
         <var name="V_mode" vt="string" defval="percent" range="kmh,percent"
              remark="How the V values should be interpreted by the digint: percent is used for decoders without max speed tuning.(Delta...)"/>
         <var name="V_max" vt="int" defval="100" range="*" remark="Maximal speed."/>
+        <var name="V_maxsec" vt="int" defval="14" range="*" remark="Maximal speed for secondary address."/>
         <var name="V_cru" vt="int" defval="0" range="*" remark="Cruise speed.(not used when 0)"/>
         <var name="V_mid" vt="int" defval="50" range="*" remark="Middle speed."/>
         <var name="V_min" vt="int" defval="10" range="*" remark="Minimal speed."/>

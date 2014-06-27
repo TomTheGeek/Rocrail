@@ -537,10 +537,12 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
       m_SwitchAddr->setLED(m_bSecAddr);
       m_SwitchAddr->SetLabel(m_bSecAddr?wxT("2"):wxT("1"));
       if( m_bSecAddr ) {
+        m_SpeedSlider->SetRange( 0, wLoc.getV_maxsec(m_Props) );
         m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed2) );
         m_SpeedSlider->SetValue( m_iSpeed2, true );
       }
       else {
+        m_SpeedSlider->SetRange( 0, wLoc.getV_max(m_Props) );
         m_Speed->SetValue( wxString::Format(wxT("%d"), m_iSpeed1) );
         m_SpeedSlider->SetValue( m_iSpeed1, true );
       }

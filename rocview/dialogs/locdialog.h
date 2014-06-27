@@ -469,6 +469,7 @@ public:
     wxTextCtrl* m_V_Rcru;
     wxStaticText* m_Label_V_max;
     wxTextCtrl* m_V_max;
+    wxTextCtrl* m_VmaxSec;
     wxStaticText* m_Label_V_Rmax;
     wxTextCtrl* m_V_Rmax;
     wxStaticText* m_LabelV_step;
