@@ -316,11 +316,10 @@ static void __reader( void* threadinst ) {
 
     while( !eol && !SocketOp.isBroken(data->socket) ) {
       SocketOp.read( data->socket, msg+idx, 1 );
-      if( msg[idx] == ';') {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GoT read: %c(0x%02X)", msg[idx], msg[idx] );
+
+      if( msg[idx] == '\r' ) {
         eol = True;
-      }
-      else if( msg[idx] == '\n' || msg[idx] == '\r' || msg[idx] == ' ' ) {
-        /* skip */
       }
       else {
         idx++;
@@ -333,6 +332,8 @@ static void __reader( void* threadinst ) {
       data->socket = NULL;
     }
     else if( eol ) {
+      StrOp.replaceAll(msg, '\n', '\0');
+      StrOp.replaceAll(msg, '\r', '\0');
       __evaluateRecord(got, msg);
     }
 
