@@ -383,8 +383,11 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       /* cs2 ranges all speeds from 0 - 1000 regardless of number of steps */
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
         speed = wLoc.getV( node ) * 10;
-      else if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_step ) )
-        speed = wLoc.getV( node ) * 10;
+      else if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_step ) ) {
+        float fspeed = 1000.0 / (float)wLoc.getspcnt( node );
+        fspeed *= wLoc.getV( node );
+        speed = (int)fspeed;
+      }
       else if( wLoc.getV_max( node ) > 0 )
         speed = (wLoc.getV( node ) * 1000) / wLoc.getV_max( node );
       speed1 = (speed & 0xFF00) >>8;

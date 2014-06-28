@@ -352,7 +352,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
           speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "speed=%d", speed );
       }
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "id=%s addr=%d V=%d(%d) dir=%s lights=%s throttleid=%s",
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "id=%s: addr=%d, calculated speed=%d, command V=%d, dir=%s, lights=%s, throttleid=%s",
           id, addr, speed, wLoc.getV( node ), wLoc.isdir( node )?"fwd":"rev", fn?"on":"off", wLoc.getthrottleid(node) );
     }
 
