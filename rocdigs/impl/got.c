@@ -270,14 +270,79 @@ static void __evaluateRecord(iOGOT got, const char* msg) {
 }
 
 
-static void __reader( void* threadinst ) {
+/**
+ * Reading the GameOnTrack Central directly over USB.
+ * This serial reading is reengineerd and the protocol is not public; I did ask GOT.
+ * Under Mac OSX the FDTI device driver will crash the system if the continous byte stream is not read permanently. (Buffer over flow?)
+ */
+static void __serialReader( void* threadinst ) {
+  iOThread  th   = (iOThread)threadinst;
+  iOGOT     got  = (iOGOT)ThreadOp.getParm( th );
+  iOGOTData data = Data(got);
+  Boolean   serialOK = False;
+  int idx = 0;
+
+  /* 35 init bytes which activates the transmitter and the receivers which depends on the IDs of the hardware in question.
+   * In this case the receivers are C856 and CB56, the sender is C347.
+   */
+  byte msg[1014] = {0x02, 0x28, 0x01, 0x10, 0x22, 0x0A, 0xCA, 0x03, 0x02, 0x2A, 0x00, 0x01, 0xC8, 0x56, 0x00, 0xB6, 0x03, 0x02, 0x2A, 0x01, 0x01, 0xCB,
+                    0x56, 0x00, 0xB2, 0x03, 0x02, 0xAA, 0x00, 0x01, 0x47, 0x29, 0x00, 0xE4, 0x03};
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GoT serial reader started." );
+
+  ThreadOp.sleep(50); /* resume some time to get it all being setup */
+
+  data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
+  SerialOp.setFlow( data->serial, cts );
+  SerialOp.setLine( data->serial, 115200, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
+  SerialOp.setTimeout( data->serial, wDigInt.gettimeout(data->ini), wDigInt.gettimeout(data->ini) );
+  serialOK = SerialOp.open( data->serial );
+
+  if( serialOK ) {
+    SerialOp.write( data->serial, (char*)msg, 35 );
+  }
+
+  while( serialOK && data->run ) {
+    Boolean eol = False;
+
+    /*
+     02 43 0A 00 10 22 00 C3 47 29 00 7D 03 02 84 B6
+     C8 56 00 4E 22 40 00 F7 03 02 04 B4 CB 56 00 73
+     2F 10 36 00 6E 03 02 C1 47 29 00 0A 40 43 10 22
+     3F 03
+     */
+    if( SerialOp.available( data->serial ) ) {
+      int rc = SerialOp.read( data->serial, (char*)msg, 1 );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GoT read: idx=%d 0x%02X", idx, msg[idx] );
+
+      if( idx >= 50 ) {
+        /* ToDo: How to determine the start or end of the packet... */
+        TraceOp.dump( name, TRCLEVEL_INFO, (char*)msg, idx );
+        idx = 0;
+      }
+      else
+        idx++;
+
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  SerialOp.close( data->serial );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GoT serial reader ended." );
+
+}
+
+
+static void __socketReader( void* threadinst ) {
   iOThread  th   = (iOThread)threadinst;
   iOGOT     got  = (iOGOT)ThreadOp.getParm( th );
   iOGOTData data = Data(got);
 
   char msg[1014];
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GoT reader started." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GoT socket reader started." );
 
   ThreadOp.sleep(50); /* resume some time to get it all being setup */
 
@@ -340,7 +405,7 @@ static void __reader( void* threadinst ) {
     ThreadOp.sleep(10);
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GoT reader ended." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GoT socket reader ended." );
 }
 
 
@@ -362,12 +427,20 @@ static struct OGOT* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "GamesOnTrack %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sublib   = %s", wDigInt.getsublib( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "host     = %s", wDigInt.gethost(data->ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "port     = %d", wDigInt.getport(data->ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", wDigInt.getdevice( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  data->reader = ThreadOp.inst( "gotreader", &__reader, __GOT );
-  ThreadOp.start( data->reader );
+  if( StrOp.equals( wDigInt.sublib_serial, wDigInt.getsublib( data->ini ) ) ) {
+    data->reader = ThreadOp.inst( "gotreader", &__serialReader, __GOT );
+    ThreadOp.start( data->reader );
+  }
+  else {
+    data->reader = ThreadOp.inst( "gotreader", &__socketReader, __GOT );
+    ThreadOp.start( data->reader );
+  }
 
   instCnt++;
   return __GOT;

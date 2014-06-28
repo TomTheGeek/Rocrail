@@ -1836,7 +1836,7 @@
     </data>
   </object>
 
-  <object name="GOT" interface="$../rocint/rocint.xml:DigInt" use="node,trace,thread,socket" include="$rocint/public/digint" remark="GamesOnTrack">
+  <object name="GOT" interface="$../rocint/rocint.xml:DigInt" use="node,trace,thread,serial,socket" include="$rocint/public/digint" remark="GamesOnTrack">
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -1847,6 +1847,7 @@
       <var name="host" vt="const char*"/>
       <var name="port" vt="int"/>
       <var name="socket" vt="iOSocket"/>
+      <var name="serial" vt="iOSerial"/>
       <var name="run" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>
