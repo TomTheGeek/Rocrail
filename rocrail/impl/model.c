@@ -2816,7 +2816,7 @@ static iOLoc _getLocByAddress( iOModel inst, int addr, const char* iid ) {
 
   for( i = 0; i < cnt; i++ ) {
     iOLoc loc = (iOLoc)ListOp.get( o->locList, i );
-    if( LocOp.getAddress(loc) == addr ) {
+    if( LocOp.getAddress(loc) == addr || LocOp.getSecAddress(loc) == addr ) {
       if( iid != NULL && StrOp.len(iid) > 0 ) {
         const char* lciid = wLoc.getiid(LocOp.base.properties(loc));
         if( lciid != NULL && StrOp.len(lciid) > 0 ) {

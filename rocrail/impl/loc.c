@@ -731,7 +731,7 @@ static void* __event( void* inst, const void* evt ) {
     return NULL;
   }
 
-  if( StrOp.equals( wLoc.name(), NodeOp.getName(evtNode) )) {
+  if( StrOp.equals( wLoc.name(), NodeOp.getName(evtNode) ) && wLoc.getaddr( evtNode ) != wLoc.getsecaddr( data->props ) ) {
     int V = __getVfromRaw(inst, evtNode);
     int spcnt = wLoc.getspcnt( data->props );
     int V_raw = wLoc.getV_raw(evtNode);
@@ -3421,6 +3421,10 @@ static Boolean __loadDriver( iOLoc inst ) {
 static int _getAddress( iOLoc loc ) {
   iOLocData data = Data(loc);
   return wLoc.getaddr( data->props );
+}
+static int _getSecAddress( iOLoc loc ) {
+  iOLocData data = Data(loc);
+  return wLoc.getsecaddr( data->props );
 }
 static const char* _getIdent( iOLoc loc ) {
   iOLocData data = Data(loc);

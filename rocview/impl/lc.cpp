@@ -324,7 +324,7 @@ bool LC::updateLoc( iONode node ) {
         }
 
       }
-      else {
+      else if( wLoc.getsecaddr( m_LocProps) != wLoc.getaddr( node) && !wLoc.isusesecaddr( node)  )  {
         m_iSpeed = wLoc.getV( node );
         wLoc.setV( m_LocProps, m_iSpeed );
         m_Vslider->SetValue( m_iSpeed );

@@ -204,7 +204,7 @@ bool ThrottleDlg::setFX( iONode node ) {
 void ThrottleDlg::onSlider(wxScrollEvent& event) {
   int speed = m_SpeedSlider->GetValue();
   int* iSpeed = m_bSecAddr ? &m_iSpeed2:&m_iSpeed1;
-  TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "slider new=%d old=%d steps=%d", speed, *iSpeed, wLoc.getspcnt(m_Props) );
+  TraceOp.trc( "throttledlg", TRCLEVEL_DEBUG, __LINE__, 9999, "slider new=%d old=%d steps=%d", speed, *iSpeed, wLoc.getspcnt(m_Props) );
   if( event.GetEventType() != wxEVT_SCROLL_THUMBTRACK ) {
     if( !wGui.isuseallspeedsteps(wxGetApp().getIni()) && wLoc.getspcnt(m_Props) > 28 ) {
       int step = wLoc.getspcnt(m_Props) / 28;

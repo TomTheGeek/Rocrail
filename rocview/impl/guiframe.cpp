@@ -1483,7 +1483,7 @@ void RocGuiFrame::CVevent( wxCommandEvent& event ) {
 void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
   // Get copied node:
   iONode node = (iONode)event.GetClientData();
-  TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "update active locos %s", NodeOp.getName(node));
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "update active locos %s", NodeOp.getName(node));
 
   if( StrOp.equals( wFunCmd.name(), NodeOp.getName( node ) ) )
   {
@@ -1502,8 +1502,8 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
   }
   else if( StrOp.equals( wLoc.name(), NodeOp.getName( node ) ) )
   {
-    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loc event: [%s] block=[%s] destblock=[%s] throttleID=%s",
-        wLoc.getid( node ), (wLoc.getblockid( node ) != NULL ? wLoc.getblockid( node ):"-"),
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Loc event: [%s][%d] block=[%s] destblock=[%s] throttleID=%s",
+        wLoc.getid( node ), wLoc.getaddr( node ), (wLoc.getblockid( node ) != NULL ? wLoc.getblockid( node ):"-"),
         (wLoc.getdestblockid( node ) != NULL ? wLoc.getdestblockid( node ):"-") , wLoc.getthrottleid(node) );
 
     if( wGui.islocowidgetstab(m_Ini) && m_LocoPanel != NULL ) {
@@ -1533,7 +1533,9 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
           val = StrOp.fmt( "%s%s%d%s (%d)", dir?"":"<", placing?"":"-", wLoc.getV( node )==-1?0:wLoc.getV( node ), dir?">":"", wLoc.getV_realkmh( node ) );
         }
 
-        m_ActiveLocs->SetCellValue( i, LOC_COL_V, wxString(val,wxConvUTF8) );
+        if( !wLoc.isusesecaddr( node)  )  {
+           m_ActiveLocs->SetCellValue( i, LOC_COL_V, wxString(val,wxConvUTF8) );
+        }
         StrOp.free( val );
         m_ActiveLocs->SetCellBackgroundColour( i, LOC_COL_V,
             wLoc.isplacing(node)?m_ActiveLocs->GetCellBackgroundColour(i, LOC_COL_BLOCK):wxColour(240,200,200));

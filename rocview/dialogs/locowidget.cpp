@@ -77,7 +77,13 @@ void LocoWidget::InitLoco() {
 
 
 void LocoWidget::UpdateLoco(iONode node) {
-  TraceOp.trc( "locowidget", TRCLEVEL_INFO, __LINE__, 9999, "update [%s]", wLoc.getid( node ) );
+  TraceOp.trc( "locowidget", TRCLEVEL_INFO, __LINE__, 9999, "update [%s] addr=%d", wLoc.getid( node ), wLoc.getaddr( node) );
+
+  if( wLoc.getsecaddr( m_Props) == wLoc.getaddr( node) || wLoc.isusesecaddr( node)  )  {
+    // ignore secondary address
+    return;
+  }
+
   Boolean dir = wLoc.isdir(node);
   Boolean placing = wLoc.isplacing(node);
   char* val = StrOp.fmt( "%s%s%d%s", dir?"":"<", placing?"":"-", wLoc.getV( node )==-1?0:wLoc.getV( node ), dir?">":"" );
