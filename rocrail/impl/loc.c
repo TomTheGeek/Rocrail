@@ -1461,6 +1461,7 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
 
     if( useSecAddr && wLoc.getsecaddr(data->props) > 0  && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props )) ) {
       wLoc.setaddr( cmd, wLoc.getsecaddr(data->props));
+      wLoc.setspcnt( cmd, wLoc.getsecspcnt(data->props));
       wLoc.setV_mode( cmd, wLoc.V_mode_step);
     }
     ControlOp.cmd( control, cmd, NULL );

@@ -452,6 +452,7 @@ public:
     wxTextCtrl* m_ProtVersion;
     wxStaticText* m_LabelSpeedSteps;
     wxTextCtrl* m_SpeedSteps;
+    wxTextCtrl* m_SecSpeedSteps;
     wxStaticText* m_LabelFunCnt;
     wxTextCtrl* m_FunCnt;
     wxStaticBox* m_VelocityBox;
