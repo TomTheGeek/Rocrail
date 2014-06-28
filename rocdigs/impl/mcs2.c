@@ -397,7 +397,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2, 0, 0);
       /* when changing direction cs2 set speed to 0 internally, so after direction change also send speed */
     } else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %s %d (%s) speedstep=%d %s", id, addr, prot, (speed * wLoc.getspcnt( node ) / 1000), (dir==1)?"forwards":"backwards");
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %s %d (%s) speed=%d(%d,%d) %s", id, addr, prot, speed, speed1, speed2, (dir==1)?"forwards":"backwards");
       __setSysMsg(out2, 0, CMD_LOCO_VELOCITY, False, 6, address, speed1, speed2, 0, 0);
       /* also send direction to prevent going wrong way when user has changed direction on the cs2 */
       __setSysMsg(out, 0, CMD_LOCO_DIRECTION, False, 5, address, dir, 0, 0, 0);
