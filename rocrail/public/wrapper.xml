@@ -2523,6 +2523,7 @@
         -->
         <!-- V speed attributes -->
         <const name="V_mode_kmh" vt="string" val="kmh"/>
+        <const name="V_mode_step" vt="string" val="step"/>
         <const name="V_mode_percent" vt="string" val="percent"
                remark="use 30 incase of mins=4, 70 incase of maxs=10... (Replaces attr controlled)"/>
         <var name="V_mode" vt="string" defval="percent" range="kmh,percent"

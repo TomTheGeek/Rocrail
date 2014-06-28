@@ -642,7 +642,7 @@ static void __broadcastLocoProps( iOLoc inst, const char* cmd, iONode node, cons
   wLoc.setid( node, wLoc.getid( data->props ) );
   wLoc.setdir( node, wLoc.isdir( data->props ) );
   wLoc.setaddr( node, wLoc.getaddr( data->props ) );
-  wLoc.setsecaddr( node, wLoc.getaddr( data->props ) );
+  wLoc.setsecaddr( node, wLoc.getsecaddr( data->props ) );
   wLoc.setV( node, wLoc.getV( data->props ) );
   wLoc.setplacing( node, wLoc.isplacing( data->props ) );
   wLoc.setblockenterside( node, wLoc.isblockenterside( data->props ) );
@@ -1459,8 +1459,10 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
       wLoc.setaddr( cmd, wLoc.getaddr(data->props) );
     }
 
-    if( useSecAddr && wLoc.getsecaddr(data->props) > 0  && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props )) )
+    if( useSecAddr && wLoc.getsecaddr(data->props) > 0  && !StrOp.equals( wLoc.prot_A, wLoc.getprot( data->props )) ) {
       wLoc.setaddr( cmd, wLoc.getsecaddr(data->props));
+      wLoc.setV_mode( cmd, wLoc.V_mode_step);
+    }
     ControlOp.cmd( control, cmd, NULL );
 
     if( cmdTD != NULL ) {

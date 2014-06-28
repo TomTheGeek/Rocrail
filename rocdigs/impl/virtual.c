@@ -346,6 +346,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       if( wLoc.getV( node ) != -1 ) {
         if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
           speed = (wLoc.getV( node ) * spcnt) / 100;
+        else if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_step ) )
+          speed = wLoc.getV( node );
         else if( wLoc.getV_max( node ) > 0 )
           speed = (wLoc.getV( node ) * spcnt) / wLoc.getV_max( node );
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "speed=%d", speed );
