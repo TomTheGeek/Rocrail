@@ -1870,7 +1870,12 @@
       <var name="f0_12" vt="int"/>
       <var name="f13_20" vt="int"/>
     </struct>
-      <fun name="inst" vt="this">
+    <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
+      <var name="msg[256]" vt="char"/>
+      <var name="time" vt="unsigned long"/>
+      <var name="delay" vt="unsigned long"/>
+    </struct>
+    <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
@@ -1886,7 +1891,9 @@
       <var name="connOK" vt="Boolean"/>
       <var name="lcmux" vt="iOMutex"/>
       <var name="lcmap" vt="iOMap"/>
-      </data>
+      <var name="timedQueue" vt="iOThread"/>
+      <var name="swtime" vt="int"/>
+    </data>
   </object>
 
 </Project>

@@ -196,12 +196,20 @@ static iONode __translate( iOESUNavi inst, iONode node ) {
     int addr  = wSwitch.getaddr1( node );
     int state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.straight ) ? 1:0;
     int port  = wSwitch.getport1( node );
+    int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
     if( port > 0 ) {
       addr = AddrOp.toPADA( addr, port );
     }
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch %d %s", addr, wSwitch.getcmd(node) );
     StrOp.fmtb(msg, "a a%d %d %s\r\n", addr, state, "on");
     SerialOp.write( data->serial, msg, StrOp.len(msg) );
+
+    /* deactivate the gate to be used */
+    iQCmd cmd = allocMem(sizeof(struct QCmd));
+    cmd->time   = SystemOp.getTick();
+    cmd->delay  = delay / 10;
+    StrOp.fmtb(cmd->msg, "a a%d %d %s\r\n", addr, state, "off");
+    ThreadOp.post( data->timedQueue, (obj)cmd );
   }
 
   /* Output command */
@@ -301,6 +309,8 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
   iOESUNaviData data = Data(inst);
+  data->run = False;
+  ThreadOp.sleep(500);
 }
 
 
@@ -408,11 +418,14 @@ static void __evaluateMsg(iOESUNavi esunavi, char* msg) {
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
     int addr = 0;
     int state = 0;
+    const char* onoff = "";
     if( StrTokOp.hasMoreTokens( tok ) )
       addr = atoi(StrTokOp.nextToken(tok)+1);
     if( StrTokOp.hasMoreTokens( tok ) )
       state = atoi(StrTokOp.nextToken(tok));
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Accessory: addr=%d state=%d", addr, state );
+    if( StrTokOp.hasMoreTokens( tok ) )
+      onoff = StrTokOp.nextToken(tok);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Accessory: addr=%d state=%d %s", addr, state, onoff );
 
     wSwitch.setaddr1( nodeC, addr );
     if( data->iid != NULL )
@@ -484,6 +497,40 @@ static void __serialReader( void* threadinst ) {
 
 }
 
+static void __timedqueue( void* threadinst ) {
+  iOThread      th = (iOThread)threadinst;
+  iOESUNavi     esunavi = (iOESUNavi)ThreadOp.getParm(th);
+  iOESUNaviData data = Data(esunavi);
+
+  iOList list = ListOp.inst();
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue started" );
+
+  while( data->run ) {
+    iQCmd cmd = (iQCmd)ThreadOp.getPost( th );
+    if (cmd != NULL) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new timed command time=%d delay=%d tick=%d", cmd->time, cmd->delay, SystemOp.getTick() );
+      ListOp.add(list, (obj)cmd);
+    }
+
+    int i = 0;
+    for( i = 0; i < ListOp.size(list); i++ ) {
+      iQCmd cmd = (iQCmd)ListOp.get(list, i);
+      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
+        SerialOp.write( data->serial, cmd->msg, StrOp.len(cmd->msg) );
+        ListOp.removeObj(list, (obj)cmd);
+        freeMem(cmd);
+        break;
+      }
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue ended" );
+}
+
+
 
 
 
@@ -508,6 +555,7 @@ static struct OESUNavi* _inst( const iONode ini ,const iOTrace trc ) {
   /* Initialize data->xxx members... */
   data->ini      = ini;
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
+  data->swtime   = wDigInt.getswtime( ini );
 
   data->lcmap  = MapOp.inst();
   data->lcmux  = MutexOp.inst( NULL, True );
@@ -523,6 +571,9 @@ static struct OESUNavi* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->reader = ThreadOp.inst( "esureader", &__serialReader, __ESUNavi );
   ThreadOp.start( data->reader );
+
+  data->timedQueue = ThreadOp.inst( "timedqueue", &__timedqueue, __ESUNavi );
+  ThreadOp.start( data->timedQueue );
 
   instCnt++;
   return __ESUNavi;
