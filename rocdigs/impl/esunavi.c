@@ -104,6 +104,24 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OESUNavi ----- */
+static iOSlot __getSlotByAddr(iOESUNavi inst, int addr) {
+  iOESUNaviData data = Data(inst);
+  iOSlot slot = NULL;
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.first( data->lcmap);
+    while( slot != NULL ) {
+      if( slot->addr == addr ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, addr );
+        break;
+      }
+      slot = (iOSlot)MapOp.next( data->lcmap);
+    };
+    MutexOp.post(data->lcmux);
+  }
+  return slot;
+}
+
+
 static iOSlot __getSlot(iOESUNavi inst, iONode node) {
   iOESUNaviData data = Data(inst);
   int    addr  = wLoc.getaddr(node);
@@ -135,8 +153,8 @@ static iOSlot __getSlot(iOESUNavi inst, iONode node) {
     MutexOp.post(data->lcmux);
   }
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "configure loco %d %s%d", addr, slot->prot==2?"m":"d", slot->steps );
-  StrOp.fmtb(msg, "L %d %s%d\r\n", addr, slot->prot==2?"m":"d", slot->steps);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "configure loco %d %s%d %s", addr, slot->prot==2?"m":"d", slot->steps, slot->id );
+  StrOp.fmtb(msg, "L %d %s%d \"%s\"\r\n", addr, slot->prot==2?"m":"d", slot->steps, slot->id);
   SerialOp.write( data->serial, msg, StrOp.len(msg) );
 
   return slot;
@@ -208,9 +226,9 @@ static iONode __translate( iOESUNavi inst, iONode node ) {
 
     if( wLoc.getV( node ) != -1 ) {
       if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-        slot->V = (wLoc.getV( node ) * 127) / 100;
+        slot->V = (wLoc.getV( node ) * 128) / 100;
       else if( wLoc.getV_max( node ) > 0 )
-        slot->V = (wLoc.getV( node ) * 127) / wLoc.getV_max( node );
+        slot->V = (wLoc.getV( node ) * 128) / wLoc.getV_max( node );
     }
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d %s%d", addr, slot->dir?"":"-", slot->V );
     StrOp.fmtb(msg, "l %d %s%d\r\n", addr, slot->dir?"":"-", slot->V);
@@ -333,9 +351,14 @@ static void __reportState(iOESUNaviData data, Boolean power) {
 
 static void __evaluateMsg(iOESUNavi esunavi, char* msg) {
   iOESUNaviData data = Data(esunavi);
+  iOStrTok tok = StrTokOp.inst( msg, ' ' );
+  const char* cmd = NULL;
 
   StrOp.replaceAll(msg, '\n', '\0');
   StrOp.replaceAll(msg, '\r', '\0');
+
+  if( StrTokOp.hasMoreTokens( tok ) )
+    cmd = StrTokOp.nextToken(tok);
 
   if( msg[0] == 'S' ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Status message received: %s", msg );
@@ -353,17 +376,56 @@ static void __evaluateMsg(iOESUNavi esunavi, char* msg) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Device info: %s", msg+2 );
   }
   else if( msg[0] == 'l' ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco: %s", msg+2 );
+    iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+    iOSlot slot = NULL;
+    int addr = 0;
+    int speed = 0;
+    if( StrTokOp.hasMoreTokens( tok ) )
+      addr = atoi(StrTokOp.nextToken(tok));
+    if( StrTokOp.hasMoreTokens( tok ) )
+      speed = atoi(StrTokOp.nextToken(tok));
+    slot = __getSlotByAddr(esunavi, addr);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco: addr=%d speed=%d dir=%s", addr, abs(speed), speed < 0 ? "rev":"fwd" );
+
+    if( data->iid != NULL )
+      wLoc.setiid( nodeC, data->iid );
+    if( slot != NULL )
+      wLoc.setid( nodeC, slot->id );
+
+    wLoc.setaddr( nodeC, addr );
+    wLoc.setV_raw( nodeC, abs(speed) );
+    wLoc.setV_rawMax( nodeC, 128 );
+    wLoc.setdir( nodeC, speed >= 0 ? True:False);
+    wLoc.setcmd( nodeC, wLoc.velocity );
+    wLoc.setthrottleid( nodeC, "esunavi" );
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
   else if( msg[0] == 'L' ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco configuration: %s", msg+2 );
   }
   else if( msg[0] == 'a' ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Accessory: %s", msg+2 );
+    iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+    int addr = 0;
+    int state = 0;
+    if( StrTokOp.hasMoreTokens( tok ) )
+      addr = atoi(StrTokOp.nextToken(tok)+1);
+    if( StrTokOp.hasMoreTokens( tok ) )
+      state = atoi(StrTokOp.nextToken(tok));
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Accessory: addr=%d state=%d", addr, state );
+
+    wSwitch.setaddr1( nodeC, addr );
+    if( data->iid != NULL )
+      wSwitch.setiid( nodeC, data->iid );
+    wSwitch.setstate( nodeC, state==1?wSwitch.straight:wSwitch.turnout );
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unsupported message received: %s", msg );
   }
+
+  StrTokOp.base.del(tok);
 
 }
 
