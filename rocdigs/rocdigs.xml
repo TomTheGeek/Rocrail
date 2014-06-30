@@ -1857,5 +1857,37 @@
     </data>
   </object>
 
+  <object name="ESUNavi" interface="$../rocint/rocint.xml:DigInt" use="node,trace,thread,serial,map,mutex" include="$rocint/public/digint" remark="ESU Navigator">
+    <struct name="slot" typedef="*iOSlot" remark="Loco slot">
+      <var name="id" vt="char*"/>
+      <var name="addr" vt="int"/>
+      <var name="V" vt="int"/>
+      <var name="Vraw" vt="int"/>
+      <var name="steps" vt="int"/>
+      <var name="prot" vt="int"/>
+      <var name="fncnt" vt="int"/>
+      <var name="dir" vt="Boolean"/>
+      <var name="f0_12" vt="int"/>
+      <var name="f13_20" vt="int"/>
+    </struct>
+      <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode"/>
+      <var name="iid" vt="const char*"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="run" vt="Boolean"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
+      <var name="listenerObj" vt="obj"/>
+      <var name="listenerFun" vt="digint_listener"/>
+      <var name="connOK" vt="Boolean"/>
+      <var name="lcmux" vt="iOMutex"/>
+      <var name="lcmap" vt="iOMap"/>
+      </data>
+  </object>
+
 </Project>
 
