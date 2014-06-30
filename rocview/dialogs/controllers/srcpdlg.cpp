@@ -88,8 +88,8 @@ SRCPCtrlDlg::SRCPCtrlDlg( wxWindow* parent, iONode props, const char* devices )
   if( StrOp.equals( wDigInt.got, wDigInt.getlib( m_Props ) ) ) {
     SetTitle(wxT("GamesOnTrack"));
     m_BussesPanel->Show(false);
-    m_SubLibBox->Enable(false);
-    m_Device->Enable(false);
+    //m_SubLibBox->Enable(false);
+    //m_Device->Enable(false);
   }
 
   initLabels();

@@ -312,7 +312,7 @@ static void __serialReader( void* threadinst ) {
      3F 03
      */
     if( SerialOp.available( data->serial ) ) {
-      int rc = SerialOp.read( data->serial, (char*)msg, 1 );
+      int rc = SerialOp.read( data->serial, (char*)msg+idx, 1 );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "GoT read: idx=%d 0x%02X", idx, msg[idx] );
 
       if( idx >= 50 ) {
