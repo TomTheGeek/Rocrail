@@ -1883,6 +1883,7 @@
       <var name="ini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="serial" vt="iOSerial"/>
+      <var name="mux" vt="iOMutex"/>
       <var name="run" vt="Boolean"/>
       <var name="reader" vt="iOThread"/>
       <var name="writer" vt="iOThread"/>

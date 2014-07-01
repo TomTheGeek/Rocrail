@@ -167,6 +167,10 @@ static iONode __translate( iOESUNavi inst, iONode node ) {
   iONode rsp = NULL;
   char msg[256];
 
+  if( !MutexOp.wait( data->mux ) ) {
+    return rsp;
+  }
+
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
 
   /* System command. */
@@ -281,6 +285,8 @@ static iONode __translate( iOESUNavi inst, iONode node ) {
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "command [%s] not supported", NodeOp.getName( node ) );
   }
+
+  MutexOp.post(data->mux);
 
   return rsp;
 }
@@ -573,22 +579,25 @@ static void __timedqueue( void* threadinst ) {
       ListOp.add(list, (obj)cmd);
     }
 
-    int i = 0;
-    for( i = 0; i < ListOp.size(list); i++ ) {
-      iQCmd cmd = (iQCmd)ListOp.get(list, i);
-      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
-        SerialOp.write( data->serial, cmd->msg, StrOp.len(cmd->msg) );
-        ListOp.removeObj(list, (obj)cmd);
-        freeMem(cmd);
-        break;
+    if( MutexOp.wait( data->mux ) ) {
+      int i = 0;
+      for( i = 0; i < ListOp.size(list); i++ ) {
+        iQCmd cmd = (iQCmd)ListOp.get(list, i);
+        if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
+          SerialOp.write( data->serial, cmd->msg, StrOp.len(cmd->msg) );
+          ListOp.removeObj(list, (obj)cmd);
+          freeMem(cmd);
+          break;
+        }
       }
-    }
 
-    statistics++;
-    if( statistics >= 1000 ) {
-      SerialOp.write( data->serial, "s\r\n", StrOp.len("s\r\n") );
-      statistics = 0;
+      statistics++;
+      if( statistics >= 1000 ) {
+        SerialOp.write( data->serial, "s\r\n", StrOp.len("s\r\n") );
+        statistics = 0;
+      }
+      MutexOp.post(data->mux);
     }
 
     ThreadOp.sleep(10);
@@ -623,6 +632,7 @@ static struct OESUNavi* _inst( const iONode ini ,const iOTrace trc ) {
   data->ini      = ini;
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
   data->swtime   = wDigInt.getswtime( ini );
+  data->mux      = MutexOp.inst( NULL, True );
 
   data->lcmap  = MapOp.inst();
   data->lcmux  = MutexOp.inst( NULL, True );
