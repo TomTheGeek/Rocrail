@@ -359,6 +359,37 @@ static void __reportState(iOESUNaviData data, Boolean power) {
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
 }
 
+/*
+   1 Interner Fehler
+   5 Nicht machbar (für Navi)
+   6 Unbekanntes Objekt
+   7 Fehler beim Anlegen der Lok
+   8 Fehler beim Anlegen eines Consist
+  14 Adressfehler
+  15 Consist-Operation Fehler
+ 128 Zeile zu lang
+ 129 Syntax Error
+ 130 Unbekannter Befehl
+ 131 Ungültiger/fehlender Parameter
+  */
+static const char* __getErrorString(int error) {
+  switch( error ) {
+  case 1: return "Internal error";
+  case 5: return "Not possible";
+  case 6: return "Unknown object";
+  case 7: return "Error on creating a loco";
+  case 8: return "Error on creating a consist";
+  case 14: return "Address out of range";
+  case 15: return "Consist operating error";
+  case 128: return "Line too long";
+  case 129: return "Syntax error";
+  case 130: return "Unknown command";
+  case 131: return "Invalid/missing parameter";
+  }
+  return "Unknown";
+}
+
+
 static void __evaluateMsg(iOESUNavi esunavi, char* msg) {
   iOESUNaviData data = Data(esunavi);
   iOStrTok tok = StrTokOp.inst( msg, ' ' );
@@ -433,6 +464,18 @@ static void __evaluateMsg(iOESUNavi esunavi, char* msg) {
     wSwitch.setstate( nodeC, state==1?wSwitch.straight:wSwitch.turnout );
 
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+  else if( msg[0] == 'e' ) {
+    const char* cmderr = "";
+    int error = 0;
+    int pos = 0;
+    if( StrTokOp.hasMoreTokens( tok ) )
+      cmderr = StrTokOp.nextToken(tok);
+    if( StrTokOp.hasMoreTokens( tok ) )
+      error = atoi(StrTokOp.nextToken(tok));
+    if( StrTokOp.hasMoreTokens( tok ) )
+      pos = atoi(StrTokOp.nextToken(tok));
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Error: cmd=%s error=%d position=%d [%s]", cmderr, error, pos, __getErrorString(error) );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unsupported message received: %s", msg );
