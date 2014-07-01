@@ -579,25 +579,28 @@ static void __timedqueue( void* threadinst ) {
       ListOp.add(list, (obj)cmd);
     }
 
-    if( MutexOp.wait( data->mux ) ) {
-      int i = 0;
-      for( i = 0; i < ListOp.size(list); i++ ) {
-        iQCmd cmd = (iQCmd)ListOp.get(list, i);
-        if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
-          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
+    int i = 0;
+    for( i = 0; i < ListOp.size(list); i++ ) {
+      iQCmd cmd = (iQCmd)ListOp.get(list, i);
+      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
+        if( MutexOp.wait( data->mux ) ) {
           SerialOp.write( data->serial, cmd->msg, StrOp.len(cmd->msg) );
           ListOp.removeObj(list, (obj)cmd);
           freeMem(cmd);
-          break;
+          MutexOp.post(data->mux);
         }
+        break;
       }
+    }
 
-      statistics++;
-      if( statistics >= 1000 ) {
-        SerialOp.write( data->serial, "s\r\n", StrOp.len("s\r\n") );
-        statistics = 0;
-      }
+    statistics++;
+    if( statistics >= 1000 ) {
+      if( MutexOp.wait( data->mux ) ) {
+      SerialOp.write( data->serial, "s\r\n", StrOp.len("s\r\n") );
       MutexOp.post(data->mux);
+      }
+      statistics = 0;
     }
 
     ThreadOp.sleep(10);
