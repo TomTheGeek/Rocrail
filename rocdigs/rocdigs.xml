@@ -1893,7 +1893,11 @@
       <var name="lcmap" vt="iOMap"/>
       <var name="timedQueue" vt="iOThread"/>
       <var name="swtime" vt="int"/>
-    </data>
+      <var name="power" vt="Boolean"/>
+      <var name="A" vt="int"/>
+      <var name="V" vt="int"/>
+      <var name="T" vt="int"/>
+      </data>
   </object>
 
 </Project>

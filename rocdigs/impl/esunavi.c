@@ -349,11 +349,14 @@ static Boolean _supportPT( obj inst ) {
   return 0;
 }
 
-static void __reportState(iOESUNaviData data, Boolean power) {
+static void __reportState(iOESUNaviData data) {
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   if( data->iid != NULL )
     wState.setiid( node, data->iid );
-  wState.setpower( node, power );
+  wState.setpower( node, data->power );
+  wState.setload( node, data->A );
+  wState.setvolt( node, data->V );
+  wState.settemp( node, data->T );
 
   if( data->listenerFun != NULL && data->listenerObj != NULL )
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
@@ -403,10 +406,14 @@ static void __evaluateMsg(iOESUNavi esunavi, char* msg) {
 
   if( msg[0] == 'S' ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Status message received: %s", msg );
-    if( StrOp.find(msg+1, "go"))
-      __reportState(data, True);
-    else if( StrOp.find(msg+1, "stop"))
-      __reportState(data, False);
+    if( StrOp.find(msg+1, "go")) {
+      data->power = True;
+      __reportState(data);
+    }
+    else if( StrOp.find(msg+1, "stop")) {
+      data->power = False;
+      __reportState(data);
+    }
   }
   else if( msg[0] == 'I' ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ESU Navigator version: %s", msg+2 );
@@ -477,6 +484,16 @@ static void __evaluateMsg(iOESUNavi esunavi, char* msg) {
       pos = atoi(StrTokOp.nextToken(tok));
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Error: cmd=%s error=%d position=%d [%s]", cmderr, error, pos, __getErrorString(error) );
   }
+  else if( msg[0] == 's' ) {
+    if( StrTokOp.hasMoreTokens( tok ) )
+      data->A = atoi(StrTokOp.nextToken(tok));
+    if( StrTokOp.hasMoreTokens( tok ) )
+      data->V = atoi(StrTokOp.nextToken(tok));
+    if( StrTokOp.hasMoreTokens( tok ) )
+      data->T = atoi(StrTokOp.nextToken(tok));
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Statistics: current=%d voltage=%d temp.=%d", data->A, data->V, data->T );
+    __reportState(data);
+  }
   else {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unsupported message received: %s", msg );
   }
@@ -544,6 +561,7 @@ static void __timedqueue( void* threadinst ) {
   iOThread      th = (iOThread)threadinst;
   iOESUNavi     esunavi = (iOESUNavi)ThreadOp.getParm(th);
   iOESUNaviData data = Data(esunavi);
+  int statistics = 0;
 
   iOList list = ListOp.inst();
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue started" );
@@ -565,6 +583,12 @@ static void __timedqueue( void* threadinst ) {
         freeMem(cmd);
         break;
       }
+    }
+
+    statistics++;
+    if( statistics >= 1000 ) {
+      SerialOp.write( data->serial, "s\r\n", StrOp.len("s\r\n") );
+      statistics = 0;
     }
 
     ThreadOp.sleep(10);
