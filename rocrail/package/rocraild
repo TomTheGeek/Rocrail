@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 ### BEGIN INIT INFO
 # Provides:          rocrail
@@ -33,7 +33,7 @@ DEVCHECK=-nodevcheck
 
 rocrail_PID=$(ps -C rocrail -o pid=)
 
-if [ ! -x $rocrail_DIR/rocrail ] ; then
+if [ ! -e $rocrail_DIR/rocrail ] ; then
   echo Rocrail is not installed
   exit 5
 fi
@@ -78,6 +78,7 @@ case "$1" in
     $0 start
     ;;
   *)
-    echo Usage: $0 {start|stop|restart|status|deltrace}
+    echo "Usage: $0 {start|stop|restart|status|deltrace}"
     exit 1
 esac
+exit 0
