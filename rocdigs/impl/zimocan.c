@@ -332,6 +332,19 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
     }
   }
 
+  /* Output command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
+    iOPoint point = __getPoint(inst, node);
+    if( point != NULL ) {
+      byte* msg = allocMem(32);
+      int port = wOutput.getport( node );
+      int val  = StrOp.equals(wOutput.on, wOutput.getcmd(node)) ? 1:0;
+      msg[0] = __makePacket(msg+1, ACCESSORY_COMMAND_GROUP, ACCESSORY_PORT, MODE_CMD, 4, data->NID, point->nid, port, val, 0, 0, 0, 0);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Set output %d:%d to %d", point->addr, port, val );
+      ThreadOp.post(data->writer, (obj)msg);
+    }
+  }
+
   return rsp;
 }
 
@@ -453,6 +466,106 @@ static int __getObjectNID(byte* msg) {
 }
 
 
+static void __evauluateAccessoryData( iOZimoCAN zimocan, byte* msg ) {
+  iOZimoCANData data    = Data(zimocan);
+  int cmd  = (msg[4] >> 2);
+  int mode = (msg[4] &0x03);
+  int nid  = __getNID(msg);
+  int port = msg[9];
+  int type = msg[10];
+  int addr = msg[11] + (msg[12] * 256);
+  iONode nodeC = NULL;
+  char ident[32];
+
+  StrOp.fmtb(ident, "%d", addr );
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "nid=%X port=%d type=%d loco=%d", nid, port, type, addr );
+
+  if( nid >= 0x5080 && nid <= 0x50BF && type >= 0x11 && type <= 0x14) {
+    /* MX9 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MX9 nid=%X port=%d type=%d loco=%d", nid, port, type, addr );
+    nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+    wFeedback.setstate( nodeC, addr > 0 ? True:False );
+    wFeedback.setbus( nodeC, nid );
+    wFeedback.setaddr( nodeC, port );
+    wFeedback.setidentifier( nodeC, ident );
+  }
+  else if( nid >= 0xD000 && nid <= 0xDFFF && type >= 0x20 && type <= 0x3F ) {
+    /* StEin */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "StEin nid=%X port=%d type=%d loco=%d", nid, port, type, addr );
+    nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+    wFeedback.setstate( nodeC, addr > 0 ? True:False );
+    wFeedback.setbus( nodeC, nid );
+    wFeedback.setaddr( nodeC, port );
+    wFeedback.setidentifier( nodeC, ident );
+  }
+
+  if( nodeC != NULL ) {
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+}
+
+
+static void __evauluateAccessoryPort( iOZimoCAN zimocan, byte* msg ) {
+  iOZimoCANData data    = Data(zimocan);
+  int cmd  = (msg[4] >> 2);
+  int mode = (msg[4] &0x03);
+  int nid  = __getNID(msg);
+  int port = msg[9];
+  int val  = msg[10];
+  iONode nodeC = NULL;
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "nid=%X port=%d value=%d", nid, port, val );
+
+  if( nid >= 0x5080 && nid <= 0x50BF ) {
+    /* MX9 */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "MX9 nid=%X port=%d value=%d", nid, port, val );
+    nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+    wFeedback.setstate( nodeC, val );
+    wFeedback.setbus( nodeC, nid );
+    wFeedback.setaddr( nodeC, port );
+  }
+  else if( nid >= 0xD000 && nid <= 0xDFFF ) {
+    /* StEin */
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "StEin nid=%X port=%d value=%d", nid, port, val );
+    nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wFeedback.setiid( nodeC, data->iid );
+    wFeedback.setstate( nodeC, val );
+    wFeedback.setbus( nodeC, nid );
+    wFeedback.setaddr( nodeC, port );
+  }
+
+  if( nodeC != NULL ) {
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+}
+
+
+static void __evauluateAccessoryGroup( iOZimoCAN zimocan, byte* msg ) {
+  iOZimoCANData data    = Data(zimocan);
+  int cmd  = (msg[4] >> 2);
+  int mode = (msg[4] &0x03);
+
+  switch( cmd ) {
+  case ACCESSORY_PORT:
+    if( mode & 0x02 ) {
+      __evauluateAccessoryPort(zimocan, msg);
+    }
+    break;
+  case ACCESSORY_DATA:
+    __evauluateAccessoryData(zimocan, msg);
+    break;
+  }
+}
+
+
 static void __evauluateNetworkGroup( iOZimoCAN zimocan, byte* msg ) {
   iOZimoCANData data    = Data(zimocan);
   int cmd  = (msg[4] >> 2);
@@ -528,6 +641,7 @@ static void __evaluateMsg( iOZimoCAN zimocan, byte* msg ) {
     break;
   case ACCESSORY_COMMAND_GROUP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ACCESSORY COMMAND GROUP" );
+    __evauluateAccessoryGroup(zimocan, msg);
     break;
   case MOBILE_CONTROL_GROUP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE CONTROL GROUP" );
