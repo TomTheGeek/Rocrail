@@ -345,6 +345,19 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
     }
   }
 
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if( wProgram.getcmd( node ) == wProgram.get ) {
+      int addr = wProgram.getaddr(node);
+      int cv   = wProgram.getcv( node );
+    }
+    else if( wProgram.getcmd( node ) == wProgram.set ) {
+      int addr  = wProgram.getaddr(node);
+      int cv    = wProgram.getcv( node );
+      int value = wProgram.getvalue( node );
+    }
+  }
+
   return rsp;
 }
 
@@ -623,6 +636,40 @@ static void __evauluateMobileControlGroup( iOZimoCAN zimocan, byte* msg ) {
 }
 
 
+static void __evauluateTrackConfigGroup( iOZimoCAN zimocan, byte* msg ) {
+  iOZimoCANData data    = Data(zimocan);
+  int cmd  = (msg[4] >> 2);
+  int mode = (msg[4] &0x03);
+  int nid  = __getNID(msg);
+
+  switch( cmd ) {
+  case TRACK_CONFIG_INFO:
+    if( mode == 0x03 ) {
+      int state = msg[12];
+      int code  = msg[13];
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "track config info: state=0x%02X code=0x%02X", state, code );
+    }
+    break;
+  case TRACK_CONFIG_READ:
+  case TRACK_CONFIG_WRITE:
+    if( mode == 0x03 ) {
+      int loconid = msg[9] + (msg[10] * 256);
+      int cv  = msg[11] + msg[12]*0xFF + msg[13]*0xFFFF;
+      int val = msg[14];
+      iOSlot slot = __getSlotByNID(zimocan, loconid);
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setvalue( node, val );
+      wProgram.setcmd( node, wProgram.datarsp );
+      wProgram.setcv( node, cv+1 );
+      wProgram.setiid( node, data->iid );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "track config read: loco=%s(0x%04X) cv=%d value=%d", slot!=NULL?slot->id:"_", loconid, cv, val );
+      data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
+    break;
+  }
+}
+
+
 static void __evaluateMsg( iOZimoCAN zimocan, byte* msg ) {
   iOZimoCANData data    = Data(zimocan);
   int group = msg[3];
@@ -642,6 +689,10 @@ static void __evaluateMsg( iOZimoCAN zimocan, byte* msg ) {
   case ACCESSORY_COMMAND_GROUP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ACCESSORY COMMAND GROUP" );
     __evauluateAccessoryGroup(zimocan, msg);
+    break;
+  case TRACK_CONFIG_GROUP:
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "TRACK CONFIG GROUP" );
+    __evauluateTrackConfigGroup(zimocan, msg);
     break;
   case MOBILE_CONTROL_GROUP:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE CONTROL GROUP" );
