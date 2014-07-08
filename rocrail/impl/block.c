@@ -1438,7 +1438,7 @@ static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPr
       StrTokOp.base.del(tok);
       if( !hasCargoType ) {
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "Loc [%s] has no permission to enter block [%s]; cargo does not fit. (%s!=%s)",
+                       "Loc [%s] has no permission to enter block [%s]; type does not fit. (block=[%s] loco/train=[%s])",
                        id, data->id, permtype, cargo);
         return suits_not;
       }
