@@ -188,6 +188,22 @@ static iOSlot __getSlotByNID(iOZimoCAN inst, int nid) {
 }
 
 
+static iOSlot __getSlotByAddr(iOZimoCAN inst, int addr) {
+  iOZimoCANData data = Data(inst);
+  iOSlot slot = NULL;
+  if( MutexOp.wait( data->lcmux ) ) {
+    slot = (iOSlot)MapOp.first( data->lcmap);
+    while( slot != NULL ) {
+      if( slot->addr == addr ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot found for %s by address %d", slot->id, addr );
+        break;
+      }
+      slot = (iOSlot)MapOp.next( data->lcmap);
+    };
+    MutexOp.post(data->lcmux);
+  }
+  return slot;
+}
 
 
 static iOPoint __getPoint(iOZimoCAN inst, iONode node) {
@@ -347,14 +363,27 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
 
   /* Program command. */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
-    if( wProgram.getcmd( node ) == wProgram.get ) {
-      int addr = wProgram.getaddr(node);
-      int cv   = wProgram.getcv( node );
+    int addr = wProgram.getaddr(node);
+    int cv   = wProgram.getcv( node );
+    iOSlot slot = __getSlotByAddr(inst, addr);
+
+    if( slot != NULL ) {
+      if( wProgram.getcmd( node ) == wProgram.get ) {
+        byte* msg = allocMem(32);
+        msg[0] = __makePacket(msg+1, TRACK_CONFIG_GROUP, TRACK_CONFIG_READ, MODE_CMD, 7, data->NID, slot->nid, cv&0xFF, (cv&0xFF00)>>8, cv>>16, 0, 0, 0);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "read cv=%d nid=0x%04X", cv, slot->nid );
+        ThreadOp.post(data->writer, (obj)msg);
+      }
+      else if( wProgram.getcmd( node ) == wProgram.set ) {
+        int val = wProgram.getvalue( node );
+        byte* msg = allocMem(32);
+        msg[0] = __makePacket(msg+1, TRACK_CONFIG_GROUP, TRACK_CONFIG_WRITE, MODE_CMD, 8, data->NID, slot->nid, cv&0xFF, (cv&0xFF00)>>8, cv>>16, val, 0, 0);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "write cv=%d value=%d nid=0x%04X", cv, val, slot->nid );
+        ThreadOp.post(data->writer, (obj)msg);
+      }
     }
-    else if( wProgram.getcmd( node ) == wProgram.set ) {
-      int addr  = wProgram.getaddr(node);
-      int cv    = wProgram.getcv( node );
-      int value = wProgram.getvalue( node );
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "uninitialised loco %d; unable to program", addr );
     }
   }
 
