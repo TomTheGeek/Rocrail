@@ -223,6 +223,7 @@ static Boolean __connectToGoT(iOGOT got) {
 static void __evaluateRecord(iOGOT got, const char* msg) {
   iOGOTData data = Data(got);
   iOStrTok tok = StrTokOp.inst( msg, ',' );
+  char ident[32];
   int idx = 0;
   int t = 0;
   int x = 0;
@@ -231,7 +232,7 @@ static void __evaluateRecord(iOGOT got, const char* msg) {
   int sid = 0;
   int valid = 0;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "record: [%s]", msg );
+  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "record: [%s]", msg );
 
   /* report to the Rocrail server */
   while( StrTokOp.hasMoreTokens( tok ) ) {
@@ -248,24 +249,42 @@ static void __evaluateRecord(iOGOT got, const char* msg) {
   };
   StrTokOp.base.del(tok);
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "t=%d sid=%d x=%d y=%d z=%d", t, sid, x, y, z );
+  StrOp.fmtb(ident, "%d", sid);
 
   if( valid ) {
-    char ident[32];
-    iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-    wFeedback.setgpstime( nodeC, t );
-    wFeedback.setgpssid( nodeC, sid );
-    wFeedback.setgpsx( nodeC, x );
-    wFeedback.setgpsy( nodeC, y );
-    wFeedback.setgpsz( nodeC, z );
-    wFeedback.setfbtype( nodeC, wFeedback.fbtype_gps );
-    if( data->iid != NULL )
-      wFeedback.setiid( nodeC, data->iid );
-    wFeedback.setstate( nodeC, True );
+    Boolean newSid = False;
+    iOSender sender = (iOSender)MapOp.get(data->sidMap, ident );
 
-    StrOp.fmtb(ident, "%d", sid);
-    wFeedback.setidentifier( nodeC, ident);
-    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    if( sender == NULL ) {
+      sender = allocMem( sizeof( struct sender) );
+      sender->sid = sid;
+      sender->x = x;
+      sender->y = y;
+      sender->z = z;
+      MapOp.put(data->sidMap, ident, (obj)sender);
+      newSid = True;
+    }
+
+    if( newSid || sender->x != x || sender->y != y || sender->z != z  ) {
+      iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+      wFeedback.setgpstime( nodeC, t );
+      wFeedback.setgpssid( nodeC, sid );
+      wFeedback.setgpsx( nodeC, x );
+      wFeedback.setgpsy( nodeC, y );
+      wFeedback.setgpsz( nodeC, z );
+      wFeedback.setfbtype( nodeC, wFeedback.fbtype_gps );
+      if( data->iid != NULL )
+        wFeedback.setiid( nodeC, data->iid );
+      wFeedback.setstate( nodeC, True );
+
+      wFeedback.setidentifier( nodeC, ident);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "t=%d sid=%d x=%d y=%d z=%d", t, sid, x, y, z );
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+      sender->x = x;
+      sender->y = y;
+      sender->z = z;
+    }
   }
 }
 
@@ -420,7 +439,7 @@ static struct OGOT* _inst( const iONode ini ,const iOTrace trc ) {
   /* Initialize data->xxx members... */
   data->ini      = ini;
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
-
+  data->sidMap   = MapOp.inst();
   data->run      = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );

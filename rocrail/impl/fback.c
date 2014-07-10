@@ -733,14 +733,29 @@ static Boolean _isAtGPSPos( iOFBack inst, int sid, int xx, int yy, int zz, Boole
 
     if( abs(xx-x) > tolx ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "X abs(%d-%d)=%d > tolx=%d", xx, x, abs(xx-x), tolx );
+      if( sid == wFeedback.getgpssid(data->props) ) {
+        wFeedback.setgpssid(data->props, 0);
+        wFeedback.setstate(data->props, False);
+        FBackOp.event(inst, (iONode)NodeOp.base.clone(data->props));
+      }
       return False;
     }
     if( abs(yy-y) > toly ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Y abs(%d-%d)=%d > toly=%d", yy, y, abs(yy-y), toly );
+      if( sid == wFeedback.getgpssid(data->props) ) {
+        wFeedback.setgpssid(data->props, 0);
+        wFeedback.setstate(data->props, False);
+        FBackOp.event(inst, (iONode)NodeOp.base.clone(data->props));
+      }
       return False;
     }
     if( abs(zz-z) > tolz ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Z abs(%d-%d)=%d > tolz=%d", zz, z, abs(zz-z), tolz );
+      if( sid == wFeedback.getgpssid(data->props) ) {
+        wFeedback.setgpssid(data->props, 0);
+        wFeedback.setstate(data->props, False);
+        FBackOp.event(inst, (iONode)NodeOp.base.clone(data->props));
+      }
       return False;
     }
 
