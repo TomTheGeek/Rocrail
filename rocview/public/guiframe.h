@@ -131,6 +131,7 @@ public:
   void OnConnect(wxCommandEvent& event);
   void OnPlanTitle(wxCommandEvent& event);
   void OnGo(wxCommandEvent& event);
+  void OnEnableCom(wxCommandEvent& event);
   void OnStop(wxCommandEvent& event);
   void OnEmergencyBreak(wxCommandEvent& event);
   void OnAutoMode(wxCommandEvent& event);
@@ -439,6 +440,7 @@ private:
   bool  m_bServerConsoleMode;
   bool  m_bInitialized;
   bool  m_bActiveWorkspace;
+  bool  m_bEnableCom;
 
   bool  showlogo;
   bool  m_bEditMode;
@@ -494,6 +496,7 @@ enum
     ME_RouteDlg,
     ME_Connect,
     ME_Go,
+    ME_EnableCom,
     ME_Stop,
     ME_EmergencyBreak,
     ME_AutoMode,

@@ -420,7 +420,10 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     const char* cmd = wSysCmd.getcmd( node );
     int boosterid = wSysCmd.getbus(node);
 
-    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmd, wSysCmd.enablecom ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s: %s communication", data->iid, wSysCmd.getval(node) == 1 ? "enable":"disable" );
+    }
+    else if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       if( boosterid > 0 ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF for booster [%d]", wSysCmd.getbus(node) );
       }

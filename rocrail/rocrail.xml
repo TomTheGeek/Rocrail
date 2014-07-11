@@ -384,6 +384,7 @@
       <var name="temp" vt="int"/>
       <var name="txshortidsrun" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
+      <var name="enablecom" vt="Boolean"/>
       <var name="programming" vt="Boolean"/>
       <var name="trackbus" vt="Boolean"/>
       <var name="sensorbus" vt="Boolean"/>

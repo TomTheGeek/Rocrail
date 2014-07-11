@@ -293,6 +293,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( wxID_PREFERENCES  , RocGuiFrame::OnRocguiIni)
     EVT_MENU( ME_PlanTitle      , RocGuiFrame::OnPlanTitle)
     EVT_MENU( ME_Go             , RocGuiFrame::OnGo)
+    EVT_MENU( ME_EnableCom      , RocGuiFrame::OnEnableCom)
     EVT_MENU( ME_Stop           , RocGuiFrame::OnStop)
     EVT_MENU( ME_EmergencyBreak , RocGuiFrame::OnEmergencyBreak)
     EVT_MENU( ME_AutoMode       , RocGuiFrame::OnAutoMode)
@@ -1803,6 +1804,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_TraceMutex         = MutexOp.inst(NULL, True);
   m_ThrottlesRestored  = false;
   m_ScaleComboBox      = NULL;
+  m_bEnableCom         = true;
 
 
   if( wxTheClipboard != NULL ) {
@@ -1995,6 +1997,7 @@ void RocGuiFrame::initFrame() {
 
   wxMenu *menuControl = new wxMenu();
   menuControl->AppendCheckItem(ME_Go, wxGetApp().getMenu("poweron"), wxGetApp().getTip("poweron") );
+  menuControl->AppendCheckItem(ME_EnableCom, wxGetApp().getMenu("enablecom"), wxGetApp().getTip("enablecom") );
 
   wxMenuItem *break_menuControl = new wxMenuItem(menuControl, ME_EmergencyBreak, wxGetApp().getMenu("ebreak"), wxGetApp().getMsg("ebreak") );
   break_menuControl->SetBitmap(*_img_stopall);
@@ -3198,6 +3201,21 @@ void RocGuiFrame::OnGo( wxCommandEvent& event ) {
   cmd->base.del(cmd);
 }
 
+void RocGuiFrame::OnEnableCom( wxCommandEvent& event ) {
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "enable com" );
+  wxMenuItem* mi_ec = menuBar->FindItem(ME_EnableCom);
+
+  m_bEnableCom = event.IsChecked();
+  mi_ec->Check(m_bEnableCom);
+
+  iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+  wSysCmd.setcmd( cmd, wSysCmd.enablecom );
+  wSysCmd.setval( cmd, m_bEnableCom?1:0 );
+  wSysCmd.setinformall( cmd, True );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
 void RocGuiFrame::OnStop( wxCommandEvent& event ) {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "STOP" );
   iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
@@ -4005,6 +4023,9 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   mi = menuBar->FindItem(ME_Go);
   if( mi != NULL ) mi->Enable( !l_bOffline );
+  mi = menuBar->FindItem(ME_EnableCom);
+  if( mi != NULL ) mi->Enable( !l_bOffline );
+  mi->Check(m_bEnableCom);
   mi = menuBar->FindItem(ME_Stop);
   if( mi != NULL ) mi->Enable( !l_bOffline );
   mi = menuBar->FindItem(ME_EmergencyBreak);
@@ -4648,6 +4669,7 @@ void RocGuiFrame::OnStateEvent( wxCommandEvent& event ) {
     Boolean power = wState.ispower( node );
     Boolean console = wState.isconsolemode( node );
     m_bServerConsoleMode = console;
+    m_bEnableCom = wState.isenablecom( node );
 
     if( wGui.getstatusboosteruid(m_Ini) == 0 || wGui.getstatusboosteruid(m_Ini) == wState.getuid(node) ) {
       if( m_ToolBar != NULL )

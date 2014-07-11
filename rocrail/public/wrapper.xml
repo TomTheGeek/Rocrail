@@ -1130,6 +1130,7 @@
   <state remark="State wrapper" wrappername="State">
     <var name="iid" vt="string" defval="NULL" range="*"/>
     <var name="power" vt="bool" defval="false"/>
+    <var name="enablecom" vt="bool" defval="false"/>
     <var name="programming" vt="bool" defval="false"/>
     <var name="trackbus" vt="bool" defval="false"/>
     <var name="sensorbus" vt="bool" defval="false"/>
@@ -1185,6 +1186,7 @@
 
   <sys remark="System command." wrappername="SysCmd">
     <const name="stoplocs" vt="string" val="stoplocs"/>
+    <const name="enablecom" vt="string" val="enablecom"/>
     <const name="stop" vt="string" val="stop"/>
     <const name="go" vt="string" val="go"/>
     <const name="init" vt="string" val="init"/>

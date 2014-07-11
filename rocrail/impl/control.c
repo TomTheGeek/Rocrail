@@ -909,6 +909,9 @@ static void __callback( obj inst, iONode nodeA ) {
       data->power = False;
     }
 
+    if( StrOp.equals( wSysCmd.enablecom, wSysCmd.getcmd( nodeA ) ) ) {
+      data->enablecom = wSysCmd.getval(nodeA) == 1 ? True:False;
+    }
 
 
     if( StrOp.equals( wSysCmd.shutdown, wSysCmd.getcmd( nodeA ) ) ) {
@@ -1186,6 +1189,7 @@ static iONode _getState( iOControl inst ) {
   iOModel model = AppOp.getModel();
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   wState.setpower( node, data->power );
+  wState.setenablecom( node, data->enablecom );
   wState.setprogramming( node, data->programming );
   wState.settrackbus( node, data->trackbus );
   wState.setsensorbus( node, data->sensorbus );
@@ -1681,6 +1685,7 @@ static iOControl _inst( Boolean nocom ) {
     MemOp.basecpy( control, &ControlOp, 0, sizeof( struct OControl ), data );
 
     data->diMap = MapOp.inst();
+    data->enablecom = True;
 
     if( !wRocRail.isnodevcheck(ini) )
       data->devlist = DevicesOp.getDevicesStr();

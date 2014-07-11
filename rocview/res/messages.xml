@@ -27937,4 +27937,7 @@
   <Msg id="virtualtimer">
     <en txt="Virtual timer"/>
   </Msg>
+  <Msg id="enablecom">
+    <en txt="Enable communication"/>
+  </Msg>
 </Messages>

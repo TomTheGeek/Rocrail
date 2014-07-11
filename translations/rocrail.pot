@@ -7121,3 +7121,9 @@ msgstr ""
 msgid "Virtual timer"
 msgstr ""
 
+#. 
+# id="enablecom"
+#, c-format
+msgid "Enable communication"
+msgstr ""
+

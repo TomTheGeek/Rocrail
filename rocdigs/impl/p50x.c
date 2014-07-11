@@ -104,6 +104,18 @@ static int __count(void) {
 /*
  ***** Private functions.
  */
+static void __recoverCom(iOP50xData data) {
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to recover communication...");
+  if( data->serial != NULL )
+    SerialOp.base.del( data->serial );
+  data->serial = SerialOp.inst( data->device );
+  SerialOp.setFlow( data->serial, data->flow );
+  SerialOp.setLine( data->serial, data->bps, data->bits, data->stopBits, data->parity, wDigInt.isrtsdisabled( data->ini ) );
+  SerialOp.setTimeout( data->serial, data->timeout, data->timeout );
+  data->serialOK = SerialOp.open( data->serial );
+
+}
+
 static Boolean __flushP50x( iOP50xData o ) {
   Boolean ok = False;
   /* Read all pending information on serial port. Interface Hickups if data is pending from previous init! */
@@ -196,8 +208,13 @@ static Boolean __transact( iOP50xData o, char* out, int outsize, char* in, int i
           }
         }
       }
-      else
+      else {
+        /* error: try to recover? */
         state = P50_SNDERR;
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "communication error");
+        ThreadOp.sleep(1000);
+        __recoverCom(o);
+      }
     }
     if( state != P50_OK ) {
       const char* strState = state == P50_RCVERR?"RCVERR":"SNDERR";
@@ -440,7 +457,11 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmd, wSysCmd.enablecom ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s: %s communication", o->iid, wSysCmd.getval(node) == 1 ? "enable":"disable" );
+      o->dummyio = wSysCmd.getval(node) == 0 ? True:False;
+    }
+    else if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       p50[0] = (byte)'x';
       p50[1] = 0xa6;
       *insize = 1; /* Return code from P50x. */
@@ -1062,6 +1083,12 @@ static void __PTeventReader( void* threadinst ) {
             }
           }
         }
+        else {
+          /* error: try to recover? */
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "communication error");
+          ThreadOp.sleep(1000);
+          __recoverCom(o);
+        }
       }
 
       if( ptEvent ) {
@@ -1412,6 +1439,12 @@ static void __statusReader( void* threadinst ) {
           }
         } while(in[0] != 0x80);
       }
+      else {
+        /* error: try to recover? */
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "communication error");
+        ThreadOp.sleep(1000);
+        __recoverCom(o);
+      }
 
 
       MutexOp.post( o->mux );
@@ -1497,8 +1530,13 @@ static void __feedbackReader( void* threadinst ) {
           else
             state = P50_RCVERR;
         }
-        else
+        else {
+          /* error: try to recover? */
           state = P50_SNDERR;
+          TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "communication error");
+          ThreadOp.sleep(1000);
+          __recoverCom(o);
+        }
 
       }
 
