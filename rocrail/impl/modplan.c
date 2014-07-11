@@ -586,11 +586,6 @@ static void __resolveRoutes( iOModPlanData data, iONode model, iONode module, iO
 
     stclone = (iONode)NodeOp.base.clone(route);
 
-    if( wModule.isswaprrd(module) ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "swap running direction for route [%s] module [%s]",
-          wRoute.getid(stclone), wModule.getid(module) );
-    }
-
     if( StrOp.startsWith( wRoute.getbka(route), "point-" ) || StrOp.startsWith( wRoute.getbkb(route), "point-" ) ) {
       /* unresolved internal route found; add to the unresolved route list */
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Unresolved internal route from [%s] to [%s]",
@@ -983,7 +978,6 @@ static iONode _setModule( iOModPlan inst, iONode module ) {
 
   wModule.settitle( planmodule, wModule.gettitle(module) );
   wModule.setfilename( planmodule, wModule.getfilename(module) );
-  wModule.setswaprrd( planmodule, wModule.isswaprrd(module) );
 
   wModule.setcx( planmodule, wModule.getcx(module) );
   wModule.setcy( planmodule, wModule.getcy(module) );
