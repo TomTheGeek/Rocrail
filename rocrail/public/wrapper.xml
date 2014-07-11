@@ -1401,7 +1401,7 @@
     <var name="modified" vt="bool" defval="false" remark="Flags module as modified by the GUI. (Internal use only)"/>
     <var name="savemodplan" vt="bool" defval="true" remark="Make sure locs and routes are in separate files and not part of a module!"/>
     <var name="savemodules" vt="bool" defval="true" remark="Leave modules un touched if set to false, but all changes are lost."/>
-    <var name="modroutes" vt="bool" defval="false" remark="Use internal module routes in conjunction with connections."/>
+    <var name="modroutes" vt="bool" defval="true" remark="Use internal module routes in conjunction with connections."/>
     <module cardinality="n" remark="Module definition" wrappername="Module">
       <var name="title" vt="string" defval="Rename me!" required="true" range="*" remark="Text to show in the tab."/>
       <var name="filename" vt="string" defval="m1.xml" range="*" remark="File name of module track plan."/>

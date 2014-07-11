@@ -789,7 +789,7 @@ static Boolean __mergeRoutes( iOModPlanData data, iONode model, const char* fnam
     int routesCnt = ListOp.size( data->unresolvedRouteList );
     int modconCnt = ListOp.size( data->modconList );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "**NOT** Resolving [%d] routes with [%d] module connections...", routesCnt, modconCnt );
+        "**NOT** Resolving [%d] routes with [%d] module connections; enable modroutes in the modplan section", routesCnt, modconCnt );
   }
 
   return True;
