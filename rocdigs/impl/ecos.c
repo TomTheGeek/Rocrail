@@ -409,6 +409,10 @@ static void __sends88Eventgroup( iOECoS inst, int news88, int olds88, int s88mod
 static void __transact( iOECoS inst, const char* ecosCmd, int len ) {
   iOECoSData data = Data(inst);
 
+  if( !data->enablecom ) {
+    return;
+  }
+
   if ( SocketOp.isConnected( data->socket )) {
 
     if ( MutexOp.trywait( data->writemux, 1000 )) {
@@ -654,8 +658,11 @@ static void __releaseViews( iOECoS inst ) {
 static Boolean __connect( iOECoS inst ) {
   iOECoSData data = Data(inst);
 
-    /* Create a socket object: */
+  if( !data->enablecom ) {
+    return True;
+  }
 
+  /* Create a socket object: */
   if ( data->socket == NULL )
     data->socket = SocketOp.inst( data->host, data->port, False, False, False );
 
@@ -978,6 +985,10 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
       __checkObject( (iOECoS)inst, node );
 
     }
+    else if( StrOp.equals( cmdstr, wSysCmd.enablecom ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s: %s communication", data->iid, wSysCmd.getval(node) == 1 ? "enable":"disable" );
+      data->enablecom = wSysCmd.getval(node) == 1 ? True:False;
+    }
 
     /*
 
@@ -1028,10 +1039,18 @@ static iONode _cmd( obj inst, const iONode cmd ) {
 
   if ( !data->connected ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no ECoS connection" );
-    if( cmd != NULL )
+    if( cmd != NULL ) {
+      if ( StrOp.equals( NodeOp.getName(cmd), wSysCmd.name())) {
+        if( StrOp.equals( wSysCmd.getcmd(cmd), wSysCmd.enablecom ) ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s: %s communication", data->iid, wSysCmd.getval(cmd) == 1 ? "enable":"disable" );
+          data->enablecom = wSysCmd.getval(cmd) == 1 ? True:False;
+        }
+      }
       cmd->base.del(cmd);
+    }
     return NULL;
-  } else {
+  }
+  else {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Connected to ECoS" );
   }
 
@@ -1965,7 +1984,7 @@ static void __reader( void * threadinst ) {
 
   while ( data->run ) {
 
-    if ( data->connected ) {
+    if ( data->connected && data->enablecom ) {
       char c;
       if( !SocketOp.isConnected( data->socket ) || SocketOp.isBroken( data->socket ) ) {
         data->connected = False;
@@ -2022,7 +2041,8 @@ static struct OECoS* _inst( const iONode ini, const iOTrace trace ) {
   data->iid = StrOp.dup( wDigInt.getiid( ini ));  /* Set interface id */
 
   data->host      = wDigInt.gethost( ini );       /* host address */
-  data->port      = wDigInt.getport( ini );       /* port, usually 15471 */
+  data->port      = wDigInt.getport( ini ) > 0 ? wDigInt.getport( ini ):15471;       /* port, usually 15471 */
+  data->enablecom = True;
 
     /* Mark this object as running */
 

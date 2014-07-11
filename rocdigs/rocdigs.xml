@@ -784,7 +784,8 @@
       <var name="dccOidToSwitchAddrMap" vt="iOMap" remark="DCC OID to Switch Addr Mapper"/>
       <var name="dccSwitchStates[2048]" vt="unsigned char" remark="DCC Switch state control"/>
       <var name="power" vt="Boolean" remark="Power Flag"/>
-    </data>
+      <var name="enablecom" vt="Boolean"/>
+      </data>
   </object>
 
   <object name="OpenDCC" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,thread,mutex,map" include="$rocint/public/digint" remark="ECoS object">
