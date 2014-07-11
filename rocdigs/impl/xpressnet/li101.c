@@ -28,6 +28,9 @@
 
 Boolean li101Connect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
+  if( !data->enablecom ) {
+    return False;
+  }
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
   SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:0 );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
@@ -41,6 +44,10 @@ void li101DisConnect(obj xpressnet) {
 Boolean li101Avail(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
   int available = 0;
+
+  if( !data->enablecom ) {
+    return False;
+  }
 
   if( data->dummyio )
     return False;
@@ -114,6 +121,10 @@ int li101Read(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   int len = 0;
   Boolean ok = False;
 
+  if( !data->enablecom ) {
+    return 0;
+  }
+
   if( data->dummyio )
     return 0;
 
@@ -145,6 +156,10 @@ Boolean li101Write(obj xpressnet, byte* out, Boolean* rspexpected) {
 
   if( len == 0 ) {
     return False;
+  }
+
+  if( !data->enablecom ) {
+    return 0;
   }
 
   if( data->dummyio )

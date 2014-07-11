@@ -64,6 +64,10 @@ static void __availwd( void* threadinst ) {
 Boolean xntcpConnect(obj xpressnet) {
   iOXpressNetData data = Data(xpressnet);
 
+  if( !data->enablecom ) {
+    return False;
+  }
+
   TraceOp.trc( "xntcp", TRCLEVEL_INFO, __LINE__, 9999, "XnTcp at %s:%d",
       wDigInt.gethost( data->ini ), wDigInt.getport( data->ini ) );
 
@@ -119,6 +123,9 @@ int xntcpRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
   int len = 0;
 
+  if( !data->enablecom ) {
+    return 0;
+  }
   if( data->socket != NULL && !SocketOp.isBroken(data->socket) && MutexOp.wait( data->serialmux ) ) {
     if( data->availFlag || SocketOp.read( data->socket, (char*)&data->startbyte, 1 ) ) {
       buffer[0] = data->startbyte;
@@ -144,6 +151,9 @@ Boolean xntcpWrite(obj xpressnet, byte* out, Boolean* rspexpected) {
   Boolean rc = False;
   byte bXor = 0;
   
+  if( !data->enablecom ) {
+    return False;
+  }
   if( data->socket == NULL || SocketOp.isBroken(data->socket) ) {
     return False;
   }

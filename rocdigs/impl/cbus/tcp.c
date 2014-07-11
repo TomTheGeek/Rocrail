@@ -81,6 +81,11 @@ static void __watchdog( void* threadinst ) {
 
 Boolean tcpConnect( obj inst ) {
   iOCBUSData data = Data(inst);
+
+  if( !data->enablecom ) {
+    return False;
+  }
+
   data->lastcmdtick = SystemOp.getTick();
   data->connectpending = False;
   data->socket = NULL;
@@ -94,6 +99,10 @@ Boolean tcpConnect( obj inst ) {
 Boolean tcpConnectInternal( obj inst ) {
   iOCBUSData data = Data(inst);
   iOSocket socket = NULL;
+
+  if( !data->enablecom ) {
+    return False;
+  }
 
   data->connectpending = True;
 
@@ -149,6 +158,10 @@ void tcpDisconnect( obj inst ) {
 Boolean tcpRead ( obj inst, unsigned char *frame, int len ) {
   iOCBUSData data = Data(inst);
 
+  if( !data->enablecom ) {
+    return True;
+  }
+
   if( data->socket == NULL ) {
     return False;
   }
@@ -167,6 +180,10 @@ Boolean tcpRead ( obj inst, unsigned char *frame, int len ) {
 
 Boolean tcpWrite( obj inst, unsigned char *frame, int len ) {
   iOCBUSData data = Data(inst);
+
+  if( !data->enablecom ) {
+    return True;
+  }
 
   if( data->socket == NULL ) {
     return False;
@@ -190,6 +207,11 @@ Boolean tcpWrite( obj inst, unsigned char *frame, int len ) {
 Boolean tcpAvailable( obj inst ) {
   iOCBUSData data = Data(inst);
   char msgStr[32];
+
+  if( !data->enablecom ) {
+    return False;
+  }
+
   if( data->socket == NULL || SocketOp.isBroken(data->socket) ) {
     TraceOp.trc( "cbustcp", TRCLEVEL_DEBUG, __LINE__, 9999, "not connected" );
     return False;

@@ -78,6 +78,11 @@ static void __availwd( void* threadinst ) {
   TraceOp.trc( "lieth", TRCLEVEL_INFO, __LINE__, 9999, "available watchdog started" );
 
   while( data->run ) {
+    if( !data->enablecom ) {
+      ThreadOp.sleep(100);
+      continue;
+    }
+
     if( MutexOp.wait( data->serialmux ) ) {
       if( !data->availFlag && data->socket != NULL && !SocketOp.isBroken(data->socket)) {
         char buffer[2];
@@ -118,6 +123,10 @@ Boolean liethConnectInternal(obj xpressnet) {
   iOSocket socket = NULL;
 
   data->connectpending = True;
+
+  if( !data->enablecom ) {
+    return False;
+  }
 
   if( wDigInt.gethost( data->ini ) == NULL || StrOp.len(wDigInt.gethost( data->ini )) == 0 ) {
     wDigInt.sethost( data->ini, "192.168.0.200" );
@@ -182,6 +191,10 @@ int liethRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   iOXpressNetData data = Data(xpressnet);
   int len = 0;
 
+  if( !data->enablecom ) {
+    return 0;
+  }
+
   if( data->socket == NULL ) {
     return 0;
   }
@@ -217,6 +230,11 @@ Boolean liethWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   unsigned char out[256];
 
   *rspexpected = False;
+
+  if( !data->enablecom ) {
+    return 0;
+  }
+
   if( data->socket == NULL ) {
     return 0;
   }

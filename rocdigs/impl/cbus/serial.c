@@ -69,6 +69,10 @@ static Boolean isCts( obj inst ) {
 Boolean serialConnect( obj inst ) {
   iOCBUSData data = Data(inst);
 
+  if( !data->enablecom ) {
+    return False;
+  }
+
   if( StrOp.equals( wDigInt.sublib_usb, wDigInt.getsublib(data->ini) ))
     data->bps = 500000;
   else {
@@ -112,6 +116,11 @@ void serialDisconnect( obj inst ) {
 
 Boolean serialRead ( obj inst, unsigned char *frame, int len ) {
   iOCBUSData data = Data(inst);
+
+  if( !data->enablecom ) {
+    return False;
+  }
+
   if( !data->dummyio && data->serial != NULL ) {
     int available = SerialOp.available(data->serial);
     if( available > 0 ) {
@@ -133,6 +142,11 @@ Boolean serialRead ( obj inst, unsigned char *frame, int len ) {
 Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
   iOCBUSData data = Data(inst);
   Boolean ok = False;
+
+  if( !data->enablecom ) {
+    return False;
+  }
+
   if( data->serial != NULL && isCts(inst) ) {
     TraceOp.dump ( "cbusserial", TRCLEVEL_BYTE, (char*)msg, len );
     if( !data->dummyio )
@@ -146,6 +160,11 @@ Boolean serialWrite( obj inst, unsigned char *msg, int len ) {
 
 Boolean serialAvailable( obj inst ) {
   iOCBUSData data = Data(inst);
+
+  if( !data->enablecom ) {
+    return False;
+  }
+
   if( !data->dummyio && data->serial != NULL ) {
     int available = SerialOp.available(data->serial);
     if( available > 0 ) {

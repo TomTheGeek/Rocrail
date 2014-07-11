@@ -640,7 +640,11 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmd = wSysCmd.getcmd( node );
 
-    if( StrOp.equals( cmd, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmd, wSysCmd.enablecom ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s: %s communication", data->iid, wSysCmd.getval(node) == 1 ? "enable":"disable" );
+      data->enablecom = wSysCmd.getval(node) == 0 ? True:False;
+    }
+    else if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       byte* outa = allocMem(32);
       outa[0] = 0x21;
       outa[1] = 0x80;
@@ -1641,6 +1645,7 @@ static struct OXpressNet* _inst( const iONode ini ,const iOTrace trc ) {
   data->ignoreBusy    = wDigInt.isignorebusy( ini );
   data->v2            = wDigInt.getprotver( ini ) == 2;
   data->fbmodcnt      = 0;
+  data->enablecom     = True;
 
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );

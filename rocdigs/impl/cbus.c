@@ -1868,7 +1868,11 @@ static iONode __translate( iOCBUS cbus, iONode node ) {
   /* System command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmdstr = wSysCmd.getcmd( node );
-    if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
+    if( StrOp.equals( cmdstr, wSysCmd.enablecom ) ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s: %s communication", data->iid, wSysCmd.getval(node) == 1 ? "enable":"disable" );
+      data->enablecom = wSysCmd.getval(node) == 0 ? True:False;
+    }
+    else if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
       /* CS off */
       byte cmd[2];
       byte* frame = allocMem(32);
@@ -2434,7 +2438,8 @@ static struct OCBUS* _inst( const iONode ini ,const iOTrace trc ) {
   data->loaderMux= MutexOp.inst( NULL, True );
   data->stress   = wDigInt.isstress(ini);
   data->dummyio  = wDigInt.isdummyio(ini);
-  data->wait4Ack = False;
+  data->wait4Ack  = False;
+  data->enablecom = True;
 
   data->commandAck  = wCBus.iscommandack(data->cbusini);
   data->heartbeaton = wCBus.isheartbeat(data->cbusini);

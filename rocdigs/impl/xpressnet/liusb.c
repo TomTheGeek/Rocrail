@@ -36,6 +36,9 @@ Boolean liusbConnect(obj xpressnet) {
     - 8 Datenbits, 1 Startbit, 1 Stopbit, kein Paritybit
     - kein Handshake
    */
+  if( !data->enablecom ) {
+    return False;
+  }
   data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
   SerialOp.setFlow( data->serial, StrOp.equals( wDigInt.cts, wDigInt.getflow( data->ini ) ) ? cts:0 );
   SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
@@ -60,6 +63,9 @@ int liusbRead(obj xpressnet, byte* buffer, Boolean* rspreceived) {
   int len = 0;
   Boolean ok = False;
 
+  if( !data->enablecom ) {
+    return 0;
+  }
   if( data->dummyio )
     return 0;
 
@@ -111,7 +117,7 @@ Boolean liusbWrite(obj xpressnet, byte* outin, Boolean* rspexpected) {
   out[0] = 0xFF;
   out[1] = 0xFE;
 
-  if( data->dummyio ) {
+  if( data->dummyio || !data->enablecom ) {
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
     *rspexpected = False;
     return True;
