@@ -186,9 +186,14 @@ static const char* __createRoute( iOModPlanData data, iONode model, iOList route
   wRoute.setsga( newRoute, wRoute.getsga( fromRoute ) );
   wRoute.setbkaside( newRoute, wRoute.isbkaside( fromRoute ) );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating the new route from[%s](signal %d) to[%s](signal %d) -> %s",
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "creating the new route from[%s](signal %d) to[%s](signal %d) -> %s crossing block(s): [%s]",
       wRoute.getbka( newRoute ), wRoute.getsga( newRoute ),
-      wRoute.getbkb( newRoute ), wRoute.getsgb( newRoute ), modid);
+      wRoute.getbkb( newRoute ), wRoute.getsgb( newRoute ), modid,
+      wRoute.getbkc(newRoute)!=NULL?wRoute.getbkc(newRoute):"");
+
+  if( wRoute.getbkc(newRoute) != NULL &&  StrOp.len( wRoute.getbkc(newRoute) ) > 0 ) {
+    bkc = StrOp.fmt( "%s", wRoute.getbkc(newRoute) );
+  }
 
   routeID = StrOp.fmt( "%s-%s", wRoute.getbka(newRoute), wRoute.getbkb(newRoute) );
   wRoute.setid( newRoute, routeID );
@@ -198,6 +203,8 @@ static const char* __createRoute( iOModPlanData data, iONode model, iOList route
   /* merge all commands */
   for( r = 0; r < ListOp.size(routeList); r++ ) {
     iONode routeseg = (iONode)ListOp.get( routeList, r );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "route segment %d [%s], crossing blocks: [%s]", r, wRoute.getid(routeseg),
+        wRoute.getbkc(routeseg)!=NULL?wRoute.getbkc(routeseg):"");
 
     /* add to map to lookup the new route ID with the segment route ID */
     MapOp.put( data->mod2routeIdMap, wRoute.getid(routeseg), (obj)wRoute.getid( newRoute ) );
@@ -205,8 +212,12 @@ static const char* __createRoute( iOModPlanData data, iONode model, iOList route
     if( wRoute.getbkc(routeseg) != NULL &&  StrOp.len( wRoute.getbkc(routeseg) ) > 0 ) {
       if( bkc == NULL )
         bkc = StrOp.fmt( "%s", wRoute.getbkc(routeseg) );
-      else
-        bkc = StrOp.fmt( "%s,%s", bkc, wRoute.getbkc(routeseg) );
+      else {
+        char* l_bkc = StrOp.fmt( "%s,%s", bkc, wRoute.getbkc(routeseg) );
+        StrOp.free(bkc);
+        bkc = l_bkc;
+      }
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add crossing block(s) [%s], [%s], from route segment %d [%s]", wRoute.getbkc(routeseg), bkc, r, wRoute.getid(routeseg));
     }
     if( routeseg != toRoute ) {
       iONode swcmd  = wRoute.getswcmd(routeseg);
@@ -226,8 +237,10 @@ static const char* __createRoute( iOModPlanData data, iONode model, iOList route
       }
     }
   }
-  if( bkc != NULL )
+  if( bkc != NULL ) {
     wRoute.setbkc( newRoute, bkc );
+    StrOp.free(bkc);
+  }
 
   /* the route is generated so remove the module ID */
   wRoute.setmodid( newRoute, wRoute.modid_auto_gen );
