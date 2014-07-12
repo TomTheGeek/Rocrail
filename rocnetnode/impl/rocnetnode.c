@@ -1754,7 +1754,7 @@ static void __pwm( void* threadinst ) {
         }
         else if( !data->channels[i]->ready ) {
           /* report current state */
-          int onoff = (data->channels[i]->onpos == data->channels[i]->curpos) ? 1:0;
+          int onoff = (data->channels[i]->curpos >= data->channels[i]->onpos) ? 1:0;
           byte* msg = allocMem(32);
           msg[RN_PACKET_NETID] = data->location;
           msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
