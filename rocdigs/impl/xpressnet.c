@@ -642,7 +642,7 @@ static iONode __translate( iOXpressNet xpressnet, iONode node ) {
 
     if( StrOp.equals( cmd, wSysCmd.enablecom ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s: %s communication", data->iid, wSysCmd.getval(node) == 1 ? "enable":"disable" );
-      data->enablecom = wSysCmd.getval(node) == 0 ? True:False;
+      data->enablecom = wSysCmd.getval(node) == 1 ? True:False;
     }
     else if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       byte* outa = allocMem(32);
