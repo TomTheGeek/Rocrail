@@ -823,7 +823,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
   }
 
   /* unhandled command */
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Unhandled command: [%s][%s]",
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Unhandled command: [%s][%s]",
       NodeOp.getName(node), NodeOp.getStr(node, "cmd", "?") );
   /* not used; free up */
   freeMem(rn);
