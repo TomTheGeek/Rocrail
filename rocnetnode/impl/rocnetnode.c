@@ -1752,6 +1752,24 @@ static void __pwm( void* threadinst ) {
           __writeChannel(rocnetnode, data->channels[i]->channel, data->channels[i]->curpos);
           ThreadOp.sleep(0);
         }
+        else if( !data->channels[i]->ready ) {
+          /* report current state */
+          int onoff = (data->channels[i]->onpos == data->channels[i]->curpos) ? 1:0;
+          byte* msg = allocMem(32);
+          msg[RN_PACKET_NETID] = data->location;
+          msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
+          rnReceipientAddresToPacket( 0, msg, 0 );
+          rnSenderAddresToPacket( data->id, msg, 0 );
+          msg[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
+          msg[RN_PACKET_ACTION] |= (RN_ACTIONTYPE_EVENT << 5);
+          msg[RN_PACKET_LEN] = 4;
+          msg[RN_PACKET_DATA + 0] = onoff;
+          msg[RN_PACKET_DATA + 1] = wProgram.porttype_servo;
+          msg[RN_PACKET_DATA + 2] = 0;
+          msg[RN_PACKET_DATA + 3] = data->channels[i]->channel;
+          __sendRN(rocnetnode, msg);
+          data->channels[i]->ready = True;
+        }
 
         if( data->channels[i]->options & PWM_SERVO && data->channels[i]->ready ) {
           if( data->channels[i]->idle < 100 ) {
