@@ -342,6 +342,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_CBusNode       , RocGuiFrame::OnCBusNode)
     EVT_MENU( ME_BiDiB          , RocGuiFrame::OnBiDiB)
     EVT_MENU( ME_RocNet         , RocGuiFrame::OnRocNet)
+    EVT_MENU( ME_RocNetShutdown , RocGuiFrame::OnRocNetShutdown)
     EVT_MENU( ME_RocPro         , RocGuiFrame::OnRocPro)
     EVT_MENU( ME_ZoomX          , RocGuiFrame::OnZoomX)
     EVT_MENU( ME_Zoom25         , RocGuiFrame::OnZoom25)
@@ -2154,7 +2155,10 @@ void RocGuiFrame::initFrame() {
 
   menuProgramming->Append( ME_CBusNode, _T("CBUS..."), _T("CBUS Nodes") );
   menuProgramming->Append( ME_BiDiB, _T("BiDiB..."), _T("BiDiB Nodes") );
-  menuProgramming->Append( ME_RocNet, _T("RocNet..."), _T("RocNet Nodes") );
+  wxMenu *menuRocnet = new wxMenu();
+  menuRocnet->Append( ME_RocNet, wxGetApp().getMenu("setup") + wxT("..."), wxGetApp().getTip("setup") );
+  menuRocnet->Append( ME_RocNetShutdown, wxGetApp().getMenu("shutdownall"), wxGetApp().getTip("shutdownall") );
+  menuProgramming->Append( -1, _T("RocNet"), menuRocnet );
   menuProgramming->Append( ME_RocPro, _T("RocPro..."), _T("RocPro Decoder Programming") );
 
   // the "About" item should be in the help menu
@@ -3930,6 +3934,20 @@ void RocGuiFrame::OnRocNet( wxCommandEvent& event ) {
     wxGetApp().sendToRocrail( cmd, false );
     cmd->base.del(cmd);
   }
+}
+
+void RocGuiFrame::OnRocNetShutdown( wxCommandEvent& event ) {
+  int action = wxMessageDialog( this, wxGetApp().getMsg( "shutdownallnodes" ),
+      _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION | wxNO_DEFAULT ).ShowModal();
+  if( action == wxID_NO ) {
+    return;
+  }
+
+  iONode cmd = NodeOp.inst( wSysCmd.name(), NULL, ELEMENT_NODE );
+  wSysCmd.setcmd( cmd, wSysCmd.shutdownnode );
+  wSysCmd.setbus(cmd, 0);
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
 }
 
 void RocGuiFrame::OnRocPro( wxCommandEvent& event ) {
