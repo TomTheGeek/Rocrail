@@ -68,7 +68,8 @@ else ifeq ($(PLATFORM),WIN64)
 	SHAREDSUFFIX=.dll
 	CC_EXTRA_FLAGS=
 else ifeq ($(PLATFORM),MACOSX)
-	LIBS=-lpthread -ldl -lusb-1.0
+	LIBS=-lpthread -ldl
+	LIBUSB=-lusb-1.0
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
 	LNK_FLAGS=-dynamiclib -flat_namespace -undefined suppress
@@ -82,7 +83,8 @@ else ifeq ($(PLATFORM),OPENBSD)
 	LNK=gcc
 	SHAREDSUFFIX=.so
 else
-	LIBS=-lpthread -ldl -lusb-1.0
+	LIBS=-lpthread -ldl
+	LIBUSB=-lusb-1.0
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
 	LNK_FLAGS=-shared
@@ -217,7 +219,7 @@ $(OUTDIR)$(FS)z21$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)z21.o $(COMMONOBJS) $(RRLIBS)
 $(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)xnmm.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)xnmm.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)rocomp.o $(COMMONOBJS) $(RRLIBS)
-	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)rocomp.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)rocomp.o $(COMMONOBJS) $(RRLIBS) $(LIBS) $(LIBUSB)
 $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX): $(ZIMOCANOBJS) $(TMPOUTDIR)$(FS)zimocan.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)zimocan.o $(ZIMOCANOBJS) $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)ucons88.o $(COMMONOBJS) $(RRLIBS)

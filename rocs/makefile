@@ -81,7 +81,7 @@ ifeq ($(PLATFORM),LINUX)
 	LIBS=-lpthread -ldl -lusb-1.0
 endif
 ifeq ($(PLATFORM),MACOSX)
-	LIBS=-lpthread -ldl -lusb-1.0
+	LIBS=-lpthread -ldl
 endif
 ifeq ($(PLATFORM),HP)
 	LIBS=-lpthread -ldld
