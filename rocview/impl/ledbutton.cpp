@@ -157,14 +157,15 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
         scale = scaleH;
       }
 
-      if( (int)scale != 0 ) {
+      wxBitmap* l_icon = icon;
+
+      if( (int)scale != 0 && (bmpW/scale) > 0 && (bmpH/scale) > 0 ) {
         wxImage img = icon->ConvertToImage();
-        delete icon;
         img = img.Scale( (bmpW/scale), (bmpH/scale), wxIMAGE_QUALITY_HIGH );
-        icon = new wxBitmap(img);
+        l_icon = new wxBitmap(img);
       }
 
-      dc.DrawBitmap(*icon, (buttonWidth - icon->GetWidth())/2, (buttonHeight - icon->GetHeight())/2, true);
+      dc.DrawBitmap(*l_icon, (buttonWidth - l_icon->GetWidth())/2, (buttonHeight - l_icon->GetHeight())/2, true);
     }
     else {
       double width;
