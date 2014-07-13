@@ -46,6 +46,7 @@ public:
     LEDButton(wxWindow* parent, wxString text, int width, int height, bool useLED=true, bool textOnly=false);
 
     void OnPaint(wxPaintEvent& event);
+    void OnSize(wxSizeEvent& event);
 
     void setLED(bool ON);
     void SetLabel(const wxString &text);

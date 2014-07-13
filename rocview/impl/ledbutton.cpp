@@ -53,12 +53,13 @@ BEGIN_EVENT_TABLE(LEDButton, wxPanel)
 
     // catch paint events
     EVT_PAINT(LEDButton::OnPaint)
+    EVT_SIZE(LEDButton::OnSize)
 
 END_EVENT_TABLE()
 
 
 LEDButton::LEDButton(wxWindow* parent, wxString text, int width, int height, bool useLED, bool textOnly)
-  :wxPanel(parent, -1,  wxDefaultPosition, wxSize(width,height), wxBORDER_NONE|wxWANTS_CHARS|wxGROW)
+  :wxPanel(parent, -1,  wxDefaultPosition, wxSize(width,height), wxBORDER_NONE|wxWANTS_CHARS|wxGROW|wxFULL_REPAINT_ON_RESIZE)
 {
   buttonWidth = width;
   buttonHeight = height;
@@ -73,6 +74,10 @@ LEDButton::LEDButton(wxWindow* parent, wxString text, int width, int height, boo
   SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 }
 
+
+void LEDButton::OnSize(wxSizeEvent& WXUNUSED(event)) {
+  Refresh();
+}
 
 /*
  * Called by the system of by wxWidgets when the panel needs
