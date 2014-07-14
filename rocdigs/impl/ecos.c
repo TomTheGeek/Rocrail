@@ -758,7 +758,7 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
     StrOp.fmtb( ecosCmd, "set(%d, switch[%s%d%c])\n",
                 OID_SWMANAGER, ( protocol[ 0 ] == 'M' ? "MOT" : "DCC" ), address, direction );
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ECoS switch command set(%d, switch[%s%d%c])",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch command set(%d, switch[%s%d%c])",
                  OID_SWMANAGER, ( protocol[ 0 ] == 'M' ? "MOT" : "DCC" ), address, direction);
     /*
 
@@ -809,7 +809,7 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
     StrOp.fmtb( ecosCmd, "set(%d, switch[%s%d%c])\n",
                 OID_SWMANAGER, (prot[0]=='M'?"MOT":"DCC"), addr, dir );
 
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ECoS output command set(%d, switch[%s%d%c])",
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output command set(%d, switch[%s%d%c])",
                  OID_SWMANAGER, ( prot[ 0 ] == 'M' ? "MOT" : "DCC" ), addr, dir);
 
     /*
@@ -863,7 +863,7 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
                     oid, 0, wLoc.isfn( node ) ? 1 : 0,
                     oid );
 
-      /* TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, ecosCmd); */
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %s oid=%s V=%d dir=%s lights=%s", id, oid, V, dir?"fwd":"rev", wLoc.isfn( node )?"on":"off" );
 
     } else if ( oid == NULL ) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "no ecos oid found for [%s]", ecosid );
@@ -949,6 +949,7 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
         }
       }
 
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %s oid=%s function %d set to %d", id, oid, fnchanged, fn[fnchanged] );
 
 
       StrOp.fmtb( ecosCmd + StrOp.len( ecosCmd ), "release(%s, control)\n", oid );
@@ -970,7 +971,7 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ECoS system function command" );
 
     const char* cmdstr  = wSysCmd.getcmd( node );
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "SysCmd %s", cmdstr );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SysCmd %s", cmdstr );
 
     if ( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
 
