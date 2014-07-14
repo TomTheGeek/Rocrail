@@ -1359,11 +1359,6 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
 
   m_ActiveLocs->AutoSizeColumns(false);
   m_ActiveLocs->AutoSizeColumn(LOC_COL_IMAGE);
-  /*
-  m_ActiveLocs->FitInside();
-  m_ActiveLocs->UpdateDimensions();
-  m_ActiveLocsPanel->GetSizer()->Layout();
-  */
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
   m_ActiveLocs->MakeCellVisible(m_iLcRowSelection, m_ActiveLocs->XToCol(0) );
 

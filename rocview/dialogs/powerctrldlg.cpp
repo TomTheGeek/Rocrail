@@ -69,7 +69,6 @@ PowerCtrlDlg::PowerCtrlDlg( wxWindow* parent ):powerctrlgen( parent )
 
   m_Boosters->AutoSizeColumns();
   m_Boosters->FitInside();
-  m_Boosters->UpdateDimensions();
   GetSizer()->Layout();
 
   iONode ini = wxGetApp().getIni();

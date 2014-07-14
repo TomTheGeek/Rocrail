@@ -322,12 +322,12 @@ void ScheduleDialog::initLabels() {
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
   m_Apply->SetLabel( wxGetApp().getMsg( "apply" ) );
 
-  m_Entries->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("location"), 0);
-  m_Entries->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("block"), 1);
-  m_Entries->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("time"), 2);
-  m_Entries->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("actions"), 3);
-  m_Entries->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("free"), 4);
-  m_Entries->SetEditable(FALSE);
+  m_Entries->SetColLabelValue(0, wxGetApp().getMsg("location"));
+  m_Entries->SetColLabelValue(1, wxGetApp().getMsg("block"));
+  m_Entries->SetColLabelValue(2, wxGetApp().getMsg("time"));
+  m_Entries->SetColLabelValue(3, wxGetApp().getMsg("actions"));
+  m_Entries->SetColLabelValue(4, wxGetApp().getMsg("free"));
+  m_Entries->EnableEditing(false);
   m_Entries->AutoSizeColumns();
   m_Entries->AutoSizeRows();
 
@@ -614,7 +614,6 @@ void ScheduleDialog::initSchedule() {
   };
   m_Entries->AutoSizeColumns();
   m_Entries->FitInside();
-  //m_Entries->UpdateDimensions();
   m_Destinations->GetSizer()->Layout();
 
   if( m_SelectedRow != -1 ) {

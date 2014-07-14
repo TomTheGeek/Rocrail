@@ -954,7 +954,6 @@ void RouteDialog::initCondList() {
 
   m_CondGrid->AutoSizeColumns();
   m_CondGrid->FitInside();
-  m_CondGrid->UpdateDimensions();
   m_ConditionsPanel->GetSizer()->Layout();
 
   m_CondDelete->Enable( false );

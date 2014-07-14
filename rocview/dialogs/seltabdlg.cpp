@@ -402,7 +402,6 @@ void SelTabDialog::initValues() {
 
   m_TracksGrid->AutoSizeColumns();
   m_TracksGrid->FitInside();
-  m_TracksGrid->UpdateDimensions();
   m_TracksPanel->GetSizer()->Layout();
 
   // Routes

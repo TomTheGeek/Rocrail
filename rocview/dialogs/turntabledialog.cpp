@@ -532,7 +532,6 @@ void TurntableDialog::initValues() {
 
   m_TracksGrid->AutoSizeColumns();
   m_TracksGrid->FitInside();
-  m_TracksGrid->UpdateDimensions();
   m_TracksPanel->GetSizer()->Layout();
 
   wxCommandEvent event( wxEVT_COMMAND_COMBOBOX_SELECTED, ID_COMBOBOX_TT_TYPE );
