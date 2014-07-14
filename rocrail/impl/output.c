@@ -305,6 +305,7 @@ static void _event( iOOutput inst, iONode nodeC ) {
     };
   }
 
+  NodeOp.base.del(nodeC);
 }
 
 /**  */
