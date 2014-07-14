@@ -1339,7 +1339,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
       ListOp.base.del( list );
 
     }
-    m_ActiveLocs->SetCellBackgroundColour( hiddenlocos ? wxColour(255,255,200):wxColour(255,255,255));
+    m_ActiveLocs->SetBackgroundColour( hiddenlocos ? wxColour(255,255,200):wxColour(255,255,255));
 
   }
 
