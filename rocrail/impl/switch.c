@@ -774,7 +774,7 @@ static Boolean _isSet( iOSwitch inst ) {
     else {
       /* check fieldstate */
       isSet = StrOp.equals(wSwitch.getwantedstate(data->props), wSwitch.getfieldstate(data->props));
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch[%s] isSet=%s wanted=%s field=%s",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "switch[%s] isSet=%s wanted=%s field=%s",
           SwitchOp.getId( inst ), isSet?"true":"false", wSwitch.getwantedstate(data->props), wSwitch.getfieldstate(data->props) );
     }
   }
