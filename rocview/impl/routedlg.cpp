@@ -78,16 +78,16 @@ RouteCtrlDlg::RouteCtrlDlg(wxWindow *parent)
 
   m_Grid = new wxGrid( this, -1, wxDefaultPosition, wxSize(-1,400) ) ;
   m_Grid->CreateGrid( 1, 4 );
-  m_Grid->SetCellBackgroundColour( m_Grid->GetLabelBackgroundColour() );
-  m_Grid->SetLabelSize(wxVERTICAL, 0);
-  m_Grid->SetLabelSize(wxHORIZONTAL, m_Grid->GetRowHeight(0));
+  m_Grid->SetBackgroundColour( m_Grid->GetLabelBackgroundColour() );
+  m_Grid->SetColLabelSize(0);
+  m_Grid->SetColLabelSize(m_Grid->GetRowHeight(0));
 
-  m_Grid->SetEditable(FALSE);
+  m_Grid->EnableEditing(false);
 
-  m_Grid->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("streetid"), 0);
-  m_Grid->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("fromblock"), 1);
-  m_Grid->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("toblock"), 2);
-  m_Grid->SetLabelValue(wxHORIZONTAL, wxGetApp().getMsg("commands"), 3);
+  m_Grid->SetColLabelValue(0, wxGetApp().getMsg("streetid"));
+  m_Grid->SetColLabelValue(1, wxGetApp().getMsg("fromblock"));
+  m_Grid->SetColLabelValue(2, wxGetApp().getMsg("toblock"));
+  m_Grid->SetColLabelValue(3, wxGetApp().getMsg("commands"));
 
   init();
   m_Grid->SetSelectionMode(wxGrid::wxGridSelectRows);
@@ -118,7 +118,7 @@ void RouteCtrlDlg::OnButton(wxCommandEvent& event)
     //EndModal(0);
   }
   else if( event.GetEventObject() == m_Test ) {
-    wxString str = m_Grid->GetCellValue( m_Grid->GetCursorRow(), 0 );
+    wxString str = m_Grid->GetCellValue( m_Grid->GetGridCursorRow(), 0 );
     TraceOp.trace( NULL, TRCLEVEL_INFO, 0, "Testing %s", (const char*)str.mb_str(wxConvUTF8) );
     {
       iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
@@ -129,7 +129,7 @@ void RouteCtrlDlg::OnButton(wxCommandEvent& event)
     }
   }
   else if( event.GetEventObject() == m_Force ) {
-    wxString str = m_Grid->GetCellValue( m_Grid->GetCursorRow(), 0 );
+    wxString str = m_Grid->GetCellValue( m_Grid->GetGridCursorRow(), 0 );
     TraceOp.trace( NULL, TRCLEVEL_INFO, 0, "Forcing %s", (const char*)str.mb_str(wxConvUTF8) );
     {
       iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
@@ -157,8 +157,8 @@ static int __sortID(obj* _a, obj* _b)
 
 void RouteCtrlDlg::fillTable( iONode node ) {
   int cnt = NodeOp.getChildCnt( node );
-  if( m_Grid->GetRows() > 0 )
-    m_Grid->DeleteRows( 0, m_Grid->GetRows() );
+  if( m_Grid->GetNumberRows() > 0 )
+    m_Grid->DeleteRows( 0, m_Grid->GetNumberRows() );
   m_Grid->AppendRows( cnt );
 
   iOList list = ListOp.inst();
@@ -175,14 +175,14 @@ void RouteCtrlDlg::fillTable( iONode node ) {
   for( int i = 0; i < cnt; i++ ) {
     iONode child = (iONode)ListOp.get(list, i); //NodeOp.getChild( node, i );
 
-    m_Grid->SetCellValue( wxString(wRoute.getid( child ),wxConvUTF8), i, 0 );
-    m_Grid->SetCellValue( wxString(wRoute.getbka( child ),wxConvUTF8), i, 1 );
-    m_Grid->SetCellValue( wxString(wRoute.getbkb( child ),wxConvUTF8), i, 2 );
+    m_Grid->SetCellValue( i, 0, wxString(wRoute.getid( child ),wxConvUTF8) );
+    m_Grid->SetCellValue( i, 1, wxString(wRoute.getbka( child ),wxConvUTF8) );
+    m_Grid->SetCellValue( i, 2, wxString(wRoute.getbkb( child ),wxConvUTF8) );
     char* val = StrOp.fmt( "%d", NodeOp.getChildCnt( child ) );
-    m_Grid->SetCellValue( wxString(val,wxConvUTF8), i, 3 );
+    m_Grid->SetCellValue( i, 3, wxString(val,wxConvUTF8) );
     StrOp.free( val);
   }
-  if( m_Grid->GetRows() > 0 )
+  if( m_Grid->GetNumberRows() > 0 )
     m_Grid->SelectRow(0);
 }
 
