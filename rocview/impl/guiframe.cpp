@@ -4410,7 +4410,8 @@ void RocGuiFrame::OnQuit(wxCommandEvent& WXUNUSED(event)) {
 void RocGuiFrame::OnClose(wxCloseEvent& event) {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "shutting down..." );
   if( wxGetApp().isLocalModelModified() ) {
-    int action = wxMessageDialog( this, wxGetApp().getMsg("notsaved"), _T("Rocrail"), (wxGetApp().isOffline()?wxYES_NO:wxOK) | wxCANCEL | wxICON_EXCLAMATION ).ShowModal();
+    int action = wxMessageDialog( this, wxGetApp().isOffline()?wxGetApp().getMsg("notsaved"):wxGetApp().getMsg("saveplan"),
+        _T("Rocrail"), (wxGetApp().isOffline()?wxYES_NO:wxOK) | wxCANCEL | wxICON_EXCLAMATION ).ShowModal();
     if( action == wxID_CANCEL ) {
       return;
     }

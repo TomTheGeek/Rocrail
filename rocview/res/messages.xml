@@ -28222,4 +28222,7 @@
     <sr_latin txt="Omogući komunikaciju"/>
     <sv txt="Möjliggör kommunikation"/>
   </Msg>
+  <Msg id="saveplan">
+    <en txt="The changes will be saved."/>
+  </Msg>
 </Messages>

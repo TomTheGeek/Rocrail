@@ -7127,3 +7127,9 @@ msgstr ""
 msgid "Enable communication"
 msgstr ""
 
+#. 
+# id="saveplan"
+#, c-format
+msgid "The changes will be saved."
+msgstr ""
+
