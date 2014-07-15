@@ -1682,9 +1682,11 @@ static void __reader( void* threadinst ) {
           StrOp.free(str);
         }
         else {
+          /*
           char* str = StrOp.byteToStr(rn, 8 + rn[RN_PACKET_LEN]);
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "evaluate %s [%s] from %d to %d", rnActionTypeString(rn), str, sndr, rcpt );
           StrOp.free(str);
+          */
           __evaluateRN( rocnet, rn );
         }
       }
@@ -1827,10 +1829,12 @@ static void __writer( void* threadinst ) {
         plen = 8 + rnRequest[RN_PACKET_LEN];
 
         if( rnCheckPacket(rnRequest, &extended, &event) ) {
+          /*
           int rcpt = rnReceipientAddrFromPacket(rnRequest, 0);
           char* str = StrOp.byteToStr(rnRequest, 8 + rnRequest[RN_PACKET_LEN]);
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "write %s [%s] to %d", rnActionTypeString(rnRequest), str, rcpt );
           StrOp.free(str);
+          */
           ok = data->rnWrite( (obj)rocnet, rnRequest, plen );
 
         }
