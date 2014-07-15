@@ -22475,6 +22475,7 @@
     <sl txt="Slot ping"/>
     <en_CA txt="Slot ping"/>
     <pl txt="Ping slotu"/>
+    <fr txt="Slot ping"/>
   </Msg>
   <Msg id="localip">
     <en txt="Local IP"/>
@@ -23641,6 +23642,7 @@
     <en_AU txt="Release loco on idle"/>
     <en_CA txt="Release loco on idle"/>
     <pl txt="Zwolnij lokomotywę na biegu jałowym"/>
+    <fr txt="Libérer la locomotive au repos"/>
   </Msg>
   <Msg id="sleep">
     <en txt="Sleep"/>
@@ -23874,6 +23876,7 @@
     <en_AU txt="Trigger low events after 100ms"/>
     <en_CA txt="Trigger low events after 100ms"/>
     <pl txt="Aktywuj niskie zdarzenia po 100ms"/>
+    <fr txt="Traiter évènements après 100ms"/>
   </Msg>
   <Msg id="showsecondhand">
     <en txt="Show secondhand"/>
@@ -23893,6 +23896,7 @@
     <en_AU txt="Show secondhand"/>
     <en_CA txt="Show secondhand"/>
     <pl txt="Pokaż z drugiej ręki"/>
+    <fr txt="Afficher horloge secondaire"/>
   </Msg>
   <Msg id="twoway">
     <en txt="Twoway"/>
@@ -24056,6 +24060,7 @@
     <en_AU txt="Close on no events"/>
     <en_CA txt="Close on no events"/>
     <pl txt="Zamknij bloki jeśli nie ma żadnych zdarzeń"/>
+    <fr txt="Fermer si pas d'évènement"/>
   </Msg>
   <Msg id="every">
     <en txt="every"/>
@@ -24225,6 +24230,7 @@
     <pl txt="Katalog kluczy"/>
     <en_AU txt="Key path"/>
     <en_CA txt="Key path"/>
+    <fr txt="Répertoire de clé"/>
   </Msg>
   <Msg id="openkeyfile">
     <en txt="Open Key file"/>
@@ -24386,6 +24392,7 @@
     <en_AU txt="Check switch acknowledge"/>
     <en_CA txt="Check switch acknowledge"/>
     <pl txt="Sprawdź stan rozjazdów"/>
+    <fr txt="Tester utilisation aiguillage"/>
   </Msg>
   <Msg id="retries">
     <en txt="Retries"/>
@@ -24425,7 +24432,7 @@
     <fi txt="Tapaus" tip="Luo palvelimen ongelmatapaus."/>
     <en_AU txt="Issue" tip="Create a server issue context."/>
     <en_CA txt="Issue" tip="Create a server issue context."/>
-    <fr txt="Incident"/>
+    <fr txt="Incident" tip="Créer un contexte de problème serveur"/>
   </Msg>
   <Msg id="issuepath">
     <en txt="Issue path"/>
@@ -24526,6 +24533,7 @@
     <pl txt="Routing klasyczny jest przestarzały, proszę użyj blokowego wytyczania trasy"/>
     <en_AU txt="Classic routing is deprecated; Please migrate to block side routing."/>
     <en_CA txt="Classic routing is deprecated; Please migrate to block side routing."/>
+    <fr txt="Routage classique obsolète; Veuiller migrer vers le routage \&quot;Block Side\&quot;."/>
   </Msg>
   <Msg id="checkplanhealth">
     <en txt="Check plan health"/>
@@ -24605,6 +24613,7 @@
     <en_AU txt="Action control"/>
     <en_CA txt="Action control"/>
     <pl txt="Kontrola czynności"/>
+    <fr txt="Action de contrôle"/>
   </Msg>
   <Msg id="carcard">
     <en txt="Car card"/>
@@ -25100,6 +25109,7 @@
     <en_AU txt="In event at train length"/>
     <en_CA txt="In event at train length"/>
     <pl txt="W przypadku, gdy długość pociągu"/>
+    <fr txt="Evènement IN si train complet dans bloc"/>
   </Msg>
   <Msg id="analyser">
     <en txt="Analyser"/>
@@ -25581,6 +25591,7 @@
     <en_AU txt="Overrule throttle"/>
     <en_CA txt="Overrule throttle"/>
     <pl txt="Unieważnij przepustnicę"/>
+    <fr txt="Annuler commande"/>
   </Msg>
   <Msg id="resetwc">
     <en txt="Reset wheel counter"/>
@@ -25618,6 +25629,7 @@
     <en_CA txt="Restricted event timers"/>
     <pl txt="Ograniczone liczniki zdarzeń"/>
     <es txt="Contador de eventos restringidos"/>
+    <fr txt="Minuteries d'événement restreint"/>
   </Msg>
   <Msg id="nodevcheck">
     <en txt="No device check at startup"/>
@@ -25727,6 +25739,7 @@
     <en_AU txt="EBreak at ghost train"/>
     <en_CA txt="EBreak at ghost train"/>
     <pl txt="Awaryjne zatrzymanie pociągu widmo"/>
+    <fr txt="Arrêt d'urgence si train fantôme"/>
   </Msg>
   <Msg id="doublequote">
     <en txt="Double quote"/>
@@ -25854,6 +25867,7 @@
     <en_AU txt="Action timer 60 sec."/>
     <en_CA txt="Action timer 60 sec."/>
     <pl txt="Czynność licznik 60 sec."/>
+    <fr txt="Minuterie d'action 60 sec."/>
   </Msg>
   <Msg id="dirimage">
     <en txt="Direction image"/>
@@ -25871,6 +25885,7 @@
     <en_AU txt="Direction image"/>
     <en_CA txt="Direction image"/>
     <pl txt="Obraz kierunek"/>
+    <fr txt="Indicateur de direction"/>
   </Msg>
   <Msg id="newposflag">
     <en txt="New Position Flag"/>
@@ -25925,6 +25940,7 @@
     <en_AU txt="Train gap"/>
     <en_CA txt="Train gap"/>
     <pl txt="Odległość pociągu"/>
+    <fr txt="Espace entre trains"/>
   </Msg>
   <Msg id="entersensor">
     <en txt="Enter sensor"/>
@@ -25998,6 +26014,7 @@
     <en_CA txt="Frog"/>
     <pl txt="Krzyżownica"/>
     <es txt="Corazón del desvío"/>
+    <fr txt="Coeur d'aiguillage"/>
   </Msg>
   <Msg id="showlocked">
     <en txt="Show locked switches" tip="Show locked switches with a different color."/>
@@ -26126,6 +26143,7 @@
     <en_AU txt="Command recorder"/>
     <en_CA txt="Command recorder"/>
     <es txt="Grabador de comandos"/>
+    <fr txt="Enregistreur de commandes"/>
   </Msg>
   <Msg id="slavecode">
     <en txt="Slave code"/>
@@ -26161,6 +26179,7 @@
     <en_AU txt="Text pointsize"/>
     <en_CA txt="Text pointsize"/>
     <pl txt="Rozmiar czcionki dla obiektów tekstowych"/>
+    <fr txt="Taille du Texte"/>
   </Msg>
   <Msg id="rendergc">
     <en txt="Render smooth"/>
@@ -26214,6 +26233,7 @@
     <en_AU txt="Process block events"/>
     <en_CA txt="Process block events"/>
     <pl txt="Przetwarzanie zdarzeń bloku"/>
+    <fr txt="Traiter évènement de bloc"/>
   </Msg>
   <Msg id="processrouteevents">
     <en txt="Process route events"/>
@@ -26563,6 +26583,7 @@
     <en_AU txt="Macro Map"/>
     <en_CA txt="Macro Map"/>
     <pl txt="Lista makro"/>
+    <fr txt="Carte des macros"/>
   </Msg>
   <Msg id="slowdown">
     <en txt="Slowdown"/>
@@ -26688,6 +26709,7 @@
     <en_CA txt="Wheel count"/>
     <pl txt="Licznik kół (osi)"/>
     <zh_CN txt="车轮数"/>
+    <fr txt="Comptage des roues"/>
   </Msg>
   <Msg id="counter">
     <en txt="Counter"/>
@@ -26830,6 +26852,7 @@
     <en_AU txt="Create guest on BiDi"/>
     <en_CA txt="Create guest on BiDi"/>
     <pl txt="Stwórz lokomotywę gościa na BiDi"/>
+    <fr txt="Créer invité pour BiDi"/>
   </Msg>
   <Msg id="weight">
     <en txt="Weight"/>
@@ -26950,6 +26973,7 @@
     <pl txt="Sygnały boczne Minus(-)"/>
     <en_AU txt="Minus(-) side signals"/>
     <en_CA txt="Minus(-) side signals"/>
+    <fr txt="Signal côté Moins(-)"/>
   </Msg>
   <Msg id="plussidesignals">
     <en txt="Plus(+) side signals"/>
@@ -26966,6 +26990,7 @@
     <pl txt="Sygnały boczne Plus(+)"/>
     <en_AU txt="Plus(+) side signals"/>
     <en_CA txt="Plus(+) side signals"/>
+    <fr txt="Signale côté Plus(+)"/>
   </Msg>
   <Msg id="identify">
     <en txt="Identify"/>
@@ -27050,6 +27075,7 @@
     <en_AU txt="Use BiDi direction"/>
     <en_CA txt="Use BiDi direction"/>
     <pl txt="Korzystaj z kierunku BiDi"/>
+    <fr txt="Utiliser direction BiDi"/>
   </Msg>
   <Msg id="revision">
     <en txt="Revision"/>
@@ -27116,6 +27142,7 @@
     <en_AU txt="Acknowledge sensor events"/>
     <en_CA txt="Acknowledge sensor events"/>
     <pl txt="Potwierdzenie zdarzenia czujnika"/>
+    <fr txt="Reconnaître les évènements de détecteurs"/>
   </Msg>
   <Msg id="shutdownall">
     <en txt="Shutdown all"/>
@@ -27149,6 +27176,7 @@
     <en_AU txt="Shutdown RocNet node %d?"/>
     <en_CA txt="Shutdown RocNet node %d?"/>
     <pl txt="Wyłączyć %d węzeł RocNet?"/>
+    <fr txt="Eteindre RocNetNode %d?"/>
   </Msg>
   <Msg id="shutdownallnodes">
     <en txt="Shutdown all RocNet nodes?"/>
@@ -27165,7 +27193,7 @@
     <en_AU txt="Shutdown all RocNet nodes?"/>
     <en_CA txt="Shutdown all RocNet nodes?"/>
     <pl txt="Wyłączyć wszystkie węzły RocNet?"/>
-    <fr txt="Eteindre tous les noeuds RocNet ?"/>
+    <fr txt="Eteindre tous lmes RocNetNode"/>
   </Msg>
   <Msg id="updatenode">
     <en txt="Update RocNet node %d to revision %d?"/>
@@ -27182,6 +27210,7 @@
     <en_AU txt="Update RocNet node %d to revision %d?"/>
     <en_CA txt="Update RocNet node %d to revision %d?"/>
     <pl txt="Zaktualizować %d węzeł RocNet do wersji %d?"/>
+    <fr txt="Mettre-à-jours RocNetNode %d vers la révision %d?"/>
   </Msg>
   <Msg id="update">
     <en txt="Update"/>
@@ -27230,6 +27259,7 @@
     <en_AU txt="Shutdown location %s?"/>
     <en_CA txt="Shutdown location %s?"/>
     <pl txt="Wyłączyć lokalizację %s?"/>
+    <fr txt="Eteindre emplacement %s?"/>
   </Msg>
   <Msg id="commuteronly">
     <en txt="Commuter trains only"/>
@@ -27246,6 +27276,7 @@
     <en_AU txt="Commuter trains only"/>
     <en_CA txt="Commuter trains only"/>
     <pl txt="Tylko pociągi podmiejskie"/>
+    <fr txt="Trains de banlieue seulement"/>
   </Msg>
   <Msg id="forcemultiaspects">
     <en txt="Force multi aspects"/>
@@ -27261,6 +27292,7 @@
     <en_AU txt="Force multi aspects"/>
     <en_CA txt="Force multi aspects"/>
     <pl txt="Wymuś wiele znaczeń"/>
+    <fr txt="Forcer multi aspects"/>
   </Msg>
   <Msg id="nodemap">
     <en txt="Nodemap"/>
@@ -27553,6 +27585,7 @@
     <de txt="Binden"/>
     <en_AU txt="Bind"/>
     <en_CA txt="Bind"/>
+    <fr txt="Bind"/>
   </Msg>
   <Msg id="uidname">
     <en txt="UID-Name"/>
@@ -27648,6 +27681,7 @@
     <ru txt="Перемещать мост, если конечное положение противоположно"/>
     <sl txt="Premakni most, če je cilj na nasprotni strani"/>
     <pl txt="Obróć pomost jeśli pozycja docelowa jest naprzeciwko"/>
+    <fr txt="Déplacer pont si direction opposée"/>
   </Msg>
   <Msg id="cmdpause">
     <en txt="Command pause"/>
@@ -27679,6 +27713,7 @@
     <en_AU txt="Disable block wait for half automatic"/>
     <en_CA txt="Disable block wait for half automatic"/>
     <pl txt="Wyłącz oczekiwanie w bloku półautomatycznym"/>
+    <fr txt="Désactiver attente en mode semi-auto."/>
   </Msg>
   <Msg id="simulatesensors">
     <en txt="Simulate sensors"/>
@@ -27814,6 +27849,7 @@
     <it txt="Soglia"/>
     <pt_BR txt="Limite mínimo"/>
     <zh_CN txt="阈值"/>
+    <fr txt="Seuil Min."/>
   </Msg>
   <Msg id="monitordontwrap">
     <en txt="Monitor don't wrap"/>
@@ -27829,6 +27865,7 @@
     <pt_BR txt="Sem envolvimento dos monitores"/>
     <sl txt="Pogled brez prehajanja"/>
     <ru txt="Мониторинг без переноса строк"/>
+    <fr txt="Moniteur en recouvre pas"/>
   </Msg>
   <Msg id="subject">
     <en txt="Subject"/>
@@ -27861,6 +27898,7 @@
     <pt_BR txt="Número de vagões"/>
     <sv txt="Antal vagnar"/>
     <zh_CN txt="车辆的附近"/>
+    <fr txt="Nbre Voitures"/>
   </Msg>
   <Msg id="sleeponclosed">
     <en txt="Sleep on closed"/>
@@ -27877,6 +27915,7 @@
     <pt_BR txt="Parar quando fechado"/>
     <ru txt="Режим сна при закрытом блоке"/>
     <zh_CN txt="静止在关闭"/>
+    <fr txt="Veille à la fermeture"/>
   </Msg>
   <Msg id="sensorrange">
     <en txt="Sensor range"/>
@@ -27892,6 +27931,7 @@
     <en_GB txt="Sensor range"/>
     <pt_BR txt="Intervalo do sensor"/>
     <zh_CN txt="传感器范围"/>
+    <fr txt="Limites des détecteurs"/>
   </Msg>
   <Msg id="gridfontsizeadjust">
     <en txt="Grid fontsize adjust"/>
@@ -27905,6 +27945,7 @@
     <it txt="Griglia regolazione dimensione carattere"/>
     <ru txt="Шрифт таблицы Локов"/>
     <zh_CN txt="网格字号调整"/>
+    <fr txt="Ajuster taille fonte (LocoTab)"/>
   </Msg>
   <Msg id="maxkmh">
     <en txt="Max. km/h"/>
@@ -27960,6 +28001,7 @@
     <sv txt="Stopp vid IN i halvautomatiskt läge"/>
     <ru txt="Остановка по событию IN, в режиме полуавтомата"/>
     <zh_CN txt="停止在半自动模式"/>
+    <fr txt="Arrêt lors de IN en mode semi-auto"/>
   </Msg>
   <Msg id="v0atpoweron">
     <en txt="Send zero speed command at power on"/>
@@ -27996,6 +28038,7 @@
     <pt_BR txt="Usar o identificador para marcar no bloco"/>
     <sl txt="Uporabi identifikator za postavitev v odsek"/>
     <zh_CN txt="使用标识设置区段"/>
+    <fr txt="Utiliser l'identifieur pour mettre dans le bloc"/>
   </Msg>
   <Msg id="stagetable" dialog="true">
     <en txt="Staging block table" alttxt="Staging Blocks" tip="Staging block table"/>
@@ -28008,6 +28051,7 @@
     <sl txt="Počivališčni odseki"/>
     <en_GB txt="Staging block table"/>
     <zh_CN txt="分级区段表"/>
+    <fr txt="Table des blocs en coulisse"/>
   </Msg>
   <Msg id="others">
     <en txt="Others"/>
@@ -28032,6 +28076,7 @@
     <en_GB txt="Number of trace files"/>
     <sv txt="Antal \&quot;trace\&quot; filer"/>
     <zh_CN txt="跟踪文件编号"/>
+    <fr txt="Nombre de fichier Trace"/>
   </Msg>
   <Msg id="tracefilesize">
     <en txt="Trace file size in KB"/>
@@ -28133,6 +28178,7 @@
     <it txt="Liberare il blocco precedente all'ENTER"/>
     <en_GB txt="Free previous block on enter"/>
     <zh_CN txt="空闲上一区段输入"/>
+    <fr txt="Libérer le bloc précédent lors de l'entrée"/>
   </Msg>
   <Msg id="buslength">
     <en txt="Bus %d length"/>
@@ -28144,6 +28190,7 @@
     <it txt="Lunghezza bus %d"/>
     <en_GB txt="Bus %d length"/>
     <zh_CN txt="总线%d长度"/>
+    <fr txt="Bus %d long"/>
   </Msg>
   <Msg id="speedometer">
     <en txt="Speedometer"/>
@@ -28176,6 +28223,7 @@
     <pt_BR txt="Bit de controle"/>
     <sl txt="Takt"/>
     <sr_latin txt="Otkucaj srca"/>
+    <fr txt="Battement de coeur"/>
   </Msg>
   <Msg id="tolerance">
     <en txt="Tolerance"/>
