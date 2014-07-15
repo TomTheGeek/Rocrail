@@ -115,7 +115,8 @@ OBJS=$(patsubst impl/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/*.c))
 COREOBJS=$(patsubst impl/$(COREDIR)/%.c,$(TMPOUTDIR)/%.o,$(wildcard impl/$(COREDIR)/*.c))
 
 all: $(OUTDIR)$(FS)librocs.a $(OUTDIR)$(FS)wgen$(BINSUFFIX) $(OUTDIR)$(FS)ogen$(BINSUFFIX) $(OUTDIR)$(FS)xml2cstr$(BINSUFFIX) $(OUTDIR)$(FS)png2wx$(BINSUFFIX) \
-$(OUTDIR)$(FS)addlang$(BINSUFFIX) $(OUTDIR)$(FS)mergelang$(BINSUFFIX) $(OUTDIR)$(FS)mdoc$(BINSUFFIX) $(OUTDIR)$(FS)lang2po$(BINSUFFIX) $(OUTDIR)$(FS)po2lang$(BINSUFFIX)
+$(OUTDIR)$(FS)addlang$(BINSUFFIX) $(OUTDIR)$(FS)mergelang$(BINSUFFIX) $(OUTDIR)$(FS)mdoc$(BINSUFFIX) $(OUTDIR)$(FS)lang2po$(BINSUFFIX) $(OUTDIR)$(FS)po2lang$(BINSUFFIX) \
+ $(OUTDIR)$(FS)keygen$(BINSUFFIX)
 
 gen:
 	bin$(FS)ogen$(GENSUFFIX) rocs.xml
@@ -155,6 +156,9 @@ $(OUTDIR)$(FS)lang2po$(BINSUFFIX): $(TMPOUTDIR)$(FS)lang2po.o $(OUTDIR)$(FS)libr
 
 $(OUTDIR)$(FS)po2lang$(BINSUFFIX): $(TMPOUTDIR)$(FS)po2lang.o $(OUTDIR)$(FS)librocs.a
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)po2lang$(BINSUFFIX) $(TMPOUTDIR)$(FS)po2lang.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
+
+$(OUTDIR)$(FS)keygen$(BINSUFFIX): $(TMPOUTDIR)$(FS)keygen.o $(OUTDIR)$(FS)librocs.a
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)keygen$(BINSUFFIX) $(TMPOUTDIR)$(FS)keygen.o $(OUTDIR)$(FS)librocs.a $(LIBS) $(SSLLIBS)
 
 $(TMPOUTDIR)/%.o: impl/%.c
 	$(CPP) $(CC_FLAGS) $< -o $@
