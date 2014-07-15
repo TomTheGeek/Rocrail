@@ -2881,6 +2881,7 @@
         <const name="loco_go" vt="string" val="go"/>
         <const name="loco_stop" vt="string" val="stop"/>
         <const name="loco_velocity" vt="string" val="velocity"/>
+        <const name="loco_velocity2" vt="string" val="velocity2"/>
         <const name="loco_dispatch" vt="string" val="dispatch"/>
         <const name="loco_swap" vt="string" val="swap"/>
         <const name="loco_carcount" vt="string" val="carcount"/>

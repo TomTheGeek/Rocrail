@@ -1055,13 +1055,24 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       else if( StrOp.equals(wLoc.stop, wAction.getcmd(data->action) ) ) {
         LocOp.stop(lc, False);
       }
-      else if( StrOp.equals(wLoc.velocity, wAction.getcmd(data->action) ) ) {
+      else if( StrOp.equals(wAction.loco_velocity, wAction.getcmd(data->action) ) ) {
         int v = atoi(wAction.getparam(data->action));
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
         if( v<0 ) {
             wLoc.setdir( cmd, !LocOp.getDir( lc ) );
             v = abs( v );
         }
+        wLoc.setV( cmd, v );
+        LocOp.cmd(lc, cmd);
+      }
+      else if( StrOp.equals(wAction.loco_velocity2, wAction.getcmd(data->action) ) ) {
+        int v = atoi(wAction.getparam(data->action));
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        if( v<0 ) {
+            wLoc.setdir( cmd, !LocOp.getDir( lc ) );
+            v = abs( v );
+        }
+        wLoc.setusesecaddr( cmd, True );
         wLoc.setV( cmd, v );
         LocOp.cmd(lc, cmd);
       }
