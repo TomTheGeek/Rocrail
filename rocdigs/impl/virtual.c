@@ -40,6 +40,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/BinStateCmd.h"
 
 #include "rocutils/public/addr.h"
 
@@ -601,6 +602,18 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     }
 
   }
+
+  /* BinState command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wBinStateCmd.name() ) ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "binstate addr=%d nr=%d data=%d duration=%ds",
+        wBinStateCmd.getaddr(node), wBinStateCmd.getnr(node), wBinStateCmd.getdata(node), wBinStateCmd.gettimer(node) );
+  }
+
+  /* Unsupported command. */
+  else {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported command [%s]", NodeOp.getName( node ) );
+  }
+
   return rsp;
 }
 
