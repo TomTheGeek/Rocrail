@@ -1318,6 +1318,15 @@
       <var name="pendingfeature" vt="int"/>
       <var name="username[128]" vt="char" remark=""/>
     </struct>
+    <struct name="QBiDiBCmd" typedef="*iQBiDiBCmd" remark="Queue command.">
+      <var name="path[4]" vt="byte" remark=""/>
+      <var name="msg[256]" vt="byte"/>
+      <var name="opc" vt="int"/>
+      <var name="len" vt="int"/>
+      <var name="time" vt="unsigned long"/>
+      <var name="delay" vt="unsigned long"/>
+      <var name="bidibnode" vt="iOBiDiBNode"/>"
+    </struct>
     <struct name="slot" typedef="*iOSlot" remark="Loco slot">
       <var name="id" vt="char*"/>
       <var name="addr" vt="int"/>
@@ -1387,6 +1396,7 @@
       <var name="watchdogRunner" vt="iOThread"/>
       <var name="watchdogInt" vt="int"/>
       <var name="dccreset" vt="Boolean"/>
+      <var name="timedQueue" vt="iOThread"/>
     </data>
   </object>
 

@@ -942,7 +942,7 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     if( bidibnode == NULL )
       bidibnode = data->defaultmain;
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d binstate[%d]=%d", addr, nr, val);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d binstate[%d]=%d duration=%d", addr, nr, val, wBinStateCmd.gettimer( node ));
     if( bidibnode != NULL ) {
       msgdata[0] = addr % 256;
       msgdata[1] = addr / 256;
@@ -950,6 +950,22 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       msgdata[3] = nr / 256;
       msgdata[4] = val;
       data->subWrite((obj)inst, bidibnode->path, MSG_CS_BIN_STATE, msgdata, 5, bidibnode);
+      if( wBinStateCmd.gettimer( node ) > 0 && val > 0 ) {
+        iQBiDiBCmd cmd = allocMem(sizeof(struct QBiDiBCmd));
+        cmd->time   = SystemOp.getTick();
+        cmd->delay  = wBinStateCmd.gettimer( node ) * 100;
+        MemOp.copy(cmd->path , bidibnode->path, sizeof(bidibnode->path));
+        cmd->opc = MSG_CS_BIN_STATE;
+        cmd->msg[0] = addr % 256;
+        cmd->msg[1] = addr / 256;
+        cmd->msg[2] = nr % 256;
+        cmd->msg[3] = nr / 256;
+        cmd->msg[4] = 0;
+        cmd->len = 5;
+        cmd->bidibnode = bidibnode;
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "delayed off, %ds, loco %d binstate[%d]", wBinStateCmd.gettimer( node ), addr, nr);
+        ThreadOp.post( data->timedQueue, (obj)cmd );
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no booster available");
@@ -3618,7 +3634,39 @@ static void __stressRunner( void* threadinst ) {
 }
 
 
+static void __timedqueue( void* threadinst ) {
+  iOThread    th    = (iOThread)threadinst;
+  iOBiDiB     bidib = (iOBiDiB)ThreadOp.getParm(th);
+  iOBiDiBData data  = Data(bidib);
 
+  iOList list = ListOp.inst();
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue started" );
+
+  while( data->run ) {
+    iQBiDiBCmd cmd = (iQBiDiBCmd)ThreadOp.getPost( th );
+    if (cmd != NULL) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new timed command opc=0x%02X time=%d delay=%d tick=%d",
+          cmd->opc, cmd->time, cmd->delay, SystemOp.getTick() );
+      ListOp.add(list, (obj)cmd);
+    }
+
+    int i = 0;
+    for( i = 0; i < ListOp.size(list); i++ ) {
+      iQBiDiBCmd cmd = (iQBiDiBCmd)ListOp.get(list, i);
+      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command" );
+        data->subWrite((obj)bidib, cmd->path, cmd->opc, cmd->msg, cmd->len, cmd->bidibnode);
+        ListOp.removeObj(list, (obj)cmd);
+        freeMem(cmd);
+        break;
+      }
+    }
+
+    ThreadOp.sleep(10);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue ended" );
+}
 
 
 /**  */
@@ -3710,6 +3758,9 @@ static struct OBiDiB* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->watchdogRunner = ThreadOp.inst( "bidibwdog", &__watchdogRunner, __BiDiB );
   ThreadOp.start( data->watchdogRunner );
+
+  data->timedQueue = ThreadOp.inst( "timedqueue", &__timedqueue, __BiDiB );
+  ThreadOp.start( data->timedQueue );
 
   if( data->stress ) {
     data->stressRunner = ThreadOp.inst( "bidibstress", &__stressRunner, __BiDiB );
