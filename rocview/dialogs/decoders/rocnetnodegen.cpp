@@ -1240,7 +1240,7 @@ rocnetnodegen::rocnetnodegen( wxWindow* parent, wxWindowID id, const wxString& t
 	m_ChannelRead->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelRead ), NULL, this );
 	m_ChannelWrite->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelWrite ), NULL, this );
 	m_MacroNr->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( rocnetnodegen::onMacroNumber ), NULL, this );
-	m_MacroLines->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( rocnetnodegen::onMacroLineChange ), NULL, this );
+	m_MacroLines->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( rocnetnodegen::onMacroLineChange ), NULL, this );
 	m_MacroExport->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroExport ), NULL, this );
 	m_MacroImport->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroImport ), NULL, this );
 	m_MacroGet->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroGet ), NULL, this );
@@ -1326,7 +1326,7 @@ rocnetnodegen::~rocnetnodegen()
 	m_ChannelRead->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelRead ), NULL, this );
 	m_ChannelWrite->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onChannelWrite ), NULL, this );
 	m_MacroNr->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( rocnetnodegen::onMacroNumber ), NULL, this );
-	m_MacroLines->Disconnect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( rocnetnodegen::onMacroLineChange ), NULL, this );
+	m_MacroLines->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( rocnetnodegen::onMacroLineChange ), NULL, this );
 	m_MacroExport->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroExport ), NULL, this );
 	m_MacroImport->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroImport ), NULL, this );
 	m_MacroGet->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( rocnetnodegen::onMacroGet ), NULL, this );
