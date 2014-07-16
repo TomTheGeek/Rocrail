@@ -60,6 +60,7 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/BinStateCmd.h"
 
 static int instCnt = 0;
 static int levelCnt = 0;
@@ -1074,6 +1075,14 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         }
         wLoc.setusesecaddr( cmd, True );
         wLoc.setV( cmd, v );
+        LocOp.cmd(lc, cmd);
+      }
+      else if( StrOp.equals(wAction.loco_binstate_on, wAction.getcmd(data->action) ) || StrOp.equals(wAction.loco_binstate_off, wAction.getcmd(data->action) ) ) {
+        int nr = atoi(wAction.getparam(data->action));
+        iONode cmd = NodeOp.inst( wBinStateCmd.name(), NULL, ELEMENT_NODE);
+        wBinStateCmd.setnr( cmd, nr );
+        wBinStateCmd.setdata( cmd, StrOp.equals(wAction.loco_binstate_on, wAction.getcmd(data->action) )?1:0 );
+        wBinStateCmd.settimer( cmd, wAction.getactiontime(data->action) );
         LocOp.cmd(lc, cmd);
       }
       else if( StrOp.equals(wAction.loco_percent, wAction.getcmd(data->action) ) ) {

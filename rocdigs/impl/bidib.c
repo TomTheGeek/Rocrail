@@ -3,9 +3,6 @@
 
  Copyright (C) 2002-2014 Rob Versluis, Rocrail.net
 
- 
-
-
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -45,6 +42,7 @@
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/BinStateCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/Switch.h"
@@ -931,6 +929,31 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no booster available");
     }
 
+  }
+
+  /* BinState command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wBinStateCmd.name() ) ) {
+    int addr = wBinStateCmd.getaddr( node );
+    int nr   = wBinStateCmd.getnr( node );
+    int val  = wBinStateCmd.getdata( node );
+    iOSlot slot = __getSlot(inst, node);
+
+    bidibnode = (iOBiDiBNode)MapOp.get( data->nodemap, uidKey );
+    if( bidibnode == NULL )
+      bidibnode = data->defaultmain;
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d binstate[%d]=%d", addr, nr, val);
+    if( bidibnode != NULL ) {
+      msgdata[0] = addr % 256;
+      msgdata[1] = addr / 256;
+      msgdata[2] = nr % 256;
+      msgdata[3] = nr / 256;
+      msgdata[4] = val;
+      data->subWrite((obj)inst, bidibnode->path, MSG_CS_BIN_STATE, msgdata, 5, bidibnode);
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no booster available");
+    }
   }
 
   /* Function command. */

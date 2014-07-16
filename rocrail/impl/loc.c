@@ -61,6 +61,7 @@
 #include "rocrail/wrapper/public/BBT.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Action.h"
+#include "rocrail/wrapper/public/BinStateCmd.h"
 
 static int instCnt = 0;
 
@@ -2895,6 +2896,14 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
             nodename, (cmd==NULL?"-":cmd), wLoc.getid( data->props ), LocOp.getId(master) );
       }
     }
+  }
+
+  if( StrOp.equals(wBinStateCmd.name(), nodename ) ) {
+    wBinStateCmd.setid(nodeA, wLoc.getid(data->props) );
+    wBinStateCmd.setbus(nodeA, wLoc.getbus(data->props) );
+    wBinStateCmd.setaddr(nodeA, wLoc.getaddr(data->props) );
+    ControlOp.cmd( control, nodeA, NULL );
+    return True;
   }
 
   if( StrOp.equals(wLoc.name(), nodename ) && wLoc.isignorefn(nodeA) ) {

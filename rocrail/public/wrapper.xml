@@ -1277,6 +1277,15 @@
     <var name="cmd" vt="string" defval="" range="on,off,start,stop,reset"/>
   </auto>
 
+  <binstate remark="Binary state command" wrappername="BinStateCmd">
+    <var name="id" vt="string" defval="" range="*"/>
+    <var name="bus" vt="int" defval="0" range="0-*" required="false"/>
+    <var name="addr" vt="int" defval="0" range="0-*"/>
+    <var name="nr" vt="int" defval="0-*" remark="state number"/>
+    <var name="data" vt="int" defval="0-1" remark="state data"/>
+    <var name="timer" vt="int" defval="0-*" units="ms" remark="timer to reset state"/>
+  </binstate>
+    
   <fn remark="Function command." wrappername="FunCmd">
     <var name="id" vt="string" defval="" range="*"/>
     <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
@@ -2896,6 +2905,8 @@
         <const name="route_unlock" vt="string" val="unlock"/>
         <const name="text_update" vt="string" val="update"/>
         <const name="sound_play" vt="string" val="play"/>
+        <const name="loco_binstate_on" vt="string" val="binstate_on"/>
+        <const name="loco_binstate_off" vt="string" val="binstate_off"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
