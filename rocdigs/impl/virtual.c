@@ -611,7 +611,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
   /* Unsupported command. */
   else {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unsupported command [%s]", NodeOp.getName( node ) );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "unsupported command [%s]", NodeOp.getName( node ) );
   }
 
   return rsp;
@@ -712,6 +712,7 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
   if( nodeA != NULL ) {
     nodeB = __translate( (iOVirtual)inst, nodeA );
     data->listenerFun( data->listenerObj, nodeB, TRCLEVEL_INFO );
+    nodeB = NULL;
     /* Cleanup Node1 */
     nodeA->base.del(nodeA);
   }
