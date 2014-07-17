@@ -1632,7 +1632,7 @@ void LocDialog::CreateControls()
     m_labImageNr = new wxStaticText( m_General_Panel, wxID_ANY, _("Image Nr."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer39->Add(m_labImageNr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_ImageNr = new wxSpinCtrl( m_General_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 256, 0 );
+    m_ImageNr = new wxSpinCtrl( m_General_Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 256, 0 );
     itemFlexGridSizer39->Add(m_ImageNr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     itemFlexGridSizer39->AddGrowableCol(0);
@@ -1642,13 +1642,13 @@ void LocDialog::CreateControls()
 
     wxFlexGridSizer* itemFlexGridSizer44 = new wxFlexGridSizer(0, 3, 0, 0);
     itemFlexGridSizer29->Add(itemFlexGridSizer44, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-    m_Length = new wxSpinCtrl( m_General_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
+    m_Length = new wxSpinCtrl( m_General_Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
     itemFlexGridSizer44->Add(m_Length, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labNrCars = new wxStaticText( m_General_Panel, wxID_ANY, _("Nr. Cars"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer44->Add(m_labNrCars, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_NrCars = new wxSpinCtrl( m_General_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 999, 0 );
+    m_NrCars = new wxSpinCtrl( m_General_Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 999, 0 );
     itemFlexGridSizer44->Add(m_NrCars, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxBOTTOM, 5);
 
     itemFlexGridSizer44->AddGrowableCol(0);
@@ -1725,7 +1725,7 @@ void LocDialog::CreateControls()
     m_labThrottleNr = new wxStaticText( m_General_Panel, wxID_ANY, _("Throttle Nr."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer67->Add(m_labThrottleNr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_ThrottleNr = new wxSpinCtrl( m_General_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
+    m_ThrottleNr = new wxSpinCtrl( m_General_Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
     itemFlexGridSizer67->Add(m_ThrottleNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer71 = new wxBoxSizer(wxVERTICAL);
@@ -1738,7 +1738,7 @@ void LocDialog::CreateControls()
     m_labMInt = new wxStaticText( m_General_Panel, wxID_ANY, _("M-Int.:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer72->Add(m_labMInt, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_MInt = new wxSpinCtrl( m_General_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    m_MInt = new wxSpinCtrl( m_General_Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer72->Add(m_MInt, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxStaticLine* itemStaticLine76 = new wxStaticLine( m_General_Panel, wxID_STATIC, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
@@ -1962,19 +1962,19 @@ void LocDialog::CreateControls()
     m_labMaxLoad = new wxStaticText( m_Interface_Panel, wxID_ANY, _("Max. load"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer143->Add(m_labMaxLoad, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_MaxLoad = new wxSpinCtrl( m_Interface_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 999999, 0 );
+    m_MaxLoad = new wxSpinCtrl( m_Interface_Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 999999, 0 );
     itemFlexGridSizer143->Add(m_MaxLoad, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     m_labMinAccel = new wxStaticText( m_Interface_Panel, wxID_ANY, _("Min. CV3"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer143->Add(m_labMinAccel, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_MinAccel = new wxSpinCtrl( m_Interface_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
+    m_MinAccel = new wxSpinCtrl( m_Interface_Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
     itemFlexGridSizer143->Add(m_MinAccel, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     m_labMaxAccel = new wxStaticText( m_Interface_Panel, wxID_ANY, _("Max. CV3"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer143->Add(m_labMaxAccel, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxTOP|wxBOTTOM, 5);
 
-    m_MaxAccel = new wxSpinCtrl( m_Interface_Panel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
+    m_MaxAccel = new wxSpinCtrl( m_Interface_Panel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
     itemFlexGridSizer143->Add(m_MaxAccel, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     itemFlexGridSizer143->AddGrowableCol(1);
@@ -2006,19 +2006,19 @@ void LocDialog::CreateControls()
     m_labEvtCorrection = new wxStaticText( m_DetailsPanel, wxID_ANY, _("Timer correction"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer154->Add(m_labEvtCorrection, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_EvtCorrection = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, _T("100"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 1, 1000, 100 );
+    m_EvtCorrection = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, wxT("100"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 1, 1000, 100 );
     itemFlexGridSizer154->Add(m_EvtCorrection, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labPriority = new wxStaticText( m_DetailsPanel, wxID_ANY, _("Priority"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer154->Add(m_labPriority, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_Priority = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 10 );
+    m_Priority = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, wxT("10"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 100, 10 );
     itemFlexGridSizer154->Add(m_Priority, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labSwapTimer = new wxStaticText( m_DetailsPanel, wxID_ANY, _("Swap timer"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer154->Add(m_labSwapTimer, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_SwapTimer = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    m_SwapTimer = new wxSpinCtrl( m_DetailsPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer154->Add(m_SwapTimer, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labStartupTour = new wxStaticText( m_DetailsPanel, wxID_STATIC, _("Startup tour"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -2147,7 +2147,7 @@ void LocDialog::CreateControls()
     m_f0 = new wxTextCtrl( m_FunctionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer186->Add(m_f0, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 2);
 
-    m_TimerF0 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    m_TimerF0 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
     itemFlexGridSizer186->Add(m_TimerF0, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
     m_Button_f0 = new wxButton( m_FunctionPanel, ID_BUTTON_F0, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
@@ -2167,7 +2167,7 @@ void LocDialog::CreateControls()
     itemFlexGridSizer198->Add(itemButton199, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labFnGroup = new wxStaticText( m_FunctionPanel, wxID_ANY, _("1"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_labFnGroup->SetFont(wxFont(12, wxSWISS, wxNORMAL, wxNORMAL, false, wxT("Sans")));
+    m_labFnGroup->SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Sans")));
     itemFlexGridSizer198->Add(m_labFnGroup, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_FunctionGroup = new wxButton( m_FunctionPanel, ID_LOC_FN_GROUP, _("Fg >"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -2205,7 +2205,7 @@ void LocDialog::CreateControls()
     m_f1 = new wxTextCtrl( m_FunctionPanel, ID_TEXTCTRL_F1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer202->Add(m_f1, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_TimerF1 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    m_TimerF1 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer202->Add(m_TimerF1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
     m_Button_f1 = new wxButton( m_FunctionPanel, ID_BUTTON_F1, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
@@ -2217,10 +2217,10 @@ void LocDialog::CreateControls()
     m_Icon_f1 = new wxTextCtrl( m_FunctionPanel, ID_LOC_ICONF1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer202->Add(m_Icon_f1, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_F1Addr = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
+    m_F1Addr = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer202->Add(m_F1Addr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_F1AddrFn = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 28, 0 );
+    m_F1AddrFn = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer202->Add(m_F1AddrFn, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Label_f2 = new wxStaticText( m_FunctionPanel, wxID_STATIC_F2, _("f2"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -2229,7 +2229,7 @@ void LocDialog::CreateControls()
     m_f2 = new wxTextCtrl( m_FunctionPanel, ID_TEXTCTRL_F2, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer202->Add(m_f2, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_TimerF2 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    m_TimerF2 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer202->Add(m_TimerF2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
     m_Button_f2 = new wxButton( m_FunctionPanel, ID_BUTTON_F2, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
@@ -2241,10 +2241,10 @@ void LocDialog::CreateControls()
     m_Icon_f2 = new wxTextCtrl( m_FunctionPanel, ID_LOC_ICONF2, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer202->Add(m_Icon_f2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_F2Addr = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
+    m_F2Addr = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer202->Add(m_F2Addr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_F2AddrFn = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 28, 0 );
+    m_F2AddrFn = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer202->Add(m_F2AddrFn, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Label_f3 = new wxStaticText( m_FunctionPanel, wxID_STATIC_F3, _("f3"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -2253,7 +2253,7 @@ void LocDialog::CreateControls()
     m_f3 = new wxTextCtrl( m_FunctionPanel, ID_TEXTCTRL_F3, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer202->Add(m_f3, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_TimerF3 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    m_TimerF3 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer202->Add(m_TimerF3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
     m_Button_f3 = new wxButton( m_FunctionPanel, ID_BUTTON_F3, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
@@ -2265,10 +2265,10 @@ void LocDialog::CreateControls()
     m_Icon_f3 = new wxTextCtrl( m_FunctionPanel, ID_LOC_ICONF3, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer202->Add(m_Icon_f3, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_F3Addr = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
+    m_F3Addr = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer202->Add(m_F3Addr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_F3AddrFn = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 28, 0 );
+    m_F3AddrFn = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer202->Add(m_F3AddrFn, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Label_f4 = new wxStaticText( m_FunctionPanel, wxID_STATIC_F4, _("f4"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -2277,7 +2277,7 @@ void LocDialog::CreateControls()
     m_f4 = new wxTextCtrl( m_FunctionPanel, ID_TEXTCTRL_F4, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer202->Add(m_f4, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_TimerF4 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    m_TimerF4 = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(70, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer202->Add(m_TimerF4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
     m_Button_f4 = new wxButton( m_FunctionPanel, ID_BUTTON_F4, _("..."), wxDefaultPosition, wxSize(40, 25), 0 );
@@ -2289,10 +2289,10 @@ void LocDialog::CreateControls()
     m_Icon_f4 = new wxTextCtrl( m_FunctionPanel, ID_LOC_ICONF4, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer202->Add(m_Icon_f4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_F4Addr = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
+    m_F4Addr = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer202->Add(m_F4Addr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_F4AddrFn = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS, 0, 28, 0 );
+    m_F4AddrFn = new wxSpinCtrl( m_FunctionPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer202->Add(m_F4AddrFn, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     itemFlexGridSizer202->AddGrowableCol(1);
@@ -2584,7 +2584,7 @@ void LocDialog::CreateControls()
     m_BBT->SetValue(false);
     itemFlexGridSizer324->Add(m_BBT, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_BBTSteps = new wxSpinCtrl( m_BBTPanel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 4, 16, 10 );
+    m_BBTSteps = new wxSpinCtrl( m_BBTPanel, wxID_ANY, wxT("10"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 4, 16, 10 );
     itemFlexGridSizer324->Add(m_BBTSteps, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSteps = new wxStaticText( m_BBTPanel, wxID_ANY, _("Steps"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -2593,7 +2593,7 @@ void LocDialog::CreateControls()
     m_labBBTStartInterval = new wxStaticText( m_BBTPanel, wxID_ANY, _("Start interval"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer324->Add(m_labBBTStartInterval, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_BBTStartInterval = new wxSpinCtrl( m_BBTPanel, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 100, 10 );
+    m_BBTStartInterval = new wxSpinCtrl( m_BBTPanel, wxID_ANY, wxT("10"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 100, 10 );
     itemFlexGridSizer324->Add(m_BBTStartInterval, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxStaticText* itemStaticText330 = new wxStaticText( m_BBTPanel, wxID_ANY, _("* 10ms"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -2602,7 +2602,7 @@ void LocDialog::CreateControls()
     m_labBBTMaxDiff = new wxStaticText( m_BBTPanel, wxID_ANY, _("Max. difference"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer324->Add(m_labBBTMaxDiff, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_BBTMaxDiff = new wxSpinCtrl( m_BBTPanel, wxID_ANY, _T("250"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 500, 250 );
+    m_BBTMaxDiff = new wxSpinCtrl( m_BBTPanel, wxID_ANY, wxT("250"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 500, 250 );
     itemFlexGridSizer324->Add(m_BBTMaxDiff, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labBBT10ms = new wxStaticText( m_BBTPanel, wxID_ANY, _("* 10ms"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -2611,7 +2611,7 @@ void LocDialog::CreateControls()
     m_labBBTCorrection = new wxStaticText( m_BBTPanel, wxID_ANY, _("Correction"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer324->Add(m_labBBTCorrection, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_BBTCorrection = new wxSpinCtrl( m_BBTPanel, wxID_ANY, _T("25"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 100, 25 );
+    m_BBTCorrection = new wxSpinCtrl( m_BBTPanel, wxID_ANY, wxT("25"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 100, 25 );
     itemFlexGridSizer324->Add(m_BBTCorrection, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labBBTPer = new wxStaticText( m_BBTPanel, wxID_ANY, _("%"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -2645,7 +2645,7 @@ void LocDialog::CreateControls()
     m_labBBTInterval = new wxStaticText( m_BBTPanel, wxID_ANY, _("Interval"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer342->Add(m_labBBTInterval, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_BBTInterval = new wxSpinCtrl( m_BBTPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(120, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
+    m_BBTInterval = new wxSpinCtrl( m_BBTPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(120, -1), wxSP_ARROW_KEYS, 0, 65535, 0 );
     itemFlexGridSizer342->Add(m_BBTInterval, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_BBTFixed = new wxCheckBox( m_BBTPanel, wxID_ANY, _("Fixed"), wxDefaultPosition, wxDefaultSize, 0 );

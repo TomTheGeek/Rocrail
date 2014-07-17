@@ -447,6 +447,8 @@ void ThrottleDlg::funCmd(int fidx, bool on)
 
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
   wFunCmd.setfnchanged ( cmd, fidx );
+  if( fidx != -1 )
+    wFunCmd.setfnchangedstate ( cmd, on?True:False );
   wFunCmd.setid ( cmd, wLoc.getid( m_Props ) );
   wFunCmd.setgroup ( cmd, group );
   wFunCmd.setfncnt ( cmd, wLoc.getfncnt( m_Props ) );

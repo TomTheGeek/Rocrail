@@ -987,21 +987,34 @@ static iONode __translate( iOBiDiB inst, iONode node ) {
     if( bidibnode == NULL )
       bidibnode = data->defaultmain;
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d f[%d]=%s", addr, fnchanged, fnstate?"on":"off");
     if( bidibnode != NULL ) {
-      msgdata[0] = addr % 256;
-      msgdata[1] = addr / 256;
-      msgdata[2] = 0;
-      msgdata[3] = 0x3E; // functions only
-      msgdata[4] = 0;
-      msgdata[5] = (fn?0x10:0x00) + (wFunCmd.isf1(node)?0x01:0x00) + (wFunCmd.isf2(node)?0x02:0x00) + (wFunCmd.isf3(node)?0x04:0x00) + (wFunCmd.isf4(node)?0x08:0x00);
-      msgdata[6] = (wFunCmd.isf5(node)?0x01:0x00) + (wFunCmd.isf6(node)?0x02:0x00) + (wFunCmd.isf7(node)?0x04:0x00) + (wFunCmd.isf8(node)?0x08:0x00);
-      msgdata[6]+= (wFunCmd.isf9(node)?0x10:0x00) + (wFunCmd.isf10(node)?0x20:0x00) + (wFunCmd.isf11(node)?0x40:0x00) + (wFunCmd.isf12(node)?0x80:0x00);
-      msgdata[7] = (wFunCmd.isf13(node)?0x01:0x00) + (wFunCmd.isf14(node)?0x02:0x00) + (wFunCmd.isf15(node)?0x04:0x00) + (wFunCmd.isf16(node)?0x08:0x00);
-      msgdata[7]+= (wFunCmd.isf17(node)?0x10:0x00) + (wFunCmd.isf18(node)?0x20:0x00) + (wFunCmd.isf19(node)?0x40:0x00) + (wFunCmd.isf20(node)?0x80:0x00);
-      msgdata[8] = (wFunCmd.isf21(node)?0x01:0x00) + (wFunCmd.isf22(node)?0x02:0x00) + (wFunCmd.isf23(node)?0x04:0x00) + (wFunCmd.isf24(node)?0x08:0x00);
-      msgdata[8]+= (wFunCmd.isf25(node)?0x10:0x00) + (wFunCmd.isf26(node)?0x20:0x00) + (wFunCmd.isf27(node)?0x40:0x00) + (wFunCmd.isf28(node)?0x80:0x00);
-      data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode);
+      if( fnchanged > 100 ) {
+        int nr = fnchanged-100;
+        fnstate = wFunCmd.isfnchangedstate(node);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d binstate[%d]=%s", addr, nr, fnstate?"on":"off");
+        msgdata[0] = addr % 256;
+        msgdata[1] = addr / 256;
+        msgdata[2] = nr % 256;
+        msgdata[3] = nr / 256;
+        msgdata[4] = fnstate?1:0;
+        data->subWrite((obj)inst, bidibnode->path, MSG_CS_BIN_STATE, msgdata, 5, bidibnode);
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d f[%d]=%s", addr, fnchanged, fnstate?"on":"off");
+        msgdata[0] = addr % 256;
+        msgdata[1] = addr / 256;
+        msgdata[2] = 0;
+        msgdata[3] = 0x3E; // functions only
+        msgdata[4] = 0;
+        msgdata[5] = (fn?0x10:0x00) + (wFunCmd.isf1(node)?0x01:0x00) + (wFunCmd.isf2(node)?0x02:0x00) + (wFunCmd.isf3(node)?0x04:0x00) + (wFunCmd.isf4(node)?0x08:0x00);
+        msgdata[6] = (wFunCmd.isf5(node)?0x01:0x00) + (wFunCmd.isf6(node)?0x02:0x00) + (wFunCmd.isf7(node)?0x04:0x00) + (wFunCmd.isf8(node)?0x08:0x00);
+        msgdata[6]+= (wFunCmd.isf9(node)?0x10:0x00) + (wFunCmd.isf10(node)?0x20:0x00) + (wFunCmd.isf11(node)?0x40:0x00) + (wFunCmd.isf12(node)?0x80:0x00);
+        msgdata[7] = (wFunCmd.isf13(node)?0x01:0x00) + (wFunCmd.isf14(node)?0x02:0x00) + (wFunCmd.isf15(node)?0x04:0x00) + (wFunCmd.isf16(node)?0x08:0x00);
+        msgdata[7]+= (wFunCmd.isf17(node)?0x10:0x00) + (wFunCmd.isf18(node)?0x20:0x00) + (wFunCmd.isf19(node)?0x40:0x00) + (wFunCmd.isf20(node)?0x80:0x00);
+        msgdata[8] = (wFunCmd.isf21(node)?0x01:0x00) + (wFunCmd.isf22(node)?0x02:0x00) + (wFunCmd.isf23(node)?0x04:0x00) + (wFunCmd.isf24(node)?0x08:0x00);
+        msgdata[8]+= (wFunCmd.isf25(node)?0x10:0x00) + (wFunCmd.isf26(node)?0x20:0x00) + (wFunCmd.isf27(node)?0x40:0x00) + (wFunCmd.isf28(node)?0x80:0x00);
+        data->subWrite((obj)inst, bidibnode->path, MSG_CS_DRIVE, msgdata, 9, bidibnode);
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no booster available");

@@ -392,14 +392,20 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     Boolean f13 = wFunCmd.isf13( node );
     Boolean f14 = wFunCmd.isf14( node );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-            "id=%s decoder %d f%d(%d)=%s", id, addr, fc, group , __getFnState(node,fc)?"on":"off" );
+    if( fc > 100 ) {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "id=%s decoder %d f%d(%d)=%s binstatenr=%d", id, addr, fc, group , wFunCmd.isfnchangedstate(node)?"on":"off", fc-100 );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "id=%s decoder %d f%d(%d)=%s", id, addr, fc, group , __getFnState(node,fc)?"on":"off" );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-            "decoder %d f0=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s f13=%s f14=%s",
-            addr, f0?"on":"off", f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off",
-            f5?"on":"off", f6?"on":"off", f7?"on":"off", f8?"on":"off",
-            f9?"on":"off", f10?"on":"off", f11?"on":"off", f12?"on":"off", f13?"on":"off", f14?"on":"off" );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "decoder %d f0=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s f13=%s f14=%s",
+              addr, f0?"on":"off", f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off",
+              f5?"on":"off", f6?"on":"off", f7?"on":"off", f8?"on":"off",
+              f9?"on":"off", f10?"on":"off", f11?"on":"off", f12?"on":"off", f13?"on":"off", f14?"on":"off" );
+    }
 
     if( wDigInt.isoverrule(data->ini) ) {
       rsp = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );

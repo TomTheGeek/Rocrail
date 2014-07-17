@@ -194,6 +194,8 @@ void LC::funCmd(int fidx)
   iONode cmd = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
   wFunCmd.setgroup ( cmd, m_iFnGroup + 1 );
   wFunCmd.setfnchanged ( cmd, fidx==-1?0:fidx + 1 );
+  if( fidx != -1 )
+    wFunCmd.setfnchangedstate ( cmd, m_bFx[fidx]?True:False );
   wFunCmd.setfncnt ( cmd, wLoc.getfncnt( m_LocProps ) );
   wFunCmd.setid ( cmd, wLoc.getid( m_LocProps ) );
   wFunCmd.setf0 ( cmd, m_bFn?True:False );
