@@ -679,6 +679,60 @@ static void calc_function_group(char* byte1, char* byte2, int group, Boolean f[]
    TraceOp.trc( "nmra", TRCLEVEL_BYTE, __LINE__, 9999,"function datagram %s %s", byte1, byte2!=NULL?byte2:"");
 }
 
+
+/*
+The format of two byte instructions in this group is: 110CCCCC 0 DDDDDDDD
+The format of three byte instructions in this group is: 110CCCCC 0 DDDDDDDD 0 DDDDDDDD
+The 5-bit sub-instruction CCCCC allows for 32 separate Feature Expansion Sub-instructions.
+CCCCC = 00000: Binary State Control Instruction long form – Sub instruction "00000" is a three byte instruction and provides for control
+of one of 32767 binary states within the decoder. The two bytes following this instruction byte have the format DLLLLLLL 0 HHHHHHHH".
+Bits 0-6 of the first data byte (LLLLLLL) shall define the low order bits of the binary state address; bits 0-7 of
+the second data byte (HHHHHHHH) shall define the high order bits of binary state address. The addresses range from 1 to 32767.
+Bit 7 of the second byte (D) defines the
+binary state. A value of "1" shall indicate that the binary state is "on" while a value of "0" shall indicate that the binary state is "off".
+The value of 0 for the address is reserved as broadcast to clear or set all 32767 binary states. An instruction "11000000 0 00000000 0 00000000"
+sets all 32767 binary states to off.
+Binary states accessed with all high address bits set to zero would be the same as accessed by the short form of the 300 binary state control.
+Command stations shall use the short form in this case, i.e. Binary State Controls 1 to 127
+should always be addressed using the short form. Decoders supporting the long form shall support the short form as well.
+ */
+static void calc_binstat(char* byte1, char* byte2, char* byte3, int nr, int val) {
+  int nr_low  = nr & 0xFF;
+  int nr_high = nr % 256;
+
+  byte1[0] = '1';
+  byte1[1] = '1';
+  byte1[2] = '0';
+  byte1[3] = '0';
+  byte1[4] = '0';
+  byte1[5] = '0';
+  byte1[6] = '0';
+  byte1[7] = '0';
+  byte1[8] = 0;
+
+  byte2[0] = val?'1':'0';
+  byte2[1] = (nr_low&0x40)?'1':'0';
+  byte2[2] = (nr_low&0x20)?'1':'0';
+  byte2[3] = (nr_low&0x10)?'1':'0';
+  byte2[4] = (nr_low&0x08)?'1':'0';
+  byte2[5] = (nr_low&0x04)?'1':'0';
+  byte2[6] = (nr_low&0x02)?'1':'0';
+  byte2[7] = (nr_low&0x01)?'1':'0';
+  byte2[8] = 0;
+
+  byte3[0] = (nr_high&0x80)?'1':'0';
+  byte3[1] = (nr_high&0x40)?'1':'0';
+  byte3[2] = (nr_high&0x20)?'1':'0';
+  byte3[3] = (nr_high&0x10)?'1':'0';
+  byte3[4] = (nr_high&0x08)?'1':'0';
+  byte3[5] = (nr_high&0x04)?'1':'0';
+  byte3[6] = (nr_high&0x02)?'1':'0';
+  byte3[7] = (nr_high&0x01)?'1':'0';
+  byte3[8] = 0;
+
+}
+
+
 static void calc_128spst_adv_op_bytes(char *byte1, char *byte2,
                                int direction, int speed) {
 
@@ -930,6 +984,124 @@ int compFunctionLongAddr(char* packetstream, int address, int group, Boolean f[]
      strcpy( tmp, errdbyte );
      xor_two_bytes(errdbyte, tmp, funcbyte2);
      strcat(bitstream, funcbyte2);
+     strcat(bitstream, "0");
+   }
+   strcat(bitstream, errdbyte);
+   strcat(bitstream, "1");
+
+   TraceOp.trc( "nmra", TRCLEVEL_BYTE, __LINE__, 9999,
+       "14 bit addr bitstream: %s", bitstream);
+
+   return translateBitstream2Packetstream(bitstream, packetstream);
+}
+
+
+/* function-decoder with 7-bit address */
+int compBinStateShortAddr(char* packetstream, int address, int nr, int val) {
+
+   char addrbyte[9] = {0};
+   char funcbyte[9] = {0};
+   char funcbyte2[9] = {0};
+   char funcbyte3[9] = {0};
+   char errdbyte[9] = {0};
+   char bitstream[BUFFERSIZE];
+
+   int adr = 0;
+   int i;
+
+   adr=address;
+   /* no special error handling, it's job of the clients */
+   if (address<1 || address>127 )
+      return 1;
+
+   calc_7bit_address_byte(addrbyte, address);
+   calc_binstat(funcbyte, funcbyte2, funcbyte3, nr, val);
+
+   xor_two_bytes(errdbyte, addrbyte, funcbyte);
+
+
+   /* putting all together in a 'bitstream' (char array) (functions) */
+   memset(bitstream, 0, 100);
+   strcat(bitstream, preamble);
+   strcat(bitstream, "0");
+   strcat(bitstream, addrbyte);
+   strcat(bitstream, "0");
+   strcat(bitstream, funcbyte);
+   strcat(bitstream, "0");
+   if(funcbyte2[0] != 0 ) {
+     char tmp[9] = {0};
+     strcpy( tmp, errdbyte );
+     xor_two_bytes(errdbyte, tmp, funcbyte2);
+     strcat(bitstream, funcbyte2);
+     strcat(bitstream, "0");
+   }
+   if(funcbyte3[0] != 0 ) {
+     char tmp[9] = {0};
+     strcpy( tmp, errdbyte );
+     xor_two_bytes(errdbyte, tmp, funcbyte3);
+     strcat(bitstream, funcbyte3);
+     strcat(bitstream, "0");
+   }
+   strcat(bitstream, errdbyte);
+   strcat(bitstream, "1");
+
+   TraceOp.trc( "nmra", TRCLEVEL_BYTE, __LINE__, 9999,
+       "7 bit addr bitstream: %s", bitstream);
+
+   return translateBitstream2Packetstream(bitstream, packetstream);
+}
+
+
+/* function-decoder with 14-bit address */
+int compBinStateLongAddr(char* packetstream, int address, int nr, int val) {
+
+   char addrbyte1[9] = {0};
+   char addrbyte2[9] = {0};
+   char funcbyte[9] = {0};
+   char funcbyte2[9] = {0};
+   char funcbyte3[9] = {0};
+   char errdbyte[9] = {0};
+   char dummy[9] = {0};
+   char bitstream[BUFFERSIZE];
+
+   int adr       = 0;
+   int i;
+
+   adr=address;
+
+   /* no special error handling, it's job of the clients */
+   if (address<1 || address>10239)
+      return 1;
+
+   calc_14bit_address_byte(addrbyte1, addrbyte2, address);
+   calc_binstat(funcbyte, funcbyte2, funcbyte3, nr, val);
+
+   xor_two_bytes(dummy, addrbyte1, addrbyte2);
+   xor_two_bytes(errdbyte, dummy, funcbyte);
+
+
+   /* putting all together in a 'bitstream' (char array) (functions) */
+   memset(bitstream, 0, 100);
+   strcat(bitstream, preamble);
+   strcat(bitstream, "0");
+   strcat(bitstream, addrbyte1);
+   strcat(bitstream, "0");
+   strcat(bitstream, addrbyte2);
+   strcat(bitstream, "0");
+   strcat(bitstream, funcbyte);
+   strcat(bitstream, "0");
+   if(funcbyte2[0] != 0 ) {
+     char tmp[9] = {0};
+     strcpy( tmp, errdbyte );
+     xor_two_bytes(errdbyte, tmp, funcbyte2);
+     strcat(bitstream, funcbyte2);
+     strcat(bitstream, "0");
+   }
+   if(funcbyte3[0] != 0 ) {
+     char tmp[9] = {0};
+     strcpy( tmp, errdbyte );
+     xor_two_bytes(errdbyte, tmp, funcbyte3);
+     strcat(bitstream, funcbyte3);
      strcat(bitstream, "0");
    }
    strcat(bitstream, errdbyte);
@@ -1245,6 +1417,12 @@ int compFunction(char* packetstream, int address, Boolean longaddr, int group, B
     return compFunctionShortAddr( packetstream, address, group, f);
 }
 
+int compBinStat(char* packetstream, int address, Boolean longaddr, int nr, int val) {
+  if( longaddr )
+    return compBinStateLongAddr( packetstream, address, nr, val);
+  else
+    return compBinStateShortAddr( packetstream, address, nr, val);
+}
 
 
 /* PT */

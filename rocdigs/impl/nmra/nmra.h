@@ -37,6 +37,7 @@ int compSpeed14(char* packetstream, int address, int direction, int speed);
 
 int compSpeed(char* packetstream, int address, Boolean longaddr, int direction, int speed, int steps);
 int compFunction(char* packetstream, int address, Boolean longaddr, int group, Boolean f[]);
+int compBinStat(char* packetstream, int address, Boolean longaddr, int nr, int val);
 
 /* short addresses */
 int compSpeed28ShortAddr(char* packetstream, int address, int direction, int speed);

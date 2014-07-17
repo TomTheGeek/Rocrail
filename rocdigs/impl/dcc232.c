@@ -24,6 +24,7 @@
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/DCC232.h"
+#include "rocrail/wrapper/public/BinStateCmd.h"
 
 #include "rocutils/public/addr.h"
 
@@ -376,6 +377,24 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     }
   }
 
+  /* BinState command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wBinStateCmd.name() ) ) {
+    int addr = wBinStateCmd.getaddr( node );
+    int nr   = wBinStateCmd.getnr( node );
+    int val  = wBinStateCmd.getdata( node );
+    Boolean longaddr = StrOp.equals( wLoc.getprot( node ), wLoc.prot_L );
+    int packetlen = 0;
+    byte dccpacket[64];
+    byte* cmd = NULL;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "binary state decoder=%d nr=%d val=%d",  addr, nr, val );
+
+    packetlen = compBinStat((char*)dccpacket, addr, longaddr, nr, val);
+    cmd = allocMem(64);
+    cmd[0] = packetlen;
+    MemOp.copy(cmd+1, dccpacket, packetlen );
+    ThreadOp.post( data->writer, (obj)cmd );
+  }
+
   /* Function */
   else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name() ) ) {
     int addr  = wFunCmd.getaddr( node );
@@ -385,7 +404,18 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     byte dccpacket[64];
     byte* cmd = NULL;
 
-    if( MutexOp.trywait( data->slotmux, 100 ) ) {
+    if( wFunCmd.getfnchanged(node) > 100 ) {
+      int nr = wFunCmd.getfnchanged(node) - 100;
+      int val = wFunCmd.isfnchangedstate(node)?1:0;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d binstate[%d]=%d", addr, nr, val);
+      packetlen = compBinStat((char*)dccpacket, addr, longaddr, nr, val);
+      cmd = allocMem(64);
+      cmd[0] = packetlen;
+      MemOp.copy(cmd+1, dccpacket, packetlen );
+      ThreadOp.post( data->writer, (obj)cmd );
+    }
+
+    else if( MutexOp.trywait( data->slotmux, 100 ) ) {
       Boolean isNew = False;
       int slot =  __getLocoSlot( dcc232, node, &isNew);
 
