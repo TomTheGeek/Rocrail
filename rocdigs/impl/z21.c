@@ -636,19 +636,27 @@ static iONode __translate(iOZ21 inst, iONode node) {
 
     __checkDecMode(inst, node);
 
-    packet[0] = 0x0A;
-    packet[1] = 0x00;
-    packet[2] = X_BUS_TUNNEL;
-    packet[3] = 0x00;
-    packet[4] = 0xE4;
-    packet[5] = 0xF8;
-    packet[6] = 0xC0 + (addr / 256); /*MSB*/
-    packet[7] = addr % 256; /*LSB*/
-    packet[8] = (fnstate?0x40:0x00) + fnchanged;
-    packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d function %d %s", addr, fnchanged, fnstate?"on":"off" );
-    ThreadOp.post(data->writer, (obj)packet);
-
+    if( fnchanged > 100 ) {
+      int val = wFunCmd.isfnchangedstate(node)?1:0;
+      NodeOp.setName(node, wBinStateCmd.name() );
+      wBinStateCmd.setnr(node, fnchanged-100);
+      wBinStateCmd.setdata(node, val);
+      __translate(inst, node);
+    }
+    else {
+      packet[0] = 0x0A;
+      packet[1] = 0x00;
+      packet[2] = X_BUS_TUNNEL;
+      packet[3] = 0x00;
+      packet[4] = 0xE4;
+      packet[5] = 0xF8;
+      packet[6] = 0xC0 + (addr / 256); /*MSB*/
+      packet[7] = addr % 256; /*LSB*/
+      packet[8] = (fnstate?0x40:0x00) + fnchanged;
+      packet[9] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7] ^ packet[8]; /*xor*/
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d function %d %s", addr, fnchanged, fnstate?"on":"off" );
+      ThreadOp.post(data->writer, (obj)packet);
+    }
   }
 
   /* Program command. */
