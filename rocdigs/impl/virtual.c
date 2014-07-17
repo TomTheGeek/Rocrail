@@ -710,9 +710,10 @@ static iONode _cmd( obj inst ,const iONode nodeA ) {
   iONode nodeB = NULL;
 
   if( nodeA != NULL ) {
-    nodeB = __translate( (iOVirtual)inst, nodeA );
-    data->listenerFun( data->listenerObj, nodeB, TRCLEVEL_INFO );
-    nodeB = NULL;
+    iONode rsp = __translate( (iOVirtual)inst, nodeA );
+    if( rsp != NULL ) {
+      data->listenerFun( data->listenerObj, rsp, TRCLEVEL_INFO );
+    }
     /* Cleanup Node1 */
     nodeA->base.del(nodeA);
   }
