@@ -7133,3 +7133,9 @@ msgstr ""
 msgid "The changes will be saved."
 msgstr ""
 
+#. 
+# id="swapped"
+#, c-format
+msgid "Swapped"
+msgstr ""
+

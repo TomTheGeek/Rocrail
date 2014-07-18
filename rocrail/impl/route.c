@@ -1065,6 +1065,20 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
     return False;
   }
 
+  if( wRoute.getplacing(data->props) > 0 ) {
+    if( wRoute.getplacing(data->props) == 1 && !LocOp.getPlacing(loc) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Loc [%s] has no permission to use route [%s]; only placing default is allowed.",
+                     id, wRoute.getid(data->props) );
+      return False;
+    }
+    else if( wRoute.getplacing(data->props) == 2 && LocOp.getPlacing(loc) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Loc [%s] has no permission to use route [%s]; only placing swapped is allowed.",
+                     id, wRoute.getid(data->props) );
+      return False;
+    }
+  }
 
   if( wRoute.isnocommuter(data->props) && LocOp.isCommuter(loc)) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,

@@ -28273,4 +28273,7 @@
   <Msg id="saveplan">
     <en txt="The changes will be saved."/>
   </Msg>
+  <Msg id="swapped">
+    <en txt="Swapped"/>
+  </Msg>
 </Messages>

@@ -321,6 +321,7 @@ public:
     wxStaticText* m_labMinLen;
     wxSpinCtrl* m_MinLen;
     wxRadioBox* m_Commuter;
+    wxRadioBox* m_Placing;
     wxPanel* m_ConditionsPanel;
     wxGrid* m_CondGrid;
     wxCheckBox* m_CondNotFromBlock;
