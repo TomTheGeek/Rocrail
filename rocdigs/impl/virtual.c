@@ -106,6 +106,7 @@ static void __inform( iOVirtual inst, int uid ) {
   iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
   wState.setiid( node, wDigInt.getiid( data->ini ) );
   wState.setpower( node, data->power );
+  wState.setenablecom( node, data->enablecom );
   wState.settrackbus( node, True );
   wState.setuid( node, uid);
   wState.setload( node, 3000 );
@@ -429,6 +430,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
 
     if( StrOp.equals( cmd, wSysCmd.enablecom ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s: %s communication", data->iid, wSysCmd.getval(node) == 1 ? "enable":"disable" );
+      data->enablecom = wSysCmd.getval(node) == 1 ? True:False;
     }
     else if( StrOp.equals( cmd, wSysCmd.stop ) ) {
       if( boosterid > 0 ) {
@@ -832,11 +834,12 @@ static struct OVirtual* _inst( const iONode ini ,const iOTrace trc ) {
   SystemOp.inst();
 
   /* Initialize data->xxx members... */
-  data->ini      = ini;
-  data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
-  data->fbmod    = wDigInt.getfbmod( ini );
-  data->fboffset = wDigInt.getfboffset( ini );
-  data->readfb   = wDigInt.isreadfb( ini );
+  data->ini       = ini;
+  data->iid       = StrOp.dup( wDigInt.getiid( ini ) );
+  data->fbmod     = wDigInt.getfbmod( ini );
+  data->fboffset  = wDigInt.getfboffset( ini );
+  data->readfb    = wDigInt.isreadfb( ini );
+  data->enablecom = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "virtual %d.%d.%d", vmajor, vminor, patch );

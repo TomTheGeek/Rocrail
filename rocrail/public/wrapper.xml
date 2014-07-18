@@ -1130,7 +1130,7 @@
   <state remark="State wrapper" wrappername="State">
     <var name="iid" vt="string" defval="NULL" range="*"/>
     <var name="power" vt="bool" defval="false"/>
-    <var name="enablecom" vt="bool" defval="false"/>
+    <var name="enablecom" vt="bool" defval="true"/>
     <var name="programming" vt="bool" defval="false"/>
     <var name="trackbus" vt="bool" defval="false"/>
     <var name="sensorbus" vt="bool" defval="false"/>

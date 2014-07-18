@@ -443,6 +443,7 @@
       <var name="fboffset" vt="int"/>
       <var name="fbnum" vt="int"/>
       <var name="power" vt="Boolean"/>
+      <var name="enablecom" vt="Boolean"/>
       <var name="readfb" vt="Boolean"/>
       <var name="responseReader" vt="iOThread"/>
       <var name="transactor" vt="iOThread"/>
