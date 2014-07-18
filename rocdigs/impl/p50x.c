@@ -1363,6 +1363,7 @@ static void __statusReader( void* threadinst ) {
             wState.settrackbus( node, !halt );
             wState.setsensorbus( node, power );
             wState.setaccessorybus( node, power );
+            wState.setenablecom( node, o->dummyio );
 
             if( o->listenerFun != NULL && o->listenerObj != NULL )
               o->listenerFun( o->listenerObj, node, TRCLEVEL_INFO );

@@ -1866,6 +1866,7 @@ static void __reportState(iOECoS inst) {
     if( data->iid != NULL )
       wState.setiid( node, data->iid );
     wState.setpower( node, data->power );
+    wState.setenablecom( node, data->enablecom );
 
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }

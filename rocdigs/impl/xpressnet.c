@@ -1344,6 +1344,7 @@ static void __transactor( void* threadinst ) {
           wState.setiid( node, data->iid );
         wState.setpower( node, False );
         wState.settrackbus( node, False );
+        wState.setenablecom( node, data->enablecom );
 
         if( data->listenerFun != NULL && data->listenerObj != NULL )
           data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
@@ -1362,6 +1363,7 @@ static void __transactor( void* threadinst ) {
         wState.settrackbus( node, False );
         wState.setsensorbus( node, False );
         wState.setaccessorybus( node, False );
+        wState.setenablecom( node, data->enablecom );
 
         if( data->listenerFun != NULL && data->listenerObj != NULL )
           data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
@@ -1380,6 +1382,7 @@ static void __transactor( void* threadinst ) {
         wState.settrackbus( node, True );
         wState.setsensorbus( node, True );
         wState.setaccessorybus( node, True );
+        wState.setenablecom( node, data->enablecom );
 
         if( data->listenerFun != NULL && data->listenerObj != NULL )
           data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
