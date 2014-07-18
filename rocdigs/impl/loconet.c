@@ -60,6 +60,7 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/Clock.h"
+#include "rocrail/wrapper/public/BinStateCmd.h"
 
 
 /* loconet opcodes */
@@ -75,6 +76,7 @@
 #include "rocdigs/impl/loconet/lncv.h"
 #include "rocdigs/impl/loconet/locoio.h"
 #include "rocdigs/impl/loconet/ibcom-cv.h"
+#include "rocdigs/impl/loconet/lnutils.h"
 
 #include "rocutils/public/addr.h"
 
@@ -147,12 +149,12 @@ static void* __properties( void* inst ) {
 
 static byte _checksum(const byte *cmd, int len)
 {
-    byte chksum = 0xff;
-    int i;
-    for (i = 0; i < len; i++) {
-        chksum ^= cmd[i];
-    }
-    return chksum;
+  byte chksum = 0xff;
+  int i;
+  for (i = 0; i < len; i++) {
+    chksum ^= cmd[i];
+  }
+  return chksum;
 }
 
 
@@ -1995,6 +1997,16 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     *delnode = False;
     return 0;
   }
+
+  /* BinState command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wBinStateCmd.name() ) ) {
+    int addr = wBinStateCmd.getaddr( node );
+    int nr   = wBinStateCmd.getnr( node );
+    int val  = wBinStateCmd.getdata( node );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "binary state addr=%d nr=%d val=%d", addr, nr, val );
+    return binaryStateLN(cmd, addr, nr, val);
+  }
+
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     int addr = wSwitch.getaddr1( node );
@@ -2087,6 +2099,13 @@ static int __translate( iOLocoNet loconet_inst, iONode node, byte* cmd, Boolean*
     }
   }
 
+
+  /* Function command > 100. */
+  else if( StrOp.equals( NodeOp.getName( node ), wFunCmd.name()) && wFunCmd.getfnchanged(node) > 100 ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "(function > 100) binary state addr=%d nr=%d val=%d",
+        wFunCmd.getaddr(node), wFunCmd.getfnchanged(node)-100, wFunCmd.isfnchangedstate(node)?1:0 );
+    return binaryStateLN(cmd, wFunCmd.getaddr(node), wFunCmd.getfnchanged(node)-100, wFunCmd.isfnchangedstate(node)?1:0);
+  }
 
   /* Loc command. */
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ||
