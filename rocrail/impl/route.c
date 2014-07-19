@@ -1080,6 +1080,21 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
     }
   }
 
+  if( wRoute.getlocodir(data->props) > 0 ) {
+    if( wRoute.getlocodir(data->props) == 1 && !LocOp.getDir(loc) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Loc [%s] has no permission to use route [%s]; only direction forwards is allowed.",
+                     id, wRoute.getid(data->props) );
+      return False;
+    }
+    else if( wRoute.getlocodir(data->props) == 2 && LocOp.getDir(loc) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Loc [%s] has no permission to use route [%s]; only direction reverse is allowed.",
+                     id, wRoute.getid(data->props) );
+      return False;
+    }
+  }
+
   if( wRoute.isnocommuter(data->props) && LocOp.isCommuter(loc)) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Loc [%s] has no permission to use route [%s]; commuter trains are not allowed.",
