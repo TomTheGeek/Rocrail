@@ -1686,16 +1686,16 @@ void RouteDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer99 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer98->Add(itemFlexGridSizer99, 0, wxGROW|wxALL, 5);
     m_labMaxLen = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Max. train length"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer99->Add(m_labMaxLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer99->Add(m_labMaxLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_MaxLen = new wxSpinCtrl( m_PermissionsPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
-    itemFlexGridSizer99->Add(m_MaxLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer99->Add(m_MaxLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labMinLen = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Min. train length"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer99->Add(m_labMinLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer99->Add(m_labMinLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_MinLen = new wxSpinCtrl( m_PermissionsPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
-    itemFlexGridSizer99->Add(m_MinLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer99->Add(m_MinLen, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     itemFlexGridSizer99->AddGrowableCol(1);
 
@@ -1718,7 +1718,7 @@ void RouteDialog::CreateControls()
     m_PlacingStrings.Add(_("&Swapped"));
     m_Placing = new wxRadioBox( m_PermissionsPanel, wxID_ANY, _("Placing"), wxDefaultPosition, wxDefaultSize, m_PlacingStrings, 1, wxRA_SPECIFY_ROWS );
     m_Placing->SetSelection(0);
-    itemBoxSizer105->Add(m_Placing, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer105->Add(m_Placing, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Notebook->AddPage(m_PermissionsPanel, _("Persmissions"));
 
