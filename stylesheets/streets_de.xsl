@@ -8,7 +8,7 @@
    <head><title>Rocrail Routes report</title>
   </head>
   <body>
-  <h2>Liste aller definierten Fahrstrassen</h2>
+  <h2>Liste der definierten Fahrstrassen (PB)</h2>
 
   <table border="1" rules="all" cellpadding="4" cellspacing="0" width="100%">
       <THEAD>
@@ -17,14 +17,7 @@
 	     <TH width="15%" height="30" bgcolor="lightgrey">Von Block</TH>
 	     <TH width="15%" height="30" bgcolor="lightgrey">Nach Block</TH>
 	     <TH width="10%" height="30" bgcolor="lightgrey">Kreuzender Block</TH>
-	     <TH width="20%" height="30" bgcolor="lightgrey"><xsl:text> </xsl:text></TH>
-	  </TR>
-	  <TR>
-	     <TH height="30" bgcolor="white"><xsl:text> </xsl:text></TH>
-	     <TH height="30" bgcolor="lightgrey">Benutzung</TH>
-	     <TH height="30" bgcolor="lightgrey">Fahrrichtung</TH>
-	     <TH height="30" bgcolor="lightgrey">Platzierung &#228;ndern</TH>
-	     <TH height="30" bgcolor="lightgrey">Geschwindigkeit</TH>
+	     <TH width="20%" height="30" bgcolor="lightgrey">Geschwindigkeit</TH>
 	  </TR>
       </THEAD> 
       <TBODY>
@@ -38,9 +31,12 @@
 
 <xsl:template match="stlist">  
   
-  <xsl:apply-templates/>
+  <xsl:apply-templates>
+   <xsl:sort select="@id" order="ascending" data-type="text" />
+  
+  </xsl:apply-templates>
 
-</xsl:template>
+  </xsl:template>
 
 
 <xsl:template match="st">  
@@ -72,8 +68,8 @@
        </xsl:choose>
 	   </TD>
 
-	   <xsl:variable name="bkc" select="@bkc" />
 	   <TD align="center">
+	   <xsl:variable name="bkc" select="@bkc" />
 	   <xsl:choose>
          <xsl:when test="@bkc">
    	       <xsl:choose>
@@ -90,55 +86,52 @@
        </xsl:otherwise>
        </xsl:choose>
 	   </TD>
+
+	   <TD align="center">
+       <xsl:variable name="speed" select="@speed" />
+	   <xsl:choose>
+            <xsl:when test="$speed = 'percent'">
+                  <xsl:value-of select="@speedpercent" /> <xsl:text>%</xsl:text>
+            </xsl:when>
+       <xsl:otherwise>
+            <xsl:value-of select="@speed" />
+       </xsl:otherwise>
+       </xsl:choose>
+
+	   </TD>
    </TR>
    <TR>
-      <xsl:variable name="dir" select="@dir" />
+	  <xsl:variable name="nocommuter" select="@nocommuter" />
+	  <TD align="center">
+         <xsl:choose>
+         <xsl:when test="$nocommuter = 'false'">
+          <xsl:text>-</xsl:text>
+           </xsl:when>
+           <xsl:when test="$nocommuter = 'true'">
+           <xsl:text>Pendel: nein</xsl:text>
+         </xsl:when>
+         </xsl:choose>
+      </TD>
+      
+	  <xsl:variable name="commuter" select="@commuter" />
+	  <TD align="center">
+         <xsl:choose>
+         <xsl:when test="$commuter = 'false'">
+          <xsl:text>-</xsl:text>
+           </xsl:when>
+           <xsl:when test="$commuter = 'true'">
+           <xsl:text>Pendel: nur</xsl:text>
+         </xsl:when>
+         </xsl:choose>
+      </TD>
 
+      <xsl:variable name="swappost" select="@swappost" />
       <TD align="center">
 	   <xsl:choose>
-         <xsl:when test="@dir">
+         <xsl:when test="@swappost">
    	       <xsl:choose>
-             <xsl:when test="$dir = 'true'">
-                <xsl:text>Von - Nach</xsl:text>
-             </xsl:when>
-           <xsl:otherwise>
-                <xsl:text>Beide Richtungen</xsl:text>
-           </xsl:otherwise>
-           </xsl:choose>
-       </xsl:when>
-       <xsl:otherwise>
-         <xsl:text>-</xsl:text>
-       </xsl:otherwise>
-       </xsl:choose>
-	   </TD>
-
-      <xsl:variable name="lcdir" select="@lcdir" />
-	   <TD align="center">
-	   <xsl:choose>
-         <xsl:when test="@lcdir">
-   	       <xsl:choose>
-             <xsl:when test="$lcdir = 'true'">
-                <xsl:text>Vorw&#228;rts</xsl:text>
-             </xsl:when>
-           <xsl:otherwise>
-                <xsl:text>R&#252;ckw&#228;rts</xsl:text>
-           </xsl:otherwise>
-           </xsl:choose>
-       </xsl:when>
-       <xsl:otherwise>
-         <xsl:text>-</xsl:text>
-       </xsl:otherwise>
-       </xsl:choose>
-	   </TD>
-
-	   
-       <xsl:variable name="swap" select="@swap" />
-	   <TD align="center">
-	   <xsl:choose>
-         <xsl:when test="@sawp">
-   	       <xsl:choose>
-             <xsl:when test="$swap = 'true'">
-                  <xsl:value-of select="@swap" />
+             <xsl:when test="$swappost = 'true'">
+                <xsl:text>swap after</xsl:text>
              </xsl:when>
            <xsl:otherwise>
                 <xsl:text>-</xsl:text>
@@ -150,18 +143,21 @@
        </xsl:otherwise>
        </xsl:choose>
 	   </TD>
-
-       <xsl:variable name="speed" select="@speed" />
-	   <TD align="center">
-	   <xsl:choose>
-            <xsl:when test="$speed = 'percent'">
-                  <xsl:value-of select="@speedpercent" /> <xsl:text>%</xsl:text>
-            </xsl:when>
-       <xsl:otherwise>
-            <xsl:value-of select="@speed" />
+	   
+	  <xsl:variable name="placing" select="@placing" />
+	  <TD align="center">
+         <xsl:choose>
+         <xsl:when test="$placing = '1'">
+          <xsl:text>nur Standard</xsl:text>
+           </xsl:when>
+           <xsl:when test="$placing = '2'">
+           <xsl:text>nur Swapped</xsl:text>
+         </xsl:when>
+        <xsl:otherwise>
+         <xsl:text>-</xsl:text>
        </xsl:otherwise>
-       </xsl:choose>
-	   </TD>
+        </xsl:choose>
+      </TD>
    </TR>
 
     <TR>
