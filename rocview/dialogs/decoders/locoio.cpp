@@ -1597,8 +1597,8 @@ void LocoIO::evaluateEvent( int type, int low, int sub, int sv, int val, int ver
     m_ModConfig->SetValue(s);
     m_PortRefresh->SetValue( val&0x01 ? true:false );
     m_FilpButtonCode->SetValue( val&0x02 ? true:false );
-    m_4PosServo->SetValue( val&0x03 ? true:false );
-    m_Port_5_12_Servos->SetValue( val&0x04 ? true:false );
+    m_4PosServo->SetValue( val&0x04 ? true:false );
+    m_Port_5_12_Servos->SetValue( val&0x08 ? true:false );
     m_FlashFreq->SetValue( (val & 0xF0) >> 4 );
   }
   else if( sv == 1 ) {
