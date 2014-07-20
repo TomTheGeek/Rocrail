@@ -2738,11 +2738,19 @@ static iOList _getSensorsByAddress( iOModel inst, const char* iid, int bus, int 
 }
 
 
-static obj _getSwByAddress( iOModel inst, const char* iid, int bus, int addr, int port, int type, const char* uidname ) {
+static obj _getSwByAddress( iOModel inst, const char* iid, int bus, int addr, int port, int type, const char* uidname, obj offset ) {
   iOModelData o = Data(inst);
+  Boolean gotOffset = False;
   obj sw = ListOp.first(o->switchList);
   while( sw != NULL ) {
     iONode props = sw->properties(sw);
+
+    if( offset != NULL && !gotOffset ) {
+      if( offset == sw )
+        gotOffset = True;
+      sw = ListOp.next( o->switchList );
+      continue;
+    }
 
     if( iid != NULL && wItem.getiid(props) != NULL && StrOp.len(wItem.getiid(props)) > 0 ) {
       if( !StrOp.equals(iid, wItem.getiid(props)) ) {
@@ -3786,10 +3794,15 @@ static void _event( iOModel inst, iONode nodeC ) {
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
     int type = wSwitch.getporttype( nodeC );
+    Boolean foundSw = False;
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match switch event: %d:%d:%d type=%d uidname=[%s]", bus, addr, port, type, uidname );
-    obj sw = ModelOp.getSwByAddress(inst, iid, bus, addr, port, type, uidname);
-    if( sw != NULL ) {
+    obj sw = ModelOp.getSwByAddress(inst, iid, bus, addr, port, type, uidname, NULL);
+    while( sw != NULL ) {
+      foundSw = True;
       sw->event( sw, (iONode)NodeOp.base.clone(nodeC) );
+      sw = ModelOp.getSwByAddress(inst, iid, bus, addr, port, type, uidname, sw);
+    }
+    if( foundSw ) {
       NodeOp.base.del(nodeC);
       return;
     }

@@ -934,7 +934,8 @@
       <param name="port" vt="int" remark="Decoder port to search for"/>
       <param name="type" vt="int" remark="Port type to search for"/>
       <param name="uidname" vt="const char*" remark="Alternative name for the bus number."/>
-    </fun>
+      <param name="offset" vt="obj" remark="Optional switch object offset to be able to find another switch with the same address."/>
+      </fun>
     <fun name="getSgByAddress" vt="iOSignal">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="iid" vt="const char*" remark="Optional IID"/>
