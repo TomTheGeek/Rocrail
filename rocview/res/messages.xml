@@ -28276,4 +28276,7 @@
   <Msg id="swapped">
     <en txt="Swapped"/>
   </Msg>
+  <Msg id="locoimagecolumn">
+    <en txt="Loco image column"/>
+  </Msg>
 </Messages>

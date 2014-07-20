@@ -129,6 +129,7 @@
     <var name="verticaltoolbar" vt="bool" defval="false"/>
     <var name="statusboosteruid" vt="int" defval="0"/>
     <var name="showspeedometer" vt="bool" defval="false"/>
+    <var name="locoimagecolumn" vt="bool" defval="true"/>
     <trace extern="true"/>
     <var name="restorelcctrl" vt="bool" defval="true"/>
     <var name="locosortbyaddress" vt="bool" defval="false"/>

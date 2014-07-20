@@ -7139,3 +7139,9 @@ msgstr ""
 msgid "Swapped"
 msgstr ""
 
+#. 
+# id="locoimagecolumn"
+#, c-format
+msgid "Loco image column"
+msgstr ""
+

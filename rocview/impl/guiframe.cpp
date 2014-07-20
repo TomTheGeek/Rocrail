@@ -1332,7 +1332,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
 
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_DESTBLOCK, wxALIGN_LEFT, wxALIGN_CENTRE );
 
-        if( wLoc.getimage( lc ) != NULL && StrOp.len(wLoc.getimage( lc )) > 0 ) {
+        if( m_bLocoImageColumn && wLoc.getimage( lc ) != NULL && StrOp.len(wLoc.getimage( lc )) > 0 ) {
           m_ActiveLocs->SetCellRenderer(i, LOC_COL_IMAGE, new CellRenderer(wLoc.getimage( lc )) );
         }
       }
@@ -1358,7 +1358,8 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
   }
 
   m_ActiveLocs->AutoSizeColumns(false);
-  m_ActiveLocs->AutoSizeColumn(LOC_COL_IMAGE);
+  if( m_bLocoImageColumn )
+    m_ActiveLocs->AutoSizeColumn(LOC_COL_IMAGE);
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
   m_ActiveLocs->MakeCellVisible(m_iLcRowSelection, m_ActiveLocs->XToCol(0) );
 
@@ -1801,6 +1802,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_ThrottlesRestored  = false;
   m_ScaleComboBox      = NULL;
   m_bEnableCom         = true;
+  m_bLocoImageColumn   = wGui.islocoimagecolumn(m_Ini)?true:false;
 
 
   if( wxTheClipboard != NULL ) {
@@ -2462,7 +2464,7 @@ void RocGuiFrame::create() {
 
   m_ActiveLocs = new wxGrid( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
   m_ActiveLocs->SetRowLabelSize(0);
-  m_ActiveLocs->CreateGrid(1, 8, wxGrid::wxGridSelectRows);
+  m_ActiveLocs->CreateGrid(1, m_bLocoImageColumn?8:7, wxGrid::wxGridSelectRows);
 
   wxFont* fontHeader = new wxFont( m_ActiveLocs->GetLabelFont() );
   fontHeader->SetPointSize( (int)(fontHeader->GetPointSize() + wGui.getgridfontsizeadjust(m_Ini) ) );
@@ -2481,7 +2483,8 @@ void RocGuiFrame::create() {
   m_ActiveLocs->SetColLabelValue(LOC_COL_MODE, wxGetApp().getMsg("mode") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_DESTBLOCK, wxGetApp().getMsg("destination") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_CONSIST, wxGetApp().getMsg("train") );
-  m_ActiveLocs->SetColLabelValue(LOC_COL_IMAGE, wxGetApp().getMsg("image") );
+  if( m_bLocoImageColumn )
+    m_ActiveLocs->SetColLabelValue(LOC_COL_IMAGE, wxGetApp().getMsg("image") );
   m_ActiveLocs->AutoSizeColumns();
   m_ActiveLocs->AutoSizeRows();
 
