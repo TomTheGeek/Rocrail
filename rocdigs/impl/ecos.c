@@ -971,15 +971,16 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ECoS system function command" );
 
     const char* cmdstr  = wSysCmd.getcmd( node );
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SysCmd %s", cmdstr );
 
     if ( StrOp.equals( cmdstr, wSysCmd.stop ) || StrOp.equals( cmdstr, wSysCmd.ebreak ) ) {
 
       StrOp.fmtb( ecosCmd, "set(%d, stop)\n", OID_ECOS );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power OFF" );
 
     } else if ( StrOp.equals( cmdstr, wSysCmd.go )) {
 
       StrOp.fmtb( ecosCmd, "set(%d, go)\n", OID_ECOS );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Power ON" );
 
     } else if ( StrOp.equals( cmdstr, wSysCmd.loccnfg ) || StrOp.equals( cmdstr, wSysCmd.swcnfg )) {
 
