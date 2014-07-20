@@ -7839,7 +7839,7 @@ static Boolean _checkPlanHealth(iOAnalyse inst) {
           __createAccessorymapKeyFromAPGPVIB( key, wSwitch.getaddr1(item), wSwitch.getport1(item), wSwitch.getgate1(item), wSwitch.getparam1(item), wSwitch.getvalue1(item), wItem.getiid(item), wSwitch.getbus(item) );
           if( MapOp.haskey( accessoryMap, key ) ) {
             iONode switchItem = (iONode)MapOp.get( accessoryMap, key );
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: switch %s has an already used address %d-%d by %s (aMapKey=%s)",
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch %s has an already used address %d-%d by %s (aMapKey=%s)",
                 wItem.getid(item), wSwitch.getaddr1(item), wSwitch.getport1(item), wItem.getid(switchItem), key );
           }
           else {
