@@ -57,15 +57,24 @@ static const char* __name(void) {
 static unsigned char* __serialize(void* inst, long* size) {
   iOAttrData data = Data(inst);
   Boolean utf8 = ( DocOp.isUTF8Encoding() && DocOp.isUTF2Latin() );
-  char* val = utf8 ? SystemOp.latin2utf(data->val):StrOp.dup( data->val );
-  char* s = NULL;
-  s = StrOp.cat( s, data->name);
-  s = StrOp.cat( s, "=\"");
-  s = StrOp.cat( s, val);
-  s = StrOp.cat( s, "\"");
-  *size = StrOp.len( s );
-  StrOp.free( val );
-  return (unsigned char*)s;
+  if( data->val != NULL ) {
+    char* val = utf8 ? SystemOp.latin2utf(data->val):StrOp.dup( data->val );
+    char* s = NULL;
+    s = StrOp.cat( s, data->name);
+    s = StrOp.cat( s, "=\"");
+    s = StrOp.cat( s, val);
+    s = StrOp.cat( s, "\"");
+    *size = StrOp.len( s );
+    StrOp.free( val );
+    return (unsigned char*)s;
+  }
+  else {
+    char* s = NULL;
+    s = StrOp.cat( s, data->name);
+    s = StrOp.cat( s, "=\"\"");
+    *size = StrOp.len( s );
+    return (unsigned char*)s;
+  }
 }
 
 /* ------------------------------------------------------------
@@ -103,7 +112,7 @@ static void __deserialize(void* inst, unsigned char* a) {
 static char* __toString(void* inst) {
   iOAttrData data = Data(inst);
   char* str = allocIDMem( StrOp.len(data->name) + StrOp.len(data->val) + 4, RocsStrID );
-  str = StrOp.fmtb( str, "%s=\"%s\"", data->name, data->val );
+  str = StrOp.fmtb( str, "%s=\"%s\"", data->name, data->val==NULL?"":data->val );
   return str;
 }
 
