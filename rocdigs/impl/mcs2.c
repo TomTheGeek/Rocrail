@@ -318,6 +318,27 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     return rsp;
   }
 
+  /* Signal command */
+  else if( StrOp.equals( NodeOp.getName(node), wSignal.name() ) ) {
+    byte* out = allocMem(32);
+    int module = wSignal.getaddr(node);
+    int port   = wSignal.getport1(node);
+    int gate   = wSignal.getgate1(node);
+    int aspect = wSignal.getaspect(node);
+    if ( module == 0 )
+      module = 1;
+
+    Boolean dccoutput = StrOp.equals( wSignal.getprot( node ), wOutput.prot_N );
+    if( port == 0 )    //fada used convert to address, port
+      AddrOp.fromFADA( module, &module, &port, &gate );
+
+    long address = (( module - 1 ) * 4 ) + port -1 + (dccoutput?0x3800:0x3000);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Signal %d (%s) aspect=%d", (address - (dccoutput?0x37FF:0x2FFF) ), dccoutput?"dcc":"mm", aspect );
+    __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, aspect, 1, 0, 0);
+    ThreadOp.post( data->writer, (obj)out );
+    return rsp;
+  }
+
   /* Output command */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
     byte* out = allocMem(32);
