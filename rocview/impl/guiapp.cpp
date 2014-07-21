@@ -349,12 +349,17 @@ wxString RocGui::getTip( const char* key ) {
   return wxString(ResOp.getTip( m_Res, key ),wxConvUTF8);
 }
 void RocGui::openLink( const char* pagename, const char* section ) {
-  const char* lang = wGui.getlang(wxGetApp().getIni());
-  const char* url = wGui.gethelpurl(wxGetApp().getIni());
-  char* pagefilename = NULL;
+  const char* lang      = wGui.lang_english;
+  const char* locallang = wGui.getlang(wxGetApp().getIni());
+  const char* url       = wGui.gethelpurl(wxGetApp().getIni());
+  char* pagefilename    = NULL;
 
-  if( !( StrOp.equals( wGui.lang_german, lang ) || StrOp.equals( wGui.lang_italien, lang ) ) )
-    lang = wGui.lang_english;
+  // allow local wiki translations
+  if( StrOp.equals( wGui.lang_german, locallang ) || StrOp.equals( wGui.lang_italien, locallang ) ||
+      StrOp.equals( wGui.lang_french, locallang ) || StrOp.equals( wGui.lang_dutch, locallang ) )
+  {
+    lang = locallang;
+  }
 
   if( section == NULL )
     pagefilename = StrOp.fmt("%s/doku.php?id=%s-%s", url, pagename, lang);
