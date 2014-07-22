@@ -460,11 +460,28 @@ void SymbolRenderer::initSym() {
             m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_turnoutleft_t );
           }
           else {
-            m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft );
-            m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_t );
-            m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_t );
-            m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_occ );
-            m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_t_occ );
+            if( wSwitch.getaccnr( m_Props ) > 1 ) {
+              char key[256];
+              StrOp.fmtb( key, switchtype::accessory_on, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_off, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_on_occ, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_off_occ, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_on_route, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_off_route, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, key );
+            }
+            else {
+              m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft );
+              m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_t );
+              m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_t );
+              m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_occ );
+              m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_t_occ );
+            }
           }
         }
       }
@@ -487,11 +504,28 @@ void SymbolRenderer::initSym() {
             m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_turnoutright_t );
           }
           else {
-            m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright );
-            m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_t );
-            m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_t );
-            m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_occ );
-            m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_t_occ );
+            if( wSwitch.getaccnr( m_Props ) > 1 ) {
+              char key[256];
+              StrOp.fmtb( key, switchtype::accessory_on, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_off, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_on_occ, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_off_occ, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_on_route, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, key );
+              StrOp.fmtb( key, switchtype::accessory_off_route, wSwitch.getaccnr( m_Props ) );
+              m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, key );
+            }
+            else {
+              m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright );
+              m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_t );
+              m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_t );
+              m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_occ );
+              m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_t_occ );
+            }
           }
         }
       }
