@@ -1107,7 +1107,14 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         LocOp.dispatch(lc);
       }
       else if( StrOp.equals(wLoc.swap, wAction.getcmd(data->action) ) ) {
-        LocOp.swapPlacing(lc, NULL, False, False);
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setcmd( cmd, wLoc.swap );
+        LocOp.cmd(lc, cmd);
+      }
+      else if( StrOp.equals(wLoc.blockside, wAction.getcmd(data->action) ) ) {
+        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+        wLoc.setcmd( cmd, wLoc.blockside );
+        LocOp.cmd(lc, cmd);
       }
     }
   }

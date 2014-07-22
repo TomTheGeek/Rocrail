@@ -1042,6 +1042,7 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wLoc.releasetrain, wxConvUTF8));
       m_Command->Append(wxString( wAction.loco_binstate_on, wxConvUTF8));
       m_Command->Append(wxString( wAction.loco_binstate_off, wxConvUTF8));
+      m_Command->Append(wxString( wLoc.blockside, wxConvUTF8));
       break;
     case 8: // function
       m_Command->Append(wxString( wAction.fun_on, wxConvUTF8));
