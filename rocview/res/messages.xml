@@ -2871,7 +2871,7 @@
     <en txt="Sensor table" alttxt="Sensors" tip="Sensor table"/>
     <nl txt="Melders" tip="Bezetmelders"/>
     <sv txt="Sensorer" tip="Sensortabell"/>
-    <fr txt="Contacts" tip="Tableau des contacts"/>
+    <fr txt="Table des détecteurs" tip="Tableau des contacts"/>
     <tr txt="Sensör tablosu" tip="Algılayıcılar"/>
     <es txt="Contactos" tip="Contactos"/>
     <it txt="Sensori" tip="Sensori"/>
@@ -2903,7 +2903,7 @@
     <en txt="Sensors comming from block %s:"/>
     <nl txt="Melders vanuit blok %s:"/>
     <sv txt="Sensor från block %s:"/>
-    <fr txt="Contacts en provenance du bloc %s :"/>
+    <fr txt="Détecteurs en provenance du bloc %s:"/>
     <tr txt="Blok %s için algılayıcı :"/>
     <es txt="Contactos del Bloque %s:"/>
     <it txt="Sensori dal blocco %s:"/>
@@ -3160,7 +3160,7 @@
     <en txt="ID"/>
     <nl txt="ID"/>
     <sv txt="ID"/>
-    <fr txt="Indicatif"/>
+    <fr txt="Identifiant"/>
     <tr txt="ID"/>
     <es txt="Denominación"/>
     <it txt="ID"/>
@@ -4160,7 +4160,7 @@
     <en txt="Sensor"/>
     <nl txt="Melder"/>
     <sv txt="Sensor"/>
-    <fr txt="Contact de voie"/>
+    <fr txt="Détecteur"/>
     <tr txt="Algılayıcı"/>
     <es txt="Contacto"/>
     <it txt="Sensore"/>
@@ -4872,7 +4872,7 @@
     <en txt="Loc ID" alttxt="Loco ID"/>
     <nl txt="Loc ID"/>
     <sv txt="Lok-ID"/>
-    <fr txt="Indicatif de la locomotive"/>
+    <fr txt="Identifiant de la locomotive"/>
     <tr txt="Loc ID"/>
     <es txt="Denominación Loc"/>
     <it txt="ID Loco"/>
@@ -4904,7 +4904,7 @@
     <en txt="Turntable ID"/>
     <nl txt="Draaischijf ID"/>
     <sv txt="Turntable-ID"/>
-    <fr txt="Indicatif du pont tournant"/>
+    <fr txt="Identifiant du pont tournant"/>
     <tr txt="Turntable ID"/>
     <es txt="Denominación Turntable"/>
     <it txt="ID piattaforma girevole"/>
@@ -8354,7 +8354,7 @@
     <en txt="Position sensor"/>
     <nl txt="Positie melder"/>
     <sv txt="Sensorposition"/>
-    <fr txt="Contact de position"/>
+    <fr txt="Détecteur de position"/>
     <tr txt="Pozisyon algılayıcı"/>
     <es txt="Contacto de posición"/>
     <it txt="Sensore di posizione"/>
@@ -8385,7 +8385,7 @@
     <en txt="Loc sensor"/>
     <nl txt="Loc melder"/>
     <sv txt="Loksensor"/>
-    <fr txt="Contact de la locomotive"/>
+    <fr txt="détecteur de locomotive"/>
     <tr txt="Loc algılayıcı"/>
     <es txt="Contacto de Locomotora"/>
     <it txt="Sensore locomotiva"/>
@@ -13767,7 +13767,7 @@
     <en txt="Sensors"/>
     <nl txt="Melders"/>
     <sv txt="Sensorer"/>
-    <fr txt="Contacts"/>
+    <fr txt="Détecteurs"/>
     <tr txt="Sensors"/>
     <es txt="Contactos"/>
     <it txt="Sensori"/>
@@ -15015,7 +15015,7 @@
     <en txt="Switch sensors" tip=""/>
     <nl txt="Wissel melders" tip=""/>
     <sv txt="Växelsensorer" tip=""/>
-    <fr txt="Contacts d'aiguillage" tip=""/>
+    <fr txt="Détecteur d'aiguillage" tip=""/>
     <tr txt="Switch sensors" tip=""/>
     <es txt="Switch sensors" tip=""/>
     <it txt="Sensori deviatoio" tip=""/>
@@ -15126,7 +15126,7 @@
     <en txt="Switch sensor mode" tip=""/>
     <nl txt="Wissel terugmeldings mode" tip=""/>
     <sv txt="Typ av växelsensor" tip=""/>
-    <fr txt="Mode du contact d'aiguillage" tip=""/>
+    <fr txt="Mode détecteur Switch" tip=""/>
     <tr txt="Switch sensor mode" tip=""/>
     <es txt="Switch sensor mode" tip=""/>
     <it txt="Modalità sensore deviatoio" tip=""/>
@@ -16580,7 +16580,7 @@
     <en txt="Shared sensors"/>
     <nl txt="Gedeelde melders"/>
     <sv txt="Shared sensors"/>
-    <fr txt="Contacts partagés"/>
+    <fr txt="Détecteurs partagés"/>
     <tr txt="Shared sensors"/>
     <es txt="Shared sensors"/>
     <it txt="Sensori condivisi"/>
@@ -20111,7 +20111,7 @@
     <en txt="Open Workspace" tip="Open a Workspace to play."/>
     <cs txt="Otevři pracovní prostor" tip="Otevři pracovní prostor pro hraní"/>
     <nl txt="Werkruimte openen" tip="Open een werkruimte"/>
-    <fr txt="Ouvrir l'environnement de jeu" tip="Ouvrir le dossier de travail pour jouer."/>
+    <fr txt="Ouvrir l'environnement de travail" tip="Ouvrir l'environnement de travail pour jouer"/>
     <de txt="Arbeitsbereich öffnen" tip="Einen Arbeitsbereich zum Spielen öffnen."/>
     <it txt="Apri cartella di lavoro" tip="Apri una cartella di lavoro per iniziare"/>
     <pt txt="Abrir espaço de trabalho"/>
@@ -20158,7 +20158,7 @@
     <en txt="Default Workspace" tip="Default Workspace to open at startup."/>
     <cs txt="Defaultní pracovní prostor" tip="Defaultní pracovní prostor otevřen při zapnutí"/>
     <nl txt="Standaard werkruimte" tip="Standaard werkruimte bij het opstarten"/>
-    <fr txt="Environnement de jeu par défaut" tip="Environnement de jeu à ouvrir par défaut."/>
+    <fr txt="Environnement de travail par défaut" tip="Environnement de travail par défaut au démarrage"/>
     <de txt="Standard-Arbeitsbereich" tip="Zu ladender Arbeitsbereich beim Programmstart"/>
     <it txt="Cartella di lavoro predefinita" tip="Cartella di lavoro predefinita da aprire all'avvio"/>
     <pt txt="Espaço de trabalho default"/>
@@ -20181,7 +20181,7 @@
     <en txt="Use Workspace at startup"/>
     <cs txt="Použij pracovní prostor při zapnutí"/>
     <nl txt="Gebruik werkruimte bij het opstarten"/>
-    <fr txt="Utiliser l'environnement de jeu au démarrage"/>
+    <fr txt="Utiliser l'environnement de travail au démarrage"/>
     <de txt="Lade Arbeitsbereich beim Programmstart"/>
     <it txt="Usare cartella di lavoro all'avvio"/>
     <pt txt="Usar espaço de trabalho no arranque"/>
@@ -21309,7 +21309,7 @@
     <en txt="Recent Workspaces"/>
     <cs txt="Nedávné pracovní prostory"/>
     <nl txt="Laatste werkruimten"/>
-    <fr txt="Environnements de jeu récents"/>
+    <fr txt="Environnement de travail récents"/>
     <de txt="Letzte Arbeitsbereiche"/>
     <ru txt="Недавние Workspaces"/>
     <en_AU txt="Recent Workspaces"/>
@@ -23174,7 +23174,7 @@
     <en txt="Timed sensors"/>
     <nl txt="Vertraagde melders"/>
     <de txt="Zeitgesteuerte Rückmelder"/>
-    <fr txt="Capteurs temporisés"/>
+    <fr txt="Détecteurs temporisés"/>
     <ru txt="Датчики с задержкой времени на откл."/>
     <es txt="Sensores temporizados"/>
     <it txt="Temporizzare i sensori"/>
@@ -24120,7 +24120,7 @@
     <sv txt="Hämta sensorstatus" tip="Efterfråga aktuell status på alla sensorer"/>
     <en_GB txt="Query sensors" tip="Query actual state of all sensors."/>
     <fi txt="Hae antureiden tilat" tip="Kysy jokaisen anturin oikea tila"/>
-    <fr txt="capteurs" tip="etat de tous les capteurs"/>
+    <fr txt="Questionner les détecteurs" tip="etat de tous les capteurs"/>
     <pl txt="Sprawdzenie stanu czujników" tip="Sprawdzenie aktualnego stanu wszystkich czujników."/>
     <en_AU txt="Query sensors" tip="Query actual state of all sensors."/>
     <en_CA txt="Query sensors" tip="Query actual state of all sensors."/>
@@ -24970,7 +24970,7 @@
     <pt_BR txt="Sensor de energia"/>
     <en_GB txt="Power sensor"/>
     <fi txt="Virta-anturi"/>
-    <fr txt="capteur de courant"/>
+    <fr txt="détecteur de courant"/>
     <en_AU txt="Power sensor"/>
     <en_CA txt="Power sensor"/>
   </Msg>
@@ -25048,7 +25048,7 @@
     <pt_BR txt="Ferramentas da locomotiva"/>
     <en_GB txt="Loco Widgets"/>
     <fi txt="Veturilisukkeet"/>
-    <fr txt="identifications de la loco"/>
+    <fr txt="Widget de la loco"/>
     <en_AU txt="Loco Widgets"/>
     <en_CA txt="Loco Widgets"/>
     <pl txt="Widżety lokomotyw"/>
@@ -28272,11 +28272,25 @@
   </Msg>
   <Msg id="saveplan">
     <en txt="The changes will be saved."/>
+    <de txt="Die Änderungen werden gespeichert"/>
+    <fr txt="Les changements seront sauvés"/>
+    <nl txt="De modificaties worden opgeslagen."/>
+    <pt_BR txt="As mudanças serão gravadas."/>
+    <sr_latin txt="Promene će biti snimljene."/>
   </Msg>
   <Msg id="swapped">
     <en txt="Swapped"/>
+    <de txt="Getauscht"/>
+    <fr txt="Inversé"/>
+    <nl txt="Omgekeerd"/>
+    <pt_BR txt="Invertido"/>
+    <sr_latin txt="Zamenjeno"/>
   </Msg>
   <Msg id="locoimagecolumn">
     <en txt="Loco image column"/>
+    <de txt="Lok-Bild-Spalte"/>
+    <fr txt="Colonne d'image de loco"/>
+    <nl txt="Locomotief afbeelding kolom"/>
+    <pt_BR txt="Coluna de imagens de locomotivas"/>
   </Msg>
 </Messages>
