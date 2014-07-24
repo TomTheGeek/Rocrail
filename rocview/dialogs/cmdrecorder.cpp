@@ -53,6 +53,10 @@ CmdRecorder::CmdRecorder( wxWindow* parent )
   m_Pause->SetBitmapLabel(*_img_pause);
   m_Record->SetBitmapLabel(*_img_record);
   m_Play->SetBitmapLabel(*_img_play);
+  m_Stop->Refresh();
+  m_Pause->Refresh();
+  m_Record->Refresh();
+  m_Play->Refresh();
 
   initLabels();
   GetSizer()->Layout();

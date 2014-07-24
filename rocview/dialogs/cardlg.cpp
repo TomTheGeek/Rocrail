@@ -353,6 +353,7 @@ void CarDlg::initIndex(){
 
   m_CarList2->DeleteAllItems();
   m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+  m_CarImage->Refresh();
   m_Props = NULL;
 
   iONode model = wxGetApp().getModel();

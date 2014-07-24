@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep 12 2010)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -17,7 +17,7 @@ DonKeyGen::DonKeyGen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
 	m_Splash = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 360,115 ), wxBU_AUTODRAW );
-	bSizer1->Add( m_Splash, 1, wxALL|wxEXPAND, 5 );
+	bSizer1->Add( m_Splash, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_DonateText = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,100 ), wxTE_MULTILINE|wxTE_READONLY );
 	bSizer1->Add( m_DonateText, 0, wxALL|wxEXPAND, 5 );
@@ -60,9 +60,9 @@ DonKeyGen::DonKeyGen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_stdButtonHelp = new wxButton( this, wxID_HELP );
 	m_stdButton->AddButton( m_stdButtonHelp );
 	m_stdButton->Realize();
-	bSizer2->Add( m_stdButton, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer2->Add( m_stdButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
+	bSizer1->Add( bSizer2, 0, wxALIGN_RIGHT, 5 );
 	
 	this->SetSizer( bSizer1 );
 	this->Layout();

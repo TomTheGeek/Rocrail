@@ -111,6 +111,7 @@ void DonKey::OnOK( wxCommandEvent& event )
 
 void DonKey::initLabels() {
   m_Splash->SetBitmapLabel( *_img_rocrail_logo );
+  m_Splash->Refresh();
 
   m_labEmail->SetLabel( wxGetApp().getMsg( "email" ) );
   m_labExpDate->SetLabel( wxGetApp().getMsg( "expdate" ) );

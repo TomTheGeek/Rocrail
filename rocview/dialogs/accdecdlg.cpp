@@ -50,6 +50,7 @@ AccDecDlg::AccDecDlg( wxWindow* parent ):AccDecGenDlg( parent )
 {
   m_Props = NULL;
   m_Image->SetBitmapLabel( wxBitmap(nopict_xpm) );
+  m_Image->Refresh();
 
   initLabels();
   initCVDesc();

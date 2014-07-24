@@ -172,7 +172,7 @@ void InfoDialog::CreateControls()
     itemBoxSizer2->Add(itemFlexGridSizer3, 1, wxGROW|wxALL, 5);
 
     m_Splash = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_INFO_SPLASH, wxNullBitmap, wxDefaultPosition, wxSize(360, 115), wxBU_AUTODRAW );
-    itemFlexGridSizer3->Add(m_Splash, 1, wxGROW|wxGROW|wxALL, 5);
+    itemFlexGridSizer3->Add(m_Splash, 0, wxGROW|wxGROW|wxALL, 5);
 
     m_Build = new wxStaticText( itemDialog1, wxID_STATIC_INFO_BUILD, _("build"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     m_Build->SetFont(wxFont(10, wxDEFAULT, wxNORMAL, wxBOLD, false, wxT("Ubuntu")));
