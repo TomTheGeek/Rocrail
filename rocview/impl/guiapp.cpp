@@ -849,6 +849,10 @@ bool RocGui::OnInit() {
     iX = 0;
   if( iY < 0 )
     iY = 0;
+  if( iWidth < 200 )
+    iWidth = 400;
+  if( iHeight < 100 )
+    iHeight = 200;
 
   m_Frame = new RocGuiFrame( _T("Rocrail"), wxPoint(iX, iY),
       wxDefaultSize, m_Ini, theme, sp, tp );
