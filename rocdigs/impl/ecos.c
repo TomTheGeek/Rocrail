@@ -1040,7 +1040,7 @@ static iONode _cmd( obj inst, const iONode cmd ) {
     /* Make sure we have a valid connection */
 
   if ( !data->connected ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no ECoS connection" );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "no ECoS connection" );
     if( cmd != NULL ) {
       if ( StrOp.equals( NodeOp.getName(cmd), wSysCmd.name())) {
         if( StrOp.equals( wSysCmd.getcmd(cmd), wSysCmd.enablecom ) ) {
