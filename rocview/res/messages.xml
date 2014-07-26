@@ -12339,7 +12339,7 @@
     <pl txt="Wielowierszowy"/>
   </Msg>
   <Msg id="usage">
-    <de txt="Benutzung"/>
+    <de txt="Verwendung"/>
     <en txt="Usage"/>
     <nl txt="Gebruik"/>
     <sv txt="Användning"/>
@@ -16606,7 +16606,7 @@
     <pl txt="Wspólne czujniki"/>
   </Msg>
   <Msg id="managetrackblocks">
-    <de txt="Manage track blocks"/>
+    <de txt="Gleis-Blöcke verwalten"/>
     <en txt="Manage track blocks"/>
     <nl txt="Manage track blocks"/>
     <sv txt="Manage track blocks"/>
