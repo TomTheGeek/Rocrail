@@ -139,7 +139,17 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot, Boolean* vdfChanged
     speed  = sx1 & 0x1F;
     dir    = (sx1 & 0x20) ? False:True;
     lights = (sx1 & 0x40) ? True:False;
-    f1_8   = (sx1 & 0x80) ? 0x01:0x00;
+    if (!slot->sx1aux1 && !slot->sx1aux2) {
+      f1_8  = (sx1 & 0x80) ? 0x01:0x00;                      /* Horn wird auf F1 gemappt */
+    } 
+    else if (slot->sx1aux1 && !slot->sx1aux2) {
+      f1_8   = data->sx1[slot->bus&0x01][slot->sx1aux1];     /* 1. Zusatzkanal  enthält F1 bis F8 */
+      f9_16  = (sx1 & 0x80) ? 0x01:0x00;                     /* Horn wird auf F9 gemappt */
+    } 
+    else {
+      f1_8   = data->sx1[slot->bus&0x01][slot->sx1aux1];     /* 1. Zusatzkanal  enthält F1 bis F8 */
+      f9_16  = data->sx1[slot->bus&0x01][slot->sx1aux2];     /* 2. Zusatzkanal  enthält F9 bis F16 */
+    }
   }
 
   if( slot->speed != speed ) {
@@ -468,6 +478,17 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
     slot->steps = steps;
     slot->ebreak = ebreak;
     slot->sx1 = sx1;
+    if (sx1) {
+      slot->sx1aux1 = slot->sx1aux2 = 0;
+      if (fncnt > 0) {
+        slot->sx1aux1 = addr+1;	/* 1. SX1 Zusatzkanal an Lokadresse + 1 */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "1. SX1 Auxchanel Adr. %d", slot->sx1aux1 );
+      }
+      if (fncnt > 8) {
+        slot->sx1aux2 = addr+2;	/* 2. SX1 Zusatzkanal an Lokadresse + 2 */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "2. SX1 Auxchanel Adr. %d", slot->sx1aux2 );
+      }
+    }
     slot->bus = wLoc.getbus(node);
     slot->id = StrOp.dup(wLoc.getid(node));
     if( MutexOp.wait( data->lcmux ) ) {
@@ -612,6 +633,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
     Boolean fn = wLoc.isfn( node );
     int    dir = wLoc.isdir( node );
     int  spcnt = wLoc.getspcnt( node );
+    byte horn;
 
     int index = 0;
 
@@ -660,11 +682,18 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       out[2] = speed & 0x1F;
       out[2] |= (wLoc.isdir(node) ? 0x00:0x20);
       out[2] |= (wLoc.isfn(node)  ? 0x40:0x00);
-      out[2] |= ((slot->f1_8 & 0x01)  ? 0x80:0x00);
+      if (!slot->sx1aux1 && !slot->sx1aux2)
+        horn = slot->f1_8 & 0x01;    /* F1 wird auf Horn gemappt */
+      else if (slot->sx1aux1 && !slot->sx1aux2)
+        horn = slot->f9_16 & 0x01;   /* F9 wird auf Horn gemappt */
+      else
+        horn = 0x00;
+      out[2] |= ((horn & 0x01) ? 0x80:0x00);
 
       slot->speed = speed;
       slot->dir = wLoc.isdir(node);
       slot->lights = wLoc.isfn(node);
+      slot->lastcmd = SystemOp.getTick();
 
       *insize = 1;
       return 3;
@@ -726,7 +755,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
     Boolean f14 = wFunCmd.isf14( node );
     Boolean f15 = wFunCmd.isf15( node );
     Boolean f16 = wFunCmd.isf16( node );
-
+    byte in = 0;
     iOSlot slot = __getSlot(data, node );
 
     if( slot == NULL ) {
@@ -739,15 +768,46 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       /* native selectrix SX1 */
       int   addr = wFunCmd.getaddr( node );
 
+      if (slot->sx1aux2) {
+        out[0] = wLoc.getbus(node)&0x01;
+        out[1] = slot->sx1aux2;
+        out[1] |= 0x80;
+        out[2] = (f9 << 0 | f10 << 1 | f11 << 2 | f12 << 3 | f13 << 4 | f14 << 5 | f15 << 6 | f16 << 7);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 Auxchanel2 command for %s", wLoc.getid(node) );
+        slot->f9_16 = out[2];
+        slot->lastcmd = SystemOp.getTick();
+        __transact( data, out, 3, &in, 1 );
+      }
+
+      if (slot->sx1aux1) {
+        out[0] = wLoc.getbus(node)&0x01;
+        out[1] = slot->sx1aux1;
+        out[1] |= 0x80;
+        out[2] = (f1 << 0 | f2 << 1 | f3 << 2 | f4 << 3 | f5 << 4 | f6 << 5 | f7 << 6 | f8 << 7);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 Auxchanel1 command for %s", wLoc.getid(node) );
+        slot->f1_8 = out[2];
+        slot->lastcmd = SystemOp.getTick();
+        __transact( data, out, 3, &in, 1 );
+      }
+
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 function command for %s", wLoc.getid(node) );
       out[0] = wLoc.getbus(node)&0x01;
       out[1] = wLoc.getaddr(node);
       out[1] |= 0x80;
       out[2] = slot->speed & 0x1F;
       out[2] |= (slot->dir ? 0x00:0x20);
+      slot->lights = wLoc.isfn(node);    /* Wegen padroc */ 
       out[2] |= (slot->lights ? 0x40:0x00);
-      out[2] |= (f1 ? 0x80:0x00);
+      if (!slot->sx1aux1 && !slot->sx1aux2) {
+        out[2] |= (f1 ? 0x80:0x00);      /* F1 wird auf Horn gemapped */
       slot->f1_8 = f1 ? 0x01:0x00;
+      } 
+      else if (slot->sx1aux1 && !slot->sx1aux2) {
+        out[2] |= (f9 ? 0x80:0x00);      /* F9 wird auf Horn gemapped */
+        slot->f9_16 = f9 ? 0x01 : 0x00;
+      } /* No else */
+
+      slot->lastcmd = SystemOp.getTick();
 
       *insize = 1;
       return 3;
@@ -961,7 +1021,7 @@ static void __sxReader( void* threadinst ) {
     byte cmd[2];
     Boolean ok = True;
     
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 50 );
     if( ok ) {
       cmd[0] = 0x78;
       cmd[1] = 0x03;
@@ -973,7 +1033,7 @@ static void __sxReader( void* threadinst ) {
       }
     }
     
-    ThreadOp.sleep( 100 );
+    ThreadOp.sleep( 50 );
     if( ok ) {
       cmd[0] = 0x78;
       cmd[1] = 0xC0;
@@ -1103,6 +1163,7 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
   data->pointmux = MutexOp.inst( NULL, True );
   data->pointmap = MapOp.inst();
 
+  data->ini      = ini;
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
   data->dummyio  = wDigInt.isdummyio(ini);
@@ -1112,6 +1173,7 @@ static struct OMttmFcc* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bidi     = %s", wDigInt.isreadbidi( data->ini ) ? "yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serialOK = False;

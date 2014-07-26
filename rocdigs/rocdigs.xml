@@ -1086,6 +1086,9 @@
       <var name="lights" vt="Boolean"/>
       <var name="f1_8" vt="byte"/>
       <var name="f9_16" vt="byte"/>
+      <var name="sx1aux1" vt="int"/>
+      <var name="sx1aux2" vt="int"/>
+      <var name="lastcmd" vt="long"/>
     </struct>
     <struct name="point" typedef="*iOPoint">
       <var name="id" vt="char*"/>
