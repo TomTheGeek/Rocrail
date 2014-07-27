@@ -140,15 +140,15 @@ static Boolean __updateSlot(iOMttmFccData data, iOSlot slot, Boolean* vdfChanged
     dir    = (sx1 & 0x20) ? False:True;
     lights = (sx1 & 0x40) ? True:False;
     if (!slot->sx1aux1 && !slot->sx1aux2) {
-      f1_8  = (sx1 & 0x80) ? 0x01:0x00;                      /* Horn wird auf F1 gemappt */
+      f1_8  = (sx1 & 0x80) ? 0x01:0x00;                      /* Horn at F1 */
     } 
     else if (slot->sx1aux1 && !slot->sx1aux2) {
-      f1_8   = data->sx1[slot->bus&0x01][slot->sx1aux1];     /* 1. Zusatzkanal  enthält F1 bis F8 */
-      f9_16  = (sx1 & 0x80) ? 0x01:0x00;                     /* Horn wird auf F9 gemappt */
+      f1_8   = data->sx1[slot->bus&0x01][slot->sx1aux1];     /* Aux channel 1: F1-F8 */
+      f9_16  = (sx1 & 0x80) ? 0x01:0x00;                     /* Horn at F9 */
     } 
     else {
-      f1_8   = data->sx1[slot->bus&0x01][slot->sx1aux1];     /* 1. Zusatzkanal  enthält F1 bis F8 */
-      f9_16  = data->sx1[slot->bus&0x01][slot->sx1aux2];     /* 2. Zusatzkanal  enthält F9 bis F16 */
+      f1_8   = data->sx1[slot->bus&0x01][slot->sx1aux1];     /* Aux channel 1: F1-F8 */
+      f9_16  = data->sx1[slot->bus&0x01][slot->sx1aux2];     /* Aux channel 2: F9-F16 */
     }
   }
 
@@ -481,12 +481,12 @@ static iOSlot __getSlot(iOMttmFccData data, iONode node) {
     if (sx1) {
       slot->sx1aux1 = slot->sx1aux2 = 0;
       if (fncnt > 0) {
-        slot->sx1aux1 = addr+1;	/* 1. SX1 Zusatzkanal an Lokadresse + 1 */
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "1. SX1 Auxchanel Adr. %d", slot->sx1aux1 );
+        slot->sx1aux1 = addr+1;	/* First SX1 auxchannel at loco address + 1 */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 Auxchannel 1 Addr=%d", slot->sx1aux1 );
       }
       if (fncnt > 8) {
-        slot->sx1aux2 = addr+2;	/* 2. SX1 Zusatzkanal an Lokadresse + 2 */
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "2. SX1 Auxchanel Adr. %d", slot->sx1aux2 );
+        slot->sx1aux2 = addr+2;	/* Second SX1 auxchannel at loco address + 2 */
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 Auxchannel 2 Addr=%d", slot->sx1aux2 );
       }
     }
     slot->bus = wLoc.getbus(node);
@@ -683,9 +683,9 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       out[2] |= (wLoc.isdir(node) ? 0x00:0x20);
       out[2] |= (wLoc.isfn(node)  ? 0x40:0x00);
       if (!slot->sx1aux1 && !slot->sx1aux2)
-        horn = slot->f1_8 & 0x01;    /* F1 wird auf Horn gemappt */
+        horn = slot->f1_8 & 0x01;    /* Horn at F1 */
       else if (slot->sx1aux1 && !slot->sx1aux2)
-        horn = slot->f9_16 & 0x01;   /* F9 wird auf Horn gemappt */
+        horn = slot->f9_16 & 0x01;   /* Horn at F9 */
       else
         horn = 0x00;
       out[2] |= ((horn & 0x01) ? 0x80:0x00);
@@ -773,7 +773,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
         out[1] = slot->sx1aux2;
         out[1] |= 0x80;
         out[2] = (f9 << 0 | f10 << 1 | f11 << 2 | f12 << 3 | f13 << 4 | f14 << 5 | f15 << 6 | f16 << 7);
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 Auxchanel2 command for %s", wLoc.getid(node) );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 Auxchannel 2 command for loco [%s]", wLoc.getid(node) );
         slot->f9_16 = out[2];
         slot->lastcmd = SystemOp.getTick();
         __transact( data, out, 3, &in, 1 );
@@ -784,7 +784,7 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
         out[1] = slot->sx1aux1;
         out[1] |= 0x80;
         out[2] = (f1 << 0 | f2 << 1 | f3 << 2 | f4 << 3 | f5 << 4 | f6 << 5 | f7 << 6 | f8 << 7);
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 Auxchanel1 command for %s", wLoc.getid(node) );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "SX1 Auxchannel 1 command for loco [%s]", wLoc.getid(node) );
         slot->f1_8 = out[2];
         slot->lastcmd = SystemOp.getTick();
         __transact( data, out, 3, &in, 1 );
@@ -796,14 +796,14 @@ static int __translate( iOMttmFccData data, iONode node, byte* out, int *insize 
       out[1] |= 0x80;
       out[2] = slot->speed & 0x1F;
       out[2] |= (slot->dir ? 0x00:0x20);
-      slot->lights = wLoc.isfn(node);    /* Wegen padroc */ 
+      slot->lights = wLoc.isfn(node);    /* save light function */ 
       out[2] |= (slot->lights ? 0x40:0x00);
       if (!slot->sx1aux1 && !slot->sx1aux2) {
-        out[2] |= (f1 ? 0x80:0x00);      /* F1 wird auf Horn gemapped */
+        out[2] |= (f1 ? 0x80:0x00);      /* Horn at F1 */
       slot->f1_8 = f1 ? 0x01:0x00;
       } 
       else if (slot->sx1aux1 && !slot->sx1aux2) {
-        out[2] |= (f9 ? 0x80:0x00);      /* F9 wird auf Horn gemapped */
+        out[2] |= (f9 ? 0x80:0x00);      /* Horn at F9 */
         slot->f9_16 = f9 ? 0x01 : 0x00;
       } /* No else */
 
