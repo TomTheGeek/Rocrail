@@ -232,8 +232,10 @@ int RocGui::OnExit() {
     wWindow.sety( wGui.getwindow( m_Ini ), point.y );
 
     wxSize size = this->getFrame()->GetSize();
-    wWindow.setcx( wGui.getwindow( m_Ini ), size.GetWidth() );
-    wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() );
+    if( size.GetWidth() > 100 && size.GetHeight() > 100 ) {
+      wWindow.setcx( wGui.getwindow( m_Ini ), size.GetWidth() );
+      wWindow.setcy( wGui.getwindow( m_Ini ), size.GetHeight() );
+    }
 
 #ifdef __APPLE__
     if( !wGui.isverticaltoolbar( m_Ini ) )
