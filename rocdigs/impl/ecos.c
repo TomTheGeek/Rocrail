@@ -1804,7 +1804,7 @@ static void __processS88Events( iOECoS inst, iONode node ) {
         StrTokOp.base.del(tok);
 
         addr = module * 16 + chanel + 1;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "railcom sensor event addr=%d, loco=%d, dir=%d", addr, loco, dir );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "railcom sensor event addr=%d, loco=%d, dir=%s", addr, loco, dir?"fwd":"rev" );
 
         iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
