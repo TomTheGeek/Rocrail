@@ -1102,7 +1102,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menuTurnoff->Append( ME_AddRoadRight    , wxGetApp().getMenu("right") );
       menuTurnoff->Append( ME_AddRoadLeft     , wxGetApp().getMenu("left") );
       menuTurnoff->Append( ME_AddRoadCrossing , wxGetApp().getMenu("crossing") );
-      menuRoad->Append( -1, wxGetApp().getMenu("turnoff"), menuTurnoff );
+      menuRoad->Append( -1, wxGetApp().getMenu("turnout"), menuTurnoff );
       menu.Append( -1, wxGetApp().getMenu("road"), menuRoad );
 
       menu.AppendSeparator();
