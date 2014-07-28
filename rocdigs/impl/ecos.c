@@ -1779,6 +1779,9 @@ static void __processS88Events( iOECoS inst, iONode node ) {
       int loco   = 0;
       int dir    = 0;
       char ident[32];
+      /* getting the module number */
+      const char* sIOD = NodeOp.getName(child);
+      int module = atoi(sIOD);
       iOStrTok tok = StrTokOp.inst(railcomstring, ',' );
       if( StrTokOp.hasMoreTokens( tok ) ) {
         const char* schanel = StrTokOp.nextToken( tok );
@@ -1794,11 +1797,11 @@ static void __processS88Events( iOECoS inst, iONode node ) {
       }
       StrTokOp.base.del(tok);
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "railcom event: port=%d, addr=%d, dir=%d", chanel, loco, dir );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "railcom event: module:%d port=%d, addr=%d, dir=%d", module, chanel, loco, dir );
 
       iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
-      wFeedback.setaddr( nodeC, chanel );
+      wFeedback.setaddr( nodeC, module * 16 + chanel );
       wFeedback.setfbtype( nodeC, wFeedback.fbtype_railcom );
 
       if( data->iid != NULL )
