@@ -382,7 +382,7 @@ static void __sends88Eventgroup( iOECoS inst, int news88, int olds88, int s88mod
       int address = s88module * 16 + port + 1;
       Boolean state = news88 & mask ? True:False;
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new event %d %s", address, state?"on":"off" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "s88 sensor event addr=%d state=%s", address, state?"on":"off" );
 
       /* inform listener: Node */
       iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
@@ -1784,6 +1784,7 @@ static void __processS88Events( iOECoS inst, iONode node ) {
       int module = atoi(sIOD);
 
       if( module >= 200 ) {
+        int addr = 0;
         module = module - 200;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "railcom module [%d]", module );
 
@@ -1802,11 +1803,12 @@ static void __processS88Events( iOECoS inst, iONode node ) {
         }
         StrTokOp.base.del(tok);
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "railcom event: module:%d port=%d, addr=%d, dir=%d", module, chanel, loco, dir );
+        addr = module * 16 + chanel + 1;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "railcom sensor event addr=%d, loco=%d, dir=%d", addr, loco, dir );
 
         iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
-        wFeedback.setaddr( nodeC, module * 16 + chanel + 1 );
+        wFeedback.setaddr( nodeC, addr );
         wFeedback.setfbtype( nodeC, wFeedback.fbtype_railcom );
 
         if( data->iid != NULL )
