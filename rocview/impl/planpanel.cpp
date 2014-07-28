@@ -1098,11 +1098,11 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menuRoad->Append( ME_AddRoadDir      , wxGetApp().getMenu("dir") );
       menuRoad->Append( ME_AddRoadBlock    , wxGetApp().getMenu("block") );
       menuRoad->Append( ME_AddRoadFBack    , wxGetApp().getMenu("sensor") );
-      wxMenu* menuTurnoff = new wxMenu();
-      menuTurnoff->Append( ME_AddRoadRight    , wxGetApp().getMenu("right") );
-      menuTurnoff->Append( ME_AddRoadLeft     , wxGetApp().getMenu("left") );
-      menuTurnoff->Append( ME_AddRoadCrossing , wxGetApp().getMenu("crossing") );
-      menuRoad->Append( -1, wxGetApp().getMenu("turnout"), menuTurnoff );
+      wxMenu* menuRoadTurnoout = new wxMenu();
+      menuRoadTurnoout->Append( ME_AddRoadRight    , wxGetApp().getMenu("right") );
+      menuRoadTurnoout->Append( ME_AddRoadLeft     , wxGetApp().getMenu("left") );
+      menuRoadTurnoout->Append( ME_AddRoadCrossing , wxGetApp().getMenu("crossing") );
+      menuRoad->Append( -1, wxGetApp().getMenu("turnout"), menuRoadTurnoout );
       menu.Append( -1, wxGetApp().getMenu("road"), menuRoad );
 
       menu.AppendSeparator();
