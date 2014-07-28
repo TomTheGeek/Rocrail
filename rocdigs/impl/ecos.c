@@ -1782,38 +1782,48 @@ static void __processS88Events( iOECoS inst, iONode node ) {
       /* getting the module number */
       const char* sIOD = NodeOp.getName(child);
       int module = atoi(sIOD);
-      iOStrTok tok = StrTokOp.inst(railcomstring, ',' );
-      if( StrTokOp.hasMoreTokens( tok ) ) {
-        const char* schanel = StrTokOp.nextToken( tok );
-        chanel = (int)strtol( schanel, (char**)NULL, 10 );
+
+      if( module >= 200 ) {
+        module = module - 200;
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "railcom module [%d]", module );
+
+        iOStrTok tok = StrTokOp.inst(railcomstring, ',' );
+        if( StrTokOp.hasMoreTokens( tok ) ) {
+          const char* schanel = StrTokOp.nextToken( tok );
+          chanel = (int)strtol( schanel, (char**)NULL, 10 );
+        }
+        if( StrTokOp.hasMoreTokens( tok ) ) {
+          const char* sloco = StrTokOp.nextToken( tok );
+          loco = (int)strtol( sloco, (char**)NULL, 10 );
+        }
+        if( StrTokOp.hasMoreTokens( tok ) ) {
+          const char* sdir = StrTokOp.nextToken( tok );
+          dir = (int)strtol( sdir, (char**)NULL, 10 );
+        }
+        StrTokOp.base.del(tok);
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "railcom event: module:%d port=%d, addr=%d, dir=%d", module, chanel, loco, dir );
+
+        iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+
+        wFeedback.setaddr( nodeC, module * 16 + chanel + 1 );
+        wFeedback.setfbtype( nodeC, wFeedback.fbtype_railcom );
+
+        if( data->iid != NULL )
+          wFeedback.setiid( nodeC, data->iid );
+
+        wFeedback.setdirection( nodeC, dir == 1 ? True:False );
+
+        wFeedback.setstate( nodeC, loco > 0 ? True:False );
+        StrOp.fmtb(ident, "%d", loco);
+        wFeedback.setidentifier( nodeC, ident);
+
+        data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
       }
-      if( StrTokOp.hasMoreTokens( tok ) ) {
-        const char* sloco = StrTokOp.nextToken( tok );
-        loco = (int)strtol( sloco, (char**)NULL, 10 );
+      else {
+        module = 0;
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Invalid railcom module ID: [%s]", sIOD );
       }
-      if( StrTokOp.hasMoreTokens( tok ) ) {
-        const char* sdir = StrTokOp.nextToken( tok );
-        dir = (int)strtol( sdir, (char**)NULL, 10 );
-      }
-      StrTokOp.base.del(tok);
-
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "railcom event: module:%d port=%d, addr=%d, dir=%d", module, chanel, loco, dir );
-
-      iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-
-      wFeedback.setaddr( nodeC, module * 16 + chanel );
-      wFeedback.setfbtype( nodeC, wFeedback.fbtype_railcom );
-
-      if( data->iid != NULL )
-        wFeedback.setiid( nodeC, data->iid );
-
-      wFeedback.setdirection( nodeC, dir == 1 ? True:False );
-
-      wFeedback.setstate( nodeC, loco > 0 ? True:False );
-      StrOp.fmtb(ident, "%d", loco);
-      wFeedback.setidentifier( nodeC, ident);
-
-      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
 
       continue;
     }
