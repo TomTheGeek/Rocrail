@@ -26,15 +26,18 @@
 #include <wx/grid.h>
 #include <wx/image.h>
 #include <wx/bitmap.h>
+#include "rocview/symbols/renderer.h"
 
 
 class CellRenderer: public wxGridCellStringRenderer
 {
   const char* imageName;
   wxBitmap* imageBitmap;
+  SymbolRenderer* m_Renderer;
 
 public:
   CellRenderer(const char* imageMame);
+  CellRenderer(const char* imageMame, SymbolRenderer* l_Renderer);
   CellRenderer(wxBitmap* bitmap);
 
   ~CellRenderer();

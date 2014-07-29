@@ -32,17 +32,27 @@
 #include "rocview/wrapper/public/Gui.h"
 
 #include "rocview/xpm/nopict.xpm"
+#include "rocrail/wrapper/public/Item.h"
 
 // m_grid->SetCellRenderer(0, 0, new CellRenderer(cellImage) );
 
 CellRenderer::CellRenderer(const char* imageName) : wxGridCellStringRenderer() {
   this->imageName = imageName;
   imageBitmap = NULL;
+  m_Renderer = NULL;
 }
+
+CellRenderer::CellRenderer(const char* imageMame, SymbolRenderer* l_Renderer) : wxGridCellStringRenderer() {
+  m_Renderer = l_Renderer;
+  this->imageName = imageMame;
+  imageBitmap = NULL;
+}
+
 
 CellRenderer::CellRenderer(wxBitmap* bitmap) : wxGridCellStringRenderer() {
   this->imageName = "dummy";
   imageBitmap = bitmap;
+  m_Renderer = NULL;
 }
 
 CellRenderer::~CellRenderer() {
@@ -52,9 +62,20 @@ CellRenderer::~CellRenderer() {
 
 void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRect& rect, int row, int col, bool isSelected)
 {
-  wxGridCellStringRenderer::Draw(grid, attr, dc, rect, row, col, isSelected);
+  wxGridCellStringRenderer::Draw(grid, attr, dc, rect, row, col, false);
 
-  if( imageName != NULL && StrOp.len(imageName) > 0 ) {
+  if( m_Renderer != NULL && imageName != NULL && StrOp.len(imageName) > 0 ) {
+    int cx = 0;
+    int cy = 0;
+    m_Renderer->drawSvgSym( (wxPaintDC&)dc, rect.x, rect.y, imageName, wItem.west, &cx, &cy );
+    if( grid.GetColSize(col) <  cx * 32 )
+      grid.SetColSize(col, cx * 32 );
+    if( grid.GetRowSize(row) <  cy * 32 )
+      grid.SetRowSize(row, cy * 32 );
+    grid.ForceRefresh();
+    TraceOp.trc( "cellrenderer", TRCLEVEL_INFO, __LINE__, 9999, "image: %s dc=%X row=%d col=%d cx=%d cy=%d", imageName, &dc, row, col, cx, cy );
+  }
+  else if( imageName != NULL && StrOp.len(imageName) > 0 ) {
     if( imageBitmap == NULL )
       updateImage(rect);
     if( imageBitmap != NULL ) {

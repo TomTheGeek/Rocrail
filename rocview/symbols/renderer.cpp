@@ -69,7 +69,8 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, in
   m_Bitmap = NULL;
   m_Scale = 1.0;
   TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "symbol map size = %d", symmap == NULL ? 0:MapOp.size(symmap) );
-  initSym();
+  if( m_Props != NULL )
+    initSym();
   m_Label = StrOp.dup("...");
   m_iItemIDps = itemidps;
   m_iTextps = textps;
@@ -1020,7 +1021,23 @@ wxBrush* SymbolRenderer::getBrush( const char* fill, wxPaintDC& dc ) {
     return new wxBrush(wxString(fill,wxConvUTF8), wxSOLID);
 }
 
-void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori, int xOff, int yOff ) {
+void SymbolRenderer::drawSvgSym( wxPaintDC& dc, int x, int y, const char* symname, const char* ori, int* cx, int* cy ) {
+  m_GC = NULL;
+  m_UseGC = false;
+  m_DC = &dc;
+  m_bAlt = false;
+  svgSymbol* svgsym = (svgSymbol*)MapOp.get( m_SymMap, symname );
+  if( svgsym != NULL ) {
+    drawSvgSym(dc, svgsym, ori, x, y, false);
+    *cx = svgsym->width  / 32;
+    *cy = svgsym->height / 32;
+  }
+  else {
+    TraceOp.trc( "render", TRCLEVEL_WARNING, __LINE__, 9999, "symbol [%s] is not in the map...", symname );
+  }
+}
+
+void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori, int xOff, int yOff, bool gridOffset ) {
   const wxBrush& b = dc.GetBrush();
 
   int xOffset = 0;
@@ -1038,8 +1055,15 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* o
   if( StrOp.equals( wItem.south, ori ) && m_cx > 1) {
     xOffset = 32 * (m_cx-1);
   }
-  xOffset += xOff * 32;
-  yOffset += yOff * 32;
+
+  if( gridOffset ) {
+    xOffset += xOff * 32;
+    yOffset += yOff * 32;
+  }
+  else {
+    xOffset += xOff;
+    yOffset += yOff;
+  }
 
   iOList polyList   = svgsym->polyList;
   iOList circleList = svgsym->circleList;

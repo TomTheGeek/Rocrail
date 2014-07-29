@@ -19,6 +19,7 @@
 */
 
 #include "trackpickerdlg.h"
+#include "rocview/public/guiapp.h"
 #include "rocview/public/cellrenderer.h"
 #include "rocview/res/icons.hpp"
 #include "rocview/symbols/sym.h"
@@ -29,23 +30,45 @@
 
 TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
 {
+
+  int itemidps = 7;
+  int textps = 10;
+  m_Renderer = new SymbolRenderer( NULL, this, wxGetApp().getFrame()->getSymMap(), itemidps, textps );
+
   m_GridTrack->EnableEditing(false);
   m_GridTrack->EnableDragGridSize(false);
   m_GridTrack->ClearGrid();
   m_GridTrack->DeleteRows( 0, m_GridTrack->GetNumberRows() );
 
-  m_GridTrack->AppendRows();
+  wxFont* font = new wxFont( m_GridTrack->GetDefaultCellFont() );
+  font->SetPointSize(1);
+  m_GridTrack->SetDefaultCellFont( *font );
 
-  char* symname = StrOp.fmt("%s:%s", wTrack.name(), wTrack.straight );
+  char* symname = NULL;
+
+  m_GridTrack->AppendRows();
+  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d", m_GridTrack->GetNumberRows() );
+  symname = StrOp.fmt("%s:%s", wTrack.name(), wTrack.straight );
   m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
   StrOp.free(symname);
+  m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(tracktype::straight, m_Renderer) );
 
-  // ToDo: Use the SVG symbol names from the sym.h and let the renderer, drawSvgSym, draw in the CellRenderer.
-  m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(_img_track) );
+  m_GridTrack->AppendRows();
+  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d", m_GridTrack->GetNumberRows() );
+  symname = StrOp.fmt("%s:%s", wTrack.name(), wTrack.curve );
+  m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+  StrOp.free(symname);
+  m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(tracktype::curve, m_Renderer) );
 
-  m_GridTrack->AutoSizeColumn(0);
+  m_GridTrack->AppendRows();
+  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d", m_GridTrack->GetNumberRows() );
+  symname = StrOp.fmt("%s:%s", wTrack.name(), wTrack.buffer );
+  m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+  StrOp.free(symname);
+  m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(tracktype::buffer, m_Renderer) );
 
-
+  m_GridTrack->AutoSizeColumns();
+  m_GridTrack->AutoSizeRows();
 }
 
 
