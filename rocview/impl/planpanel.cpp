@@ -1092,6 +1092,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menu.Append( ME_AddSelTab, wxGetApp().getMenu("seltab") );
       menu.Append( ME_AddText  , wxGetApp().getMenu("text") );
 
+      menu.AppendSeparator();
       wxMenu* menuRoad = new wxMenu();
       menuRoad->Append( ME_AddRoadStraight , wxGetApp().getMenu("straight") );
       menuRoad->Append( ME_AddRoadCurve    , wxGetApp().getMenu("curve") );
