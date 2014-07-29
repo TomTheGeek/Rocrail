@@ -739,6 +739,7 @@ static void __updateFB( obj ecos, iONode fbInfo ) {
           TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "query 16 railcom states of module %d...", addr);
           for( n = 0; n < 16; n++ ) {
             StrOp.fmtb( ecosCmd, "get(%d, railcom[%d])\n", addr, n );
+            __transact( (iOECoS)ecos, ecosCmd, StrOp.len(ecosCmd) );
             ThreadOp.sleep(10);
           }
           idx++;
