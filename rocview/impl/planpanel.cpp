@@ -56,6 +56,7 @@
 #include "rocview/dialogs/planpaneldlg.h"
 #include "rocview/dialogs/selectdialog.h"
 #include "rocview/dialogs/modulepropsdlg.h"
+#include "rocview/dialogs/trackpickerdlg.h"
 
 #include "rocview/wrapper/public/Gui.h"
 #include "rocview/wrapper/public/PlanPanel.h"
@@ -194,7 +195,22 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   iOStrTok tok = StrTokOp.inst((const char*)data.mb_str(wxConvUTF8), ':');
   const char* dropcmd = StrTokOp.nextToken(tok);
 
-  if( StrOp.equals( "bus", dropcmd ) ) {
+  if( StrOp.equals( "addsymbol", dropcmd ) ) {
+    if( StrTokOp.hasMoreTokens(tok) ) {
+      const char* symname = StrTokOp.nextToken(tok);
+      const char* symtype = "";
+      if( StrTokOp.hasMoreTokens(tok) )
+        symtype = StrTokOp.nextToken(tok);
+      TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "D&D: symbol=%s type=%s", symname, symtype );
+      m_PlanPanel->m_X = (int)(x / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
+      m_PlanPanel->m_Y = (int)(y / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
+      iONode node = NodeOp.inst( symname, NULL, ELEMENT_NODE );
+      wItem.settype( node, symtype );
+      m_PlanPanel->addItemAttr( node );
+      ok = true;
+    }
+  }
+  else if( StrOp.equals( "bus", dropcmd ) ) {
     if( StrTokOp.hasMoreTokens(tok) ) {
       const char* busnr  = StrTokOp.nextToken(tok);
       if( StrTokOp.hasMoreTokens(tok) ) {
@@ -206,7 +222,7 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
           if( StrTokOp.hasMoreTokens(tok) )
             iid = StrTokOp.nextToken(tok);
         }
-        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "D&D: bus=%s, addr=%s, type=%s, iid=%s", busnr, addr, type, iid );
+        TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "D&D: bus=%s, addr=%s, type=%s, iid=%s", busnr, addr, type, iid );
         m_PlanPanel->m_X = (int)(x / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
         m_PlanPanel->m_Y = (int)(y / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
         if( StrOp.len(type) == 0) {
@@ -1043,6 +1059,13 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
 
     m_X = (int)(m_mouseX / (m_ItemSize*m_Scale));
     m_Y = (int)(m_mouseY / (m_ItemSize*m_Scale));
+
+    if( event.CmdDown() ) {
+      TrackPickerDlg* dlg = new TrackPickerDlg( this );
+      dlg->Show(TRUE);
+      //dlg->Move( m_mouseX, m_mouseY );
+      return;
+    }
 
     if( wxGetApp().getFrame()->isEditMode() ) {
       wxMenu* menuTrack = new wxMenu();

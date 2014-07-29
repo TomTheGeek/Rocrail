@@ -40,6 +40,11 @@ CellRenderer::CellRenderer(const char* imageName) : wxGridCellStringRenderer() {
   imageBitmap = NULL;
 }
 
+CellRenderer::CellRenderer(wxBitmap* bitmap) : wxGridCellStringRenderer() {
+  this->imageName = "dummy";
+  imageBitmap = bitmap;
+}
+
 CellRenderer::~CellRenderer() {
   if( imageBitmap != NULL )
     delete imageBitmap;
