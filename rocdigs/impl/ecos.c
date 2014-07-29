@@ -185,6 +185,8 @@ ECoS Keywords:
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Item.h"
 #include "rocrail/wrapper/public/State.h"
+#include "rocrail/wrapper/public/FbMods.h"
+#include "rocrail/wrapper/public/FbInfo.h"
 
 #include "rocdigs/impl/ecos/ecos-parser.h"
 
@@ -712,6 +714,44 @@ static Boolean __connect( iOECoS inst ) {
 }
 
 
+
+/* fbmods is a comman separated address list of connected feedback modules. */
+static void __updateFB( obj ecos, iONode fbInfo ) {
+  iOECoSData data = Data(ecos);
+  int cnt = NodeOp.getChildCnt( fbInfo );
+  int i = 0;
+  int n = 0;
+  char ecosCmd[ 1024 ] = {'\0'};
+
+  char* str = NodeOp.base.toString( fbInfo );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "updateFB\n%s", str );
+  StrOp.free( str );
+
+  for( i = 0; i < cnt; i++ ) {
+    iONode fbmods = NodeOp.getChild( fbInfo, i );
+    const char* mods = wFbMods.getmodules( fbmods );
+    if( mods != NULL && StrOp.len( mods ) > 0 ) {
+      iOStrTok tok = StrTokOp.inst( mods, ',' );
+      int idx = 0;
+      while( StrTokOp.hasMoreTokens( tok ) ) {
+        int addr = atoi( StrTokOp.nextToken(tok) );
+        if( addr >= 200 ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "query 16 railcom states of module %d...", addr);
+          for( n = 0; n < 16; n++ ) {
+            StrOp.fmtb( ecosCmd, "get(%d, railcom[%d])\n", addr, n );
+            ThreadOp.sleep(10);
+          }
+          idx++;
+        }
+      };
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "updateFB count=%d", idx );
+    }
+  }
+
+}
+
+
+
 /**
  * __translate -- Translates an incoming command into the ECoS protocol.
  *
@@ -729,13 +769,17 @@ static int __translate( obj inst, iONode node, char* ecosCmd ) {
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "In __translate, oname = [%s]", oname );
 
+  if( StrOp.equals( oname, wFbInfo.name() ) ) {
+    __updateFB( inst, node );
+  }
+
     /*
 
       Switch command.
 
     */
 
-  if ( StrOp.equals( oname, wSwitch.name())) {
+  else if ( StrOp.equals( oname, wSwitch.name())) {
 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "ECoS switch command" );
 
