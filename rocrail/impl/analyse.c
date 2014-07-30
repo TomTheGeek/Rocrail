@@ -8373,6 +8373,12 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
             const char* swid = wSwitchCmd.getid( swCmd );
             const char* swcmd = wSwitchCmd.getcmd( swCmd );
             Boolean swlock = wSwitchCmd.islock( swCmd );
+            Boolean swOK = False;
+            Boolean sgOK = False;
+            Boolean coOK = False;
+            Boolean stOK = False;
+            Boolean ttOK = False;
+
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "routeCheck: st[%d] [%s] swid[%s] swcmd[%s] swlock[%d]",
                 i, stid, swid, swcmd, swlock );
             /* verify swid */
@@ -8392,32 +8398,49 @@ static Boolean routeCheck( iOAnalyse inst, Boolean repair ) {
             }
 
             /* verify swcmd */
-            if( sw != NULL ) {
-              if( checkSwitchCmd( swcmd ) == False ) {
-                if( isSimpleCrossing( SwitchOp.base.properties(sw) ) ) {
-                  /* simple crossing (no motor) may have any command, also empty or blank(s) (-> analyzer ) */
-                  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "routeCheck: route[%s] switch[%s] : simple crossing with any command[%s] is OK",
-                      stid, swid, swcmd );
+            /* it is allowed to have sw, sg, co, st and/or tt with same id in plan
+             * -> i.e. checks for signal "dummy" with command "red" may fail for a switch "dummy" -> /false/ warnings -> confused users
+             * first check if the command is OK for any of the allowed device types
+             */
+            swOK = ( sw != NULL ) && ( checkSwitchCmd( swcmd ) || isSimpleCrossing( SwitchOp.base.properties(sw) ) );
+            sgOK = ( sg != NULL ) && checkSignalCmd( swcmd );
+            coOK = ( co != NULL ) && checkOutputCmd( swcmd );
+            stOK = ( st != NULL ); /* no command checks */
+            ttOK = ( tt != NULL ); /* no command checks */
+
+            if( swOK || sgOK || coOK || stOK || ttOK ) {
+              /* any of the above is correct so we don't have to do a detailed analysis generating messages that might be wrong */
+              TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "routeCheck: route[%s] id[%s] command[%s] is OK", stid, swid, swcmd );
+            }
+            else {
+              /* detailed analysis of devices */
+              if( sw != NULL ) {
+                if( checkSwitchCmd( swcmd ) == False ) {
+                  if( isSimpleCrossing( SwitchOp.base.properties(sw) ) ) {
+                    /* simple crossing (no motor) may have any command, also empty or blank(s) (-> analyzer ) */
+                    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "routeCheck: route[%s] switch[%s] : simple crossing with any command[%s] is OK",
+                        stid, swid, swcmd );
+                  }
+                  else {
+                    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] switch[%s] : invalid command[%s]",
+                        stid, swid, swcmd );
+                    numProblems++;
+                  }
                 }
-                else {
-                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] switch[%s] : invalid command[%s]",
+              }
+              if( sg != NULL ) {
+                if( checkSignalCmd( swcmd ) == False ) {
+                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] signal[%s] : invalid command[%s]",
                       stid, swid, swcmd );
                   numProblems++;
                 }
               }
-            }
-            if( sg != NULL ) {
-              if( checkSignalCmd( swcmd )== False ) {
-                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] signal[%s] : invalid command[%s]",
-                    stid, swid, swcmd );
-                numProblems++;
-              }
-            }
-            if( co != NULL ) {
-              if( checkOutputCmd( swcmd ) == False ) {
-                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] output[%s] : invalid command[%s]",
-                    stid, swid, swcmd );
-                numProblems++;
+              if( co != NULL ) {
+                if( checkOutputCmd( swcmd ) == False ) {
+                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: routeCheck: route[%s] output[%s] : invalid command[%s]",
+                      stid, swid, swcmd );
+                  numProblems++;
+                }
               }
             }
 
