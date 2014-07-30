@@ -421,6 +421,8 @@ public:
     wxButton* m_ShowDoc;
     wxStaticText* m_Label_Purchased;
     wxTextCtrl* m_Purchased;
+    wxStaticText* m_labValue;
+    wxTextCtrl* m_Value;
     wxStaticText* m_labShortID;
     wxTextCtrl* m_ShortID;
     wxStaticText* m_labIdent;
