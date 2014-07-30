@@ -25,6 +25,12 @@
 #include "rocview/symbols/sym.h"
 
 #include "rocrail/wrapper/public/Track.h"
+#include "rocrail/wrapper/public/Switch.h"
+#include "rocrail/wrapper/public/Signal.h"
+#include "rocrail/wrapper/public/Block.h"
+#include "rocrail/wrapper/public/Stage.h"
+#include "rocrail/wrapper/public/Feedback.h"
+
 #include "rocs/public/strtok.h"
 
 #include <wx/dnd.h>
@@ -40,12 +46,44 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   m_GridTrack->EnableDragGridSize(false);
   m_GridTrack->ClearGrid();
   m_GridTrack->DeleteRows( 0, m_GridTrack->GetNumberRows() );
-
   wxFont* font = new wxFont( m_GridTrack->GetDefaultCellFont() );
   font->SetPointSize(1);
   m_GridTrack->SetDefaultCellFont( *font );
 
+  m_GridSwitch->EnableEditing(false);
+  m_GridSwitch->EnableDragGridSize(false);
+  m_GridSwitch->ClearGrid();
+  m_GridSwitch->DeleteRows( 0, m_GridSwitch->GetNumberRows() );
+  font = new wxFont( m_GridSwitch->GetDefaultCellFont() );
+  font->SetPointSize(1);
+  m_GridSwitch->SetDefaultCellFont( *font );
+
+  m_GridSignal->EnableEditing(false);
+  m_GridSignal->EnableDragGridSize(false);
+  m_GridSignal->ClearGrid();
+  m_GridSignal->DeleteRows( 0, m_GridSignal->GetNumberRows() );
+  font = new wxFont( m_GridSignal->GetDefaultCellFont() );
+  font->SetPointSize(1);
+  m_GridSignal->SetDefaultCellFont( *font );
+
+  m_GridBlock->EnableEditing(false);
+  m_GridBlock->EnableDragGridSize(false);
+  m_GridBlock->ClearGrid();
+  m_GridBlock->DeleteRows( 0, m_GridBlock->GetNumberRows() );
+  font = new wxFont( m_GridBlock->GetDefaultCellFont() );
+  font->SetPointSize(1);
+  m_GridBlock->SetDefaultCellFont( *font );
+
   initSymbols();
+
+  m_TrackBook->SetPageText( 0, wxGetApp().getMsg( "track" ) );
+  m_TrackBook->SetPageText( 1, wxGetApp().getMsg( "turnout" ) );
+  m_TrackBook->SetPageText( 2, wxGetApp().getMsg( "signal" ) );
+  m_TrackBook->SetPageText( 3, wxGetApp().getMsg( "block" ) );
+
+  m_TrackBook->SetSelection(0);
+
+  SetTitle( wxGetApp().getMsg("additem") );
 }
 
 
@@ -61,6 +99,24 @@ void TrackPickerDlg::initGrid() {
       m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
     }
+    else if( StrOp.startsWith( symname, wSwitch.name() ) ) {
+      m_GridSwitch->AppendRows();
+      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSwitch->GetNumberRows(), symname, svg );
+      m_GridSwitch->SetCellValue(m_GridSwitch->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+      m_GridSwitch->SetCellRenderer(m_GridSwitch->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
+    }
+    else if( StrOp.startsWith( symname, wSignal.name() ) ) {
+      m_GridSignal->AppendRows();
+      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSignal->GetNumberRows(), symname, svg );
+      m_GridSignal->SetCellValue(m_GridSignal->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+      m_GridSignal->SetCellRenderer(m_GridSignal->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
+    }
+    else if( StrOp.startsWith( symname, wBlock.name() ) || StrOp.startsWith( symname, wStage.name() ) || StrOp.startsWith( symname, wFeedback.name() ) ) {
+      m_GridBlock->AppendRows();
+      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridBlock->GetNumberRows(), symname, svg );
+      m_GridBlock->SetCellValue(m_GridBlock->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+      m_GridBlock->SetCellRenderer(m_GridBlock->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
+    }
     tok->base.del(tok);
   }
   m_GridTrack->AutoSizeColumns();
@@ -70,6 +126,8 @@ void TrackPickerDlg::initGrid() {
 
 void TrackPickerDlg::initSymbols() {
   m_SymbolList = ListOp.inst();
+
+  // Track
   char* symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.straight, tracktype::straight );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.curve, tracktype::curve );
@@ -81,6 +139,46 @@ void TrackPickerDlg::initSymbols() {
   symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.dirall, tracktype::dirall );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.connector, tracktype::connector );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  // Switch
+  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.left, switchtype::turnoutleft );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.right, switchtype::turnoutright );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.threeway, switchtype::threeway );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.twoway, switchtype::twoway_tr );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.ccrossing, switchtype::ccrossing );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossing );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:left,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingright );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:right,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingleft );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:left,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingright );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:right,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingleft );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  // Signal
+  symname = StrOp.fmt("%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.distant, signaltype::signaldistant_2_r );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::signalmain_r );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.shunting, signaltype::signalshunting_2_r );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  // Block
+  symname = StrOp.fmt("%s,%s", wBlock.name(), blocktype::block );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s,%s", wStage.name(), stagetype::stage );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s,%s", wFeedback.name(), feedbacktype::sensor_off );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s::%s,%s", wFeedback.name(), "curve", feedbacktype::curve_sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );
 
   initGrid();

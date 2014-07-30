@@ -240,6 +240,7 @@ public:
   void OnLocoHelp(wxCommandEvent& event);
 
   void OnPanelProps(wxCommandEvent& event);
+  void OnAddItem(wxCommandEvent& event);
   void OnAddPanel(wxCommandEvent& event);
   void OnUndo(wxCommandEvent& event);
 
@@ -571,6 +572,7 @@ enum
     UPDATE_LOC_IMAGE_EVENT,
     CV_EVENT,
     ME_PanelProps,
+    ME_AddItem,
     ME_AddPanel,
     ME_Undo,
     ME_PlanTitle,

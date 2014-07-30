@@ -19,7 +19,8 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/notebook.h>
+#include <wx/listbook.h>
+#include <wx/listctrl.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -33,9 +34,15 @@ class TrackPickerDlgGen : public wxDialog
 	private:
 	
 	protected:
-		wxNotebook* m_TrackBook;
+		wxListbook* m_TrackBook;
 		wxPanel* m_PageTrack;
 		wxGrid* m_GridTrack;
+		wxPanel* m_PageSwitch;
+		wxGrid* m_GridSwitch;
+		wxPanel* m_PageSignal;
+		wxGrid* m_GridSignal;
+		wxPanel* m_PageBlock;
+		wxGrid* m_GridBlock;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onTrackCellLeftClick( wxGridEvent& event ) { event.Skip(); }
@@ -43,7 +50,7 @@ class TrackPickerDlgGen : public wxDialog
 	
 	public:
 		
-		TrackPickerDlgGen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		TrackPickerDlgGen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Track Picker"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 		~TrackPickerDlgGen();
 	
 };

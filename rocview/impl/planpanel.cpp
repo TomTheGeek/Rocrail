@@ -199,13 +199,26 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
     if( StrTokOp.hasMoreTokens(tok) ) {
       const char* symname = StrTokOp.nextToken(tok);
       const char* symtype = "";
+      const char* symdir  = "";
       if( StrTokOp.hasMoreTokens(tok) )
         symtype = StrTokOp.nextToken(tok);
+      if( StrTokOp.hasMoreTokens(tok) )
+        symdir = StrTokOp.nextToken(tok);
       TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "D&D: symbol=%s type=%s", symname, symtype );
       m_PlanPanel->m_X = (int)(x / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
       m_PlanPanel->m_Y = (int)(y / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
       iONode node = NodeOp.inst( symname, NULL, ELEMENT_NODE );
       wItem.settype( node, symtype );
+      if( StrOp.len(symdir) > 0 ) {
+        if( StrOp.equals(symdir, wSwitch.right) || StrOp.equals(symdir, wSwitch.left) )
+          wSwitch.setrectcrossing( node, False );
+        if( StrOp.equals(symdir, wSwitch.right))
+          wItem.setdir( node, True );
+        else if( StrOp.equals(symdir, wSignal.main ) || StrOp.equals(symdir, wSignal.distant ) || StrOp.equals(symdir, wSignal.shunting ) )
+          wSignal.setsignal( node, symdir );
+        else if( StrOp.equals(symdir, "curve"))
+          wFeedback.setcurve( node, True );
+      }
       m_PlanPanel->addItemAttr( node );
       ok = true;
     }

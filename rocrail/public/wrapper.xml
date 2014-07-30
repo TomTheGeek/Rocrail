@@ -1398,6 +1398,7 @@
     <var name="type" vt="string" defval="NULL" range="*"/>
     <var name="show" vt="bool" defval="true"/>
     <var name="road" vt="bool" defval="false"/>
+    <var name="dir" vt="bool" defval="false" remark="false=left, true=right"/>
     <var name="state" vt="string" defval="-"/>
     <var name="generated" vt="bool" defval="false" remark="On the fly generated for an unknown address. Triggered by a client."/>
   </item>
