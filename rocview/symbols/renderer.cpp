@@ -1021,14 +1021,15 @@ wxBrush* SymbolRenderer::getBrush( const char* fill, wxPaintDC& dc ) {
     return new wxBrush(wxString(fill,wxConvUTF8), wxSOLID);
 }
 
-void SymbolRenderer::drawSvgSym( wxPaintDC& dc, int x, int y, const char* symname, const char* ori, int* cx, int* cy ) {
+void SymbolRenderer::drawSvgSym( wxPaintDC& dc, int x, int y, const char* symname, const char* ori, int* cx, int* cy, bool draw ) {
   m_GC = NULL;
   m_UseGC = false;
   m_DC = &dc;
   m_bAlt = false;
   svgSymbol* svgsym = (svgSymbol*)MapOp.get( m_SymMap, symname );
   if( svgsym != NULL ) {
-    drawSvgSym(dc, svgsym, ori, x, y, false);
+    if( draw )
+      drawSvgSym(dc, svgsym, ori, x, y, false);
     *cx = svgsym->width  / 32;
     *cy = svgsym->height / 32;
   }

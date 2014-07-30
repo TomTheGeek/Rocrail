@@ -76,16 +76,8 @@ void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRe
     int cy = 0;
 
     if( imageBitmap == NULL ) {
-      imageBitmap = new wxBitmap();
-      imageBitmap->Create(128, 128 , -1);
       wxMemoryDC tmpDC;
-      tmpDC.SelectObject(*imageBitmap);
-      tmpDC.SetBackground(*wxWHITE_BRUSH);
-      tmpDC.Clear();
-      m_Renderer->drawSvgSym( (wxPaintDC&)tmpDC, 0, 0, imageName, wItem.west, &cx, &cy );
-      tmpDC.SelectObject(wxNullBitmap);
-
-      delete imageBitmap;
+      m_Renderer->drawSvgSym( (wxPaintDC&)tmpDC, 0, 0, imageName, wItem.west, &cx, &cy, false );
       imageBitmap = new wxBitmap();
       imageBitmap->Create(cx * 32 * m_Scale, cy * 32 * m_Scale , -1);
       tmpDC.SelectObject(*imageBitmap);

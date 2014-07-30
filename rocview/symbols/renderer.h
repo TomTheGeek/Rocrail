@@ -112,7 +112,7 @@ public:
   void drawLine(int x, int y, int cx, int cy);
   wxFont* setFont(int pointsize=0, int red=0, int green=0, int blue=0, bool bold=false, bool italic=false, bool underlined=false);
 
-  void drawSvgSym( wxPaintDC& dc, int x, int y, const char* symname, const char* ori, int* cx, int* cy );
+  void drawSvgSym( wxPaintDC& dc, int x, int y, const char* symname, const char* ori, int* cx, int* cy, bool draw=true );
   void drawSvgSym( wxPaintDC& dc, svgSymbol* svgsym, const char* ori, int xoff=0, int yoff=0, bool gridOffset=true );
   wxPen* getPen( const char* stroke );
   wxBrush* getBrush( const char* fill, wxPaintDC& dc );
