@@ -74,14 +74,30 @@ void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRe
   if( m_Renderer != NULL && imageName != NULL && StrOp.len(imageName) > 0 ) {
     int cx = 0;
     int cy = 0;
-    //dc.SetUserScale( m_Scale, m_Scale );
 
-    m_Renderer->drawSvgSym( (wxPaintDC&)dc, rect.x, rect.y, imageName, wItem.west, &cx, &cy );
-    if( grid.GetColSize(col) <  cx * 32 )
-      grid.SetColSize(col, cx * 32 );
-    if( grid.GetRowSize(row) <  cy * 32 + 4 )
-      grid.SetRowSize(row, cy * 32 + 4 );
-    TraceOp.trc( "cellrenderer", TRCLEVEL_INFO, __LINE__, 9999, "image: %s dc=%X row=%d col=%d cx=%d cy=%d", imageName, &dc, row, col, cx, cy );
+    if( imageBitmap == NULL ) {
+      imageBitmap = new wxBitmap();
+      imageBitmap->Create(128, 128 , -1);
+      wxMemoryDC tmpDC;
+      tmpDC.SelectObject(*imageBitmap);
+      tmpDC.SetBackground(*wxWHITE_BRUSH);
+      tmpDC.Clear();
+      tmpDC.SetUserScale( m_Scale, m_Scale );
+
+      m_Renderer->drawSvgSym( (wxPaintDC&)tmpDC, 0, 0, imageName, wItem.west, &cx, &cy );
+
+      tmpDC.SelectObject(wxNullBitmap);
+      imageBitmap->SetWidth(cx*32*m_Scale);
+      imageBitmap->SetHeight(cy*32*m_Scale);
+      if( grid.GetColSize(col) <  cx * 32 * m_Scale )
+        grid.SetColSize(col, cx * 32 * m_Scale );
+      if( grid.GetRowSize(row) <  cy * 32 * m_Scale + 4 )
+        grid.SetRowSize(row, cy * 32 * m_Scale + 4 );
+      TraceOp.trc( "cellrenderer", TRCLEVEL_INFO, __LINE__, 9999, "image: %s dc=%X row=%d col=%d cx=%d cy=%d", imageName, &dc, row, col, cx, cy );
+    }
+
+    dc.DrawBitmap(*imageBitmap, rect.x, rect.y + 2);
+
   }
   else if( imageName != NULL && StrOp.len(imageName) > 0 ) {
     if( imageBitmap == NULL )

@@ -50,6 +50,7 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   wxFont* font = new wxFont( m_GridTrack->GetDefaultCellFont() );
   font->SetPointSize(1);
   m_GridTrack->SetDefaultCellFont( *font );
+  m_GridTrack->SetCellTextColour(*wxWHITE);
 
   m_GridSwitch->EnableEditing(false);
   m_GridSwitch->EnableDragGridSize(false);
@@ -58,6 +59,7 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   font = new wxFont( m_GridSwitch->GetDefaultCellFont() );
   font->SetPointSize(1);
   m_GridSwitch->SetDefaultCellFont( *font );
+  m_GridSwitch->SetCellTextColour(*wxWHITE);
 
   m_GridSignal->EnableEditing(false);
   m_GridSignal->EnableDragGridSize(false);
@@ -66,6 +68,7 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   font = new wxFont( m_GridSignal->GetDefaultCellFont() );
   font->SetPointSize(1);
   m_GridSignal->SetDefaultCellFont( *font );
+  m_GridSignal->SetCellTextColour(*wxWHITE);
 
   m_GridBlock->EnableEditing(false);
   m_GridBlock->EnableDragGridSize(false);
@@ -74,6 +77,7 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   font = new wxFont( m_GridBlock->GetDefaultCellFont() );
   font->SetPointSize(1);
   m_GridBlock->SetDefaultCellFont( *font );
+  m_GridBlock->SetCellTextColour(*wxWHITE);
 
   m_GridAccessory->EnableEditing(false);
   m_GridAccessory->EnableDragGridSize(false);
@@ -82,6 +86,7 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   font = new wxFont( m_GridAccessory->GetDefaultCellFont() );
   font->SetPointSize(1);
   m_GridAccessory->SetDefaultCellFont( *font );
+  m_GridAccessory->SetCellTextColour(*wxWHITE);
 
   initSymbols();
 
