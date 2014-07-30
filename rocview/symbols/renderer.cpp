@@ -58,7 +58,7 @@
 static double PI25DT = 3.141592653589793238462643;
 
 
-SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps, int textps ) {
+SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps, int textps, double scale ) {
   m_Props = props;
   m_Parent = parent;
   m_SymMap = symmap;
@@ -67,7 +67,7 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, in
   m_bShowCounters = false;
   m_iOccupied = 0;
   m_Bitmap = NULL;
-  m_Scale = 1.0;
+  m_Scale = scale;
   TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "symbol map size = %d", symmap == NULL ? 0:MapOp.size(symmap) );
   if( m_Props != NULL )
     initSym();

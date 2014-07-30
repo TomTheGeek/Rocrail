@@ -35,10 +35,11 @@ class CellRenderer: public wxGridCellStringRenderer
   wxBitmap* imageBitmap;
   SymbolRenderer* m_Renderer;
   bool m_bDidResize;
+  double m_Scale;
 
 public:
   CellRenderer(const char* imageName);
-  CellRenderer(const char* imageName, SymbolRenderer* l_Renderer);
+  CellRenderer(const char* imageName, SymbolRenderer* l_Renderer, double scale=1.0);
   CellRenderer(wxBitmap* bitmap);
 
   ~CellRenderer();

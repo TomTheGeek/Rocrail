@@ -41,13 +41,15 @@ CellRenderer::CellRenderer(const char* imageName) : wxGridCellStringRenderer() {
   imageBitmap = NULL;
   m_Renderer = NULL;
   m_bDidResize = false;
+  m_Scale = 1.0;
 }
 
-CellRenderer::CellRenderer(const char* imageName, SymbolRenderer* l_Renderer) : wxGridCellStringRenderer() {
+CellRenderer::CellRenderer(const char* imageName, SymbolRenderer* l_Renderer, double scale) : wxGridCellStringRenderer() {
   m_Renderer = l_Renderer;
   this->imageName = StrOp.dup(imageName);
   imageBitmap = NULL;
   m_bDidResize = false;
+  m_Scale = scale;
 }
 
 
@@ -56,6 +58,7 @@ CellRenderer::CellRenderer(wxBitmap* bitmap) : wxGridCellStringRenderer() {
   imageBitmap = bitmap;
   m_Renderer = NULL;
   m_bDidResize = false;
+  m_Scale = 1.0;
 }
 
 CellRenderer::~CellRenderer() {
@@ -71,6 +74,8 @@ void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRe
   if( m_Renderer != NULL && imageName != NULL && StrOp.len(imageName) > 0 ) {
     int cx = 0;
     int cy = 0;
+    dc.SetUserScale( m_Scale, m_Scale );
+
     m_Renderer->drawSvgSym( (wxPaintDC&)dc, rect.x, rect.y, imageName, wItem.west, &cx, &cy );
     if( grid.GetColSize(col) <  cx * 32 )
       grid.SetColSize(col, cx * 32 );

@@ -98,7 +98,7 @@ class SymbolRenderer {
 
 public:
   void initSym();
-  SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps, int textps );
+  SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, int itemidps, int textps, double scale=1.0 );
   void drawShape( wxPaintDC& dc, wxGraphicsContext* gc, bool occupied, bool actroute, double* bridgepos, bool showID, bool showCounters, const char* ori, int status=0, bool alt=false );
   void sizeToScale( double size, double scale, double bktext, int* cx, int* cy, const char* ori );
   void setLabel( const char* label, int occupied );
