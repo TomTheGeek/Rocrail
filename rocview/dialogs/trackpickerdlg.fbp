@@ -244,7 +244,7 @@
                                             <property name="row_label_vert_alignment">wxALIGN_CENTRE</property>
                                             <property name="row_sizes"></property>
                                             <property name="rows">5</property>
-                                            <property name="size">128,-1</property>
+                                            <property name="size">128,240</property>
                                             <property name="subclass"></property>
                                             <property name="tooltip"></property>
                                             <property name="validator_data_type"></property>

@@ -21,7 +21,7 @@ TrackPickerDlgGen::TrackPickerDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	m_GridTrack = new wxGrid( m_PageTrack, wxID_ANY, wxDefaultPosition, wxSize( 128,-1 ), 0 );
+	m_GridTrack = new wxGrid( m_PageTrack, wxID_ANY, wxDefaultPosition, wxSize( 128,240 ), 0 );
 	
 	// Grid
 	m_GridTrack->CreateGrid( 5, 1 );

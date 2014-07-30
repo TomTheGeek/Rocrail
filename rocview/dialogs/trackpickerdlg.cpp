@@ -30,6 +30,7 @@
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Feedback.h"
+#include "rocrail/wrapper/public/Output.h"
 
 #include "rocs/public/strtok.h"
 
@@ -111,7 +112,9 @@ void TrackPickerDlg::initGrid() {
       m_GridSignal->SetCellValue(m_GridSignal->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridSignal->SetCellRenderer(m_GridSignal->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
     }
-    else if( StrOp.startsWith( symname, wBlock.name() ) || StrOp.startsWith( symname, wStage.name() ) || StrOp.startsWith( symname, wFeedback.name() ) ) {
+    else if( StrOp.startsWith( symname, wBlock.name() ) || StrOp.startsWith( symname, wStage.name() ) ||
+        StrOp.startsWith( symname, wFeedback.name() ) || StrOp.startsWith( symname, wOutput.name() ) )
+    {
       m_GridBlock->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridBlock->GetNumberRows(), symname, svg );
       m_GridBlock->SetCellValue(m_GridBlock->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
@@ -162,6 +165,8 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:right,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingleft );
   ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.decoupler, switchtype::decoupler );
+  ListOp.add( m_SymbolList, (obj) symname );
 
   // Signal
   symname = StrOp.fmt("%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.distant, signaltype::signaldistant_2_r );
@@ -179,6 +184,8 @@ void TrackPickerDlg::initSymbols() {
   symname = StrOp.fmt("%s,%s", wFeedback.name(), feedbacktype::sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s::%s,%s", wFeedback.name(), "curve", feedbacktype::curve_sensor_off );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s,%s", wOutput.name(), outputtype::button );
   ListOp.add( m_SymbolList, (obj) symname );
 
   initGrid();
