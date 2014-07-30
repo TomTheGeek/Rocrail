@@ -31,13 +31,14 @@
 
 class CellRenderer: public wxGridCellStringRenderer
 {
-  const char* imageName;
+  char* imageName;
   wxBitmap* imageBitmap;
   SymbolRenderer* m_Renderer;
+  bool m_bDidResize;
 
 public:
-  CellRenderer(const char* imageMame);
-  CellRenderer(const char* imageMame, SymbolRenderer* l_Renderer);
+  CellRenderer(const char* imageName);
+  CellRenderer(const char* imageName, SymbolRenderer* l_Renderer);
   CellRenderer(wxBitmap* bitmap);
 
   ~CellRenderer();

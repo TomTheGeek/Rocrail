@@ -37,27 +37,31 @@
 // m_grid->SetCellRenderer(0, 0, new CellRenderer(cellImage) );
 
 CellRenderer::CellRenderer(const char* imageName) : wxGridCellStringRenderer() {
-  this->imageName = imageName;
+  this->imageName = StrOp.dup(imageName);
   imageBitmap = NULL;
   m_Renderer = NULL;
+  m_bDidResize = false;
 }
 
-CellRenderer::CellRenderer(const char* imageMame, SymbolRenderer* l_Renderer) : wxGridCellStringRenderer() {
+CellRenderer::CellRenderer(const char* imageName, SymbolRenderer* l_Renderer) : wxGridCellStringRenderer() {
   m_Renderer = l_Renderer;
-  this->imageName = imageMame;
+  this->imageName = StrOp.dup(imageName);
   imageBitmap = NULL;
+  m_bDidResize = false;
 }
 
 
 CellRenderer::CellRenderer(wxBitmap* bitmap) : wxGridCellStringRenderer() {
-  this->imageName = "dummy";
+  this->imageName = StrOp.dup("dummy");
   imageBitmap = bitmap;
   m_Renderer = NULL;
+  m_bDidResize = false;
 }
 
 CellRenderer::~CellRenderer() {
   if( imageBitmap != NULL )
     delete imageBitmap;
+  StrOp.free(imageName);
 }
 
 void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRect& rect, int row, int col, bool isSelected)
@@ -72,7 +76,6 @@ void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRe
       grid.SetColSize(col, cx * 32 );
     if( grid.GetRowSize(row) <  cy * 32 )
       grid.SetRowSize(row, cy * 32 );
-    grid.ForceRefresh();
     TraceOp.trc( "cellrenderer", TRCLEVEL_INFO, __LINE__, 9999, "image: %s dc=%X row=%d col=%d cx=%d cy=%d", imageName, &dc, row, col, cx, cy );
   }
   else if( imageName != NULL && StrOp.len(imageName) > 0 ) {
@@ -80,7 +83,10 @@ void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRe
       updateImage(rect);
     if( imageBitmap != NULL ) {
       dc.DrawBitmap(*imageBitmap, rect.x, rect.y);
-      grid.AutoSizeColumn(col);
+      if( !m_bDidResize ) {
+        grid.AutoSizeColumn(col);
+        m_bDidResize = true;
+      }
     }
   }
 }

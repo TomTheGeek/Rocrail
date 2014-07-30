@@ -25,6 +25,7 @@
 #include "rocview/symbols/sym.h"
 
 #include "rocrail/wrapper/public/Track.h"
+#include "rocs/public/strtok.h"
 
 #include <wx/dnd.h>
 
@@ -44,33 +45,51 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   font->SetPointSize(1);
   m_GridTrack->SetDefaultCellFont( *font );
 
-  char* symname = NULL;
+  initSymbols();
+}
 
-  m_GridTrack->AppendRows();
-  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d", m_GridTrack->GetNumberRows() );
-  symname = StrOp.fmt("%s:%s", wTrack.name(), wTrack.straight );
-  m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-  StrOp.free(symname);
-  m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(tracktype::straight, m_Renderer) );
 
-  m_GridTrack->AppendRows();
-  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d", m_GridTrack->GetNumberRows() );
-  symname = StrOp.fmt("%s:%s", wTrack.name(), wTrack.curve );
-  m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-  StrOp.free(symname);
-  m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(tracktype::curve, m_Renderer) );
-
-  m_GridTrack->AppendRows();
-  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d", m_GridTrack->GetNumberRows() );
-  symname = StrOp.fmt("%s:%s", wTrack.name(), wTrack.buffer );
-  m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-  StrOp.free(symname);
-  m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(tracktype::buffer, m_Renderer) );
-
+void TrackPickerDlg::initGrid() {
+  for( int i = 0; i < ListOp.size(m_SymbolList); i++) {
+    char* symbol = (char*)ListOp.get(m_SymbolList, i);
+    iOStrTok tok = StrTokOp.inst(symbol, ',');
+    const char* symname = StrTokOp.nextToken(tok);
+    const char* svg     = StrTokOp.nextToken(tok);
+    if( StrOp.startsWith( symname, wTrack.name() ) ) {
+      m_GridTrack->AppendRows();
+      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridTrack->GetNumberRows(), symname, svg );
+      m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+      m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
+    }
+    tok->base.del(tok);
+  }
   m_GridTrack->AutoSizeColumns();
   m_GridTrack->AutoSizeRows();
 }
 
+
+void TrackPickerDlg::initSymbols() {
+  m_SymbolList = ListOp.inst();
+  char* symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.straight, tracktype::straight );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.curve, tracktype::curve );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.buffer, tracktype::buffer );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.dir, tracktype::dir );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.dirall, tracktype::dirall );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.connector, tracktype::connector );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  initGrid();
+
+  for( int i = 0; i < ListOp.size(m_SymbolList); i++) {
+    StrOp.free((char*)ListOp.get(m_SymbolList, i));
+  }
+  ListOp.base.del(m_SymbolList);
+}
 
 void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
   wxString str = ((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 );
