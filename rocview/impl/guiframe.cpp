@@ -1967,7 +1967,7 @@ void RocGuiFrame::initFrame() {
   menuPanel->AppendCheckItem(ME_EditMode, wxGetApp().getMenu("editmode"), wxGetApp().getTip("editmode") );
   menuPanel->AppendCheckItem(ME_EditModPlan, wxGetApp().getMenu("editmodplan"), wxGetApp().getTip("editmodplan") );
   menuPanel->AppendSeparator();
-  menuPanel->Append(ME_AddItem, wxGetApp().getMenu("additem"), wxGetApp().getTip("additem") );
+  menuPanel->Append(ME_AddItem, wxGetApp().getMenu("additem")+wxT("..."), wxGetApp().getTip("additem") );
   menuPanel->Append(ME_AddPanel, wxGetApp().getMenu("addpanel"), wxGetApp().getTip("addpanel") );
   menuPanel->Append(ME_PanelProps, wxGetApp().getMenu("panelprops"), wxGetApp().getTip("panelprops") );
 
@@ -4110,8 +4110,6 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
     if( mi != NULL ) mi->Enable( false );
     mi = menuBar->FindItem(ME_PanelProps);
     if( mi != NULL ) mi->Enable( false );
-    mi = menuBar->FindItem(ME_AddItem);
-    if( mi != NULL ) mi->Enable( false );
   }
   else {
     mi = menuBar->FindItem(ME_EditMode);
@@ -4123,8 +4121,6 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
     mi = menuBar->FindItem(ME_AddPanel);
     if( mi != NULL ) mi->Enable( !m_bAutoMode );
     mi = menuBar->FindItem(ME_PanelProps);
-    if( mi != NULL ) mi->Enable( !m_bAutoMode );
-    mi = menuBar->FindItem(ME_AddItem);
     if( mi != NULL ) mi->Enable( !m_bAutoMode );
   }
 
@@ -4265,7 +4261,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
     mi->Enable( !wxGetApp().isModView() );
 
     mi = menuBar->FindItem(ME_AddItem);
-    mi->Enable( !wxGetApp().isModView() );
+    mi->Enable( m_bEditMode );
 
     mi = menuBar->FindItem(ME_CtrlMode);
     if( mi != NULL )
