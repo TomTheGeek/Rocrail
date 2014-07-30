@@ -75,6 +75,14 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   font->SetPointSize(1);
   m_GridBlock->SetDefaultCellFont( *font );
 
+  m_GridAccessory->EnableEditing(false);
+  m_GridAccessory->EnableDragGridSize(false);
+  m_GridAccessory->ClearGrid();
+  m_GridAccessory->DeleteRows( 0, m_GridAccessory->GetNumberRows() );
+  font = new wxFont( m_GridAccessory->GetDefaultCellFont() );
+  font->SetPointSize(1);
+  m_GridAccessory->SetDefaultCellFont( *font );
+
   initSymbols();
 
   m_TrackBook->SetPageText( 0, wxGetApp().getMsg( "track" ) );
@@ -101,10 +109,18 @@ void TrackPickerDlg::initGrid() {
       m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
     }
     else if( StrOp.startsWith( symname, wSwitch.name() ) ) {
-      m_GridSwitch->AppendRows();
-      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSwitch->GetNumberRows(), symname, svg );
-      m_GridSwitch->SetCellValue(m_GridSwitch->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-      m_GridSwitch->SetCellRenderer(m_GridSwitch->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
+      if( StrOp.find( symname, wSwitch.accessory ) != NULL ) {
+        m_GridAccessory->AppendRows();
+        TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
+        m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+        m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
+      }
+      else {
+        m_GridSwitch->AppendRows();
+        TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSwitch->GetNumberRows(), symname, svg );
+        m_GridSwitch->SetCellValue(m_GridSwitch->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+        m_GridSwitch->SetCellRenderer(m_GridSwitch->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer) );
+      }
     }
     else if( StrOp.startsWith( symname, wSignal.name() ) ) {
       m_GridSignal->AppendRows();
@@ -173,6 +189,8 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::signalmain_r );
   ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::signalmain_dwarf_r );
+  ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.shunting, signaltype::signalshunting_2_r );
   ListOp.add( m_SymbolList, (obj) symname );
 
@@ -186,6 +204,22 @@ void TrackPickerDlg::initSymbols() {
   symname = StrOp.fmt("%s::%s,%s", wFeedback.name(), "curve", feedbacktype::curve_sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s,%s", wOutput.name(), outputtype::button );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  // Accessory
+  symname = StrOp.fmt("%s:%s:10,%s", wSwitch.name(), wSwitch.accessory, "accessory-10-off.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:11,%s", wSwitch.name(), wSwitch.accessory, "accessory-11-off.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:12,%s", wSwitch.name(), wSwitch.accessory, "accessory-12-off.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:51,%s", wSwitch.name(), wSwitch.accessory, "accessory-51-off.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:52,%s", wSwitch.name(), wSwitch.accessory, "accessory-52-off.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:53,%s", wSwitch.name(), wSwitch.accessory, "accessory-53-off.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:54,%s", wSwitch.name(), wSwitch.accessory, "accessory-54-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
 
   initGrid();

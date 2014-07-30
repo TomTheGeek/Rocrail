@@ -200,10 +200,13 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       const char* symname = StrTokOp.nextToken(tok);
       const char* symtype = "";
       const char* symdir  = "";
+      const char* symsub  = "";
       if( StrTokOp.hasMoreTokens(tok) )
         symtype = StrTokOp.nextToken(tok);
       if( StrTokOp.hasMoreTokens(tok) )
         symdir = StrTokOp.nextToken(tok);
+      if( StrTokOp.hasMoreTokens(tok) )
+        symsub = StrTokOp.nextToken(tok);
       TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "D&D: symbol=%s type=%s", symname, symtype );
       m_PlanPanel->m_X = (int)(x / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
       m_PlanPanel->m_Y = (int)(y / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
@@ -218,6 +221,12 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
           wSignal.setsignal( node, symdir );
         else if( StrOp.equals(symdir, "curve"))
           wFeedback.setcurve( node, True );
+        if( atoi(symdir) > 0 )
+          wSwitch.setaccnr(node, atoi(symdir) );
+      }
+      if( StrOp.len(symsub) > 0 ) {
+        if( StrOp.equals(symsub, "dwarf"))
+          wSignal.setdwarf( node, True );
       }
       m_PlanPanel->addItemAttr( node );
       ok = true;
