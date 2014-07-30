@@ -79,8 +79,8 @@ void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRe
     m_Renderer->drawSvgSym( (wxPaintDC&)dc, rect.x, rect.y, imageName, wItem.west, &cx, &cy );
     if( grid.GetColSize(col) <  cx * 32 )
       grid.SetColSize(col, cx * 32 );
-    if( grid.GetRowSize(row) <  cy * 32 )
-      grid.SetRowSize(row, cy * 32 );
+    if( grid.GetRowSize(row) <  cy * 32 + 4 )
+      grid.SetRowSize(row, cy * 32 + 4 );
     TraceOp.trc( "cellrenderer", TRCLEVEL_INFO, __LINE__, 9999, "image: %s dc=%X row=%d col=%d cx=%d cy=%d", imageName, &dc, row, col, cx, cy );
   }
   else if( imageName != NULL && StrOp.len(imageName) > 0 ) {
