@@ -94,10 +94,13 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   m_TrackBook->SetPageText( 1, wxGetApp().getMsg( "turnout" ) );
   m_TrackBook->SetPageText( 2, wxGetApp().getMsg( "signal" ) );
   m_TrackBook->SetPageText( 3, wxGetApp().getMsg( "block" ) );
+  m_TrackBook->SetPageText( 4, wxGetApp().getMsg( "accessory" ) );
 
   m_TrackBook->SetSelection(0);
 
   SetTitle( wxGetApp().getMsg("additem") );
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
 }
 
 
