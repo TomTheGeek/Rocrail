@@ -124,7 +124,7 @@
                         <event name="OnLeftDClick"></event>
                         <event name="OnLeftDown"></event>
                         <event name="OnLeftUp"></event>
-                        <event name="OnListbookPageChanged"></event>
+                        <event name="OnListbookPageChanged">onPageChanged</event>
                         <event name="OnListbookPageChanging"></event>
                         <event name="OnMiddleDClick"></event>
                         <event name="OnMiddleDown"></event>

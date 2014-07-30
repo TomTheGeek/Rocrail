@@ -146,8 +146,23 @@ void TrackPickerDlg::initGrid() {
     }
     tok->base.del(tok);
   }
+
   m_GridTrack->AutoSizeColumns();
   m_GridTrack->AutoSizeRows();
+  m_GridSwitch->AutoSizeColumns();
+  m_GridSwitch->AutoSizeRows();
+  m_GridSignal->AutoSizeColumns();
+  m_GridSignal->AutoSizeRows();
+  m_GridBlock->AutoSizeColumns();
+  m_GridBlock->AutoSizeRows();
+  m_GridAccessory->AutoSizeColumns();
+  m_GridAccessory->AutoSizeRows();
+
+  m_GridTrack->ForceRefresh();
+  m_GridSwitch->ForceRefresh();
+  m_GridSignal->ForceRefresh();
+  m_GridBlock->ForceRefresh();
+  m_GridAccessory->ForceRefresh();
 }
 
 
@@ -246,4 +261,18 @@ void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
   wxDropSource dragSource( this );
   dragSource.SetData( my_data );
   wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+  Raise();
 }
+
+void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
+  int selpage = event.GetSelection();
+  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "selected page %d", selpage );
+  switch( selpage ) {
+  case 0: m_GridTrack->AutoSizeRows(); break;
+  case 1: m_GridSwitch->AutoSizeRows(); break;
+  case 2: m_GridSignal->AutoSizeRows(); break;
+  case 3: m_GridBlock->AutoSizeRows(); break;
+  case 4: m_GridAccessory->AutoSizeRows(); break;
+  }
+}
+

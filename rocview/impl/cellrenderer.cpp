@@ -82,13 +82,19 @@ void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRe
       tmpDC.SelectObject(*imageBitmap);
       tmpDC.SetBackground(*wxWHITE_BRUSH);
       tmpDC.Clear();
-      tmpDC.SetUserScale( m_Scale, m_Scale );
-
       m_Renderer->drawSvgSym( (wxPaintDC&)tmpDC, 0, 0, imageName, wItem.west, &cx, &cy );
-
       tmpDC.SelectObject(wxNullBitmap);
-      imageBitmap->SetWidth(cx*32*m_Scale);
-      imageBitmap->SetHeight(cy*32*m_Scale);
+
+      delete imageBitmap;
+      imageBitmap = new wxBitmap();
+      imageBitmap->Create(cx * 32 * m_Scale, cy * 32 * m_Scale , -1);
+      tmpDC.SelectObject(*imageBitmap);
+      tmpDC.SetBackground(*wxWHITE_BRUSH);
+      tmpDC.Clear();
+      tmpDC.SetUserScale( m_Scale, m_Scale );
+      m_Renderer->drawSvgSym( (wxPaintDC&)tmpDC, 0, 0, imageName, wItem.west, &cx, &cy );
+      tmpDC.SelectObject(wxNullBitmap);
+
       if( grid.GetColSize(col) <  cx * 32 * m_Scale )
         grid.SetColSize(col, cx * 32 * m_Scale );
       if( grid.GetRowSize(row) <  cy * 32 * m_Scale + 4 )
