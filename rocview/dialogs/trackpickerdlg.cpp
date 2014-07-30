@@ -262,6 +262,7 @@ void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
   dragSource.SetData( my_data );
   wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
   Raise();
+  event.Skip();
 }
 
 void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
