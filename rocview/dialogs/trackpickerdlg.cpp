@@ -33,6 +33,7 @@
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Turntable.h"
+#include "rocrail/wrapper/public/Text.h"
 
 #include "rocs/public/strtok.h"
 
@@ -51,71 +52,51 @@
 TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
 {
 
-  int itemidps = 7;
-  int textps = 10;
-  m_Renderer = new SymbolRenderer( NULL, this, wxGetApp().getFrame()->getSymMap(), itemidps, textps, wxGetApp().getFrame()->getScale() );
-
   m_GridTrack->EnableEditing(false);
   m_GridTrack->EnableDragGridSize(false);
   m_GridTrack->ClearGrid();
   m_GridTrack->DeleteRows( 0, m_GridTrack->GetNumberRows() );
-  wxFont* font = new wxFont( m_GridTrack->GetDefaultCellFont() );
-  font->SetPointSize(1);
-  m_GridTrack->SetDefaultCellFont( *font );
   m_GridTrack->SetCellTextColour(*wxWHITE);
+
+  int itemidps = 7;
+  int textps =  m_GridTrack->GetDefaultCellFont().GetPointSize();
+  m_Renderer = new SymbolRenderer( NULL, this, wxGetApp().getFrame()->getSymMap(), itemidps, textps, wxGetApp().getFrame()->getScale() );
+
 
   m_GridSwitch->EnableEditing(false);
   m_GridSwitch->EnableDragGridSize(false);
   m_GridSwitch->ClearGrid();
   m_GridSwitch->DeleteRows( 0, m_GridSwitch->GetNumberRows() );
-  font = new wxFont( m_GridSwitch->GetDefaultCellFont() );
-  font->SetPointSize(1);
-  m_GridSwitch->SetDefaultCellFont( *font );
   m_GridSwitch->SetCellTextColour(*wxWHITE);
 
   m_GridSignal->EnableEditing(false);
   m_GridSignal->EnableDragGridSize(false);
   m_GridSignal->ClearGrid();
   m_GridSignal->DeleteRows( 0, m_GridSignal->GetNumberRows() );
-  font = new wxFont( m_GridSignal->GetDefaultCellFont() );
-  font->SetPointSize(1);
-  m_GridSignal->SetDefaultCellFont( *font );
   m_GridSignal->SetCellTextColour(*wxWHITE);
 
   m_GridBlock->EnableEditing(false);
   m_GridBlock->EnableDragGridSize(false);
   m_GridBlock->ClearGrid();
   m_GridBlock->DeleteRows( 0, m_GridBlock->GetNumberRows() );
-  font = new wxFont( m_GridBlock->GetDefaultCellFont() );
-  font->SetPointSize(1);
-  m_GridBlock->SetDefaultCellFont( *font );
   m_GridBlock->SetCellTextColour(*wxWHITE);
 
   m_GridSensor->EnableEditing(false);
   m_GridSensor->EnableDragGridSize(false);
   m_GridSensor->ClearGrid();
   m_GridSensor->DeleteRows( 0, m_GridSensor->GetNumberRows() );
-  font = new wxFont( m_GridSensor->GetDefaultCellFont() );
-  font->SetPointSize(1);
-  m_GridSensor->SetDefaultCellFont( *font );
   m_GridSensor->SetCellTextColour(*wxWHITE);
 
   m_GridAccessory->EnableEditing(false);
   m_GridAccessory->EnableDragGridSize(false);
   m_GridAccessory->ClearGrid();
   m_GridAccessory->DeleteRows( 0, m_GridAccessory->GetNumberRows() );
-  font = new wxFont( m_GridAccessory->GetDefaultCellFont() );
-  font->SetPointSize(1);
-  m_GridAccessory->SetDefaultCellFont( *font );
   m_GridAccessory->SetCellTextColour(*wxWHITE);
 
   m_GridRoad->EnableEditing(false);
   m_GridRoad->EnableDragGridSize(false);
   m_GridRoad->ClearGrid();
   m_GridRoad->DeleteRows( 0, m_GridRoad->GetNumberRows() );
-  font = new wxFont( m_GridRoad->GetDefaultCellFont() );
-  font->SetPointSize(1);
-  m_GridRoad->SetDefaultCellFont( *font );
   m_GridRoad->SetCellTextColour(*wxWHITE);
 
   initSymbols();
@@ -175,6 +156,12 @@ void TrackPickerDlg::initGrid() {
       m_GridSignal->SetCellRenderer(m_GridSignal->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
     }
     else if( StrOp.startsWith( symname, wOutput.name() ) ) {
+      m_GridAccessory->AppendRows();
+      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
+      m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+      m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+    }
+    else if( StrOp.startsWith( symname, wText.name() ) ) {
       m_GridAccessory->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
       m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
@@ -285,6 +272,8 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Accessory
+  symname = StrOp.fmt("%s,%s", wText.name(), "text" );
+  ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:10,%s", wSwitch.name(), wSwitch.accessory, "accessory-10-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:11,%s", wSwitch.name(), wSwitch.accessory, "accessory-11-off.svg" );

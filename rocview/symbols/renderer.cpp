@@ -1058,6 +1058,19 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, int x, int y, const char* symnam
       *cx = 4;
       *cy = 4;
     }
+    else if( StrOp.equals( "text", symname) ) {
+      if( draw ) {
+        m_Props = NodeOp.inst( wText.name(), NULL, ELEMENT_NODE );
+        //wText.setpointsize( m_Props, 13 );
+        StrOp.free(m_Label);
+        m_Label = StrOp.dup("Text");
+        drawText( dc, false, ori );
+        NodeOp.base.del(m_Props);
+        m_Props = NULL;
+      }
+      *cx = 4;
+      *cy = 1;
+    }
     else
       TraceOp.trc( "render", TRCLEVEL_WARNING, __LINE__, 9999, "symbol [%s] is not in the map...", symname );
   }
