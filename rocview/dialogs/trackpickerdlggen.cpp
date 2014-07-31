@@ -161,6 +161,42 @@ TrackPickerDlgGen::TrackPickerDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	m_PageBlock->Layout();
 	bSizer5->Fit( m_PageBlock );
 	m_TrackBook->AddPage( m_PageBlock, wxT("Block"), false );
+	m_PageSensor = new wxPanel( m_TrackBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer8;
+	bSizer8 = new wxBoxSizer( wxVERTICAL );
+	
+	m_GridSensor = new wxGrid( m_PageSensor, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	
+	// Grid
+	m_GridSensor->CreateGrid( 5, 1 );
+	m_GridSensor->EnableEditing( false );
+	m_GridSensor->EnableGridLines( false );
+	m_GridSensor->EnableDragGridSize( false );
+	m_GridSensor->SetMargins( 0, 0 );
+	
+	// Columns
+	m_GridSensor->AutoSizeColumns();
+	m_GridSensor->EnableDragColMove( false );
+	m_GridSensor->EnableDragColSize( true );
+	m_GridSensor->SetColLabelSize( 0 );
+	m_GridSensor->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Rows
+	m_GridSensor->AutoSizeRows();
+	m_GridSensor->EnableDragRowSize( true );
+	m_GridSensor->SetRowLabelSize( 0 );
+	m_GridSensor->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Label Appearance
+	
+	// Cell Defaults
+	m_GridSensor->SetDefaultCellAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	bSizer8->Add( m_GridSensor, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	
+	m_PageSensor->SetSizer( bSizer8 );
+	m_PageSensor->Layout();
+	bSizer8->Fit( m_PageSensor );
+	m_TrackBook->AddPage( m_PageSensor, wxT("Sensor"), false );
 	m_PageAccessory = new wxPanel( m_TrackBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
@@ -255,6 +291,7 @@ TrackPickerDlgGen::TrackPickerDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	m_GridSwitch->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridSignal->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridBlock->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
+	m_GridSensor->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridAccessory->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridRoad->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 }
@@ -268,6 +305,7 @@ TrackPickerDlgGen::~TrackPickerDlgGen()
 	m_GridSwitch->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridSignal->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridBlock->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
+	m_GridSensor->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridAccessory->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridRoad->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	

@@ -43,6 +43,8 @@ class TrackPickerDlgGen : public wxDialog
 		wxGrid* m_GridSignal;
 		wxPanel* m_PageBlock;
 		wxGrid* m_GridBlock;
+		wxPanel* m_PageSensor;
+		wxGrid* m_GridSensor;
 		wxPanel* m_PageAccessory;
 		wxGrid* m_GridAccessory;
 		wxPanel* m_PageRoad;

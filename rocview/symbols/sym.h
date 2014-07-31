@@ -494,6 +494,11 @@ namespace seltabtype {
   static const int i_seltab = 1;
 }
 
+namespace turntabletype {
+  static const char* turntable = "turntable.svg";
+  static const int i_turntable = 1;
+}
+
 namespace texttype {
   static const char* text = "text.svg";
 

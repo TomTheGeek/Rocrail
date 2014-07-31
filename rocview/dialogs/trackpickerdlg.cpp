@@ -31,6 +31,8 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Feedback.h"
 #include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/SelTab.h"
+#include "rocrail/wrapper/public/Turntable.h"
 
 #include "rocs/public/strtok.h"
 
@@ -89,6 +91,15 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   m_GridBlock->SetDefaultCellFont( *font );
   m_GridBlock->SetCellTextColour(*wxWHITE);
 
+  m_GridSensor->EnableEditing(false);
+  m_GridSensor->EnableDragGridSize(false);
+  m_GridSensor->ClearGrid();
+  m_GridSensor->DeleteRows( 0, m_GridSensor->GetNumberRows() );
+  font = new wxFont( m_GridSensor->GetDefaultCellFont() );
+  font->SetPointSize(1);
+  m_GridSensor->SetDefaultCellFont( *font );
+  m_GridSensor->SetCellTextColour(*wxWHITE);
+
   m_GridAccessory->EnableEditing(false);
   m_GridAccessory->EnableDragGridSize(false);
   m_GridAccessory->ClearGrid();
@@ -113,8 +124,9 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   m_TrackBook->SetPageText( 1, wxGetApp().getMsg( "turnout" ) );
   m_TrackBook->SetPageText( 2, wxGetApp().getMsg( "signal" ) );
   m_TrackBook->SetPageText( 3, wxGetApp().getMsg( "block" ) );
-  m_TrackBook->SetPageText( 4, wxGetApp().getMsg( "accessory" ) );
-  m_TrackBook->SetPageText( 5, wxGetApp().getMsg( "road" ) );
+  m_TrackBook->SetPageText( 4, wxGetApp().getMsg( "sensor" ) );
+  m_TrackBook->SetPageText( 5, wxGetApp().getMsg( "accessory" ) );
+  m_TrackBook->SetPageText( 6, wxGetApp().getMsg( "road" ) );
 
   m_TrackBook->SetSelection(0);
 
@@ -162,13 +174,26 @@ void TrackPickerDlg::initGrid() {
       m_GridSignal->SetCellValue(m_GridSignal->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridSignal->SetCellRenderer(m_GridSignal->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
     }
+    else if( StrOp.startsWith( symname, wOutput.name() ) ) {
+      m_GridAccessory->AppendRows();
+      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
+      m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+      m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+    }
     else if( StrOp.startsWith( symname, wBlock.name() ) || StrOp.startsWith( symname, wStage.name() ) ||
-        StrOp.startsWith( symname, wFeedback.name() ) || StrOp.startsWith( symname, wOutput.name() ) )
+        StrOp.startsWith( symname, wSelTab.name() ) || StrOp.startsWith( symname, wTurntable.name() ) )
     {
       m_GridBlock->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridBlock->GetNumberRows(), symname, svg );
       m_GridBlock->SetCellValue(m_GridBlock->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridBlock->SetCellRenderer(m_GridBlock->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+    }
+    else if( StrOp.startsWith( symname, wFeedback.name() ) )
+    {
+      m_GridSensor->AppendRows();
+      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSensor->GetNumberRows(), symname, svg );
+      m_GridSensor->SetCellValue(m_GridSensor->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+      m_GridSensor->SetCellRenderer(m_GridSensor->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
     }
     tok->base.del(tok);
   }
@@ -247,6 +272,10 @@ void TrackPickerDlg::initSymbols() {
   symname = StrOp.fmt("%s,%s", wBlock.name(), blocktype::block );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s,%s", wStage.name(), stagetype::stage );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s,%s", wSelTab.name(), seltabtype::seltab );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s,%s", wTurntable.name(), turntabletype::turntable );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s,%s", wFeedback.name(), feedbacktype::sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );

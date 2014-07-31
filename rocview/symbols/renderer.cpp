@@ -1028,13 +1028,38 @@ void SymbolRenderer::drawSvgSym( wxPaintDC& dc, int x, int y, const char* symnam
   m_bAlt = false;
   svgSymbol* svgsym = (svgSymbol*)MapOp.get( m_SymMap, symname );
   if( svgsym != NULL ) {
-    if( draw )
+    if( draw ) {
       drawSvgSym(dc, svgsym, ori, x, y, false);
+    }
     *cx = svgsym->width  / 32;
     *cy = svgsym->height / 32;
   }
   else {
-    TraceOp.trc( "render", TRCLEVEL_WARNING, __LINE__, 9999, "symbol [%s] is not in the map...", symname );
+    if( StrOp.equals( seltabtype::seltab, symname) ) {
+      if( draw ) {
+        m_Props = NodeOp.inst( wSelTab.name(), NULL, ELEMENT_NODE );
+        wSelTab.setnrtracks(m_Props, 4);
+        drawSelTab( dc, false, ori );
+        NodeOp.base.del(m_Props);
+        m_Props = NULL;
+      }
+      *cx = 4;
+      *cy = 1;
+    }
+    else if( StrOp.equals( turntabletype::turntable, symname) ) {
+      if( draw ) {
+        m_Props = NodeOp.inst( wTurntable.name(), NULL, ELEMENT_NODE );
+        wTurntable.setsymbolsize( m_Props, 4 );
+        double bridgepos = 0.0;
+        drawTurntable( dc, false, &bridgepos, ori );
+        NodeOp.base.del(m_Props);
+        m_Props = NULL;
+      }
+      *cx = 4;
+      *cy = 4;
+    }
+    else
+      TraceOp.trc( "render", TRCLEVEL_WARNING, __LINE__, 9999, "symbol [%s] is not in the map...", symname );
   }
 }
 
