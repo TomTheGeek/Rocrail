@@ -21,6 +21,7 @@
 #include <wx/icon.h>
 #include <wx/listbook.h>
 #include <wx/listctrl.h>
+#include <wx/textctrl.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -49,6 +50,7 @@ class TrackPickerDlgGen : public wxDialog
 		wxGrid* m_GridAccessory;
 		wxPanel* m_PageRoad;
 		wxGrid* m_GridRoad;
+		wxTextCtrl* m_Tip;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }

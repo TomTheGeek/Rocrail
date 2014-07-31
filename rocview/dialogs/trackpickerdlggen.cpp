@@ -278,6 +278,9 @@ TrackPickerDlgGen::TrackPickerDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	
 	bSizer1->Add( m_TrackBook, 1, wxEXPAND | wxALL, 5 );
 	
+	m_Tip = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	bSizer1->Add( m_Tip, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	
 	this->SetSizer( bSizer1 );
 	this->Layout();
 	bSizer1->Fit( this );

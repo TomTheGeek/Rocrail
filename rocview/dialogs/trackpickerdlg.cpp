@@ -343,6 +343,7 @@ void TrackPickerDlg::initSymbols() {
 void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
   ((wxGrid*)event.GetEventObject())->SetGridCursor(event.GetRow(), 0);
   wxString str = ((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 );
+  m_Tip->SetValue(str);
 
   wxString my_text = wxT("addsymbol:")+str;
   wxTextDataObject my_data(my_text);
