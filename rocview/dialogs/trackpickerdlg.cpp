@@ -35,6 +35,16 @@
 #include "rocs/public/strtok.h"
 
 #include <wx/dnd.h>
+/* ToDo: Check this code in the TrackPickerDlgGen class and disable the last line:
+ *
+  #ifndef __WXGTK__ // Small icon style not supported in GTK
+  wxListView* m_TrackBookListView = m_TrackBook->GetListView();
+  long m_TrackBookFlags = m_TrackBookListView->GetWindowStyleFlag();
+  m_TrackBookFlags = ( m_TrackBookFlags & ~wxLC_ICON ) | wxLC_SMALL_ICON;
+  //m_TrackBookListView->SetWindowStyleFlag( m_TrackBookFlags ); // This will assert on Windows and OSX!
+  #endif
+ */
+
 
 TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
 {
