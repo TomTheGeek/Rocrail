@@ -201,12 +201,15 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       const char* symtype = "";
       const char* symdir  = "";
       const char* symsub  = "";
+      const char* symsub2 = "";
       if( StrTokOp.hasMoreTokens(tok) )
         symtype = StrTokOp.nextToken(tok);
       if( StrTokOp.hasMoreTokens(tok) )
         symdir = StrTokOp.nextToken(tok);
       if( StrTokOp.hasMoreTokens(tok) )
         symsub = StrTokOp.nextToken(tok);
+      if( StrTokOp.hasMoreTokens(tok) )
+        symsub2 = StrTokOp.nextToken(tok);
       TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "D&D: symbol=%s type=%s", symname, symtype );
       m_PlanPanel->m_X = (int)(x / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
       m_PlanPanel->m_Y = (int)(y / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
@@ -227,6 +230,10 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       if( StrOp.len(symsub) > 0 ) {
         if( StrOp.equals(symsub, "dwarf"))
           wSignal.setdwarf( node, True );
+      }
+      if( StrOp.len(symsub2) > 0 ) {
+        if( StrOp.equals(symsub2, "road"))
+          wItem.setroad( node, True );
       }
       m_PlanPanel->addItemAttr( node );
       ok = true;

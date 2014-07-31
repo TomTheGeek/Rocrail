@@ -98,6 +98,15 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   m_GridAccessory->SetDefaultCellFont( *font );
   m_GridAccessory->SetCellTextColour(*wxWHITE);
 
+  m_GridRoad->EnableEditing(false);
+  m_GridRoad->EnableDragGridSize(false);
+  m_GridRoad->ClearGrid();
+  m_GridRoad->DeleteRows( 0, m_GridRoad->GetNumberRows() );
+  font = new wxFont( m_GridRoad->GetDefaultCellFont() );
+  font->SetPointSize(1);
+  m_GridRoad->SetDefaultCellFont( *font );
+  m_GridRoad->SetCellTextColour(*wxWHITE);
+
   initSymbols();
 
   m_TrackBook->SetPageText( 0, wxGetApp().getMsg( "track" ) );
@@ -105,6 +114,7 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   m_TrackBook->SetPageText( 2, wxGetApp().getMsg( "signal" ) );
   m_TrackBook->SetPageText( 3, wxGetApp().getMsg( "block" ) );
   m_TrackBook->SetPageText( 4, wxGetApp().getMsg( "accessory" ) );
+  m_TrackBook->SetPageText( 5, wxGetApp().getMsg( "road" ) );
 
   m_TrackBook->SetSelection(0);
 
@@ -120,7 +130,13 @@ void TrackPickerDlg::initGrid() {
     iOStrTok tok = StrTokOp.inst(symbol, ',');
     const char* symname = StrTokOp.nextToken(tok);
     const char* svg     = StrTokOp.nextToken(tok);
-    if( StrOp.startsWith( symname, wTrack.name() ) ) {
+    if( StrOp.find( symname, "road" ) != NULL ) {
+      m_GridRoad->AppendRows();
+      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridRoad->GetNumberRows(), symname, svg );
+      m_GridRoad->SetCellValue(m_GridRoad->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+      m_GridRoad->SetCellRenderer(m_GridRoad->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+    }
+    else if( StrOp.startsWith( symname, wTrack.name() ) ) {
       m_GridTrack->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridTrack->GetNumberRows(), symname, svg );
       m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
@@ -255,6 +271,38 @@ void TrackPickerDlg::initSymbols() {
   symname = StrOp.fmt("%s:%s:54,%s", wSwitch.name(), wSwitch.accessory, "accessory-54-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
 
+  // Road
+  symname = StrOp.fmt("%s:%s:::road,%s", wTrack.name(), wTrack.straight, tracktype::road_straight );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road,%s", wTrack.name(), wTrack.curve, tracktype::road_curve );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road,%s", wTrack.name(), wTrack.dir, tracktype::road_dir );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road,%s", wTrack.name(), wTrack.dirall, tracktype::road_dirall );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.left, switchtype::road_turnoutleft );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.right, switchtype::road_turnoutright );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.crossing, switchtype::road_crossing90 );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.threeway, switchtype::road_rect_threeway );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::road_dcrossingright );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  symname = StrOp.fmt("%s:%s:%s::road,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::road_signalmain_r );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:%s:%s:road,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::road_signalmain_dwarf_r );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  symname = StrOp.fmt("%s::::road,%s", wBlock.name(), blocktype::road_block );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s::::road,%s", wFeedback.name(), feedbacktype::road_sensor_off );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+
   initGrid();
 
   for( int i = 0; i < ListOp.size(m_SymbolList); i++) {
@@ -264,6 +312,7 @@ void TrackPickerDlg::initSymbols() {
 }
 
 void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
+  ((wxGrid*)event.GetEventObject())->SetGridCursor(event.GetRow(), 0);
   wxString str = ((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 );
 
   wxString my_text = wxT("addsymbol:")+str;

@@ -45,6 +45,8 @@ class TrackPickerDlgGen : public wxDialog
 		wxGrid* m_GridBlock;
 		wxPanel* m_PageAccessory;
 		wxGrid* m_GridAccessory;
+		wxPanel* m_PageRoad;
+		wxGrid* m_GridRoad;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }

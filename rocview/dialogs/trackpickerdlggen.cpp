@@ -197,6 +197,42 @@ TrackPickerDlgGen::TrackPickerDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	m_PageAccessory->Layout();
 	bSizer6->Fit( m_PageAccessory );
 	m_TrackBook->AddPage( m_PageAccessory, wxT("Accessory"), false );
+	m_PageRoad = new wxPanel( m_TrackBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer7;
+	bSizer7 = new wxBoxSizer( wxVERTICAL );
+	
+	m_GridRoad = new wxGrid( m_PageRoad, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	
+	// Grid
+	m_GridRoad->CreateGrid( 5, 1 );
+	m_GridRoad->EnableEditing( false );
+	m_GridRoad->EnableGridLines( false );
+	m_GridRoad->EnableDragGridSize( false );
+	m_GridRoad->SetMargins( 0, 0 );
+	
+	// Columns
+	m_GridRoad->AutoSizeColumns();
+	m_GridRoad->EnableDragColMove( false );
+	m_GridRoad->EnableDragColSize( true );
+	m_GridRoad->SetColLabelSize( 0 );
+	m_GridRoad->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Rows
+	m_GridRoad->AutoSizeRows();
+	m_GridRoad->EnableDragRowSize( true );
+	m_GridRoad->SetRowLabelSize( 0 );
+	m_GridRoad->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Label Appearance
+	
+	// Cell Defaults
+	m_GridRoad->SetDefaultCellAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	bSizer7->Add( m_GridRoad, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	
+	m_PageRoad->SetSizer( bSizer7 );
+	m_PageRoad->Layout();
+	bSizer7->Fit( m_PageRoad );
+	m_TrackBook->AddPage( m_PageRoad, wxT("Road"), false );
 	#ifndef __WXGTK__ // Small icon style not supported in GTK
 	wxListView* m_TrackBookListView = m_TrackBook->GetListView();
 	long m_TrackBookFlags = m_TrackBookListView->GetWindowStyleFlag();
@@ -220,6 +256,7 @@ TrackPickerDlgGen::TrackPickerDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	m_GridSignal->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridBlock->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridAccessory->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
+	m_GridRoad->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 }
 
 TrackPickerDlgGen::~TrackPickerDlgGen()
@@ -232,5 +269,6 @@ TrackPickerDlgGen::~TrackPickerDlgGen()
 	m_GridSignal->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridBlock->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridAccessory->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
+	m_GridRoad->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	
 }
