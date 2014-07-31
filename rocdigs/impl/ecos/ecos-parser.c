@@ -270,6 +270,10 @@ static void __parseCallParms( iONode node, const char* p_replyline ) {
  * input : <REPLY queryObjects(10, name)>
  * output: <reply cmd="queryObjects" oid="10">
  *
+ * <reply rtype="0" cmd="get" oid="202" railcom="12" rc="0" msg="OK)&gt;">
+ * <202 railcom="12, 64, 1"/>
+ * </reply>
+ *
  */
 static void __parseREPLY( iONode node, const char* replyline ) {
 

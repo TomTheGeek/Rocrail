@@ -1973,7 +1973,7 @@ static void __processReply( iOECoS inst, iONode node ) {
 
   if ( rtype == REPLY_TYPE_REPLY ) {
 
-      /* These are the loc and switch events */
+      /* These are the loco, switch and sensor events */
 
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
                   "MemOp.mem_getAllocCount() = [%d]", MemOp.getAllocCount());
@@ -1998,6 +1998,9 @@ static void __processReply( iOECoS inst, iONode node ) {
     }
     else if ( oid == OID_ECOS) {
       __processSystemEvents( inst, node );
+    }
+    else if ( oid >= 100 && oid <= 300 ) {
+      __processS88Events( inst, node );
     }
     else {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "other reply, rname = [%s]", rname );

@@ -76,6 +76,11 @@ while 1:
       connection.send('<EVENT 202>\n')
       connection.send('202 railcom[02, 7324, 1]\n')
       connection.send('<END 0 (OK)>\n')
+      
+      connection.send('<REPLY get(202, railcom[12])>\n')
+      connection.send('202 railcom[12, 64, 1]\n')
+      connection.send('<END 0 (OK)>\n')
+      
       time.sleep(3)
       
 connection.close()               # close socket
