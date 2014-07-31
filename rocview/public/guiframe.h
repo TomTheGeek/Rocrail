@@ -60,6 +60,7 @@
 #include "rocview/dialogs/widgetspanel.h"
 #include "rocview/dialogs/cmdrecorder.h"
 #include "rocview/dialogs/sensorevents.h"
+#include "rocview/dialogs/trackpickerdlg.h"
 
 #include <wx/splitter.h>
 #include <wx/textctrl.h>
@@ -375,6 +376,7 @@ public:
   void resetSensorMonitorRef() {m_SensorMonitor=NULL;}
   void resetRocNetNodeRef() {m_RocnetNodeDlg=NULL;}
   void resetBidibIdentRef() {m_BidibIdentDlg=NULL;}
+  void resetTrackPickerRef() {m_TrackPickerDlg=NULL;}
 
 private:
   void Save();
@@ -420,7 +422,7 @@ private:
   MGV141Dlg* m_MGV141;
   PowerCtrlDlg* m_PowerCtrl;
   SensorEventsDlg* m_SensorMonitor;
-
+  TrackPickerDlg* m_TrackPickerDlg;
   iOMutex m_muxInitActiveLocs;
 
   const char* m_ThemePath;

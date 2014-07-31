@@ -47,6 +47,7 @@ class TrackPickerDlgGen : public wxDialog
 		wxGrid* m_GridAccessory;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void onPageChanged( wxListbookEvent& event ) { event.Skip(); }
 		virtual void onTrackCellLeftClick( wxGridEvent& event ) { event.Skip(); }
 		

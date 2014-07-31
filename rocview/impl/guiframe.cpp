@@ -1805,7 +1805,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_ScaleComboBox      = NULL;
   m_bEnableCom         = true;
   m_bLocoImageColumn   = wGui.islocoimagecolumn(m_Ini)?true:false;
-
+  m_TrackPickerDlg     = NULL;
 
   if( wxTheClipboard != NULL ) {
     if( wxTheClipboard->Open() ) {
@@ -3277,6 +3277,10 @@ void RocGuiFrame::OnEditMode( wxCommandEvent& event ) {
 
   m_bEditMode = mi_editmode->IsChecked();
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EditMode is %s", m_bEditMode?"true":"false" );
+  if( m_TrackPickerDlg == NULL && m_bEditMode ) {
+    m_TrackPickerDlg = new TrackPickerDlg( this );
+    m_TrackPickerDlg->Show(TRUE);
+  }
 }
 
 void RocGuiFrame::OnEditModPlan( wxCommandEvent& event ) {
@@ -3295,6 +3299,10 @@ void RocGuiFrame::OnCtrlMode( wxCommandEvent& event ) {
 
   m_bEditMode = !mi_ctrlmode->IsChecked();
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EditMode is %s", m_bEditMode?"true":"false" );
+  if( m_TrackPickerDlg != NULL && !m_bEditMode ) {
+    m_TrackPickerDlg->Destroy();
+    m_TrackPickerDlg = NULL;
+  }
 }
 
 
@@ -5385,8 +5393,13 @@ void RocGuiFrame::OnPanelProps(wxCommandEvent& event) {
 
 
 void RocGuiFrame::OnAddItem(wxCommandEvent& event) {
-  TrackPickerDlg* dlg = new TrackPickerDlg( this );
-  dlg->Show(TRUE);
+  if( m_TrackPickerDlg == NULL ) {
+    m_TrackPickerDlg = new TrackPickerDlg( this );
+    m_TrackPickerDlg->Show(TRUE);
+  }
+  else {
+    m_TrackPickerDlg->Raise();
+  }
 }
 
 

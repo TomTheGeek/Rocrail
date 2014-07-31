@@ -287,3 +287,9 @@ void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
   }
 }
 
+void TrackPickerDlg::onClose( wxCloseEvent& event ) {
+  wxGetApp().getFrame()->resetTrackPickerRef();
+  Destroy();
+}
+
+

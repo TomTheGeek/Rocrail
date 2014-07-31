@@ -52,7 +52,7 @@
             <event name="OnActivate"></event>
             <event name="OnActivateApp"></event>
             <event name="OnChar"></event>
-            <event name="OnClose"></event>
+            <event name="OnClose">onClose</event>
             <event name="OnEnterWindow"></event>
             <event name="OnEraseBackground"></event>
             <event name="OnHibernate"></event>

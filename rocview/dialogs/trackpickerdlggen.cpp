@@ -213,6 +213,7 @@ TrackPickerDlgGen::TrackPickerDlgGen( wxWindow* parent, wxWindowID id, const wxS
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( TrackPickerDlgGen::onClose ) );
 	m_TrackBook->Connect( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED, wxListbookEventHandler( TrackPickerDlgGen::onPageChanged ), NULL, this );
 	m_GridTrack->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridSwitch->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
@@ -224,6 +225,7 @@ TrackPickerDlgGen::TrackPickerDlgGen( wxWindow* parent, wxWindowID id, const wxS
 TrackPickerDlgGen::~TrackPickerDlgGen()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( TrackPickerDlgGen::onClose ) );
 	m_TrackBook->Disconnect( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED, wxListbookEventHandler( TrackPickerDlgGen::onPageChanged ), NULL, this );
 	m_GridTrack->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
 	m_GridSwitch->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( TrackPickerDlgGen::onTrackCellLeftClick ), NULL, this );
