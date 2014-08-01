@@ -339,7 +339,7 @@ void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
   wxString str = ((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 );
   m_Tip->SetValue(str);
 
-  wxString my_text = wxT("addsymbol:")+str;
+  wxString my_text = wxString( wxT("addsymbol:")+str);
   wxTextDataObject my_data(my_text);
   wxDropSource dragSource( this );
   dragSource.SetData( my_data );
