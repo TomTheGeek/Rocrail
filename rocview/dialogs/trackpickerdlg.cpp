@@ -368,6 +368,7 @@ void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
     TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "rowsize=%d page=%d row=%d", renderer->GetRowSize(), selpage, i );
   }
   grid->ForceRefresh();
+  m_Tip->SetValue(wxT(""));
 }
 
 void TrackPickerDlg::onClose( wxCloseEvent& event ) {
