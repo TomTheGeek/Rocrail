@@ -351,7 +351,6 @@ void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
 void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
   int selpage = event.GetSelection();
   TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "selected page %d", selpage );
-#ifdef __APPLE__
   wxGrid* grid = NULL;
   switch( selpage ) {
   case 1: grid = m_GridSwitch; break;
@@ -369,7 +368,6 @@ void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
     TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "rowsize=%d page=%d row=%d", renderer->GetRowSize(), selpage, i );
   }
   grid->ForceRefresh();
-#endif
 }
 
 void TrackPickerDlg::onClose( wxCloseEvent& event ) {
