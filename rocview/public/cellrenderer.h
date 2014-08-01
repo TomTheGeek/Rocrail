@@ -36,6 +36,7 @@ class CellRenderer: public wxGridCellStringRenderer
   SymbolRenderer* m_Renderer;
   bool m_bDidResize;
   double m_Scale;
+  int m_RowSize;
 
 public:
   CellRenderer(const char* imageName);
@@ -46,6 +47,7 @@ public:
   virtual void Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRect& rect, int row, int col, bool isSelected);
   void updateImage(const wxRect& rect);
   wxSize GetBestSize(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, int row, int col);
+  int GetRowSize() { return m_RowSize;}
 };
 
 #endif

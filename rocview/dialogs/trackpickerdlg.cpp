@@ -108,10 +108,9 @@ TrackPickerDlg::TrackPickerDlg( wxWindow* parent ):TrackPickerDlgGen( parent )
   m_TrackBook->SetPageText( 4, wxGetApp().getMsg( "sensor" ) );
   m_TrackBook->SetPageText( 5, wxGetApp().getMsg( "accessory" ) );
   m_TrackBook->SetPageText( 6, wxGetApp().getMsg( "road" ) );
+  SetTitle( wxGetApp().getMsg("additem") );
 
   m_TrackBook->SetSelection(0);
-
-  SetTitle( wxGetApp().getMsg("additem") );
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
 }
@@ -193,14 +192,20 @@ void TrackPickerDlg::initGrid() {
   m_GridSignal->AutoSizeRows();
   m_GridBlock->AutoSizeColumns();
   m_GridBlock->AutoSizeRows();
+  m_GridSensor->AutoSizeColumns();
+  m_GridSensor->AutoSizeRows();
   m_GridAccessory->AutoSizeColumns();
   m_GridAccessory->AutoSizeRows();
+  m_GridRoad->AutoSizeColumns();
+  m_GridRoad->AutoSizeRows();
 
   m_GridTrack->ForceRefresh();
   m_GridSwitch->ForceRefresh();
   m_GridSignal->ForceRefresh();
   m_GridBlock->ForceRefresh();
+  m_GridSensor->ForceRefresh();
   m_GridAccessory->ForceRefresh();
+  m_GridRoad->ForceRefresh();
 }
 
 
@@ -346,13 +351,25 @@ void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
 void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
   int selpage = event.GetSelection();
   TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "selected page %d", selpage );
+#ifdef __APPLE__
+  wxGrid* grid = NULL;
   switch( selpage ) {
-  case 0: m_GridTrack->AutoSizeRows(); break;
-  case 1: m_GridSwitch->AutoSizeRows(); break;
-  case 2: m_GridSignal->AutoSizeRows(); break;
-  case 3: m_GridBlock->AutoSizeRows(); break;
-  case 4: m_GridAccessory->AutoSizeRows(); break;
+  case 1: grid = m_GridSwitch; break;
+  case 2: grid = m_GridSignal; break;
+  case 3: grid = m_GridBlock; break;
+  case 4: grid = m_GridSensor; break;
+  case 5: grid = m_GridAccessory; break;
+  case 6: grid = m_GridRoad; break;
+  default: grid = m_GridTrack; break;
   }
+
+  for( int i = 0; i < grid->GetNumberRows(); i++ ) {
+    CellRenderer* renderer = (CellRenderer*)grid->GetCellRenderer(i,0);
+    grid->SetRowSize(i,renderer->GetRowSize());
+    TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "rowsize=%d page=%d row=%d", renderer->GetRowSize(), selpage, i );
+  }
+  grid->ForceRefresh();
+#endif
 }
 
 void TrackPickerDlg::onClose( wxCloseEvent& event ) {
