@@ -1021,6 +1021,31 @@ wxBrush* SymbolRenderer::getBrush( const char* fill, wxPaintDC& dc ) {
     return new wxBrush(wxString(fill,wxConvUTF8), wxSOLID);
 }
 
+
+bool SymbolRenderer::sizeSvgSym( const char* symname, const char* ori, int* cx, int* cy ) {
+  svgSymbol* svgsym = (svgSymbol*)MapOp.get( m_SymMap, symname );
+  if( svgsym != NULL ) {
+    *cx = svgsym->width  / 32;
+    *cy = svgsym->height / 32;
+    return true;
+  }
+
+  if( StrOp.equals( seltabtype::seltab, symname) || StrOp.equals( "text", symname) ) {
+    *cx = 4;
+    *cy = 1;
+    return true;
+  }
+
+  if( StrOp.equals( turntabletype::turntable, symname) ) {
+    *cx = 4;
+    *cy = 4;
+    return true;
+  }
+
+  return false;
+}
+
+
 void SymbolRenderer::drawSvgSym( wxPaintDC& dc, int x, int y, const char* symname, const char* ori, int* cx, int* cy, bool draw ) {
   m_GC = NULL;
   m_UseGC = false;

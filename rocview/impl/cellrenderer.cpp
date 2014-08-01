@@ -54,8 +54,7 @@ CellRenderer::CellRenderer(const char* imageName, SymbolRenderer* l_Renderer, do
   m_RowSize = 0;
   int cx = 0;
   int cy = 0;
-  wxMemoryDC tmpDC;
-  m_Renderer->drawSvgSym( (wxPaintDC&)tmpDC, 0, 0, imageName, wItem.west, &cx, &cy, false );
+  m_Renderer->sizeSvgSym( imageName, wItem.west, &cx, &cy );
   m_RowSize = cy * 32 * m_Scale + 4;
 }
 
@@ -85,7 +84,7 @@ void CellRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wxRe
 
     if( imageBitmap == NULL ) {
       wxMemoryDC tmpDC;
-      m_Renderer->drawSvgSym( (wxPaintDC&)tmpDC, 0, 0, imageName, wItem.west, &cx, &cy, false );
+      m_Renderer->sizeSvgSym( imageName, wItem.west, &cx, &cy );
       imageBitmap = new wxBitmap();
       imageBitmap->Create(cx * 32 * m_Scale, cy * 32 * m_Scale , -1);
       tmpDC.SelectObject(*imageBitmap);
