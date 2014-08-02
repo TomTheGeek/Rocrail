@@ -894,6 +894,16 @@
       <var name="listenerObj" vt="obj" remark="Listener pointer"/>
       <var name="listenerFun" vt="digint_listener" remark="Listener Function pointer"/>
       <var name="iid" vt="const char*" remark="Interface ID"/>
+<!--
+***** start insert
+-->
+      <var name="gbUID" vt="int" remark="Gleisbox UID"/>
+      <var name="ms2UID" vt="int" remark="MS2-GUI UID"/>
+      <var name="mcs2gfpUID" vt="int" remark="CS2 GFP UID"/>
+      <var name="mcs2guiUID" vt="int" remark="CS2-GUI UID"/>
+<!--
+***** end insert
+-->
       <var name="run" vt="Boolean"/>
       <var name="udp" vt="Boolean"/>
       <var name="conOK" vt="Boolean"/>
@@ -912,6 +922,15 @@
       <var name="cmdpause" vt="int"/>
       <var name="sensorbegin" vt="int"/>
       <var name="sensorend" vt="int"/>
+<!--
+***** start insert
+-->
+      <var name="load" vt="int"/>
+      <var name="volt" vt="int"/>
+      <var name="temp" vt="int"/>
+<!--
+***** end insert
+-->
     </data>
   </object>
 

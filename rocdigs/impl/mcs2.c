@@ -752,7 +752,9 @@ static void __reportState(iOMCS2Data data) {
     wState.settrackbus( node, data->power );
     wState.setsensorbus( node, data->sensor );
     wState.setaccessorybus( node, True );
-
+    wState.setload( node, data->load );
+    wState.setvolt( node, data->volt );
+    wState.settemp( node, data->temp );
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
 }
@@ -776,6 +778,53 @@ static void __evaluateMCS2System( iOMCS2Data data, byte* in ) {
     }
     __reportState(data);
   } 
+  if (cmd == CMD_SYSSUB_STATUS && data->gbUID != 0) {
+    switch (in[10]){
+    case 1:
+      //Current in mA
+      data->load = (int)((in[11] * 256 + in[12]) * (1000./824.));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Current I=0x%04X converted to %dmA for UID: 0x%04X", (in[11] * 256 + in[12]), data->load, data->gbUID );
+    break;
+    case 3:
+      //Voltage in mV
+      data->volt = (int)(((in[11] * 256 + in[12])* (1000./185.))+10000);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Voltage U=0x%04X converted to %dmV for UID: 0x%04X", (in[11] * 256 + in[12]), data->volt, data->gbUID );
+    break;
+    case 4:
+      //Temperature in degree C
+      data->temp = (int)((in[11] * 256 + in[12]) * (74./202.));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Temperature t=0x%04X converted to %d degree C for UID: 0x%04X", (in[11] * 256 + in[12]), data->temp, data->gbUID );
+    break;
+}
+    __reportState(data);
+  }
+}
+
+static void __evaluatePing( iOMCS2Data data, byte* in ) {
+  int cstype = in[11] * 256 + in[12];
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Evaluate Ping for type: 0x%04X", cstype );
+  if( cstype == 0x0010 ) {
+    data->gbUID = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Gleisbox UID: 0x%04X stored", data->gbUID );
+  }
+  else if( cstype == 0x0000 ) {
+    data->mcs2gfpUID = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS2-GFP UID: 0x%04X stored", data->mcs2gfpUID );
+    if( data->gbUID != 0 ) {
+      /* error */
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "ERROR: Gleisbox and CS2 found on CAN bus, Gleisbox 0x%04X cleared", data->gbUID );
+      data->gbUID = 0;
+    }
+  }
+  else if( cstype == 0xFFFF ) {
+    data->mcs2guiUID = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS2-GUI UID: 0x%04X stored", data->mcs2guiUID );
+  }
+// despite the CAN documentation the "Geraetekennung" of a MS2 is 0x00 0x32
+  else if( (cstype & 0xFFF0) == 0x0030 ) {
+    data->ms2UID = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MS-2 UID: 0x%04X stored", data->ms2UID );
+  }
 }
 
 static void __evaluateMCS2Switch( iOMCS2Data mcs2, byte* in ) {
@@ -1190,6 +1239,9 @@ static void __reader( void* threadinst ) {
     }
     else if( in[1] == 0x22 && in[4] == 8 ) { /* Without response bit set!? (CAN Digital Bahn) */
       __evaluateSensorEvent( data, in );
+    }
+    else if( in[1] == ( CAN_ID_PING | BIT_RESPONSE) ) {
+      __evaluatePing( data, in );
     }
     else if( in[1] == ID_LOCO_DIRECTION | in[1] == 0x08 ) {
       /* loc speed or direction comamnd, not from Rocrail. */
