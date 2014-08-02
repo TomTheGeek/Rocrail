@@ -336,14 +336,16 @@ void TrackPickerDlg::initSymbols() {
 
 void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
   ((wxGrid*)event.GetEventObject())->SetGridCursor(event.GetRow(), 0);
-  wxString str = ((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 );
-  m_Tip->SetValue(str);
+  char* str = StrOp.dup((const char*)((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 ));
 
-  wxString my_text = wxString( wxT("addsymbol:")+str);
+  m_Tip->SetValue(wxString(str,wxConvUTF8));
+
+  wxString my_text = wxString::Format( wxT("addsymbol:%s"), str );
   wxTextDataObject my_data(my_text);
   wxDropSource dragSource( this );
   dragSource.SetData( my_data );
   wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);
+  StrOp.free(str);
   Raise();
   event.Skip();
 }
