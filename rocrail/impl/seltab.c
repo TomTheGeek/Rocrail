@@ -250,7 +250,7 @@ static void __initSensors( iOSelTab inst ) {
     if( b6 != NULL ) FBackOp.addListener( b6, (obj)inst );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Position sensors for the Selectiontable could not be initialized." );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Position sensors for the Selectiontable could not be initialized." );
   }
 
 }
