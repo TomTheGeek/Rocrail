@@ -213,118 +213,118 @@ void TrackPickerDlg::initSymbols() {
   m_SymbolList = ListOp.inst();
 
   // Track
-  char* symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.straight, tracktype::straight );
+  char* symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.straight, tracktype::straight );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.curve, tracktype::curve );
+  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.curve, tracktype::curve );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.buffer, tracktype::buffer );
+  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.buffer, tracktype::buffer );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.dir, tracktype::dir );
+  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.dir, tracktype::dir );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.dirall, tracktype::dirall );
+  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.dirall, tracktype::dirall );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wTrack.name(), wTrack.connector, tracktype::connector );
+  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.connector, tracktype::connector );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Switch
-  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.left, switchtype::turnoutleft );
+  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.left, switchtype::turnoutleft );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.right, switchtype::turnoutright );
+  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.right, switchtype::turnoutright );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.threeway, switchtype::threeway );
+  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.threeway, switchtype::threeway );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.twoway, switchtype::twoway_tr );
+  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.twoway, switchtype::twoway_tr );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.ccrossing, switchtype::ccrossing );
+  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.ccrossing, switchtype::ccrossing );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossing );
+  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossing );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:left,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingright );
+  symname = StrOp.fmt("%s:%s:left:::,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingright );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:right,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingleft );
+  symname = StrOp.fmt("%s:%s:right:::,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingleft );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:left,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingright );
+  symname = StrOp.fmt("%s:%s:left:::,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingright );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:right,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingleft );
+  symname = StrOp.fmt("%s:%s:right:::,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingleft );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s,%s", wSwitch.name(), wSwitch.decoupler, switchtype::decoupler );
+  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.decoupler, switchtype::decoupler );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Signal
-  symname = StrOp.fmt("%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.distant, signaltype::signaldistant_2_r );
+  symname = StrOp.fmt("%s:%s:%s:::,%s", wSignal.name(), wSignal.light, wSignal.distant, signaltype::signaldistant_2_r );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::signalmain_r );
+  symname = StrOp.fmt("%s:%s:%s:::,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::signalmain_r );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::signalmain_dwarf_r );
+  symname = StrOp.fmt("%s:%s:%s:%s::,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::signalmain_dwarf_r );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s,%s", wSignal.name(), wSignal.light, wSignal.shunting, signaltype::signalshunting_2_r );
+  symname = StrOp.fmt("%s:%s:%s:::,%s", wSignal.name(), wSignal.light, wSignal.shunting, signaltype::signalshunting_2_r );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Block
-  symname = StrOp.fmt("%s:,%s", wBlock.name(), blocktype::block );
+  symname = StrOp.fmt("%s:::::,%s", wBlock.name(), blocktype::block );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:,%s", wStage.name(), stagetype::stage );
+  symname = StrOp.fmt("%s:::::,%s", wStage.name(), stagetype::stage );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:,%s", wSelTab.name(), seltabtype::seltab );
+  symname = StrOp.fmt("%s:::::,%s", wSelTab.name(), seltabtype::seltab );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:,%s", wTurntable.name(), turntabletype::turntable );
+  symname = StrOp.fmt("%s:::::,%s", wTurntable.name(), turntabletype::turntable );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Sensor
-  symname = StrOp.fmt("%s:,%s", wFeedback.name(), feedbacktype::sensor_off );
+  symname = StrOp.fmt("%s::::::,%s", wFeedback.name(), feedbacktype::sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s::%s,%s", wFeedback.name(), "curve", feedbacktype::curve_sensor_off );
+  symname = StrOp.fmt("%s::%s:::,%s", wFeedback.name(), "curve", feedbacktype::curve_sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:,%s", wOutput.name(), outputtype::button );
+  symname = StrOp.fmt("%s:::::,%s", wOutput.name(), outputtype::button );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Accessory
-  symname = StrOp.fmt("%s:,%s", wText.name(), "text" );
+  symname = StrOp.fmt("%s:::::,%s", wText.name(), "text" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:10,%s", wSwitch.name(), wSwitch.accessory, "accessory-10-off.svg" );
+  symname = StrOp.fmt("%s:%s:10:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-10-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:11,%s", wSwitch.name(), wSwitch.accessory, "accessory-11-off.svg" );
+  symname = StrOp.fmt("%s:%s:11:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-11-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:12,%s", wSwitch.name(), wSwitch.accessory, "accessory-12-off.svg" );
+  symname = StrOp.fmt("%s:%s:12:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-12-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:51,%s", wSwitch.name(), wSwitch.accessory, "accessory-51-off.svg" );
+  symname = StrOp.fmt("%s:%s:51:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-51-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:52,%s", wSwitch.name(), wSwitch.accessory, "accessory-52-off.svg" );
+  symname = StrOp.fmt("%s:%s:52:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-52-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:53,%s", wSwitch.name(), wSwitch.accessory, "accessory-53-off.svg" );
+  symname = StrOp.fmt("%s:%s:53:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-53-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:54,%s", wSwitch.name(), wSwitch.accessory, "accessory-54-off.svg" );
+  symname = StrOp.fmt("%s:%s:54:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-54-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Road
-  symname = StrOp.fmt("%s:%s:::road,%s", wTrack.name(), wTrack.straight, tracktype::road_straight );
+  symname = StrOp.fmt("%s:%s:::road:,%s", wTrack.name(), wTrack.straight, tracktype::road_straight );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road,%s", wTrack.name(), wTrack.curve, tracktype::road_curve );
+  symname = StrOp.fmt("%s:%s:::road:,%s", wTrack.name(), wTrack.curve, tracktype::road_curve );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road,%s", wTrack.name(), wTrack.dir, tracktype::road_dir );
+  symname = StrOp.fmt("%s:%s:::road:,%s", wTrack.name(), wTrack.dir, tracktype::road_dir );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road,%s", wTrack.name(), wTrack.dirall, tracktype::road_dirall );
-  ListOp.add( m_SymbolList, (obj) symname );
-
-  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.left, switchtype::road_turnoutleft );
-  ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.right, switchtype::road_turnoutright );
-  ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.crossing, switchtype::road_crossing90 );
-  ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.threeway, switchtype::road_rect_threeway );
-  ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::road_dcrossingright );
+  symname = StrOp.fmt("%s:%s:::road:,%s", wTrack.name(), wTrack.dirall, tracktype::road_dirall );
   ListOp.add( m_SymbolList, (obj) symname );
 
-  symname = StrOp.fmt("%s:%s:%s::road,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::road_signalmain_r );
+  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.left, switchtype::road_turnoutleft );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s:%s:road,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::road_signalmain_dwarf_r );
+  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.right, switchtype::road_turnoutright );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.crossing, switchtype::road_crossing90 );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.threeway, switchtype::road_rect_threeway );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::road_dcrossingright );
   ListOp.add( m_SymbolList, (obj) symname );
 
-  symname = StrOp.fmt("%s::::road,%s", wBlock.name(), blocktype::road_block );
+  symname = StrOp.fmt("%s:%s:%s::road:,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::road_signalmain_r );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s::::road,%s", wFeedback.name(), feedbacktype::road_sensor_off );
+  symname = StrOp.fmt("%s:%s:%s:%s:road:,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::road_signalmain_dwarf_r );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  symname = StrOp.fmt("%s::::road:,%s", wBlock.name(), blocktype::road_block );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s::::road:,%s", wFeedback.name(), feedbacktype::road_sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );
 
 
