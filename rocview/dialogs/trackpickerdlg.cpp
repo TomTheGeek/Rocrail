@@ -337,7 +337,7 @@ void TrackPickerDlg::initSymbols() {
 }
 
 void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
-  char* str = StrOp.dup((const char*)((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 ));
+  char* str = StrOp.dup((const char*)((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 ).mb_str(wxConvUTF8) );
   ((wxGrid*)event.GetEventObject())->SetGridCursor(event.GetRow(), 0);
 
   m_Tip->SetValue(wxString(str,wxConvUTF8));
