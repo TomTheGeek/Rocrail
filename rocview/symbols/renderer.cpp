@@ -802,17 +802,17 @@ void SymbolRenderer::initSym() {
       else {
         if( wFeedback.getaccnr(m_Props) > 0 ) {
           char key[256];
-          StrOp.fmtb( key, feedbacktype::accessory_on, wFeedback.getaccnr( m_Props ) );
-          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, key );
           StrOp.fmtb( key, feedbacktype::accessory_off, wFeedback.getaccnr( m_Props ) );
+          m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, key );
+          StrOp.fmtb( key, feedbacktype::accessory_on, wFeedback.getaccnr( m_Props ) );
           m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, key );
-          StrOp.fmtb( key, feedbacktype::accessory_on_occ, wFeedback.getaccnr( m_Props ) );
-          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, key );
           StrOp.fmtb( key, feedbacktype::accessory_off_occ, wFeedback.getaccnr( m_Props ) );
+          m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, key );
+          StrOp.fmtb( key, feedbacktype::accessory_on_occ, wFeedback.getaccnr( m_Props ) );
           m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, key );
-          StrOp.fmtb( key, feedbacktype::accessory_on_route, wFeedback.getaccnr( m_Props ) );
-          m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, key );
           StrOp.fmtb( key, feedbacktype::accessory_off_route, wFeedback.getaccnr( m_Props ) );
+          m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, key );
+          StrOp.fmtb( key, feedbacktype::accessory_on_route, wFeedback.getaccnr( m_Props ) );
           m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, key );
           m_iSymSubType = feedbacktype::i_accessory;
         }
