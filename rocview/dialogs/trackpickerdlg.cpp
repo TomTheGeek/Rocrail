@@ -261,23 +261,25 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Block
-  symname = StrOp.fmt("%s,%s", wBlock.name(), blocktype::block );
+  symname = StrOp.fmt("%s:,%s", wBlock.name(), blocktype::block );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s,%s", wStage.name(), stagetype::stage );
+  symname = StrOp.fmt("%s:,%s", wStage.name(), stagetype::stage );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s,%s", wSelTab.name(), seltabtype::seltab );
+  symname = StrOp.fmt("%s:,%s", wSelTab.name(), seltabtype::seltab );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s,%s", wTurntable.name(), turntabletype::turntable );
+  symname = StrOp.fmt("%s:,%s", wTurntable.name(), turntabletype::turntable );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s,%s", wFeedback.name(), feedbacktype::sensor_off );
+
+  // Sensor
+  symname = StrOp.fmt("%s:,%s", wFeedback.name(), feedbacktype::sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s::%s,%s", wFeedback.name(), "curve", feedbacktype::curve_sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s,%s", wOutput.name(), outputtype::button );
+  symname = StrOp.fmt("%s:,%s", wOutput.name(), outputtype::button );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Accessory
-  symname = StrOp.fmt("%s,%s", wText.name(), "text" );
+  symname = StrOp.fmt("%s:,%s", wText.name(), "text" );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:10,%s", wSwitch.name(), wSwitch.accessory, "accessory-10-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
@@ -335,13 +337,15 @@ void TrackPickerDlg::initSymbols() {
 }
 
 void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
-  ((wxGrid*)event.GetEventObject())->SetGridCursor(event.GetRow(), 0);
   char* str = StrOp.dup((const char*)((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 ));
+  ((wxGrid*)event.GetEventObject())->SetGridCursor(event.GetRow(), 0);
 
   m_Tip->SetValue(wxString(str,wxConvUTF8));
 
-  wxString my_text = wxString::Format( wxT("addsymbol:%s"), str );
-  wxTextDataObject my_data(my_text);
+  wxString my_text = wxString::Format( wxT("addsymbol:%s\0"), str );
+  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "drag [%s]", (const char*)my_text.mb_str(wxConvUTF8) );
+  wxTextDataObject my_data;
+  my_data.SetText(my_text);
   wxDropSource dragSource( this );
   dragSource.SetData( my_data );
   wxDragResult result = dragSource.DoDragDrop(wxDrag_CopyOnly);

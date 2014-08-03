@@ -191,8 +191,9 @@ END_EVENT_TABLE()
 
 bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   bool ok = false;
-  TraceOp.trc( "panel", TRCLEVEL_INFO, __LINE__, 9999, "D&D x=%d y=%d data [%s][%d]", x, y, (const char*)data.mb_str(wxConvUTF8), data.Len() );
-  iOStrTok tok = StrTokOp.inst((const char*)data.mb_str(wxConvUTF8), ':');
+  char* dataStr = StrOp.dup((const char*)data.mb_str(wxConvUTF8));
+  TraceOp.trc( "panel", TRCLEVEL_INFO, __LINE__, 9999, "D&D x=%d y=%d data [%s] len=[%d]", x, y, dataStr, data.Len() );
+  iOStrTok tok = StrTokOp.inst(dataStr, ':');
   const char* dropcmd = StrTokOp.nextToken(tok);
 
   if( StrOp.equals( "addsymbol", dropcmd ) ) {
@@ -220,9 +221,9 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
           wSwitch.setrectcrossing( node, False );
         if( StrOp.equals(symdir, wSwitch.right))
           wItem.setdir( node, True );
-        else if( StrOp.equals(symdir, wSignal.main ) || StrOp.equals(symdir, wSignal.distant ) || StrOp.equals(symdir, wSignal.shunting ) )
+        if( StrOp.equals(symdir, wSignal.main ) || StrOp.equals(symdir, wSignal.distant ) || StrOp.equals(symdir, wSignal.shunting ) )
           wSignal.setsignal( node, symdir );
-        else if( StrOp.equals(symdir, "curve"))
+        if( StrOp.equals(symdir, "curve"))
           wFeedback.setcurve( node, True );
         if( atoi(symdir) > 0 )
           wSwitch.setaccnr(node, atoi(symdir) );
@@ -276,6 +277,7 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
   }
 
   tok->base.del(tok);
+  StrOp.free(dataStr);
   return ok;
 }
 
