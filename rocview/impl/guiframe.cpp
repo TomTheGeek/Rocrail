@@ -3280,6 +3280,7 @@ void RocGuiFrame::OnEditMode( wxCommandEvent& event ) {
   if( m_TrackPickerDlg == NULL && m_bEditMode ) {
     m_TrackPickerDlg = new TrackPickerDlg( this );
     m_TrackPickerDlg->Show(TRUE);
+    m_TrackPickerDlg->Move( 50, 50 );
   }
 }
 
