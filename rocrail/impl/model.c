@@ -2551,7 +2551,7 @@ static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean genera
   if( loc == NULL && id != NULL && StrOp.len(id) > 0 ) {
     int addr = atoi(id);
     if( addr > 0 ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find loco by addres [%d]", addr );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to find loco by addres [%d] generate=%s", addr, generate?"true":"false" );
       loc = ModelOp.getLocByAddress(inst, addr, NULL);
       if( loc != NULL )
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco by addres [%d] is [%s]", addr, LocOp.getId(loc) );
