@@ -2933,7 +2933,7 @@
     <en txt="Add track panel" tip="Add track panel"/>
     <nl txt="Voeg spoorplan toe" tip="Spoorplan toevoegen"/>
     <sv txt="Lägg till spårplan" tip="Lägg till spårplan"/>
-    <fr txt="Ajouter un panneau au circuit" tip="Ajouter un TCO"/>
+    <fr txt="Ajouter un plan de voies" tip="Ajouter un TCO"/>
     <tr txt="Ray Diyagramı Ekle" tip="Ray Diyagramı Ekle"/>
     <es txt="Añadir panel de carriles" tip=" Añadir diagrama de circuito"/>
     <it txt="Aggiungi pannello" tip="Aggiungi un tracciato"/>
@@ -3031,7 +3031,7 @@
     <en txt="Track plan" accel="6"/>
     <nl txt="Spoorplan" accel="0"/>
     <sv txt="Spårplan" accel="0"/>
-    <fr txt="Schéma du plan" accel="0"/>
+    <fr txt="Plan des voies" accel="0"/>
     <tr txt="Ray Diyagramı" accel="0"/>
     <es txt="Diagrama de circuito" accel="0"/>
     <it txt="Pannello tracciato"/>
@@ -4288,7 +4288,7 @@
     <en txt="Rotate"/>
     <nl txt="Draaien"/>
     <sv txt="Rotera"/>
-    <fr txt="Tourner"/>
+    <fr txt="Pivoter"/>
     <tr txt="Döndür"/>
     <es txt="Girar"/>
     <it txt="Ruota"/>
@@ -6545,7 +6545,7 @@
     <en txt="V_Mid"/>
     <nl txt="V_Mid"/>
     <sv txt="V_Mid"/>
-    <fr txt="V_Mid" tip="réglage de la vitesse intermédiaire"/>
+    <fr txt="V_Moy" tip="réglage de la vitesse intermédiaire"/>
     <tr txt="V_Mid"/>
     <es txt="V_Mid"/>
     <it txt="V med"/>
@@ -6660,7 +6660,7 @@
     <en txt="V_RMid" tip="Reverse middle speed"/>
     <nl txt="V_RMid" tip="Kruis snelheid achteruit."/>
     <sv txt="V_RMid" tip="Omvänd mellan hastighet"/>
-    <fr txt="V_IMoy" tip="Inverser la vitesse intermédiaire"/>
+    <fr txt="V_RMoy" tip="Inverser la vitesse intermédiaire"/>
     <tr txt="V_RMid"/>
     <es txt="V_RMid" tip="Velocidad media en reversa"/>
     <it txt="VR med" tip="Velocità media all'indietro"/>
@@ -6741,7 +6741,7 @@
     <en txt="V_Step"/>
     <nl txt="V_Step"/>
     <sv txt="V_Steg"/>
-    <fr txt="V_cran"/>
+    <fr txt="V_Cran"/>
     <tr txt="V_Step"/>
     <es txt="V_Step"/>
     <it txt="V passi"/>
@@ -28269,6 +28269,8 @@
     <pt_BR txt="Ativar comunicação"/>
     <sr_latin txt="Omogući komunikaciju"/>
     <sv txt="Möjliggör kommunikation"/>
+    <it txt="Abilitare comunicazione"/>
+    <sl txt="Omogoči komunikacijo"/>
   </Msg>
   <Msg id="saveplan">
     <en txt="The changes will be saved."/>
@@ -28277,6 +28279,8 @@
     <nl txt="De modificaties worden opgeslagen."/>
     <pt_BR txt="As mudanças serão gravadas."/>
     <sr_latin txt="Promene će biti snimljene."/>
+    <it txt="La modifica verrà salvata"/>
+    <sl txt="Spremembe bodo shranjene."/>
   </Msg>
   <Msg id="swapped">
     <en txt="Swapped"/>
@@ -28285,6 +28289,8 @@
     <nl txt="Omgekeerd"/>
     <pt_BR txt="Invertido"/>
     <sr_latin txt="Zamenjeno"/>
+    <it txt="Invertito"/>
+    <sl txt="Zamenjano"/>
   </Msg>
   <Msg id="locoimagecolumn">
     <en txt="Loco image column"/>
@@ -28292,5 +28298,7 @@
     <fr txt="Colonne d'image de loco"/>
     <nl txt="Locomotief afbeelding kolom"/>
     <pt_BR txt="Coluna de imagens de locomotivas"/>
+    <it txt="Colonna immagine loco"/>
+    <sl txt="Stolpec slike lokomotive"/>
   </Msg>
 </Messages>
