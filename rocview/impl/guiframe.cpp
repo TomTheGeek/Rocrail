@@ -3280,7 +3280,13 @@ void RocGuiFrame::OnEditMode( wxCommandEvent& event ) {
   if( m_TrackPickerDlg == NULL && m_bEditMode ) {
     m_TrackPickerDlg = new TrackPickerDlg( this );
     m_TrackPickerDlg->Show(TRUE);
-    m_TrackPickerDlg->Move( 50, 50 );
+    iONode window = wGui.getwindow(m_Ini);
+    if( window == NULL ) {
+      window = NodeOp.inst( wWindow.name(), m_Ini, ELEMENT_NODE);
+      NodeOp.addChild( m_Ini, window );
+    }
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "move picker to: x=%d, y=%d", wWindow.getxtp(window), wWindow.getytp(window) );
+    m_TrackPickerDlg->Move( wWindow.getxtp(window), wWindow.getytp(window) );
   }
 }
 
@@ -3301,8 +3307,9 @@ void RocGuiFrame::OnCtrlMode( wxCommandEvent& event ) {
   m_bEditMode = !mi_ctrlmode->IsChecked();
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "EditMode is %s", m_bEditMode?"true":"false" );
   if( m_TrackPickerDlg != NULL && !m_bEditMode ) {
-    m_TrackPickerDlg->Destroy();
-    m_TrackPickerDlg = NULL;
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "close trackpicker" );
+    wxCloseEvent event;
+    m_TrackPickerDlg->onClose(event);
   }
 }
 
@@ -5397,6 +5404,13 @@ void RocGuiFrame::OnAddItem(wxCommandEvent& event) {
   if( m_TrackPickerDlg == NULL ) {
     m_TrackPickerDlg = new TrackPickerDlg( this );
     m_TrackPickerDlg->Show(TRUE);
+    iONode window = wGui.getwindow(m_Ini);
+    if( window == NULL ) {
+      window = NodeOp.inst( wWindow.name(), m_Ini, ELEMENT_NODE);
+      NodeOp.addChild( m_Ini, window );
+    }
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "move picker to: x=%d, y=%d", wWindow.getxtp(window), wWindow.getytp(window) );
+    m_TrackPickerDlg->Move( wWindow.getxtp(window), wWindow.getytp(window) );
   }
   else {
     m_TrackPickerDlg->Raise();

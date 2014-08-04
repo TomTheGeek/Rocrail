@@ -237,7 +237,9 @@
       <var name="y" vt="int" defval="50"/>
       <var name="cx" vt="int" defval="900"/>
       <var name="cy" vt="int" defval="600"/>
-    </window>
+      <var name="xtp" vt="int" defval="50" remark="trackpickerdlg"/>
+      <var name="ytp" vt="int" defval="50" remark="trackpickerdlg"/>
+      </window>
     <jsmap extern="true"/>
     <mic wrappername="MIC" remark="Mouse Integrated Controller">
       <var name="step" vt="int" defval="1" range="1-9" remark="speed step per mousewheel notch"/>

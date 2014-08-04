@@ -41,14 +41,13 @@ class TrackPickerDlg : public TrackPickerDlgGen
   SymbolRenderer* m_Renderer;
   void onTrackCellLeftClick( wxGridEvent& event );
   void onPageChanged( wxListbookEvent& event );
-  void onClose( wxCloseEvent& event );
   void initSymbols();
   void initGrid();
 
 	public:
 		/** Constructor */
 		TrackPickerDlg( wxWindow* parent );
-	//// end generated class members
+	  void onClose( wxCloseEvent& event );
 	
 };
 

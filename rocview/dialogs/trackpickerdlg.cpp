@@ -35,6 +35,9 @@
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/Text.h"
 
+#include "rocview/wrapper/public/Gui.h"
+#include "rocview/wrapper/public/Window.h"
+
 #include "rocs/public/strtok.h"
 
 #include <wx/dnd.h>
@@ -379,6 +382,18 @@ void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
 
 void TrackPickerDlg::onClose( wxCloseEvent& event ) {
   wxGetApp().getFrame()->resetTrackPickerRef();
+  iONode window = wGui.getwindow(wxGetApp().getFrame()->m_Ini);
+  if( window == NULL ) {
+    window = NodeOp.inst( wWindow.name(), wGui.getwindow(wxGetApp().getFrame()->m_Ini), ELEMENT_NODE);
+    NodeOp.addChild( wGui.getwindow(wxGetApp().getFrame()->m_Ini), window );
+  }
+  int x,y;
+  GetPosition(&x,&y);
+
+  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "save position: x=%d, y=%d", x, y );
+  wWindow.setxtp(window, x);
+  wWindow.setytp(window, y);
+
   Destroy();
 }
 
