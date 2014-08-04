@@ -275,6 +275,8 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s::%s:::,%s", wFeedback.name(), "curve", feedbacktype::curve_sensor_off );
   ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s::4:::,%s", wFeedback.name(), "accessory-4-off.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:::::,%s", wOutput.name(), outputtype::button );
   ListOp.add( m_SymbolList, (obj) symname );
 
