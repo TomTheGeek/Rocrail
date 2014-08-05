@@ -58,6 +58,7 @@ class ThrottleDlg : public ThrottleDlgGen
   void onButton(wxCommandEvent& event);
   void onSlider(wxScrollEvent& event);
   void onBinState( wxMouseEvent& event );
+  void onBinStateKey( wxKeyEvent& event );
   void onClose( wxCloseEvent& event );
   void onDestroy( wxWindowDestroyEvent& event );
   void modelEvent( iONode evt );

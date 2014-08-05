@@ -64,6 +64,7 @@ class ThrottleDlgGen : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void onBinStateKey( wxKeyEvent& event ) { event.Skip(); }
 		virtual void onBinState( wxMouseEvent& event ) { event.Skip(); }
 		
 	

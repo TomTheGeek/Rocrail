@@ -144,6 +144,7 @@ ThrottleDlgGen::ThrottleDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ThrottleDlgGen::onClose ) );
+	m_BinState->Connect( wxEVT_KEY_UP, wxKeyEventHandler( ThrottleDlgGen::onBinStateKey ), NULL, this );
 	m_BinState->Connect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( ThrottleDlgGen::onBinState ), NULL, this );
 }
 
@@ -151,6 +152,7 @@ ThrottleDlgGen::~ThrottleDlgGen()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ThrottleDlgGen::onClose ) );
+	m_BinState->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( ThrottleDlgGen::onBinStateKey ), NULL, this );
 	m_BinState->Disconnect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( ThrottleDlgGen::onBinState ), NULL, this );
 	
 }
