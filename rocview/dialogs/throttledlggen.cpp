@@ -41,13 +41,8 @@ ThrottleDlgGen::ThrottleDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	m_SwitchAddr = new LEDButton(this, wxT("1"), 60, 25);
 	bSizer23->Add( m_SwitchAddr, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	wxBoxSizer* bSizer5;
-	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
-	
 	m_BinState = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,25 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
-	bSizer5->Add( m_BinState, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
-	
-	bSizer23->Add( bSizer5, 0, wxEXPAND, 5 );
+	bSizer23->Add( m_BinState, 0, wxBOTTOM|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	fgSizer18->Add( bSizer23, 0, wxEXPAND, 5 );
 	
