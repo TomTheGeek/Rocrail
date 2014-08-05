@@ -204,10 +204,12 @@ static void __SoD( iOMCS2 inst ) {
   if( data->fbmod > 0 ) {
     byte* out = allocMem(16);
     __setSysMsg(out, 0, 0x10, False, 5, dummy, data->fbmod, 0, 0, 0);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query %d of S88 sensor modules...", data->fbmod );
     ThreadOp.post( data->writer, (obj)out );
   }
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Queary sensors from %d to %d for version >= 2...", data->sensorbegin, data->sensorend );
+  ThreadOp.sleep(100);
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query sensors from %d to %d for version >= 2...", data->sensorbegin, data->sensorend );
 
   if( wDigInt.getprotver( data->ini ) >= 2 && (data->sensorend - data->sensorbegin) > 0 ) {
     byte*  msg   = allocMem(32);
