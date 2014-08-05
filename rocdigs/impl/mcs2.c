@@ -198,14 +198,12 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
 static void __SoD( iOMCS2 inst ) {
   iOMCS2Data data = Data(inst);
   long dummy = 0x5263526C;
-  int mod = 0;
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Start of Day..." );
 
-  for( mod = 0; mod < data->fbmod; mod++ ) {
+  if( data->fbmod > 0 ) {
     byte* out = allocMem(16);
-    __setSysMsg(out, 0, 0x10, False, 5, dummy, mod, 0, 0, 0);
-    /* unofficial command 0x10 request status of feedback module mod, one module has 16 inputs */
+    __setSysMsg(out, 0, 0x10, False, 5, dummy, data->fbmod, 0, 0, 0);
     ThreadOp.post( data->writer, (obj)out );
   }
 
