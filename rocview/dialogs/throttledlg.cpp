@@ -600,26 +600,13 @@ void ThrottleDlg::onClose( wxCloseEvent& event ) {
   Destroy();
 }
 
-void ThrottleDlg::onBinState( wxMouseEvent& event ) {
-  int val = atoi(m_BinState->GetValue().mb_str(wxConvUTF8));
-  TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "binstate [%d] %s", val, event.CmdDown()?"OFF":"ON" );
-  iONode cmd = NodeOp.inst( wBinStateCmd.name(), NULL, ELEMENT_NODE);
-  wBinStateCmd.setnr( cmd, val );
-  wBinStateCmd.setdata( cmd, event.CmdDown()?0:1 );
-  wBinStateCmd.setid( cmd, wLoc.getid( m_Props ) );
-  wBinStateCmd.setaddr( cmd, wLoc.getaddr( m_Props ) );
-  wxGetApp().sendToRocrail( cmd );
-  cmd->base.del(cmd);
-}
-
-
 void ThrottleDlg::onBinStateKey( wxKeyEvent& event ) {
   if( event.GetKeyCode() == WXK_RETURN ) {
     int val = atoi(m_BinState->GetValue().mb_str(wxConvUTF8));
-    TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "binstate [%d] %s", val, event.CmdDown()?"OFF":"ON" );
+    TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "binstate [%d] %s", val, event.AltDown()?"OFF":"ON" );
     iONode cmd = NodeOp.inst( wBinStateCmd.name(), NULL, ELEMENT_NODE);
     wBinStateCmd.setnr( cmd, val );
-    wBinStateCmd.setdata( cmd, event.CmdDown()?0:1 );
+    wBinStateCmd.setdata( cmd, event.AltDown()?0:1 );
     wBinStateCmd.setid( cmd, wLoc.getid( m_Props ) );
     wBinStateCmd.setaddr( cmd, wLoc.getaddr( m_Props ) );
     wxGetApp().sendToRocrail( cmd );
