@@ -608,7 +608,10 @@ void ThrottleDlg::onBinStateKey( wxKeyEvent& event ) {
     wBinStateCmd.setnr( cmd, val );
     wBinStateCmd.setdata( cmd, event.AltDown()?0:1 );
     wBinStateCmd.setid( cmd, wLoc.getid( m_Props ) );
-    wBinStateCmd.setaddr( cmd, wLoc.getaddr( m_Props ) );
+    if( m_bSecAddr )
+      wBinStateCmd.setaddr( cmd, wLoc.getsecaddr( m_Props ) );
+    else
+      wBinStateCmd.setaddr( cmd, wLoc.getaddr( m_Props ) );
     wxGetApp().sendToRocrail( cmd );
     cmd->base.del(cmd);
   }
