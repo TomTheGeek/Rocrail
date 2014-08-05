@@ -204,7 +204,7 @@ static void __SoD( iOMCS2 inst ) {
   if( data->fbmod > 0 ) {
     byte* out = allocMem(16);
     __setSysMsg(out, 0, 0x10, False, 5, dummy, data->fbmod, 0, 0, 0);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query %d of S88 sensor modules...", data->fbmod );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query %d S88 sensor modules...", data->fbmod );
     ThreadOp.post( data->writer, (obj)out );
   }
 
