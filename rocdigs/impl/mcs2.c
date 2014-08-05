@@ -209,6 +209,8 @@ static void __SoD( iOMCS2 inst ) {
     ThreadOp.post( data->writer, (obj)out );
   }
 
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Queary sensors from %d to %d for version >= 2...", data->sensorbegin, data->sensorend );
+
   if( wDigInt.getprotver( data->ini ) >= 2 && (data->sensorend - data->sensorbegin) > 0 ) {
     byte*  msg   = allocMem(32);
     msg[0] = (CMD_ACC_SENSOR >> 7);
@@ -224,7 +226,6 @@ static void __SoD( iOMCS2 inst ) {
     msg[10] = (data->sensorend & 0x00FF);
     msg[11] = 0xFF; /* Broadcast ein */
     msg[12] = 0;
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Queary sensor states for version >= 2..." );
     ThreadOp.post( data->writer, (obj)msg );
   }
 
