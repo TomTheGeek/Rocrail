@@ -44,6 +44,7 @@
 #include "rocrail/wrapper/public/FunCmd.h"
 #include "rocrail/wrapper/public/FunDef.h"
 #include "rocrail/wrapper/public/DataReq.h"
+#include "rocrail/wrapper/public/BinStateCmd.h"
 
 #include "rocview/wrapper/public/Gui.h"
 
@@ -598,4 +599,16 @@ void ThrottleDlg::onClose( wxCloseEvent& event ) {
 
   Destroy();
 }
+
+void ThrottleDlg::onBinState( wxMouseEvent& event ) {
+  TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "binstate [%d] ON", m_BinState->GetValue() );
+  iONode cmd = NodeOp.inst( wBinStateCmd.name(), NULL, ELEMENT_NODE);
+  wBinStateCmd.setnr( cmd, m_BinState->GetValue() );
+  wBinStateCmd.setdata( cmd, event.CmdDown()?0:1 );
+  wBinStateCmd.setid( cmd, wLoc.getid( m_Props ) );
+  wBinStateCmd.setaddr( cmd, wLoc.getaddr( m_Props ) );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
 
