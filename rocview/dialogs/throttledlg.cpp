@@ -601,9 +601,10 @@ void ThrottleDlg::onClose( wxCloseEvent& event ) {
 }
 
 void ThrottleDlg::onBinState( wxMouseEvent& event ) {
-  TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "binstate [%d] %s", m_BinState->GetValue(), event.CmdDown()?"OFF":"ON" );
+  int val = atoi(m_BinState->GetValue().mb_str(wxConvUTF8));
+  TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "binstate [%d] %s", val, event.CmdDown()?"OFF":"ON" );
   iONode cmd = NodeOp.inst( wBinStateCmd.name(), NULL, ELEMENT_NODE);
-  wBinStateCmd.setnr( cmd, m_BinState->GetValue() );
+  wBinStateCmd.setnr( cmd, val );
   wBinStateCmd.setdata( cmd, event.CmdDown()?0:1 );
   wBinStateCmd.setid( cmd, wLoc.getid( m_Props ) );
   wBinStateCmd.setaddr( cmd, wLoc.getaddr( m_Props ) );
@@ -614,9 +615,10 @@ void ThrottleDlg::onBinState( wxMouseEvent& event ) {
 
 void ThrottleDlg::onBinStateKey( wxKeyEvent& event ) {
   if( event.GetKeyCode() == WXK_RETURN ) {
-    TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "binstate [%d] %s", m_BinState->GetValue(), event.CmdDown()?"OFF":"ON" );
+    int val = atoi(m_BinState->GetValue().mb_str(wxConvUTF8));
+    TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "binstate [%d] %s", val, event.CmdDown()?"OFF":"ON" );
     iONode cmd = NodeOp.inst( wBinStateCmd.name(), NULL, ELEMENT_NODE);
-    wBinStateCmd.setnr( cmd, m_BinState->GetValue() );
+    wBinStateCmd.setnr( cmd, val );
     wBinStateCmd.setdata( cmd, event.CmdDown()?0:1 );
     wBinStateCmd.setid( cmd, wLoc.getid( m_Props ) );
     wBinStateCmd.setaddr( cmd, wLoc.getaddr( m_Props ) );

@@ -41,8 +41,8 @@ ThrottleDlgGen::ThrottleDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	m_SwitchAddr = new LEDButton(this, wxT("1"), 60, 25);
 	bSizer23->Add( m_SwitchAddr, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	m_BinState = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,25 ), wxSP_ARROW_KEYS, 0, 65535, 0 );
-	bSizer23->Add( m_BinState, 0, wxBOTTOM|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_BinState = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,25 ), wxTE_CENTRE|wxTE_DONTWRAP|wxTE_PROCESS_ENTER );
+	bSizer23->Add( m_BinState, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	fgSizer18->Add( bSizer23, 0, wxEXPAND, 5 );
 	
@@ -144,7 +144,7 @@ ThrottleDlgGen::ThrottleDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ThrottleDlgGen::onClose ) );
-	m_BinState->Connect( wxEVT_KEY_UP, wxKeyEventHandler( ThrottleDlgGen::onBinStateKey ), NULL, this );
+	m_BinState->Connect( wxEVT_CHAR, wxKeyEventHandler( ThrottleDlgGen::onBinStateKey ), NULL, this );
 	m_BinState->Connect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( ThrottleDlgGen::onBinState ), NULL, this );
 }
 
@@ -152,7 +152,7 @@ ThrottleDlgGen::~ThrottleDlgGen()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ThrottleDlgGen::onClose ) );
-	m_BinState->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( ThrottleDlgGen::onBinStateKey ), NULL, this );
+	m_BinState->Disconnect( wxEVT_CHAR, wxKeyEventHandler( ThrottleDlgGen::onBinStateKey ), NULL, this );
 	m_BinState->Disconnect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( ThrottleDlgGen::onBinState ), NULL, this );
 	
 }

@@ -20,7 +20,7 @@
 #include <wx/button.h>
 #include "rocview/public/ledbutton.h"
 #include "rocview/public/slider.h"
-#include <wx/spinctrl.h>
+#include <wx/textctrl.h>
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/dialog.h>
@@ -40,7 +40,7 @@ class ThrottleDlgGen : public wxDialog
 		LEDButton* m_Speed;
 		Slider* m_SpeedSlider;
 		LEDButton* m_SwitchAddr;
-		wxSpinCtrl* m_BinState;
+		wxTextCtrl* m_BinState;
 		wxStaticLine* m_staticline5;
 		LEDButton* m_F1;
 		LEDButton* m_F2;

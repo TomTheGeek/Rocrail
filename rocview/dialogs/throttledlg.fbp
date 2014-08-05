@@ -345,11 +345,11 @@
                                         <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>
-                                <object class="sizeritem" expanded="0">
+                                <object class="sizeritem" expanded="1">
                                     <property name="border">5</property>
-                                    <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL</property>
+                                    <property name="flag">wxBOTTOM|wxRIGHT|wxLEFT</property>
                                     <property name="proportion">0</property>
-                                    <object class="wxSpinCtrl" expanded="0">
+                                    <object class="wxTextCtrl" expanded="1">
                                         <property name="bg"></property>
                                         <property name="context_help"></property>
                                         <property name="context_menu">1</property>
@@ -358,16 +358,14 @@
                                         <property name="font"></property>
                                         <property name="hidden">0</property>
                                         <property name="id">wxID_ANY</property>
-                                        <property name="initial">0</property>
-                                        <property name="max">65535</property>
                                         <property name="maximum_size"></property>
-                                        <property name="min">0</property>
+                                        <property name="maxlength">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="name">m_BinState</property>
                                         <property name="permission">protected</property>
                                         <property name="pos"></property>
-                                        <property name="size">70,25</property>
-                                        <property name="style">wxSP_ARROW_KEYS</property>
+                                        <property name="size">60,25</property>
+                                        <property name="style">wxTE_CENTRE|wxTE_DONTWRAP|wxTE_PROCESS_ENTER</property>
                                         <property name="subclass"></property>
                                         <property name="tooltip"></property>
                                         <property name="validator_data_type"></property>
@@ -378,11 +376,11 @@
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
-                                        <event name="OnChar"></event>
+                                        <event name="OnChar">onBinStateKey</event>
                                         <event name="OnEnterWindow"></event>
                                         <event name="OnEraseBackground"></event>
                                         <event name="OnKeyDown"></event>
-                                        <event name="OnKeyUp">onBinStateKey</event>
+                                        <event name="OnKeyUp"></event>
                                         <event name="OnKillFocus"></event>
                                         <event name="OnLeaveWindow"></event>
                                         <event name="OnLeftDClick">onBinState</event>
@@ -400,8 +398,10 @@
                                         <event name="OnRightUp"></event>
                                         <event name="OnSetFocus"></event>
                                         <event name="OnSize"></event>
-                                        <event name="OnSpinCtrl"></event>
-                                        <event name="OnSpinCtrlText"></event>
+                                        <event name="OnText"></event>
+                                        <event name="OnTextEnter"></event>
+                                        <event name="OnTextMaxLen"></event>
+                                        <event name="OnTextURL"></event>
                                         <event name="OnUpdateUI"></event>
                                     </object>
                                 </object>
