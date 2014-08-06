@@ -5,7 +5,7 @@
   <!-- Ausleuchtung grau -->
     <path stroke="rgb(192,192,192)" fill="rgb(192,192,192)" d="M 8,14 L 23,14 L 23,17 L 8,17 z " />
   <!-- signal -->
-    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 1,5 L 4,2 L 22,2 L 25,5 L 28,5 L 28,2 L 30,2 L 30,9 L 28,9 L 28,6 L 25,6 L 22,9 L 4,9 L 1,6 z " />
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 1,5 L 4,2 L 22,2 L 25,5 L 25,6 L 22,9 L 4,9 L 1,6 z " />
   <!-- Gruene Lampe -->
     <path stroke="rgb(0,255,0)" fill="rgb(0,255,0)" d="M 5,4 L 7,4 L 8,5 L 8,6 L 7,7 L 5,7 L 4,6 L 4,5 z " />
   <!-- Rote Lampe -->
