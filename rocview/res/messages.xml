@@ -28301,4 +28301,7 @@
     <it txt="Colonna immagine loco"/>
     <sl txt="Stolpec slike lokomotive"/>
   </Msg>
+  <Msg id="throttlebinstate">
+    <en txt="Set/Reset BinState by Enter/Alt+Enter."/>
+  </Msg>
 </Messages>

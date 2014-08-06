@@ -75,6 +75,7 @@ ThrottleDlg::ThrottleDlg( wxWindow* parent, iOList list, iOMap map, const char* 
   m_bDir = true;
   m_bSecAddr = false;
   SetTitle(wxGetApp().getMsg( "locctrl" ));
+  m_BinState->SetToolTip(wxGetApp().getMsg( "throttlebinstate" ));
 
   if( StrOp.len( wGui.getdirimagefwd(wxGetApp().getIni()) ) > 0 && StrOp.len( wGui.getdirimagerev(wxGetApp().getIni()) )) {
     m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );

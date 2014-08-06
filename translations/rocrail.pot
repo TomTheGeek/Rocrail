@@ -7145,3 +7145,9 @@ msgstr ""
 msgid "Loco image column"
 msgstr ""
 
+#. 
+# id="throttlebinstate"
+#, c-format
+msgid "Set/Reset BinState by Enter/Alt+Enter."
+msgstr ""
+
