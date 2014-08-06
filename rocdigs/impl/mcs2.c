@@ -202,10 +202,19 @@ static void __SoD( iOMCS2 inst ) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Start of Day..." );
 
   if( data->fbmod > 0 ) {
+    int i = 0;
     byte* out = allocMem(16);
     __setSysMsg(out, 0, 0x10, False, 5, dummy, data->fbmod, 0, 0, 0);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query %d S88 sensor modules...", data->fbmod );
     ThreadOp.post( data->writer, (obj)out );
+
+    for( i = 0; i < data->fbmod * 16; i++ ) {
+      byte* out = allocMem(16);
+      __setSysMsg(out, 0, 0x11, False, 4, dummy, i, 0, 0, 0);
+      ThreadOp.post( data->writer, (obj)out );
+      ThreadOp.sleep(10);
+    }
+
   }
 
   ThreadOp.sleep(100);
