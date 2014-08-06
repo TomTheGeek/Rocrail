@@ -232,8 +232,12 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
           wSignal.setsignal( node, symdir );
         if( StrOp.equals(symdir, "curve"))
           wFeedback.setcurve( node, True );
-        if( atoi(symdir) > 0 )
-          wSwitch.setaccnr(node, atoi(symdir) );
+        if( atoi(symdir) > 0 ) {
+          if( StrOp.equals(symname, wOutput.name()))
+            wOutput.setsvgtype(node, atoi(symdir) );
+          else
+            wSwitch.setaccnr(node, atoi(symdir) );
+        }
       }
       if( StrOp.len(symsub) > 0 ) {
         if( StrOp.equals(symsub, "dwarf"))

@@ -228,6 +228,10 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.connector, tracktype::connector );
   ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.concurveright, tracktype::connector_curve_right );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.concurveleft, tracktype::connector_curve_left );
+  ListOp.add( m_SymbolList, (obj) symname );
 
   // Switch
   symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.left, switchtype::turnoutleft );
@@ -291,7 +295,12 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s::4:::,%s", wFeedback.name(), "accessory-4-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
+
   symname = StrOp.fmt("%s:::::,%s", wOutput.name(), outputtype::button );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s::1:::,%s", wOutput.name(), "button-1-off.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s::4:::,%s", wOutput.name(), "button-4-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Accessory
