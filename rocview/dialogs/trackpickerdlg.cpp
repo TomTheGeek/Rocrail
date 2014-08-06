@@ -273,6 +273,8 @@ void TrackPickerDlg::initSymbols() {
   // Block
   symname = StrOp.fmt("%s:::::,%s", wBlock.name(), blocktype::block );
   ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s::::,%s", wBlock.name(), "smallsymbol", blocktype::block_s );
+  ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:::::,%s", wStage.name(), stagetype::stage );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:::::,%s", wSelTab.name(), seltabtype::seltab );

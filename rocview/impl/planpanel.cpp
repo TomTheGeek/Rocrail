@@ -218,6 +218,8 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       if( StrOp.len(symtype) > 0 ) {
         if( StrOp.equals(symtype, "traverser"))
           wTurntable.settraverser(node, True);
+        else if( StrOp.equals(symtype, "smallsymbol"))
+          wBlock.setsmallsymbol(node, True);
         else
           wItem.settype( node, symtype );
       }
