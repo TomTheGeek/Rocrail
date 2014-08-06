@@ -41,6 +41,7 @@
 #include "rocrail/wrapper/public/State.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/BinStateCmd.h"
+#include "rocrail/wrapper/public/Text.h"
 
 #include "rocutils/public/addr.h"
 
@@ -615,6 +616,17 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wBinStateCmd.name() ) ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "binstate addr=%d nr=%d data=%d duration=%ds",
         wBinStateCmd.getaddr(node), wBinStateCmd.getnr(node), wBinStateCmd.getdata(node), wBinStateCmd.gettimer(node) );
+  }
+
+  /* Text command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wText.name() ) ) {
+    const char* text = wText.gettext(node);
+    int bus     = wText.getbus(node);
+    int addr    = wText.getaddr(node);
+    int display = wText.getdisplay(node);
+    int len     = StrOp.len( text ) + 1; /* send the terminating zero byte too */
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set display %d:%d:%d to \"%s\"", bus, addr, display, text );
   }
 
   /* Unsupported command. */

@@ -51,6 +51,7 @@
 #include "rocrail/wrapper/public/Command.h"
 #include "rocrail/wrapper/public/Action.h"
 #include "rocrail/wrapper/public/Item.h"
+#include "rocrail/wrapper/public/Text.h"
 
 #include "rocutils/public/addr.h"
 
@@ -820,6 +821,17 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       ThreadOp.post( data->writer, (obj)rn );
     }
     return rsp;
+  }
+
+  /* Text command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wText.name() ) ) {
+    const char* text = wText.gettext(node);
+    int bus     = wText.getbus(node);
+    int addr    = wText.getaddr(node);
+    int display = wText.getdisplay(node);
+    int len     = StrOp.len( text ) + 1; /* send the terminating zero byte too */
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set display %d:%d:%d to \"%s\"", bus, addr, display, text );
   }
 
   /* unhandled command */
