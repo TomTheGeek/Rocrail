@@ -215,7 +215,12 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       m_PlanPanel->m_X = (int)(x / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
       m_PlanPanel->m_Y = (int)(y / (m_PlanPanel->m_ItemSize*m_PlanPanel->m_Scale));
       iONode node = NodeOp.inst( symname, NULL, ELEMENT_NODE );
-      wItem.settype( node, symtype );
+      if( StrOp.len(symtype) > 0 ) {
+        if( StrOp.equals(symtype, "traverser"))
+          wTurntable.settraverser(node, True);
+        else
+          wItem.settype( node, symtype );
+      }
       if( StrOp.len(symdir) > 0 ) {
         if( StrOp.equals(symdir, wSwitch.right) || StrOp.equals(symdir, wSwitch.left) )
           wSwitch.setrectcrossing( node, False );

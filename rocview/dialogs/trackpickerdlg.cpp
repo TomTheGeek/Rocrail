@@ -279,6 +279,8 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:::::,%s", wTurntable.name(), turntabletype::turntable );
   ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s::::,%s", wTurntable.name(), "traverser", traversertype::traverser );
+  ListOp.add( m_SymbolList, (obj) symname );
 
   // Sensor
   symname = StrOp.fmt("%s::::::,%s", wFeedback.name(), feedbacktype::sensor_off );
