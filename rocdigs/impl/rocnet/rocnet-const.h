@@ -38,6 +38,7 @@
 #define RN_GROUP_OUTPUT        9
 #define RN_GROUP_INPUT        10
 #define RN_GROUP_SOUND        11
+#define RN_GROUP_DISPLAY      12
 
 /* host group actions */
 #define RN_HOST_SHUTDOWN     1
@@ -151,6 +152,9 @@
 #define RN_SOUND_PLAY      1
 #define RN_SOUND_SETPATH   2
 #define RN_SOUND_SETPLAYER 3
+
+/* display group actions */
+#define RN_DISPLAY_TEXT    1
 
 /* sensor group actions */
 #define RN_SENSOR_REPORT    1

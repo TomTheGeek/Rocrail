@@ -829,9 +829,23 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     int bus     = wText.getbus(node);
     int addr    = wText.getaddr(node);
     int display = wText.getdisplay(node);
-    int len     = StrOp.len( text ) + 1; /* send the terminating zero byte too */
+    int len     = StrOp.len( text );
 
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set display %d:%d:%d to \"%s\"", bus, addr, display, text );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set display %d:%d:%d to \"%s\" len=%d", bus, addr, display, text, len );
+
+    if( len > 80 ) {
+      len = 80;
+    }
+
+    rn[RN_PACKET_GROUP] = RN_GROUP_DISPLAY;
+    rnReceipientAddresToPacket( bus, rn, data->seven );
+    rn[RN_PACKET_ACTION] = RN_DISPLAY_TEXT;
+    rn[RN_PACKET_LEN] = 2 + len;
+    rn[RN_PACKET_DATA + 0] = addr;
+    rn[RN_PACKET_DATA + 1] = 0; /* line number */
+    MemOp.copy( &rn[RN_PACKET_DATA + 2], text, len );
+    rn[RN_PACKET_DATA + 2 + len] = 0; /* the terminating zero byte */
+    ThreadOp.post( data->writer, (obj)rn );
   }
 
   /* unhandled command */
