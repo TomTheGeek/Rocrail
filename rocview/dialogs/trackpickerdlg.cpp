@@ -320,6 +320,10 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:54:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-54-off.svg" );
   ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:40:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-40-on.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:41:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-41-on.svg" );
+  ListOp.add( m_SymbolList, (obj) symname );
 
   // Road
   symname = StrOp.fmt("%s:%s:::road:,%s", wTrack.name(), wTrack.straight, tracktype::road_straight );
