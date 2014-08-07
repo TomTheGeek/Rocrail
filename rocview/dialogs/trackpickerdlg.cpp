@@ -416,7 +416,6 @@ void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
 }
 
 void TrackPickerDlg::onClose( wxCloseEvent& event ) {
-  wxGetApp().getFrame()->resetTrackPickerRef();
   iONode window = wGui.getwindow(wxGetApp().getFrame()->m_Ini);
   if( window == NULL ) {
     window = NodeOp.inst( wWindow.name(), wGui.getwindow(wxGetApp().getFrame()->m_Ini), ELEMENT_NODE);
@@ -429,6 +428,7 @@ void TrackPickerDlg::onClose( wxCloseEvent& event ) {
   wWindow.setxtp(window, x);
   wWindow.setytp(window, y);
 
+  wxGetApp().getFrame()->resetTrackPickerRef();
   Destroy();
 }
 
