@@ -1293,7 +1293,7 @@ static void __reader( void* threadinst ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet: CAN-ID=0x%02X len=%d", in[1]&0xFF, in[4]&0x0F );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 13 );
     }
-    ThreadOp.sleep(10);
+    ThreadOp.sleep(0);
 
   } while( data->run );
 
