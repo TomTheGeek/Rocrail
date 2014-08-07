@@ -201,11 +201,11 @@ static void __SoD( iOMCS2 inst ) {
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Start of Day..." );
 
-  if( data->fbmod > 0 ) {
+  if( data->fbmod > 0 && data->fbmod > data->sod_fbmod) {
     int i = 0;
     byte* out = allocMem(16);
     __setSysMsg(out, 0, 0x10, False, 5, dummy, data->fbmod, 0, 0, 0);
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query %d S88 sensor modules...", data->fbmod );
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query %d S88 sensor modules, %d contacts...", data->fbmod, data->fbmod * 16 );
     ThreadOp.post( data->writer, (obj)out );
 
     for( i = 0; i < data->fbmod * 16; i++ ) {
@@ -214,28 +214,33 @@ static void __SoD( iOMCS2 inst ) {
       ThreadOp.post( data->writer, (obj)out );
       ThreadOp.sleep(10);
     }
-
+    data->sod_fbmod = data->fbmod;
   }
 
   ThreadOp.sleep(100);
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query sensors from %d to %d for version >= 2...", data->sensorbegin, data->sensorend );
 
   if( wDigInt.getprotver( data->ini ) >= 2 && (data->sensorend - data->sensorbegin) > 0 ) {
-    byte*  msg   = allocMem(32);
-    msg[0] = (CMD_ACC_SENSOR >> 7);
-    msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
-    msg[2]  = 0x03;
-    msg[3]  = 0x00;
-    msg[4]  = 7;
-    msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
-    msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
-    msg[7]  = (data->sensorbegin & 0xFF00) >> 8; /* Kontaktkennung Start */
-    msg[8]  = (data->sensorbegin & 0x00FF);
-    msg[9]  = (data->sensorend & 0xFF00) >> 8; /* Kontaktkennung Ende */
-    msg[10] = (data->sensorend & 0x00FF);
-    msg[11] = 0xFF; /* Broadcast ein */
-    msg[12] = 0;
-    ThreadOp.post( data->writer, (obj)msg );
+    if(data->sensorbegin < data->sod_sensorbegin || data->sensorend > data->sod_sensorend) {
+      byte*  msg   = allocMem(32);
+      msg[0] = (CMD_ACC_SENSOR >> 7);
+      msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
+      msg[2]  = 0x03;
+      msg[3]  = 0x00;
+      msg[4]  = 7;
+      msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
+      msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
+      msg[7]  = (data->sensorbegin & 0xFF00) >> 8; /* Kontaktkennung Start */
+      msg[8]  = (data->sensorbegin & 0x00FF);
+      msg[9]  = (data->sensorend & 0xFF00) >> 8; /* Kontaktkennung Ende */
+      msg[10] = (data->sensorend & 0x00FF);
+      msg[11] = 0xFF; /* Broadcast ein */
+      msg[12] = 0;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query sensors from %d to %d for version >= 2...", data->sensorbegin, data->sensorend );
+      ThreadOp.post( data->writer, (obj)msg );
+
+      data->sod_sensorbegin = data->sensorbegin;
+      data->sod_sensorend   = data->sensorend;
+    }
   }
 
 }
@@ -279,6 +284,9 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
+      data->sod_fbmod = 0;
+      data->sod_sensorbegin = 0;
+      data->sod_sensorend = 0;
       __SoD(inst);
       return rsp;
     }
