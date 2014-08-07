@@ -28304,4 +28304,118 @@
   <Msg id="throttlebinstate">
     <en txt="Set/Reset BinState by Enter/Alt+Enter."/>
   </Msg>
+  <Msg id="track_straight">
+    <en txt="Straight track"/>
+  </Msg>
+  <Msg id="track_curve">
+    <en txt="Curved track"/>
+  </Msg>
+  <Msg id="track_buffer">
+    <en txt="Track bumper"/>
+  </Msg>
+  <Msg id="track_dir">
+    <en txt="Track direction"/>
+  </Msg>
+  <Msg id="track_dirall">
+    <en txt="Track all directions"/>
+  </Msg>
+  <Msg id="track_connector">
+    <en txt="Straight track connector"/>
+  </Msg>
+  <Msg id="track_connector_right">
+    <en txt="Curved track connector right"/>
+  </Msg>
+  <Msg id="track_connector_left">
+    <en txt="Curved track connector left"/>
+  </Msg>
+  <Msg id="switch_left">
+    <en txt="Left turnout"/>
+  </Msg>
+  <Msg id="switch_right">
+    <en txt="Right turnout"/>
+  </Msg>
+  <Msg id="crossing_right">
+    <en txt="Right crossing"/>
+  </Msg>
+  <Msg id="crossing_left">
+    <en txt="Left crossing"/>
+  </Msg>
+  <Msg id="dcrossing_right">
+    <en txt="Right double slip switch"/>
+  </Msg>
+  <Msg id="dcrossing_left">
+    <en txt="Left double slip switch"/>
+  </Msg>
+  <Msg id="semaphore_distant">
+    <en txt="Distant semaphore"/>
+  </Msg>
+  <Msg id="semaphore_main">
+    <en txt="Main semaphore"/>
+  </Msg>
+  <Msg id="semaphore_shunting">
+    <en txt="Shunting semaphore"/>
+  </Msg>
+  <Msg id="block_small">
+    <en txt="Short block"/>
+  </Msg>
+  <Msg id="sensor_curve">
+    <en txt="Curved sensor"/>
+  </Msg>
+  <Msg id="sensor_notrack">
+    <en txt="General sensor"/>
+  </Msg>
+  <Msg id="level_crossing">
+    <en txt="Level crossing"/>
+  </Msg>
+  <Msg id="building">
+    <en txt="Building"/>
+  </Msg>
+  <Msg id="platform">
+    <en txt="Platform"/>
+  </Msg>
+  <Msg id="industry">
+    <en txt="Industry"/>
+  </Msg>
+  <Msg id="bascule_bridge">
+    <en txt="Bascule bridge"/>
+  </Msg>
+  <Msg id="road_straight">
+    <en txt="Straight road"/>
+  </Msg>
+  <Msg id="road_curve">
+    <en txt="Curved road"/>
+  </Msg>
+  <Msg id="road_dir">
+    <en txt="Road direction"/>
+  </Msg>
+  <Msg id="road_dirall">
+    <en txt="Road all directions"/>
+  </Msg>
+  <Msg id="road_switch_left">
+    <en txt="Left road turnout"/>
+  </Msg>
+  <Msg id="road_switch_right">
+    <en txt="Right road turnout"/>
+  </Msg>
+  <Msg id="road_crossing">
+    <en txt="Road crossing"/>
+  </Msg>
+  <Msg id="road_threeway">
+    <en txt="Road threeway"/>
+  </Msg>
+  <Msg id="road_dcrossing">
+    <en txt="Road double crossing"/>
+  </Msg>
+  <Msg id="road_signal_main">
+    <en txt="Traffic light"/>
+  </Msg>
+  <Msg id="road_signal_dwarf">
+    <en txt="Small traffic light"/>
+  </Msg>
+  <Msg id="road_block">
+    <en txt="Road block section"/>
+  </Msg>
+  <Msg id="road_sensor">
+    <en txt="Road sensor"/>
+  </Msg>
 </Messages>

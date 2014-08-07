@@ -125,49 +125,54 @@ void TrackPickerDlg::initGrid() {
     iOStrTok tok = StrTokOp.inst(symbol, ',');
     const char* symname = StrTokOp.nextToken(tok);
     const char* svg     = StrTokOp.nextToken(tok);
+    const char* tip     = NULL;
+
+    if( StrTokOp.hasMoreTokens(tok) )
+      tip = StrTokOp.nextToken(tok);
+
     if( StrOp.find( symname, "road" ) != NULL ) {
       m_GridRoad->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridRoad->GetNumberRows(), symname, svg );
       m_GridRoad->SetCellValue(m_GridRoad->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-      m_GridRoad->SetCellRenderer(m_GridRoad->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+      m_GridRoad->SetCellRenderer(m_GridRoad->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wTrack.name() ) ) {
       m_GridTrack->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridTrack->GetNumberRows(), symname, svg );
       m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-      m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+      m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wSwitch.name() ) ) {
       if( StrOp.find( symname, wSwitch.accessory ) != NULL ) {
         m_GridAccessory->AppendRows();
         TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
         m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-        m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+        m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
       }
       else {
         m_GridSwitch->AppendRows();
         TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSwitch->GetNumberRows(), symname, svg );
         m_GridSwitch->SetCellValue(m_GridSwitch->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-        m_GridSwitch->SetCellRenderer(m_GridSwitch->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+        m_GridSwitch->SetCellRenderer(m_GridSwitch->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
       }
     }
     else if( StrOp.startsWith( symname, wSignal.name() ) ) {
       m_GridSignal->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSignal->GetNumberRows(), symname, svg );
       m_GridSignal->SetCellValue(m_GridSignal->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-      m_GridSignal->SetCellRenderer(m_GridSignal->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+      m_GridSignal->SetCellRenderer(m_GridSignal->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wOutput.name() ) ) {
       m_GridAccessory->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
       m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-      m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+      m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wText.name() ) ) {
       m_GridAccessory->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
       m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-      m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+      m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wBlock.name() ) || StrOp.startsWith( symname, wStage.name() ) ||
         StrOp.startsWith( symname, wSelTab.name() ) || StrOp.startsWith( symname, wTurntable.name() ) )
@@ -175,14 +180,14 @@ void TrackPickerDlg::initGrid() {
       m_GridBlock->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridBlock->GetNumberRows(), symname, svg );
       m_GridBlock->SetCellValue(m_GridBlock->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-      m_GridBlock->SetCellRenderer(m_GridBlock->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+      m_GridBlock->SetCellRenderer(m_GridBlock->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wFeedback.name() ) )
     {
       m_GridSensor->AppendRows();
       TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSensor->GetNumberRows(), symname, svg );
       m_GridSensor->SetCellValue(m_GridSensor->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-      m_GridSensor->SetCellRenderer(m_GridSensor->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale()) );
+      m_GridSensor->SetCellRenderer(m_GridSensor->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     tok->base.del(tok);
   }
@@ -216,144 +221,144 @@ void TrackPickerDlg::initSymbols() {
   m_SymbolList = ListOp.inst();
 
   // Track
-  char* symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.straight, tracktype::straight );
+  char* symname = StrOp.fmt("%s:%s::::,%s,%s", wTrack.name(), wTrack.straight, tracktype::straight, "track_straight" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.curve, tracktype::curve );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wTrack.name(), wTrack.curve, tracktype::curve, "track_curve" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.buffer, tracktype::buffer );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wTrack.name(), wTrack.buffer, tracktype::buffer, "track_buffer" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.dir, tracktype::dir );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wTrack.name(), wTrack.dir, tracktype::dir, "track_dir" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.dirall, tracktype::dirall );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wTrack.name(), wTrack.dirall, tracktype::dirall, "track_dirall" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.connector, tracktype::connector );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wTrack.name(), wTrack.connector, tracktype::connector, "track_connector" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.concurveright, tracktype::connector_curve_right );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wTrack.name(), wTrack.concurveright, tracktype::connector_curve_right, "track_connector_right" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wTrack.name(), wTrack.concurveleft, tracktype::connector_curve_left );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wTrack.name(), wTrack.concurveleft, tracktype::connector_curve_left, "track_connector_left" );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Switch
-  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.left, switchtype::turnoutleft );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.left, switchtype::turnoutleft, "switch_left" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.right, switchtype::turnoutright );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.right, switchtype::turnoutright, "switch_right" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.threeway, switchtype::threeway );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.threeway, switchtype::threeway, "threeway" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.twoway, switchtype::twoway_tr );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.twoway, switchtype::twoway_tr, "twoway" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.ccrossing, switchtype::ccrossing );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.ccrossing, switchtype::ccrossing, "ccrossing" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossing );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossing, "crossing" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:left:::,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingright );
+  symname = StrOp.fmt("%s:%s:left:::,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingright, "crossing_right" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:right:::,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingleft );
+  symname = StrOp.fmt("%s:%s:right:::,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingleft, "crossing_left" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:left:::,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingright );
+  symname = StrOp.fmt("%s:%s:left:::,%s,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingright, "dcrossing_right" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:right:::,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingleft );
+  symname = StrOp.fmt("%s:%s:right:::,%s,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingleft, "dcrossing_left" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wSwitch.name(), wSwitch.decoupler, switchtype::decoupler );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.decoupler, switchtype::decoupler, "decoupler" );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Signal
-  symname = StrOp.fmt("%s:%s:%s:::,%s", wSignal.name(), wSignal.light, wSignal.distant, signaltype::signaldistant_2_r );
+  symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.light, wSignal.distant, signaltype::signaldistant_2_r, "distant_signal" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s:::,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::signalmain_r );
+  symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::signalmain_r, "main_signal" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s:%s::,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::signalmain_dwarf_r );
+  symname = StrOp.fmt("%s:%s:%s:%s::,%s,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::signalmain_dwarf_r, "dwarfsignal" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s:::,%s", wSignal.name(), wSignal.light, wSignal.shunting, signaltype::signalshunting_2_r );
+  symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.light, wSignal.shunting, signaltype::signalshunting_2_r, "shunting_signal" );
   ListOp.add( m_SymbolList, (obj) symname );
 
-  symname = StrOp.fmt("%s:%s:%s:::,%s", wSignal.name(), wSignal.semaphore, wSignal.distant, signaltype::semaphoredistant_2_r );
+  symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.semaphore, wSignal.distant, signaltype::semaphoredistant_2_r, "semaphore_distant" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s:::,%s", wSignal.name(), wSignal.semaphore, wSignal.main, signaltype::semaphoremain_r );
+  symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.semaphore, wSignal.main, signaltype::semaphoremain_r, "semaphore_main" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s:::,%s", wSignal.name(), wSignal.semaphore, wSignal.shunting, signaltype::semaphoreshunting_2_r );
+  symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.semaphore, wSignal.shunting, signaltype::semaphoreshunting_2_r, "semaphore_shunting" );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Block
-  symname = StrOp.fmt("%s:::::,%s", wBlock.name(), blocktype::block );
+  symname = StrOp.fmt("%s:::::,%s,%s", wBlock.name(), blocktype::block, "block" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wBlock.name(), "smallsymbol", blocktype::block_s );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wBlock.name(), "smallsymbol", blocktype::block_s, "block_small" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:::::,%s", wStage.name(), stagetype::stage );
+  symname = StrOp.fmt("%s:::::,%s,%s", wStage.name(), stagetype::stage, "stagingblock" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:::::,%s", wSelTab.name(), seltabtype::seltab );
+  symname = StrOp.fmt("%s:::::,%s,%s", wSelTab.name(), seltabtype::seltab, "seltab" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:::::,%s", wTurntable.name(), turntabletype::turntable );
+  symname = StrOp.fmt("%s:::::,%s,%s", wTurntable.name(), turntabletype::turntable, "turntable" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s", wTurntable.name(), "traverser", traversertype::traverser );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wTurntable.name(), "traverser", traversertype::traverser, "traverser" );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Sensor
-  symname = StrOp.fmt("%s::::::,%s", wFeedback.name(), feedbacktype::sensor_off );
+  symname = StrOp.fmt("%s::::::,%s,%s", wFeedback.name(), feedbacktype::sensor_off, "sensor" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s::%s:::,%s", wFeedback.name(), "curve", feedbacktype::curve_sensor_off );
+  symname = StrOp.fmt("%s::%s:::,%s,%s", wFeedback.name(), "curve", feedbacktype::curve_sensor_off, "sensor_curve" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s::4:::,%s", wFeedback.name(), "accessory-4-off.svg" );
+  symname = StrOp.fmt("%s::4:::,%s,%s", wFeedback.name(), "accessory-4-off.svg", "sensor_notrack" );
   ListOp.add( m_SymbolList, (obj) symname );
 
-  symname = StrOp.fmt("%s:::::,%s", wOutput.name(), outputtype::button );
+  symname = StrOp.fmt("%s:::::,%s,%s", wOutput.name(), outputtype::button, "output" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s::1:::,%s", wOutput.name(), "button-1-off.svg" );
+  symname = StrOp.fmt("%s::1:::,%s,%s", wOutput.name(), "button-1-off.svg", "output" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s::4:::,%s", wOutput.name(), "button-4-off.svg" );
+  symname = StrOp.fmt("%s::4:::,%s,%s", wOutput.name(), "button-4-off.svg", "output" );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Accessory
-  symname = StrOp.fmt("%s:::::,%s", wText.name(), "text" );
+  symname = StrOp.fmt("%s:::::,%s,%s", wText.name(), "text", "text" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:10:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-10-off.svg" );
+  symname = StrOp.fmt("%s:%s:10:::,%s,%s", wSwitch.name(), wSwitch.accessory, "accessory-10-off.svg", "level_crossing" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:11:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-11-off.svg" );
+  symname = StrOp.fmt("%s:%s:11:::,%s,%s", wSwitch.name(), wSwitch.accessory, "accessory-11-off.svg", "level_crossing" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:12:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-12-off.svg" );
+  symname = StrOp.fmt("%s:%s:12:::,%s,%s", wSwitch.name(), wSwitch.accessory, "accessory-12-off.svg", "level_crossing" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:51:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-51-off.svg" );
+  symname = StrOp.fmt("%s:%s:51:::,%s,%s", wSwitch.name(), wSwitch.accessory, "accessory-51-off.svg", "building" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:52:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-52-off.svg" );
+  symname = StrOp.fmt("%s:%s:52:::,%s,%s", wSwitch.name(), wSwitch.accessory, "accessory-52-off.svg", "platform" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:53:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-53-off.svg" );
+  symname = StrOp.fmt("%s:%s:53:::,%s,%s", wSwitch.name(), wSwitch.accessory, "accessory-53-off.svg", "building" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:54:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-54-off.svg" );
+  symname = StrOp.fmt("%s:%s:54:::,%s,%s", wSwitch.name(), wSwitch.accessory, "accessory-54-off.svg", "industry" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:40:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-40-on.svg" );
+  symname = StrOp.fmt("%s:%s:40:::,%s,%s", wSwitch.name(), wSwitch.accessory, "accessory-40-on.svg", "bascule_bridge" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:41:::,%s", wSwitch.name(), wSwitch.accessory, "accessory-41-on.svg" );
+  symname = StrOp.fmt("%s:%s:41:::,%s,%s", wSwitch.name(), wSwitch.accessory, "accessory-41-on.svg", "bascule_bridge" );
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Road
-  symname = StrOp.fmt("%s:%s:::road:,%s", wTrack.name(), wTrack.straight, tracktype::road_straight );
+  symname = StrOp.fmt("%s:%s:::road:,%s,%s", wTrack.name(), wTrack.straight, tracktype::road_straight, "road_straight" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road:,%s", wTrack.name(), wTrack.curve, tracktype::road_curve );
+  symname = StrOp.fmt("%s:%s:::road:,%s,%s", wTrack.name(), wTrack.curve, tracktype::road_curve, "road_curve" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road:,%s", wTrack.name(), wTrack.dir, tracktype::road_dir );
+  symname = StrOp.fmt("%s:%s:::road:,%s,%s", wTrack.name(), wTrack.dir, tracktype::road_dir, "road_dir" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road:,%s", wTrack.name(), wTrack.dirall, tracktype::road_dirall );
-  ListOp.add( m_SymbolList, (obj) symname );
-
-  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.left, switchtype::road_turnoutleft );
-  ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.right, switchtype::road_turnoutright );
-  ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.crossing, switchtype::road_crossing90 );
-  ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.threeway, switchtype::road_rect_threeway );
-  ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:::road:,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::road_dcrossingright );
+  symname = StrOp.fmt("%s:%s:::road:,%s,%s", wTrack.name(), wTrack.dirall, tracktype::road_dirall, "road_dirall" );
   ListOp.add( m_SymbolList, (obj) symname );
 
-  symname = StrOp.fmt("%s:%s:%s::road:,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::road_signalmain_r );
+  symname = StrOp.fmt("%s:%s:::road:,%s,%s", wSwitch.name(), wSwitch.left, switchtype::road_turnoutleft, "road_switch_left" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:%s:%s:road:,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::road_signalmain_dwarf_r );
+  symname = StrOp.fmt("%s:%s:::road:,%s,%s", wSwitch.name(), wSwitch.right, switchtype::road_turnoutright, "road_switch_right" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road:,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::road_crossing90, "road_crossing" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road:,%s,%s", wSwitch.name(), wSwitch.threeway, switchtype::road_rect_threeway, "road_threeway" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:::road:,%s,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::road_dcrossingright, "road_dcrossing" );
   ListOp.add( m_SymbolList, (obj) symname );
 
-  symname = StrOp.fmt("%s::::road:,%s", wBlock.name(), blocktype::road_block );
+  symname = StrOp.fmt("%s:%s:%s::road:,%s,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::road_signalmain_r, "road_signal_main" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s::::road:,%s", wFeedback.name(), feedbacktype::road_sensor_off );
+  symname = StrOp.fmt("%s:%s:%s:%s:road:,%s,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::road_signalmain_dwarf_r, "road_signal_dwarf" );
+  ListOp.add( m_SymbolList, (obj) symname );
+
+  symname = StrOp.fmt("%s::::road:,%s,%s", wBlock.name(), blocktype::road_block, "road_block" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s::::road:,%s,%s", wFeedback.name(), feedbacktype::road_sensor_off, "road_sensor" );
   ListOp.add( m_SymbolList, (obj) symname );
 
 
@@ -369,10 +374,16 @@ void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
   wxString str = ((wxGrid*)event.GetEventObject())->GetCellValue( event.GetRow(), 0 );
   ((wxGrid*)event.GetEventObject())->SetGridCursor(event.GetRow(), 0);
 
-  m_Tip->SetValue(str);
+  CellRenderer* renderer = (CellRenderer*)((wxGrid*)event.GetEventObject())->GetCellRenderer(event.GetRow(),0);
+  if( renderer->GetTip() != NULL) {
+    TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "cell tip is [%s] at row %d", renderer->GetTip(), event.GetRow());
+    m_Tip->SetValue(wxGetApp().getMsg( renderer->GetTip() ));
+  }
+  else
+    m_Tip->SetValue(str);
 
   wxString my_text = wxT("addsymbol:") + str;
-  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "drag [%s]", (const char*)my_text.mb_str(wxConvUTF8) );
+  TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "drag [%s]", (const char*)my_text.mb_str(wxConvUTF8) );
   wxTextDataObject my_data(my_text);
   wxDropSource dragSource( this );
   dragSource.SetData( my_data );
@@ -398,7 +409,7 @@ void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
   for( int i = 0; i < grid->GetNumberRows(); i++ ) {
     CellRenderer* renderer = (CellRenderer*)grid->GetCellRenderer(i,0);
     grid->SetRowSize(i,renderer->GetRowSize());
-    TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "rowsize=%d page=%d row=%d", renderer->GetRowSize(), selpage, i );
+    TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "rowsize=%d page=%d row=%d", renderer->GetRowSize(), selpage, i );
   }
   grid->ForceRefresh();
   m_Tip->SetValue(wxT(""));

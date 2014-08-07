@@ -37,10 +37,11 @@ class CellRenderer: public wxGridCellStringRenderer
   bool m_bDidResize;
   double m_Scale;
   int m_RowSize;
+  char* m_Tip;
 
 public:
   CellRenderer(const char* imageName);
-  CellRenderer(const char* imageName, SymbolRenderer* l_Renderer, double scale=1.0);
+  CellRenderer(const char* imageName, SymbolRenderer* l_Renderer, double scale=1.0, const char* tip=NULL);
   CellRenderer(wxBitmap* bitmap);
 
   ~CellRenderer();
@@ -48,6 +49,7 @@ public:
   void updateImage(const wxRect& rect);
   wxSize GetBestSize(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, int row, int col);
   int GetRowSize() { return m_RowSize;}
+  const char* GetTip() { return m_Tip;}
 };
 
 #endif

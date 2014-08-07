@@ -7151,3 +7151,231 @@ msgstr ""
 msgid "Set/Reset BinState by Enter/Alt+Enter."
 msgstr ""
 
+#. 
+# id="track_straight"
+#, c-format
+msgid "Straight track"
+msgstr ""
+
+#. 
+# id="track_curve"
+#, c-format
+msgid "Curved track"
+msgstr ""
+
+#. 
+# id="track_buffer"
+#, c-format
+msgid "Track bumper"
+msgstr ""
+
+#. 
+# id="track_dir"
+#, c-format
+msgid "Track direction"
+msgstr ""
+
+#. 
+# id="track_dirall"
+#, c-format
+msgid "Track all directions"
+msgstr ""
+
+#. 
+# id="track_connector"
+#, c-format
+msgid "Straight track connector"
+msgstr ""
+
+#. 
+# id="track_connector_right"
+#, c-format
+msgid "Curved track connector right"
+msgstr ""
+
+#. 
+# id="track_connector_left"
+#, c-format
+msgid "Curved track connector left"
+msgstr ""
+
+#. 
+# id="switch_left"
+#, c-format
+msgid "Left turnout"
+msgstr ""
+
+#. 
+# id="switch_right"
+#, c-format
+msgid "Right turnout"
+msgstr ""
+
+#. 
+# id="crossing_right"
+#, c-format
+msgid "Right crossing"
+msgstr ""
+
+#. 
+# id="crossing_left"
+#, c-format
+msgid "Left crossing"
+msgstr ""
+
+#. 
+# id="dcrossing_right"
+#, c-format
+msgid "Right double slip switch"
+msgstr ""
+
+#. 
+# id="dcrossing_left"
+#, c-format
+msgid "Left double slip switch"
+msgstr ""
+
+#. 
+# id="semaphore_distant"
+#, c-format
+msgid "Distant semaphore"
+msgstr ""
+
+#. 
+# id="semaphore_main"
+#, c-format
+msgid "Main semaphore"
+msgstr ""
+
+#. 
+# id="semaphore_shunting"
+#, c-format
+msgid "Shunting semaphore"
+msgstr ""
+
+#. 
+# id="block_small"
+#, c-format
+msgid "Short block"
+msgstr ""
+
+#. 
+# id="sensor_curve"
+#, c-format
+msgid "Curved sensor"
+msgstr ""
+
+#. 
+# id="sensor_notrack"
+#, c-format
+msgid "General sensor"
+msgstr ""
+
+#. 
+# id="level_crossing"
+#, c-format
+msgid "Level crossing"
+msgstr ""
+
+#. 
+# id="building"
+#, c-format
+msgid "Building"
+msgstr ""
+
+#. 
+# id="platform"
+#, c-format
+msgid "Platform"
+msgstr ""
+
+#. 
+# id="industry"
+#, c-format
+msgid "Industry"
+msgstr ""
+
+#. 
+# id="bascule_bridge"
+#, c-format
+msgid "Bascule bridge"
+msgstr ""
+
+#. 
+# id="road_straight"
+#, c-format
+msgid "Straight road"
+msgstr ""
+
+#. 
+# id="road_curve"
+#, c-format
+msgid "Curved road"
+msgstr ""
+
+#. 
+# id="road_dir"
+#, c-format
+msgid "Road direction"
+msgstr ""
+
+#. 
+# id="road_dirall"
+#, c-format
+msgid "Road all directions"
+msgstr ""
+
+#. 
+# id="road_switch_left"
+#, c-format
+msgid "Left road turnout"
+msgstr ""
+
+#. 
+# id="road_switch_right"
+#, c-format
+msgid "Right road turnout"
+msgstr ""
+
+#. 
+# id="road_crossing"
+#, c-format
+msgid "Road crossing"
+msgstr ""
+
+#. 
+# id="road_threeway"
+#, c-format
+msgid "Road threeway"
+msgstr ""
+
+#. 
+# id="road_dcrossing"
+#, c-format
+msgid "Road double crossing"
+msgstr ""
+
+#. 
+# id="road_signal_main"
+#, c-format
+msgid "Traffic light"
+msgstr ""
+
+#. 
+# id="road_signal_dwarf"
+#, c-format
+msgid "Small traffic light"
+msgstr ""
+
+#. 
+# id="road_block"
+#, c-format
+msgid "Road block section"
+msgstr ""
+
+#. 
+# id="road_sensor"
+#, c-format
+msgid "Road sensor"
+msgstr ""
+
