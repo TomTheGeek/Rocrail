@@ -132,45 +132,45 @@ void TrackPickerDlg::initGrid() {
 
     if( StrOp.find( symname, "road" ) != NULL ) {
       m_GridRoad->AppendRows();
-      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridRoad->GetNumberRows(), symname, svg );
+      TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridRoad->GetNumberRows(), symname, svg );
       m_GridRoad->SetCellValue(m_GridRoad->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridRoad->SetCellRenderer(m_GridRoad->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wTrack.name() ) ) {
       m_GridTrack->AppendRows();
-      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridTrack->GetNumberRows(), symname, svg );
+      TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridTrack->GetNumberRows(), symname, svg );
       m_GridTrack->SetCellValue(m_GridTrack->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridTrack->SetCellRenderer(m_GridTrack->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wSwitch.name() ) ) {
       if( StrOp.find( symname, wSwitch.accessory ) != NULL ) {
         m_GridAccessory->AppendRows();
-        TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
+        TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
         m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
         m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
       }
       else {
         m_GridSwitch->AppendRows();
-        TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSwitch->GetNumberRows(), symname, svg );
+        TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridSwitch->GetNumberRows(), symname, svg );
         m_GridSwitch->SetCellValue(m_GridSwitch->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
         m_GridSwitch->SetCellRenderer(m_GridSwitch->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
       }
     }
     else if( StrOp.startsWith( symname, wSignal.name() ) ) {
       m_GridSignal->AppendRows();
-      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSignal->GetNumberRows(), symname, svg );
+      TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridSignal->GetNumberRows(), symname, svg );
       m_GridSignal->SetCellValue(m_GridSignal->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridSignal->SetCellRenderer(m_GridSignal->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wOutput.name() ) ) {
       m_GridAccessory->AppendRows();
-      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
+      TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
       m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wText.name() ) ) {
       m_GridAccessory->AppendRows();
-      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
+      TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
       m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
@@ -178,14 +178,14 @@ void TrackPickerDlg::initGrid() {
         StrOp.startsWith( symname, wSelTab.name() ) || StrOp.startsWith( symname, wTurntable.name() ) )
     {
       m_GridBlock->AppendRows();
-      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridBlock->GetNumberRows(), symname, svg );
+      TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridBlock->GetNumberRows(), symname, svg );
       m_GridBlock->SetCellValue(m_GridBlock->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridBlock->SetCellRenderer(m_GridBlock->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wFeedback.name() ) )
     {
       m_GridSensor->AppendRows();
-      TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "row: %d %s %s", m_GridSensor->GetNumberRows(), symname, svg );
+      TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridSensor->GetNumberRows(), symname, svg );
       m_GridSensor->SetCellValue(m_GridSensor->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
       m_GridSensor->SetCellRenderer(m_GridSensor->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
@@ -394,7 +394,7 @@ void TrackPickerDlg::onTrackCellLeftClick( wxGridEvent& event ) {
 
 void TrackPickerDlg::onPageChanged( wxListbookEvent& event ) {
   int selpage = event.GetSelection();
-  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "selected page %d", selpage );
+  TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "selected page %d", selpage );
   wxGrid* grid = NULL;
   switch( selpage ) {
   case 1: grid = m_GridSwitch; break;
@@ -425,7 +425,7 @@ void TrackPickerDlg::onClose( wxCloseEvent& event ) {
   int x,y;
   GetPosition(&x,&y);
 
-  TraceOp.trc( "trackpicker", TRCLEVEL_INFO, __LINE__, 9999, "save position: x=%d, y=%d", x, y );
+  TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "save position: x=%d, y=%d", x, y );
   wWindow.setxtp(window, x);
   wWindow.setytp(window, y);
 
