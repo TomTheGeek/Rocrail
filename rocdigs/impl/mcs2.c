@@ -212,7 +212,7 @@ static void __SoD( iOMCS2 inst ) {
       byte* out = allocMem(16);
       __setSysMsg(out, 0, 0x11, False, 4, dummy, i, 0, 0, 0);
       ThreadOp.post( data->writer, (obj)out );
-      ThreadOp.sleep(10);
+      ThreadOp.sleep(i%16==0?1000:10);
     }
     data->sod_fbmod = data->fbmod;
   }
