@@ -60,7 +60,7 @@ class TrackPickerDlgGen : public wxDialog
 	
 	public:
 		
-		TrackPickerDlgGen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Track Picker"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP );
+		TrackPickerDlgGen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Track Picker"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 		~TrackPickerDlgGen();
 	
 };
