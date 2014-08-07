@@ -2699,7 +2699,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
   showTooltip(wxGetApp().getFrame()->isTooltip());
 
   if( StrOp.equals( wSignal.name(), NodeOp.getName( m_Props ) ) ) {
-    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "signal %d set to %s, state=%s aspect=%d",
+    TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "signal %s set to %s, state=%s aspect=%d",
         wSignal.getid(node), wSignal.ismanual(node) ? "manual":"auto", wSignal.getstate(node) , wSignal.getaspect(node) );
     wSignal.setmanual( m_Props, wSignal.ismanual(node) );
   }

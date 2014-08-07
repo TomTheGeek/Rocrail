@@ -1015,6 +1015,7 @@ static void rocrailCallback( obj me, iONode node ) {
       event.SetClientData( node->base.clone( node ) );
       wxPostEvent( guiApp->getFrame(), event );
     }
+    return;
   }
   /* Booster */
   else if( StrOp.equals( wBooster.name(), NodeOp.getName( node ) ) && guiApp->isInit() ) {
@@ -1022,6 +1023,7 @@ static void rocrailCallback( obj me, iONode node ) {
     // Make a copy of the node for using it out of this scope:
     event.SetClientData( node->base.clone( node ) );
     wxPostEvent( guiApp->getFrame(), event );
+    return;
   }
   /* Auto */
   else if( StrOp.equals( wAutoCmd.name(), NodeOp.getName( node ) ) && guiApp->isInit() ) {
@@ -1029,6 +1031,7 @@ static void rocrailCallback( obj me, iONode node ) {
     // Make a copy of the node for using it out of this scope:
     event.SetClientData( node->base.clone( node ) );
     wxPostEvent( guiApp->getFrame(), event );
+    return;
   }
 
 
@@ -1393,9 +1396,16 @@ static void rocrailCallback( obj me, iONode node ) {
             PlanPanel* p = (PlanPanel*)guiApp->getFrame()->getNotebook()->GetPage(i);
             p->modelEvent( node );
           }
-          wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE_ACTIVELOCS_EVENT );
-          event.SetClientData( node->base.clone( node ) );
-          wxPostEvent( guiApp->getFrame(), event );
+
+          /* Update the loco grid? */
+          if( StrOp.equals( wLoc.name(), NodeOp.getName(node) ) || StrOp.equals( wFunCmd.name(), NodeOp.getName(node) ) ||
+              StrOp.equals( wBlock.name(), NodeOp.getName(node) ) )
+          {
+            TraceOp.trc( "app", TRCLEVEL_DEBUG, __LINE__, 9999, "UPDATE_ACTIVELOCS_EVENT for [%s]", NodeOp.getName(node) );
+            wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, UPDATE_ACTIVELOCS_EVENT );
+            event.SetClientData( node->base.clone( node ) );
+            wxPostEvent( guiApp->getFrame(), event );
+          }
         }
       }
     }
