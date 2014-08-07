@@ -603,16 +603,11 @@ static void __feedbackMCS2Reader( void* threadinst ) {
   do {
     ThreadOp.sleep( 250 );
 
-    if( data->fbmod == 0 )
-      continue;
-
     __SoD(mcs2);
 
     if( wDigInt.getprotver( data->ini ) >= 2 ) {
       /* Just poll once for Start of Day. */
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Just poll once for Start of Day. V2" );
-      ThreadOp.sleep( 500 );
-      __SoD(mcs2);
       break;
     }
 
@@ -1465,12 +1460,8 @@ static struct OMCS2* _inst( const iONode ini ,const iOTrace trc ) {
   data->writer = ThreadOp.inst( "mcs2writer", &__writer, __MCS2 );
   ThreadOp.start( data->writer );
 
-  __SoD(__MCS2);
-
-  if( data->fbmod > 0 ) {
-    data->feedbackReader = ThreadOp.inst( "fbreader", &__feedbackMCS2Reader, __MCS2 );
-    ThreadOp.start( data->feedbackReader );
-  }
+  data->feedbackReader = ThreadOp.inst( "fbreader", &__feedbackMCS2Reader, __MCS2 );
+  ThreadOp.start( data->feedbackReader );
 
   if( wMCS2.isdiscovery(data->mcs2ini) ) {
     data->discovery = ThreadOp.inst( "discovery", &__discovery, __MCS2 );
