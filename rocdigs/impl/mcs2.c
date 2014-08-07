@@ -597,8 +597,8 @@ static void __feedbackMCS2Reader( void* threadinst ) {
   iOMCS2 mcs2 = (iOMCS2)ThreadOp.getParm( th );
   iOMCS2Data data = Data(mcs2);
 
+  ThreadOp.sleep( 1000 );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MCS2 feedbackpoll started, polling %d S88 units", data->fbmod );
-  ThreadOp.sleep( 100 );
   data->sensor = True;
   do {
     ThreadOp.sleep( 250 );
