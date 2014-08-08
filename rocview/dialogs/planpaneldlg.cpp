@@ -81,13 +81,14 @@ PlanPanelProps::PlanPanelProps( wxWindow* parent, wxWindowID id, const wxString&
     Create(parent, id, caption, pos, size, style);
 }
 
-PlanPanelProps::PlanPanelProps( wxWindow* parent, iONode zlevel )
+PlanPanelProps::PlanPanelProps( wxWindow* parent, iONode zlevel, int newlevel )
 {
   Create(parent, -1, wxGetApp().getMsg("planprops") );
   m_Props = zlevel;
 
   if( m_Props == NULL ) {
     m_Props = NodeOp.inst( wZLevel.name(), NULL, ELEMENT_NODE );
+    wZLevel.setz( m_Props, newlevel );
   }
   initLabels();
   initValues();
@@ -120,7 +121,7 @@ void PlanPanelProps::evaluate() {
     return;
   // General
   wZLevel.settitle( m_Props, m_Title->GetValue().mb_str(wxConvUTF8) );
-  wZLevel.setz( m_Props, atoi( m_ZLevel->GetValue().mb_str(wxConvUTF8) ) );
+  wZLevel.setz( m_Props, m_ZLevel->GetValue() );
 }
 
 
@@ -168,7 +169,7 @@ void PlanPanelProps::CreateControls()
     itemDialog1->SetSizer(itemBoxSizer2);
 
     wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(2, 2, 0, 0);
-    itemBoxSizer2->Add(itemFlexGridSizer3, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemFlexGridSizer3, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_LabelTitle = new wxStaticText( itemDialog1, ID_STATICTEXT_PP_TITLE, _("Title"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_LabelTitle, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
@@ -180,7 +181,7 @@ void PlanPanelProps::CreateControls()
     m_LabelZLevel = new wxStaticText( itemDialog1, ID_STATICTEXT_PP_ZLEVEL, _("zLevel"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer3->Add(m_LabelZLevel, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 5);
 
-    m_ZLevel = new wxTextCtrl( itemDialog1, ID_TEXTCTRL_PP_ZLEVEL, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
+    m_ZLevel = new wxSpinCtrl( itemDialog1, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer3->Add(m_ZLevel, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     itemFlexGridSizer3->AddGrowableCol(1);

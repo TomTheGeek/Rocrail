@@ -815,8 +815,16 @@ void RocGuiFrame::RemoveNotebookPage( iONode zlevel  ) {
     for( int i = 0; i < pages; i++ ) {
       BasePanel* p = (BasePanel*)m_PlanNotebook->GetPage(i);
       if( wZLevel.getz( zlevel ) == p->getZ() ) {
+        TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "delete page %d", i );
         p->clean();
         m_PlanNotebook->DeletePage( i );
+        if( m_PlanNotebook->GetPageCount() > 0 ) {
+          TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "select page %d", 0 );
+          p = (BasePanel*)m_PlanNotebook->GetPage(0);
+          wZLevel.setactive( p->getZLevel(), True );
+          m_PlanNotebook->ChangeSelection(0);
+          p->Refresh();
+        }
         break;
       }
     }
@@ -5419,7 +5427,15 @@ void RocGuiFrame::OnAddItem(wxCommandEvent& event) {
 
 
 void RocGuiFrame::OnAddPanel(wxCommandEvent& event) {
-  PlanPanelProps* dlg = new PlanPanelProps( this, (iONode)NULL );
+  int newlevel = 0;
+  iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
+  while( zlevel != NULL ) {
+    if( wZLevel.getz(zlevel) >= newlevel )
+      newlevel = wZLevel.getz(zlevel) + 1;
+    zlevel = wPlan.nextzlevel( wxGetApp().getModel(), zlevel );
+  };
+
+  PlanPanelProps* dlg = new PlanPanelProps( this, (iONode)NULL, newlevel );
   if( wxID_OK == dlg->ShowModal() ) {
     iONode zlevel = dlg->GetProps();
 

@@ -32,6 +32,7 @@
  */
 
 ////@begin includes
+#include "wx/spinctrl.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -41,6 +42,7 @@
  */
 
 ////@begin forward declarations
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -52,7 +54,6 @@
 #define ID_STATICTEXT_PP_TITLE 10000
 #define ID_TEXTCTRL_PP_TITLE 10001
 #define ID_STATICTEXT_PP_ZLEVEL 10002
-#define ID_TEXTCTRL_PP_ZLEVEL 10003
 #define SYMBOL_PLANPANELPROPS_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_PLANPANELPROPS_TITLE _("PlanPanel Properties")
 #define SYMBOL_PLANPANELPROPS_IDNAME ID_DIALOG_PLANPANEL_PROPS
@@ -86,7 +87,7 @@ class PlanPanelProps: public wxDialog
 
 public:
     /// Constructors
-    PlanPanelProps( wxWindow* parent, iONode p_Props );
+    PlanPanelProps( wxWindow* parent, iONode p_Props, int newlevel=0 );
     PlanPanelProps( );
     PlanPanelProps( wxWindow* parent, wxWindowID id = SYMBOL_PLANPANELPROPS_IDNAME, const wxString& caption = SYMBOL_PLANPANELPROPS_TITLE, const wxPoint& pos = SYMBOL_PLANPANELPROPS_POSITION, const wxSize& size = SYMBOL_PLANPANELPROPS_SIZE, long style = SYMBOL_PLANPANELPROPS_STYLE );
 
@@ -128,7 +129,7 @@ public:
     wxStaticText* m_LabelTitle;
     wxTextCtrl* m_Title;
     wxStaticText* m_LabelZLevel;
-    wxTextCtrl* m_ZLevel;
+    wxSpinCtrl* m_ZLevel;
     wxButton* m_OK;
     wxButton* m_Cancel;
     iONode m_Props;
