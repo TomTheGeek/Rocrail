@@ -197,24 +197,25 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
 
 static void __SoD( iOMCS2 inst ) {
   iOMCS2Data data = Data(inst);
-  long dummy = 0x5263526C;
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Start of Day..." );
 
   if( data->fbmod > 0 && data->fbmod > data->sod_fbmod) {
 
     if( wDigInt.getprotver( data->ini ) >= 3 ) {
+      long devID = 0;
       int i = 0;
       for( i = 0; i < data->fbmod * 16; i++ ) {
         byte* out = allocMem(16);
-        __setSysMsg(out, 0, 0x11, False, 4, dummy, i+1, 0, 0, 0);
+        __setSysMsg(out, 0, 0x11, False, 4, devID + 1 + i, 0, 0, 0, 0);
         ThreadOp.post( data->writer, (obj)out );
         ThreadOp.sleep(20);
       }
     }
     else {
+      long devID = 0;
       byte* out = allocMem(16);
-      __setSysMsg(out, 0, 0x10, False, 5, dummy, 0, data->fbmod, 0, 0);
+      __setSysMsg(out, 0, 0x10, False, 5, devID, data->fbmod, 0, 0, 0);
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Query %d S88 sensor modules...", data->fbmod );
       ThreadOp.post( data->writer, (obj)out );
     }
