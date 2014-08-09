@@ -131,7 +131,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OU
 	$(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(OUTDIR)$(FS)perir$(SHAREDSUFFIX) $(OUTDIR)$(FS)editspro$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)infracar$(SHAREDSUFFIX) $(OUTDIR)$(FS)cti$(SHAREDSUFFIX) $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)z21$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX) $(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX) $(OUTDIR)$(FS)got$(SHAREDSUFFIX) \
-	$(OUTDIR)$(FS)esunavi$(SHAREDSUFFIX)
+	$(OUTDIR)$(FS)esunavi$(SHAREDSUFFIX) $(OUTDIR)$(FS)spl$(SHAREDSUFFIX)
 
 # ------------------------------------------------------------
 # The Digital Interfaces as shared libraries.
@@ -228,6 +228,8 @@ $(OUTDIR)$(FS)got$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)got.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)got$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)got.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)esunavi$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)esunavi.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)esunavi$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)esunavi.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)spl$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)spl.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)spl$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)spl.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -343,6 +345,7 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)got$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)esunavi$(SHAREDSUFFIX)
+	-$(REMOVE) $(OUTDIR)$(FS)spl$(SHAREDSUFFIX)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)ogen$(GENSUFFIX) ..$(FS)..$(FS)rocdigs$(FS)rocdigs.xml ..$(FS)
 	cd $(GENDIR)$(FS)rocdigs$(CS) ..$(FS)$(BINDIR)$(FS)xml2cstr$(GENSUFFIX) ..$(FS)..$(FS)common$(FS)version.xml impl$(FS)version.c svnLog
 
@@ -393,4 +396,5 @@ install:
 	-cp -p $(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)got$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)esunavi$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)spl$(SHAREDSUFFIX) $(DESTDIR)
 	

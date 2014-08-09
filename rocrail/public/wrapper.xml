@@ -469,6 +469,7 @@
       <const name="ucons88" vt="string" val="ucons88"/>
       <const name="got" vt="string" val="got"/>
       <const name="esunavi" vt="string" val="esunavi"/>
+      <const name="spl" vt="string" val="spl"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
