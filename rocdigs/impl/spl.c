@@ -134,7 +134,7 @@ static void* __event( void* inst, const void* evt ) {
 static void __setLED(iOSPL inst, int addr, int port, Boolean state ) {
   iOSPLData data = Data(inst);
 
-  if( addr < 256 && port < 6 && port > 0 ) {
+  if( addr < 256 && addr > 0 && port < 6 && port > 0 ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "home=%d LED=%d %s", addr, port, state?"ON":"OFF" );
     byte led = 1 << (port-1);
     data->home[addr] = data->home[addr] & (~led);
@@ -144,6 +144,9 @@ static void __setLED(iOSPL inst, int addr, int port, Boolean state ) {
     StrOp.fmtb(cmd+1, "H%02XS%02X\r", addr, data->home[addr]);
     cmd[0] = StrOp.len(cmd+1);
     ThreadOp.post( data->writer, (obj)cmd );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unsupported addressing: home=%d LED=%d", addr, port );
   }
 }
 
@@ -191,7 +194,12 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
-  return;
+  iOSPLData data = Data(inst);
+  data->run = False;
+  ThreadOp.sleep(500);
+  if( data->serial != NULL ) {
+    SerialOp.base.del(data->serial);
+  }
 }
 
 
@@ -248,22 +256,36 @@ static void __serialWriter( void* threadinst ) {
 
   ThreadOp.sleep(500); /* resume some time to get it all being setup */
 
-  data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
-  SerialOp.setFlow( data->serial, 0 );
-  SerialOp.setLine( data->serial, 9600, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
-  SerialOp.setTimeout( data->serial, wDigInt.gettimeout(data->ini), wDigInt.gettimeout(data->ini) );
-  serialOK = SerialOp.open( data->serial );
 
-  while( serialOK && data->run ) {
+  while( data->run ) {
+
+    if( !serialOK ) {
+      data->serial = SerialOp.inst( wDigInt.getdevice( data->ini ) );
+      SerialOp.setFlow( data->serial, 0 );
+      SerialOp.setLine( data->serial, 9600, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
+      SerialOp.setTimeout( data->serial, wDigInt.gettimeout(data->ini), wDigInt.gettimeout(data->ini) );
+      serialOK = SerialOp.open( data->serial );
+      if( !serialOK ) {
+        SerialOp.base.del(data->serial);
+        data->serial = NULL;
+        ThreadOp.sleep(2500);
+        continue;
+      }
+    }
+
     byte* cmd = (byte*)ThreadOp.getPost( th );
     if (cmd != NULL) {
       int len = cmd[0];
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)cmd+1, len );
-      SerialOp.write( data->serial, (char*)cmd+1, len );
+      if( !SerialOp.write( data->serial, (char*)cmd+1, len ) ) {
+        SerialOp.base.del(data->serial);
+        data->serial = NULL;
+        serialOK = False;
+      }
       freeMem( cmd );
     }
 
-    ThreadOp.sleep(10);
+    ThreadOp.sleep(100);
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL serial writer end." );
