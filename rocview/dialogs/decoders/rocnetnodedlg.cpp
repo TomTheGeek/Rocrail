@@ -253,9 +253,9 @@ void RocnetNodeDlg::initPorts() {
   }
   m_PortStatus->SetForegroundColour( (m_I2Cx20 & (1 << (m_PortGroup/2))) ? *wxBLUE:*wxRED);
   if( m_PortGroup%2  == 0 )
-    m_PortStatus->SetLabel( wxString::Format(wxT("0x%02XA"), 0x20 + (m_PortGroup/2) ));
+    m_PortStatus->SetLabel( wxString::Format(wxT("I/O %d - 0x%02XA"), m_PortGroup%4+1, 0x20 + (m_PortGroup/2) ));
   else
-    m_PortStatus->SetLabel( wxString::Format(wxT("0x%02XB"), 0x20 + (m_PortGroup/2) ));
+    m_PortStatus->SetLabel( wxString::Format(wxT("I/O %d - 0x%02XB"), m_PortGroup%4+1, 0x20 + (m_PortGroup/2) ));
 }
 
 void RocnetNodeDlg::onPortPrev( wxCommandEvent& event )
