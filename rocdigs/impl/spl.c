@@ -33,6 +33,7 @@
 #include "rocrail/wrapper/public/Switch.h"
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Program.h"
 
 static int instCnt = 0;
 
@@ -168,6 +169,17 @@ static iONode __translate( iOSPL inst, iONode node ) {
     int port   = wOutput.getport( node );
     Boolean state = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
     __setLED(inst, addr, port, state);
+  }
+
+  /* Output command */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if( wProgram.getcv(node) == 1 ) {
+      char* cmd = allocMem( 32 );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "programming module address to %02X", wProgram.getvalue(node) );
+      StrOp.fmtb(cmd+1, "HFFPaa55%02X\r", wProgram.getvalue(node));
+      cmd[0] = StrOp.len(cmd+1);
+      ThreadOp.post( data->writer, (obj)cmd );
+    }
   }
 
   return rsp;
