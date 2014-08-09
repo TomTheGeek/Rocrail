@@ -28418,4 +28418,7 @@
   <Msg id="road_sensor">
     <en txt="Road sensor"/>
   </Msg>
+  <Msg id="removealltracks">
+    <en txt="Delete all tracks linked to this level?"/>
+  </Msg>
 </Messages>

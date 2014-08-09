@@ -921,6 +921,19 @@ void PlanPanel::OnRemovePanel(wxCommandEvent& event) {
   if( action == wxID_NO )
     return;
 
+  action = wxMessageDialog( this, wxGetApp().getMsg("removealltracks"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_YES ) {
+    // iterate the items in this panel
+    m_ChildTable->BeginFind();
+    Symbol* item = NULL;
+    wxNode* node = (wxNode*)m_ChildTable->Next();
+    while( node != NULL ) {
+      item = (Symbol*)node->GetData();
+      item->OnDelete(event);
+      node = (wxNode*)m_ChildTable->Next();
+    }
+  }
+
   iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
   wModelCmd.setcmd( cmd, wModelCmd.remove );
   NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( m_zLevel ) );
