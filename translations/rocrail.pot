@@ -7379,3 +7379,9 @@ msgstr ""
 msgid "Road sensor"
 msgstr ""
 
+#. 
+# id="removealltracks"
+#, c-format
+msgid "Delete all tracks linked to this level?"
+msgstr ""
+
