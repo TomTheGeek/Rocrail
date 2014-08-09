@@ -222,7 +222,7 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
         data->Vmax  = rn[RN_PACKET_DATA + 4];
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mobile V=%d dir=%d lights=%d", data->Vraw, data->Vdir, data->fn[0] );
         /* always acknowledge */
-        msg = allocMem(32);
+        msg = allocMem(128);
         msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
         rnSenderAddresToPacket( data->id, msg, 0 );
@@ -251,7 +251,7 @@ static byte* __handleMobile( iORocNetNode rocnetnode, byte* rn ) {
         }
 
         /* always acknowledge */
-        msg = allocMem(32);
+        msg = allocMem(128);
         msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_MOBILE;
         rnSenderAddresToPacket( data->id, msg, 0 );
@@ -363,7 +363,7 @@ static byte* __handleCS( iORocNetNode rocnetnode, byte* rn ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "CS track power %s", rn[RN_PACKET_DATA + 0] & 0x01 ? "ON":"OFF" );
         data->pDI->cmd( (obj)data->pDI, cmd );
         data->power = rn[RN_PACKET_DATA + 0] & 0x01 ? True:False;
-        msg = allocMem(32);
+        msg = allocMem(128);
         msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_CS;
         rnSenderAddresToPacket( data->id, msg, 0 );
@@ -1224,7 +1224,7 @@ static byte* __handleStationary( iORocNetNode rocnetnode, byte* rn ) {
 
   case RN_STATIONARY_IDENTIFY:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "queryids request from %d to %d", sndr, rcpt );
-    msg = allocMem(32);
+    msg = allocMem(128);
     msg[RN_PACKET_NETID] = data->location;
     msg[RN_PACKET_GROUP] = RN_GROUP_STATIONARY;
     rnReceipientAddresToPacket( sndr, msg, 0 );
@@ -1293,7 +1293,7 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
         rnActionTypeString(rn), port, rn[RN_PACKET_DATA + 1], rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? "on":"off",
         rcpt, isThis?"(this)":"", sndr, rn[RN_PACKET_LEN] );
     if( rn[RN_PACKET_DATA + 1] == wProgram.porttype_macro ) {
-      byte* post = allocMem(32);
+      byte* post = allocMem(128);
       post[0] = port;
       post[1] = ((rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON) ?1:0);
       post[2] = offset;
@@ -1322,7 +1322,7 @@ static byte* __handleOutput( iORocNetNode rocnetnode, byte* rn ) {
       if(data->ports[port] != NULL) {
         __writePort(rocnetnode, port, rn[RN_PACKET_DATA + 0] & RN_OUTPUT_ON ? 1:0, data->ports[port]->iotype);
 
-        msg = allocMem(32);
+        msg = allocMem(128);
         msg[RN_PACKET_NETID] = data->location;
         msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
         rnReceipientAddresToPacket( 0, msg, 0 );
@@ -1696,7 +1696,7 @@ static void __pwm( void* threadinst ) {
             if( data->channels[i]->curpos <= gotopos || steps == 0 ) {
               data->channels[i]->curpos = gotopos;
               if( data->channels[i]->options & PWM_REPORT ) {
-                byte* msg = allocMem(32);
+                byte* msg = allocMem(128);
                 msg[RN_PACKET_NETID] = data->location;
                 msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
                 rnReceipientAddresToPacket( 0, msg, 0 );
@@ -1724,7 +1724,7 @@ static void __pwm( void* threadinst ) {
             if( data->channels[i]->curpos >= gotopos || steps == 0 ) {
               data->channels[i]->curpos = gotopos;
               if( data->channels[i]->options & PWM_REPORT ) {
-                byte* msg = allocMem(32);
+                byte* msg = allocMem(128);
                 msg[RN_PACKET_NETID] = data->location;
                 msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
                 rnReceipientAddresToPacket( 0, msg, 0 );
@@ -1755,7 +1755,7 @@ static void __pwm( void* threadinst ) {
         else if( !data->channels[i]->ready ) {
           /* report current state */
           int onoff = (data->channels[i]->curpos >= data->channels[i]->onpos) ? 1:0;
-          byte* msg = allocMem(32);
+          byte* msg = allocMem(128);
           msg[RN_PACKET_NETID] = data->location;
           msg[RN_PACKET_GROUP] = RN_GROUP_OUTPUT;
           rnReceipientAddresToPacket( 0, msg, 0 );
