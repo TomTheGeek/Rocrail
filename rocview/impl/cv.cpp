@@ -539,12 +539,14 @@ void CV::OnGrid(wxGridEvent& event) {
 
 
 void CV::startProgress() {
+#ifndef __APPLE__
   if( m_Progress == NULL ) {
     m_Progress = new wxProgressDialog(wxGetApp().getMsg( "cvget" ), wxGetApp().getMsg( "waitforpt" ),
         wCVconf.gettimeout(m_CVconf), NULL, wxPD_CAN_ABORT | wxPD_AUTO_HIDE | wxPD_APP_MODAL );
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "bringing up the progress dialog...0x%08X", m_Progress);
     m_Progress->ShowModal();
   }
+#endif
 }
 
 void CV::stopProgress() {
@@ -1039,6 +1041,7 @@ void CV::OnTimer(wxTimerEvent& event) {
     event.Skip();
     return;
   }
+  TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "timer tick..." );
 
   if( m_bCleanUpProgress ) {
     if( m_Progress != NULL ) {

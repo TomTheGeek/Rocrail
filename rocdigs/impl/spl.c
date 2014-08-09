@@ -175,10 +175,26 @@ static iONode __translate( iOSPL inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
     if( wProgram.getcv(node) == 1 ) {
       char* cmd = allocMem( 32 );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "programming module address to %02X", wProgram.getvalue(node) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "programming module address to 0x%02X", wProgram.getvalue(node) );
       StrOp.fmtb(cmd+1, "HFFPaa55%02X\r", wProgram.getvalue(node));
       cmd[0] = StrOp.len(cmd+1);
       ThreadOp.post( data->writer, (obj)cmd );
+
+      rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wProgram.setiid( rsp, data->iid );
+      wProgram.setcmd( rsp, wProgram.datarsp );
+      wProgram.setcv( rsp, wProgram.getcv( node ) );
+      wProgram.setvalue( rsp, wProgram.getvalue( node ) );
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unsupported cv %d", wProgram.getcv(node) );
+      rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wProgram.setiid( rsp, data->iid );
+      wProgram.setcmd( rsp, wProgram.statusrsp );
+      wProgram.setcv( rsp, wProgram.getcv( node ) );
+      wProgram.setvalue( rsp, -1 );
     }
   }
 
