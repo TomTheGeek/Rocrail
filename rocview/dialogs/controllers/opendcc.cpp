@@ -187,6 +187,7 @@ void OpenDCCCtrlDlg::OnTimer(wxTimerEvent& event) {
     if( m_Progress != NULL ) {
       wxProgressDialog* dlg = m_Progress;
       m_Progress = NULL;
+      m_Progress->EndModal(0);
       dlg->Destroy();
       TraceOp.trc( "opendcc", TRCLEVEL_INFO, __LINE__, 9999, "cleaned up the progress dialog" );
     }
