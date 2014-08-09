@@ -219,7 +219,7 @@ private:
     wxButton* m_Set;
     wxToggleButton* m_PTonoff;
     wxStaticText* m_labIID;
-    wxComboBox* m_IID;
+    wxTextCtrl* m_IID;
 
     wxButton* m_saveCVs;
     wxButton* m_saveAllCVs;

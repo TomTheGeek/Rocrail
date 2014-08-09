@@ -552,7 +552,7 @@ void CV::stopProgress() {
     TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "end progress dialog" );
     m_bCleanUpProgress = true;
     m_bSpeedCurve = false;
-    m_Timer->Start( 10, wxTIMER_ONE_SHOT );
+    m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
   }
 }
 
@@ -987,6 +987,7 @@ void CV::doCV( int command, int index, int value ) {
   if( m_LocProps != NULL ) {
     wProgram.setstrval1(cmd, wLoc.getprot(m_LocProps));
   }
+  wProgram.setiid( cmd, m_IID->GetValue().mb_str(wxConvUTF8) );
   wProgram.setcmd( cmd, command );
   wProgram.setaddr( cmd, addr );
   wProgram.setdecaddr( cmd, addr );
@@ -1034,12 +1035,14 @@ void CV::doCV( int command, int index, int value ) {
 
 void CV::OnTimer(wxTimerEvent& event) {
   if( !MutexOp.trywait( m_TimerMutex, 100 ) ) {
-    TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "timeout on timer mutex!" );
+    TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "timeout on timer mutex!" );
+    event.Skip();
     return;
   }
 
   if( m_bCleanUpProgress ) {
     if( m_Progress != NULL ) {
+      m_Timer->Stop();
       wxProgressDialog* dlg = m_Progress;
       m_Progress = NULL;
       dlg->Destroy();
@@ -1047,6 +1050,7 @@ void CV::OnTimer(wxTimerEvent& event) {
     }
     m_bCleanUpProgress = false;
     MutexOp.post( m_TimerMutex );
+    event.Skip();
     return;
   }
 
@@ -1062,7 +1066,7 @@ void CV::OnTimer(wxTimerEvent& event) {
         m_TimerCount = wCVconf.gettimeout(m_CVconf);
       }
       else {
-        TraceOp.trc( "cv", TRCLEVEL_DEBUG, __LINE__, 9999, "timer for PT acknowledge" );
+        TraceOp.trc( "cv", TRCLEVEL_INFO, __LINE__, 9999, "timer for PT acknowledge" );
         bool rc = m_Timer->Start( 1000, wxTIMER_ONE_SHOT );
       }
     }
@@ -1206,6 +1210,14 @@ void CV::CreateControls() {
   // LocList
   m_LocBox = new wxBoxSizer(wxHORIZONTAL);
   m_PanelMainBox->Add(m_LocBox, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
+
+  wxFlexGridSizer* tmp = new wxFlexGridSizer(0, 2, 0, 0);
+  tmp->AddGrowableCol(1);
+  m_PanelMainBox->Add(tmp, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
+  m_labIID = new wxStaticText( m_ItemPanel, -1, _("IID"), wxDefaultPosition, wxDefaultSize, 0 );
+  tmp->Add(m_labIID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE, 2);
+  m_IID = new wxTextCtrl( m_ItemPanel, VAL_ADDRESS, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+  tmp->Add(m_IID, 0, wxGROW|wxALL, 1);
 
   wxString* m_LcListStrings = NULL;
   m_LcList = new wxComboBox( m_ItemPanel, ID_COMBOBOX_LOCLIST, _T(""), wxDefaultPosition, wxSize(90, 25), 0, m_LcListStrings, wxCB_READONLY );
