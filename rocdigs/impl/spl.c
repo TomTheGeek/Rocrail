@@ -131,29 +131,32 @@ static void* __event( void* inst, const void* evt ) {
 
  */
 
+static void __setLED(iOSPL inst, int addr, int port, Boolean state ) {
+  iOSPLData data = Data(inst);
+
+  if( addr < 256 && port < 6 && port > 0 ) {
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "home=%d LED=%d %s", addr, port, state?"ON":"OFF" );
+    byte led = 1 << (port-1);
+    data->home[addr] = data->home[addr] & (~led);
+    if( state )
+      data->home[addr] |= led;
+    char* cmd = allocMem( 32 );
+    StrOp.fmtb(cmd+1, "H%02XS%02X\r", addr, data->home[addr]);
+    cmd[0] = StrOp.len(cmd+1);
+    ThreadOp.post( data->writer, (obj)cmd );
+  }
+}
 
 static iONode __translate( iOSPL inst, iONode node ) {
   iOSPLData data = Data(inst);
   iONode    rsp  = NULL;
-  char      msg[32];
 
   /* Switch command. */
   if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     int addr  = wSwitch.getaddr1( node );
     int port  = wSwitch.getport1( node );
     Boolean state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.straight ) ? 1:0;
-
-    if( addr < 256 && port < 6 && port > 0 ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "home=%d LED=%d %s", addr, port, state?"ON":"OFF" );
-      byte led = 1 << (port-1);
-      data->home[addr] = data->home[addr] & (~led);
-      if( state )
-        data->home[addr] |= led;
-      char* cmd = allocMem( 32 );
-      StrOp.fmtb(cmd+1, "H%02XS%02X\r", addr, data->home[addr]);
-      cmd[0] = StrOp.len(cmd+1);
-      ThreadOp.post( data->writer, (obj)cmd );
-    }
+    __setLED(inst, addr, port, state);
   }
 
   /* Output command */
@@ -161,18 +164,7 @@ static iONode __translate( iOSPL inst, iONode node ) {
     int addr   = wOutput.getaddr( node );
     int port   = wOutput.getport( node );
     Boolean state = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
-
-    if( addr < 256 && port < 32 ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "home=%d LED=%d %s", addr, port, state?"ON":"OFF" );
-      byte led = 1 << (port-1);
-      data->home[addr] = data->home[addr] & (~led);
-      if( state )
-        data->home[addr] |= led;
-      char* cmd = allocMem( 32 );
-      StrOp.fmtb(cmd+1, "H%02XS%02X\r", addr, data->home[addr]);
-      cmd[0] = StrOp.len(cmd+1);
-      ThreadOp.post( data->writer, (obj)cmd );
-    }
+    __setLED(inst, addr, port, state);
   }
 
   return rsp;
