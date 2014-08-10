@@ -130,6 +130,12 @@ void BidibIdentDlg::initProducts() {
 }
 
 
+void BidibIdentDlg::onClose( wxCloseEvent& event ) {
+  wxGetApp().getFrame()->resetBidibIdentRef();
+  Destroy();
+}
+
+
 void BidibIdentDlg::onCancel( wxCommandEvent& event ) {
   wxGetApp().getFrame()->resetBidibIdentRef();
   Destroy();

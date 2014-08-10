@@ -76,6 +76,7 @@ class BidibIdentDlg : public BidibIdentDlgGen
 
   protected:
 		// Handlers for BidibIdentDlgGen events.
+    void onClose( wxCloseEvent& event );
 		void onCancel( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
 		void onHelp( wxCommandEvent& event );
