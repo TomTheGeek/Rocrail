@@ -781,6 +781,10 @@ BasePanel* RocGuiFrame::InitNotebookPage( iONode zlevel  ) {
   }
 
 
+  if( pages == 0 ) {
+    wZLevel.setactive( zlevel, True );
+  }
+
   iONode ini = wGui.getplanpanel(m_Ini);
   PlanPanel* p = new PlanPanel( m_PlanNotebook, wxGetApp().getItemSize(), m_Scale, m_Bktext, wZLevel.getz( zlevel ), zlevel, wPlanPanel.isshowborder( ini) );
   int itemsize = wxGetApp().getItemSize();
