@@ -811,7 +811,8 @@ void PlanPanel::processSelection(iONode sel) {
 }
 
 
-void PlanPanel::OnPaste(wxCommandEvent& event) {
+iONode PlanPanel::GetClipboardNode() {
+  iONode node = NULL;
   wxClipboard* cb = wxTheClipboard;
   if( cb != NULL ) {
     if( cb->Open() ) {
@@ -823,9 +824,8 @@ void PlanPanel::OnPaste(wxCommandEvent& event) {
           TraceOp.trc( "planpanel", TRCLEVEL_INFO, __LINE__, 9999, "paste:\n%s", xmlStr );
           iODoc doc = DocOp.parse( xmlStr );
           if( doc != NULL ) {
-            iONode node = DocOp.getRootNode( doc );
+            node = DocOp.getRootNode( doc );
             DocOp.base.del( doc );
-            addItemAttr( node );
           }
           StrOp.free(xmlStr);
         }
@@ -833,6 +833,16 @@ void PlanPanel::OnPaste(wxCommandEvent& event) {
       cb->Close();
     }
   }
+  return node;
+}
+
+
+void PlanPanel::OnPaste(wxCommandEvent& event) {
+  iONode node = GetClipboardNode();
+  if( node != NULL )
+    addItemAttr( node );
+  else
+    TraceOp.trc( "planpanel", TRCLEVEL_INFO, __LINE__, 9999, "unsupported clipboard content" );
 }
 
 
@@ -1213,7 +1223,11 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menu.Append( -1, wxGetApp().getMenu("road"), menuRoad );
 
       menu.AppendSeparator();
-      menu.Append( ME_Paste, wxGetApp().getMenu("paste") );
+      iONode node = GetClipboardNode();
+      if( node != NULL ) {
+        menu.Append( ME_Paste, wxGetApp().getMenu("paste") );
+        NodeOp.base.del(node); // free unused node
+      }
       menu.Append( ME_PanelSelect, wxGetApp().getMenu("select") );
       menu.AppendSeparator();
       menu.Append( ME_RemovePlan, wxGetApp().getMenu("removepanel") );
