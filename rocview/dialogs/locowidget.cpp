@@ -209,7 +209,7 @@ wxBitmap LocoWidget::scale(wxBitmap bmp,  int max_width, int max_height) {
 
 
 void LocoWidget::onThrottle( wxMouseEvent& event ) {
-  wxDialog* dlg = new ThrottleDlg(this, wxGetApp().getFrame()->m_ThrottleList, wxGetApp().getFrame()->m_LocDlgMap, wLoc.getid(m_Props));
+  ThrottleDlg* dlg = new ThrottleDlg(this, wxGetApp().getFrame()->m_ThrottleList, wxGetApp().getFrame()->m_LocDlgMap, wLoc.getid(m_Props));
   dlg->Show(TRUE);
 }
 

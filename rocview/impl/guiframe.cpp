@@ -1395,7 +1395,7 @@ void RocGuiFrame::initLocCtrlDialogs() {
     int y = wLcCtrl.gety(lcctrl);
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "previous position [%d,%d] for [%s]", x, y, id );
 
-    wxDialog* dlg = new ThrottleDlg(this, m_ThrottleList, m_LocDlgMap, id);
+    ThrottleDlg* dlg = new ThrottleDlg(this, m_ThrottleList, m_LocDlgMap, id);
     dlg->Show(TRUE);
     dlg->Move( x, y );
 
@@ -4611,7 +4611,7 @@ void RocGuiFrame::OnCmdRecorderDlg(wxCommandEvent& event){
 
 
 void RocGuiFrame::OnLcDlg(wxCommandEvent& event){
-  wxDialog* dlg = new ThrottleDlg(this, m_ThrottleList, m_LocDlgMap, m_LocID);
+  ThrottleDlg* dlg = new ThrottleDlg(this, m_ThrottleList, m_LocDlgMap, m_LocID);
 
   dlg->Show(TRUE);
 
