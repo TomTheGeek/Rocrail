@@ -840,9 +840,11 @@ iONode PlanPanel::GetClipboardNode(bool clear) {
 
 
 void PlanPanel::OnPaste(wxCommandEvent& event) {
-  iONode node = GetClipboardNode(true);
-  if( node != NULL )
+  iONode node = GetClipboardNode();
+  if( node != NULL ) {
+    wItem.setid(node, "");
     addItemAttr( node );
+  }
   else
     TraceOp.trc( "planpanel", TRCLEVEL_INFO, __LINE__, 9999, "unsupported clipboard content" );
 }
