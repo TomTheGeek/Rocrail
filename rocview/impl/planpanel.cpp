@@ -42,6 +42,8 @@
 #endif
 
 #include <wx/colordlg.h>
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
 
 
 #include "rocs/public/node.h"
@@ -182,6 +184,7 @@ BEGIN_EVENT_TABLE(PlanPanel, wxScrolledWindow)
   EVT_MENU( ME_ModProps , PlanPanel::OnModProps )
   EVT_MENU( ME_AddPlan   , PlanPanel::OnAddPanel )
   EVT_MENU( ME_PanelSelect    , PlanPanel::OnSelect )
+  EVT_MENU( ME_Paste    , PlanPanel::OnPaste )
   EVT_MENU( ME_RemovePlan, PlanPanel::OnRemovePanel )
 
   EVT_TIMER (ME_TimerAlt, PlanPanel::OnTimer)
@@ -808,6 +811,31 @@ void PlanPanel::processSelection(iONode sel) {
 }
 
 
+void PlanPanel::OnPaste(wxCommandEvent& event) {
+  wxClipboard* cb = wxTheClipboard;
+  if( cb != NULL ) {
+    if( cb->Open() ) {
+      if( cb->IsSupported( wxDF_TEXT )) {
+        wxTextDataObject data;
+        cb->GetData( data );
+        char* xmlStr = StrOp.dup(data.GetText().mb_str(wxConvUTF8) );
+        if( xmlStr != NULL && StrOp.len(xmlStr) > 0 ) {
+          TraceOp.trc( "planpanel", TRCLEVEL_INFO, __LINE__, 9999, "paste:\n%s", xmlStr );
+          iODoc doc = DocOp.parse( xmlStr );
+          if( doc != NULL ) {
+            iONode node = DocOp.getRootNode( doc );
+            DocOp.base.del( doc );
+            addItemAttr( node );
+          }
+          StrOp.free(xmlStr);
+        }
+      }
+      cb->Close();
+    }
+  }
+}
+
+
 void PlanPanel::OnSelect(wxCommandEvent& event) {
   if( m_zLevel != NULL ) {
     iONode sel = (iONode)event.GetClientData();
@@ -1185,6 +1213,7 @@ void PlanPanel::OnPopup(wxMouseEvent& event) {
       menu.Append( -1, wxGetApp().getMenu("road"), menuRoad );
 
       menu.AppendSeparator();
+      menu.Append( ME_Paste, wxGetApp().getMenu("paste") );
       menu.Append( ME_PanelSelect, wxGetApp().getMenu("select") );
       menu.AppendSeparator();
       menu.Append( ME_RemovePlan, wxGetApp().getMenu("removepanel") );

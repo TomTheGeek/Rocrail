@@ -122,6 +122,7 @@ enum {
     ME_West,
     ME_Type,
     ME_Delete,
+    ME_Copy,
     ME_CmdStraight,
     ME_CmdTurnout,
     ME_CmdLeft,
@@ -205,6 +206,7 @@ BEGIN_EVENT_TABLE(Symbol, wxWindow)
   EVT_MENU     (ME_West , Symbol::OnRotate )
   EVT_MENU     (ME_Type   , Symbol::OnType   )
   EVT_MENU     (ME_Delete , Symbol::OnDelete )
+  EVT_MENU     (ME_Copy , Symbol::OnCopy )
   EVT_MENU     (ME_LocGoTo, Symbol::OnLocGoTo)
   EVT_MENU     (ME_LocSchedule, Symbol::OnLocSchedule)
   EVT_MENU     (ME_LocTour, Symbol::OnLocTour)
@@ -1909,6 +1911,7 @@ void Symbol::OnPopup(wxMouseEvent& event)
     menu.Append( ME_ItemHelp , wxGetApp().getMenu("help") );
 
     if( wxGetApp().getFrame()->isEditMode() ) {
+      menu.Append( ME_Copy, wxGetApp().getMenu("copy") );
       menu.Append( ME_Delete, wxGetApp().getMenu("delete") );
 
       if( m_Renderer->isRotateable() ) {
@@ -2558,6 +2561,25 @@ void Symbol::OnType(wxCommandEvent& event) {
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del( cmd );
 }
+
+void Symbol::OnCopy(wxCommandEvent& event) {
+  wxClipboard* cb = wxTheClipboard;
+  if( cb != NULL ) {
+    if( cb->Open() ) {
+      iONode clone = (iONode)NodeOp.base.clone(m_Props);
+      char* id = StrOp.fmt("%s-copy", wItem.getid(clone));
+      wItem.setid(clone, id);
+      StrOp.free(id);
+      char* xmlStr = NodeOp.base.toString( clone );
+      wxString text( xmlStr, wxConvUTF8 );
+      wxTextDataObject *data = new wxTextDataObject( text );
+      cb->SetData( data );
+      cb->Close();
+      StrOp.free(xmlStr);
+    }
+  }
+}
+
 
 void Symbol::OnDelete(wxCommandEvent& event) {
 

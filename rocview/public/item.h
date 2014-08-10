@@ -59,6 +59,7 @@ public:
   void OnSelect(wxCommandEvent& event);
   void OnType(wxCommandEvent& event);
   void OnDelete(wxCommandEvent& event);
+  void OnCopy(wxCommandEvent& event);
   void OnLoc(wxCommandEvent& event);
   void OnUnLoc(wxCommandEvent& event);
   void OnLocGoTo(wxCommandEvent& event);

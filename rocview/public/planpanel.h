@@ -97,6 +97,7 @@ public:
   BasePanel* updateZLevel(iONode zlevel);
   void OnAddPanel(wxCommandEvent& event);
   void OnSelect(wxCommandEvent& event);
+  void OnPaste(wxCommandEvent& event);
   void processSelection(iONode sel);
   void moveSelection(iONode sel);
   void copySelection(iONode sel);
@@ -209,6 +210,7 @@ enum {
   ME_ModProps,
   ME_AddPlan,
   ME_PanelSelect,
+  ME_Paste,
   ME_RemovePlan,
   ME_AddRoadStraight,
   ME_AddRoadCurve,
