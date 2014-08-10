@@ -811,7 +811,7 @@ void PlanPanel::processSelection(iONode sel) {
 }
 
 
-iONode PlanPanel::GetClipboardNode() {
+iONode PlanPanel::GetClipboardNode(bool clear) {
   iONode node = NULL;
   wxClipboard* cb = wxTheClipboard;
   if( cb != NULL ) {
@@ -830,6 +830,8 @@ iONode PlanPanel::GetClipboardNode() {
           StrOp.free(xmlStr);
         }
       }
+      if( clear )
+        cb->Clear();
       cb->Close();
     }
   }
@@ -838,7 +840,7 @@ iONode PlanPanel::GetClipboardNode() {
 
 
 void PlanPanel::OnPaste(wxCommandEvent& event) {
-  iONode node = GetClipboardNode();
+  iONode node = GetClipboardNode(true);
   if( node != NULL )
     addItemAttr( node );
   else

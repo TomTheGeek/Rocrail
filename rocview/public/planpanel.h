@@ -120,7 +120,7 @@ public:
   bool isRouteLocked(const char* id);
   bool isAlt() {return m_bAlt;}
   void putChild(void* item);
-  iONode GetClipboardNode();
+  iONode GetClipboardNode(bool clear=false);
   iONode m_zLevel;
   int m_Z;
   const char* m_Ori;
