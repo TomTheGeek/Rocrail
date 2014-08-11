@@ -449,7 +449,10 @@ void BaseDialog::appendItem( iONode Item) {
     m_ItemList->SetColumnWidth(m_colIID, wxLIST_AUTOSIZE_USEHEADER);
     m_ItemList->SetColumnWidth(m_colAddr, m_longaddr ? wxLIST_AUTOSIZE:wxLIST_AUTOSIZE_USEHEADER);
   }
-  m_ItemList->SetItem( index, m_colDesc, wxString( wItem.getdesc(Item), wxConvUTF8));
+  if( StrOp.equals( NodeOp.getName(Item), wSwitch.name() ) )
+    m_ItemList->SetItem( index, m_colDesc, wxString( wItem.getdesc(Item), wxConvUTF8) + wxT("(") + wxString::Format( wxT("%d"), wSwitch.getswitched(Item)) + wxT(")") );
+  else
+    m_ItemList->SetItem( index, m_colDesc, wxString( wItem.getdesc(Item), wxConvUTF8));
   if( m_ShowLen ) {
     m_ItemList->SetItem( index, m_colLen, wxString::Format(_T("%d"), wItem.getlen(Item)));
     m_ItemList->SetColumnWidth(m_colLen, wxLIST_AUTOSIZE_USEHEADER);
