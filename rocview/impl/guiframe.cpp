@@ -2337,8 +2337,8 @@ void RocGuiFrame::initFrame() {
 
   // checking for new updates
   if(wGui.ischeckupdates(m_Ini)) {
-    iOThread updateReader = ThreadOp.inst( "update", updateReaderThread, NULL );
-    ThreadOp.start( updateReader );
+    //iOThread updateReader = ThreadOp.inst( "update", updateReaderThread, NULL );
+    //ThreadOp.start( updateReader );
   }
 
   wxLogo = NULL;

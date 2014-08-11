@@ -185,7 +185,6 @@ public:
     wxStaticText* m_labCYMod;
     wxSpinCtrl* m_CYMod;
     wxCheckBox* m_RestrictEdit4Auto;
-    wxCheckBox* m_Check4Updates;
     wxCheckBox* m_JsSupport;
     wxCheckBox* m_DispatchMode;
     wxCheckBox* m_RestoreLcCtrl;
