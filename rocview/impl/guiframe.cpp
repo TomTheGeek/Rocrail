@@ -2219,11 +2219,12 @@ void RocGuiFrame::initFrame() {
   issue_menuHelp->SetBitmap(*_img_trace);
   menuHelp->Append(issue_menuHelp);
 
+/*
   menuHelp->AppendSeparator();
   wxMenuItem *update_menuHelp = new wxMenuItem(menuHelp, ME_Update, wxGetApp().getMenu("softwareupdates"), wxGetApp().getTip("softwareupdates") );
   update_menuHelp->SetBitmap(*_img_updates);
   menuHelp->Append(update_menuHelp);
-
+*/
   menuHelp->AppendSeparator();
   wxMenuItem *donkey_menuHelp = new wxMenuItem(menuHelp, ME_DonKeyInfo, wxGetApp().getMenu("donkey"), wxGetApp().getTip("donkey") );
   donkey_menuHelp->SetBitmap(*_img_donate);
@@ -2326,7 +2327,7 @@ void RocGuiFrame::initFrame() {
       m_ToolBar->AddControl(m_ScaleComboBox);
     }
 
-    m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates_32, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
+    //m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates_32, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
     m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual_32, l_useDisableIcons?*_img_manual_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
 
     m_ToolBar->Realize();
