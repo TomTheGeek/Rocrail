@@ -116,6 +116,7 @@ LocSelDlg::LocSelDlg( wxWindow* parent, iONode props, bool mic, const char* loci
 
 
   Create( parent, -1, wxGetApp().getMsg("locseldlg") );
+  m_LocImageIndex->SetMaxSize( wxSize( -1,70 ) );
   InitIndex();
   GetSizer()->Layout();
   GetSizer()->Fit(this);
@@ -153,6 +154,8 @@ void LocSelDlg::SelectPrev() {
 }
 
 
+#define MAXHEIGHT 48
+
 void LocSelDlg::InitValues() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitValues %s", wLoc.getid( m_Props ) );
   // Init General
@@ -170,7 +173,18 @@ void LocSelDlg::InitValues() {
 
     if( imagename != NULL && StrOp.len(imagename) > 0 && FileOp.exist(pixpath)) {
       TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
-      m_LocImageIndex->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
+      wxImage img(wxString(pixpath,wxConvUTF8), bmptype);
+      if( img.GetHeight() > MAXHEIGHT ) {
+        int h = img.GetHeight();
+        int w = img.GetWidth();
+        float scale = (float)h / (float)MAXHEIGHT;
+        float width = (float)w / scale;
+        wxBitmap bmp(img.Scale((int)width, MAXHEIGHT, wxIMAGE_QUALITY_HIGH));
+        m_LocImageIndex->SetBitmapLabel( bmp );
+      }
+      else {
+        m_LocImageIndex->SetBitmapLabel( wxBitmap(img) );
+      }
     }
     else {
       m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
@@ -196,6 +210,8 @@ void LocSelDlg::InitValues() {
     //m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
   }
   m_LocImageIndex->Refresh();
+  GetSizer()->Fit(this);
+  GetSizer()->Layout();
 
 }
 
@@ -297,15 +313,16 @@ void LocSelDlg::CreateControls()
     LocSelDlg* itemDialog1 = this;
 
     wxFlexGridSizer* itemFlexGridSizer2 = new wxFlexGridSizer(0, 1, 0, 0);
-    itemFlexGridSizer2->AddGrowableRow(1);
     itemDialog1->SetSizer(itemFlexGridSizer2);
 
-    m_LocImageIndex = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_SEL_LOC, wxNullBitmap, wxDefaultPosition, wxSize(300, 80), wxBU_AUTODRAW );
+    m_LocImageIndex = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_SEL_LOC, wxNullBitmap, wxDefaultPosition, wxSize(240, -1), wxBU_AUTODRAW );
     itemFlexGridSizer2->Add(m_LocImageIndex, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_ListStrings;
     m_List = new wxListBox( itemDialog1, ID_LISTBOX_SEL_LOC, wxDefaultPosition, wxSize(-1, 200), m_ListStrings, wxLB_SINGLE|wxLB_ALWAYS_SB|wxLB_SORT );
     itemFlexGridSizer2->Add(m_List, 1, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer2->AddGrowableRow(1);
 
 ////@end LocSelDlg content construction
 }
