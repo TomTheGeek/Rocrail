@@ -174,7 +174,7 @@ static iONode __translate( iOSPL inst, iONode node ) {
   /* Signal command */
   else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
     int addr   = wSignal.getaddr(node);
-    int aspect = wSignal.getaspect(node) + 1;
+    int aspect = wSignal.getaspect(node);
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "signal addr=%d aspect=%d", addr, aspect );
     char* cmd = allocMem( 32 );
     StrOp.fmtb(cmd+1, "H%02XS%02X\r", addr, aspect);

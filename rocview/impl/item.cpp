@@ -984,6 +984,7 @@ void Symbol::OnCmdSignalRed(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
   wSignal.setid( cmd, wSignal.getid( m_Props ) );
   wSignal.setcmd( cmd, wSignal.red );
+  wSignal.setaspect( cmd, -1 );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -992,6 +993,7 @@ void Symbol::OnCmdSignalGreen(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
   wSignal.setid( cmd, wSignal.getid( m_Props ) );
   wSignal.setcmd( cmd, wSignal.green );
+  wSignal.setaspect( cmd, -1 );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -1000,6 +1002,7 @@ void Symbol::OnCmdSignalYellow(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
   wSignal.setid( cmd, wSignal.getid( m_Props ) );
   wSignal.setcmd( cmd, wSignal.yellow );
+  wSignal.setaspect( cmd, -1 );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
@@ -1008,6 +1011,7 @@ void Symbol::OnCmdSignalWhite(wxCommandEvent& event) {
   iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
   wSignal.setid( cmd, wSignal.getid( m_Props ) );
   wSignal.setcmd( cmd, wSignal.white );
+  wSignal.setaspect( cmd, -1 );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }

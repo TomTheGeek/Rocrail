@@ -980,7 +980,7 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) 
   iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "aspect number processing for signal [%s][%s]...", wSignal.getid( o->props ), state );
+      "aspect number processing for signal [%s] state=%s aspect=%d", wSignal.getid( o->props ), state, nr );
 
   if( nr != -1 )
     aspect = nr;
