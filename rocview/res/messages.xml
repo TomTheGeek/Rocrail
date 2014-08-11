@@ -2867,7 +2867,7 @@
     <fi txt="Kääntöpöytä"/>
   </Msg>
   <Msg id="sensortable" dialog="true" key="Alt-1">
-    <de txt="Rückmelder" tip="Rückmelder"/>
+    <de txt="Rückmelder-Tabelle" tip="Rückmelder"/>
     <en txt="Sensor table" alttxt="Sensors" tip="Sensor table"/>
     <nl txt="Melders" tip="Bezetmelders"/>
     <sv txt="Sensorer" tip="Sensortabell"/>
@@ -4156,7 +4156,7 @@
     <fi txt="Opastimet"/>
   </Msg>
   <Msg id="sensor">
-    <de txt="Rückmeldung"/>
+    <de txt="Rückmelder"/>
     <en txt="Sensor"/>
     <nl txt="Melder"/>
     <sv txt="Sensor"/>
@@ -7823,7 +7823,7 @@
     <pl txt="Prędkość transmisji"/>
   </Msg>
   <Msg id="sensormodules">
-    <de txt="Sensor Module (links, mitte, rechts, größe)"/>
+    <de txt="Rückmelder-Module (links, mitte, rechts, größe)"/>
     <en txt="Sensor Modules (left,middle,right,size)"/>
     <nl txt="Melder (liks,midden,rechts,afmeting)"/>
     <sv txt="Sensormoduler (left,middle,right,size)"/>
@@ -8225,7 +8225,7 @@
     <pl txt="Odwróć"/>
   </Msg>
   <Msg id="sensor_green">
-    <de txt="Rückmeldung Gerade"/>
+    <de txt="Rückmelder gerade"/>
     <en txt="Sensor straight"/>
     <nl txt="Melder rechtdoor"/>
     <sv txt="Sensor grön (rakt fram)"/>
@@ -8256,7 +8256,7 @@
     <pl txt="Czujnik prosto"/>
   </Msg>
   <Msg id="sensor_red">
-    <de txt="Rückmeldung Abbiegen"/>
+    <de txt="Rückmelder abbiegen"/>
     <en txt="Sensor turnout"/>
     <nl txt="Melder afslaan"/>
     <sv txt="Sensor röd (växla ut)"/>
@@ -8350,7 +8350,7 @@
     <fi txt="Rataosan numero"/>
   </Msg>
   <Msg id="posfb">
-    <de txt="Positionsrückmeldung"/>
+    <de txt="Positionsrückmelder"/>
     <en txt="Position sensor"/>
     <nl txt="Positie melder"/>
     <sv txt="Sensorposition"/>
@@ -8381,7 +8381,7 @@
     <fi txt="Paikka-anturi"/>
   </Msg>
   <Msg id="locfb">
-    <de txt="Lokrückmeldung"/>
+    <de txt="Lokrückmelder"/>
     <en txt="Loc sensor"/>
     <nl txt="Loc melder"/>
     <sv txt="Loksensor"/>
@@ -10004,7 +10004,7 @@
     <pl txt="Bufor"/>
   </Msg>
   <Msg id="decoupler">
-    <de txt="Entkoppler"/>
+    <de txt="Entkuppler"/>
     <en txt="Decoupler"/>
     <nl txt="Ontkoppelaar"/>
     <sv txt="Avkopplare"/>
@@ -15122,7 +15122,7 @@
     <pl txt="Kompensacja czujnika rozjazdu"/>
   </Msg>
   <Msg id="swsensormode">
-    <de txt="Weichenrückmeldungen" tip=""/>
+    <de txt="Weichenrückmelder-Modus" tip=""/>
     <en txt="Switch sensor mode" tip=""/>
     <nl txt="Wissel terugmeldings mode" tip=""/>
     <sv txt="Typ av växelsensor" tip=""/>
@@ -16037,7 +16037,7 @@
     <pl txt="Zasilanie włączone podczas inicjalizacji rozjazdu"/>
   </Msg>
   <Msg id="enableswfb">
-    <de txt="Anschalten Weichenrückmeldung"/>
+    <de txt="Weichenrückmeldung aktivieren"/>
     <en txt="Enable switch feedback"/>
     <nl txt="Gebruik wissel terugmeldingen"/>
     <sv txt="Växellägesindikering möjlig"/>
@@ -20011,7 +20011,7 @@
     <cs txt="Časovač"/>
     <nl txt="Timer"/>
     <fr txt="Minuterie"/>
-    <de txt="Timer"/>
+    <de txt="Zeitgeber"/>
     <it txt="Timer"/>
     <pt txt="Relógio"/>
     <ru txt="Таймер"/>
@@ -20111,7 +20111,7 @@
     <en txt="Open Workspace" tip="Open a Workspace to play."/>
     <cs txt="Otevři pracovní prostor" tip="Otevři pracovní prostor pro hraní"/>
     <nl txt="Werkruimte openen" tip="Open een werkruimte"/>
-    <fr txt="Ouvrir l'environnement de travail" tip="Ouvrir l'environnement de travail pour jouer"/>
+    <fr txt="Ouvrir l'environnement de travail" tip="Ouvrir l'environnement de travail"/>
     <de txt="Arbeitsbereich öffnen" tip="Einen Arbeitsbereich zum Spielen öffnen."/>
     <it txt="Apri cartella di lavoro" tip="Apri una cartella di lavoro per iniziare"/>
     <pt txt="Abrir espaço de trabalho"/>
@@ -27649,6 +27649,7 @@
     <en_CA txt="Centre"/>
     <pl txt="Symetryczne"/>
     <fr txt="Centre"/>
+    <ru txt="По центру"/>
   </Msg>
   <Msg id="mainline">
     <en txt="Mainline"/>
@@ -28102,6 +28103,7 @@
     <fr txt="Enregistrement"/>
     <sv txt="Inspelning"/>
     <zh_CN txt="记录"/>
+    <ru txt="Запись"/>
   </Msg>
   <Msg id="stopped">
     <en txt="Stopped"/>
@@ -28115,6 +28117,7 @@
     <fr txt="Interrompu"/>
     <sv txt="Stoppad"/>
     <zh_CN txt="已停止"/>
+    <ru txt="Стоп"/>
   </Msg>
   <Msg id="paused">
     <en txt="Paused"/>
@@ -28128,6 +28131,7 @@
     <fr txt="En pause"/>
     <sv txt="Pausad"/>
     <zh_CN txt="已暂停"/>
+    <ru txt="Пауза"/>
   </Msg>
   <Msg id="playing">
     <en txt="Playing"/>
@@ -28141,6 +28145,7 @@
     <fr txt="En cours de lecture"/>
     <sv txt="Spelar upp"/>
     <zh_CN txt="播放中"/>
+    <ru txt="Воспроизведение"/>
   </Msg>
   <Msg id="shutdownquestion">
     <en txt="Shutdown the Rocrail server too?"/>
@@ -28154,6 +28159,7 @@
     <fr txt="Eteindre également le serveur RocRail ?"/>
     <sv txt="Avsluta Rocrailservern med?"/>
     <zh_CN txt="关闭rocrail服务器吗?"/>
+    <ru txt="Выключить и Rocrail сервер?"/>
   </Msg>
   <Msg id="toolbar">
     <en txt="Toolbar"/>
@@ -28167,6 +28173,7 @@
     <fr txt="Barre d'outils"/>
     <sv txt="Verktygsfält"/>
     <zh_CN txt="工具栏"/>
+    <ru txt="Панель инструментов"/>
   </Msg>
   <Msg id="freeblockonenter">
     <en txt="Free previous block on enter"/>
@@ -28179,6 +28186,7 @@
     <en_GB txt="Free previous block on enter"/>
     <zh_CN txt="空闲上一区段输入"/>
     <fr txt="Libérer le bloc précédent lors de l'entrée"/>
+    <ru txt="Освободить предыдущий блок по событию Enter"/>
   </Msg>
   <Msg id="buslength">
     <en txt="Bus %d length"/>
@@ -28203,6 +28211,7 @@
     <fr txt="Compteur de vitesse"/>
     <it txt="Tachimetro"/>
     <zh_CN txt="速度表"/>
+    <ru txt="Спидометр"/>
   </Msg>
   <Msg id="backlight">
     <en txt="Backlight"/>
@@ -28214,6 +28223,7 @@
     <sl txt="Osvetlitev ozadja"/>
     <sr_latin txt="Pozadinsko svetlo"/>
     <zh_CN txt="背光"/>
+    <ru txt="Подсветка"/>
   </Msg>
   <Msg id="heartbeat">
     <en txt="Heartbeat"/>
@@ -28236,6 +28246,8 @@
     <sr_latin txt="Tolerancija"/>
     <sv txt="Tolerans"/>
     <zh_CN txt="公差"/>
+    <en_GB txt="Tolerance"/>
+    <ru txt="Допуск"/>
   </Msg>
   <Msg id="coordinates">
     <en txt="Coordinates"/>
@@ -28248,6 +28260,8 @@
     <sr_latin txt="Koordinate"/>
     <sv txt="Koordinater"/>
     <zh_CN txt="坐标"/>
+    <en_GB txt="Coordinates"/>
+    <ru txt="Координаты"/>
   </Msg>
   <Msg id="virtualtimer">
     <en txt="Virtual timer"/>
@@ -28260,6 +28274,8 @@
     <sr_latin txt="Virtualni tajmer"/>
     <sv txt="Virtuell timer"/>
     <zh_CN txt="虚拟计时器"/>
+    <en_GB txt="Virtual timer"/>
+    <ru txt="Виртуальный таймер"/>
   </Msg>
   <Msg id="enablecom">
     <en txt="Enable communication"/>
@@ -28271,6 +28287,7 @@
     <sv txt="Möjliggör kommunikation"/>
     <it txt="Abilitare comunicazione"/>
     <sl txt="Omogoči komunikacijo"/>
+    <en_GB txt="Enable communication"/>
   </Msg>
   <Msg id="saveplan">
     <en txt="The changes will be saved."/>
@@ -28281,6 +28298,8 @@
     <sr_latin txt="Promene će biti snimljene."/>
     <it txt="La modifica verrà salvata"/>
     <sl txt="Spremembe bodo shranjene."/>
+    <en_GB txt="The changes will be saved."/>
+    <ru txt="Изменения будут сохранены."/>
   </Msg>
   <Msg id="swapped">
     <en txt="Swapped"/>
@@ -28291,6 +28310,8 @@
     <sr_latin txt="Zamenjeno"/>
     <it txt="Invertito"/>
     <sl txt="Zamenjano"/>
+    <en_GB txt="Swapped"/>
+    <ru txt="Развернуть"/>
   </Msg>
   <Msg id="locoimagecolumn">
     <en txt="Loco image column"/>
@@ -28300,125 +28321,285 @@
     <pt_BR txt="Coluna de imagens de locomotivas"/>
     <it txt="Colonna immagine loco"/>
     <sl txt="Stolpec slike lokomotive"/>
+    <en_GB txt="Loco image column"/>
+    <ru txt="Колонка с изображениями локов"/>
   </Msg>
   <Msg id="throttlebinstate">
     <en txt="Set/Reset BinState by Enter/Alt+Enter."/>
+    <de txt="Setzen/Rücksetzen des BinState durch Enter/Alt+Enter."/>
+    <it txt="Impostare/Resettare il BinState con Enter/Alt+Enter"/>
+    <nl txt="Aan-/uitschakelen van een BinState d.m.v. Enter/Alt+Enter."/>
+    <pt_BR txt="Definir/Redefinir BinState com Enter/Alt+Enter."/>
+    <sl txt="Set/Reset BinState z Enter/Alt+Enter."/>
   </Msg>
   <Msg id="track_straight">
     <en txt="Straight track"/>
+    <de txt="Gerades Gleis"/>
+    <it txt="Binario dritto"/>
+    <nl txt="Rechte rails"/>
+    <pt_BR txt="Trilho reto"/>
   </Msg>
   <Msg id="track_curve">
     <en txt="Curved track"/>
+    <de txt="Gebogenes Gleis"/>
+    <it txt="Curva"/>
+    <nl txt="Gebogen rails"/>
+    <pt_BR txt="Trilho curvo"/>
   </Msg>
   <Msg id="track_buffer">
     <en txt="Track bumper"/>
+    <de txt="Prellbock"/>
+    <it txt="Binario di testa"/>
+    <nl txt="Stootblok"/>
+    <pt_BR txt="Fim-de-linha"/>
   </Msg>
   <Msg id="track_dir">
     <en txt="Track direction"/>
+    <de txt="Richtungs-Gleis"/>
+    <it txt="Binario direzione"/>
+    <nl txt="Richting rails"/>
+    <pt_BR txt="Direção dos trilhos"/>
   </Msg>
   <Msg id="track_dirall">
     <en txt="Track all directions"/>
+    <de txt="Gleis alle Richtungen"/>
+    <it txt="Binario multidirezione"/>
+    <nl txt="Beide richtingen rails"/>
+    <pt_BR txt="Todas as direções dos trilhos"/>
   </Msg>
   <Msg id="track_connector">
     <en txt="Straight track connector"/>
+    <de txt="Gerader Gleisverbinder"/>
+    <it txt="Connettore binario dritto"/>
+    <nl txt="Rechte verbinder"/>
+    <pt_BR txt="Conector de trilho reto"/>
   </Msg>
   <Msg id="track_connector_right">
     <en txt="Curved track connector right"/>
+    <de txt="Gebogener Gleisverbinder rechts"/>
+    <it txt="Connettore destro binario curvo"/>
+    <nl txt="Gebogen verbinder rechts"/>
+    <pt_BR txt="Conector de trilho curvo para direita"/>
   </Msg>
   <Msg id="track_connector_left">
     <en txt="Curved track connector left"/>
+    <de txt="Gebogener Gleisverbinder links"/>
+    <it txt="Connettore sinistro binario curvo"/>
+    <nl txt="Gebogen verbinder links"/>
+    <pt_BR txt="Conector de trilho curvo para esquerda"/>
   </Msg>
   <Msg id="switch_left">
     <en txt="Left turnout"/>
+    <de txt="Weiche links"/>
+    <it txt="Deviatoio sinistro"/>
+    <nl txt="Linkse wissel"/>
+    <pt_BR txt="Desvio esquerdo"/>
   </Msg>
   <Msg id="switch_right">
     <en txt="Right turnout"/>
+    <de txt="Weiche rechts"/>
+    <it txt="Deviatoio destro"/>
+    <nl txt="Rechtse wissel"/>
+    <pt_BR txt="Desvio direito"/>
   </Msg>
   <Msg id="crossing_right">
     <en txt="Right crossing"/>
+    <de txt="Kreuzung rechts"/>
+    <it txt="Incrocio destro"/>
+    <nl txt="Rechtse kruising"/>
+    <pt_BR txt="Cruzamento para direita"/>
   </Msg>
   <Msg id="crossing_left">
     <en txt="Left crossing"/>
+    <de txt="Kreuzung links"/>
+    <it txt="Incrocio sinistro"/>
+    <nl txt="Linkse kruising"/>
+    <pt_BR txt="Cruzamento para esquerda"/>
   </Msg>
   <Msg id="dcrossing_right">
     <en txt="Right double slip switch"/>
+    <de txt="Doppelte Kreuzungsweiche rechts"/>
+    <it txt="Doppio inglese destro"/>
+    <nl txt="Rechtse dubbele kruising"/>
+    <pt_BR txt="Desvio duplo para direita"/>
   </Msg>
   <Msg id="dcrossing_left">
     <en txt="Left double slip switch"/>
+    <de txt="Doppelte Kreuzungsweiche links"/>
+    <it txt="Doppio inglese sinistro"/>
+    <nl txt="Linkse dubbele kruising"/>
+    <pt_BR txt="Desvio duplo para esquerda"/>
   </Msg>
   <Msg id="semaphore_distant">
     <en txt="Distant semaphore"/>
+    <de txt="Form-Vorsignal"/>
+    <it txt="Semaforo di distanza"/>
+    <nl txt="Armsein (Voorsein)"/>
+    <pt_BR txt="Sinal de aproximação"/>
   </Msg>
   <Msg id="semaphore_main">
     <en txt="Main semaphore"/>
+    <de txt="Form-Hauptsignal"/>
+    <it txt="Semaforo principale"/>
+    <nl txt="Armsein"/>
+    <pt_BR txt="Sinal principal"/>
   </Msg>
   <Msg id="semaphore_shunting">
     <en txt="Shunting semaphore"/>
+    <de txt="Form-Rangiersignal"/>
+    <it txt="Semaforo di manovra"/>
+    <nl txt="Armsein (Rangeersein)"/>
+    <pt_BR txt="Sinal de manobras"/>
   </Msg>
   <Msg id="block_small">
     <en txt="Short block"/>
+    <de txt="Kurzer Block"/>
+    <it txt="Blocco corto"/>
+    <nl txt="Kort blok"/>
+    <pt_BR txt="Bloco curto"/>
   </Msg>
   <Msg id="sensor_curve">
     <en txt="Curved sensor"/>
+    <de txt="Rückmelder gebogenes Gleis"/>
+    <it txt="Sensore curvo"/>
+    <nl txt="Gebogen melder"/>
+    <pt_BR txt="Sensor curvo"/>
   </Msg>
   <Msg id="sensor_notrack">
     <en txt="General sensor"/>
+    <de txt="Rückmelder allgemein"/>
+    <it txt="Sensore generico"/>
+    <nl txt="Melder"/>
+    <pt_BR txt="Sensor geral"/>
   </Msg>
   <Msg id="level_crossing">
     <en txt="Level crossing"/>
+    <de txt="Bahnübergang"/>
+    <it txt="Passaggio a livello"/>
+    <nl txt="Overweg"/>
+    <pt_BR txt="Passagem de nível"/>
   </Msg>
   <Msg id="building">
     <en txt="Building"/>
+    <de txt="Gebäude"/>
+    <it txt="Edificio"/>
+    <nl txt="Gebouw"/>
+    <pt_BR txt="Edificação"/>
   </Msg>
   <Msg id="platform">
     <en txt="Platform"/>
+    <de txt="Bahnsteig"/>
+    <it txt="Banchina"/>
+    <nl txt="Perron"/>
+    <pt_BR txt="Plataforma"/>
   </Msg>
   <Msg id="industry">
     <en txt="Industry"/>
+    <de txt="Industrie"/>
+    <it txt="Fabbrica"/>
+    <nl txt="Industrie"/>
+    <pt_BR txt="Indústria"/>
   </Msg>
   <Msg id="bascule_bridge">
     <en txt="Bascule bridge"/>
+    <de txt="Klappbrücke"/>
+    <it txt="Ponte basculante"/>
+    <nl txt="Ophaalbrug"/>
+    <pt_BR txt="Ponte basculante"/>
   </Msg>
   <Msg id="road_straight">
     <en txt="Straight road"/>
+    <de txt="Gerade Straße"/>
+    <it txt="Strada rettilinea"/>
+    <nl txt="Rechte straat"/>
+    <pt_BR txt="Estrada reta"/>
   </Msg>
   <Msg id="road_curve">
     <en txt="Curved road"/>
+    <de txt="Gebogene Straße"/>
+    <it txt="Strada curva"/>
+    <nl txt="Gebogen straat"/>
+    <pt_BR txt="Estrada curva"/>
   </Msg>
   <Msg id="road_dir">
     <en txt="Road direction"/>
+    <de txt="Richtungs-Straße"/>
+    <it txt="Strada direzione"/>
+    <nl txt="Richting straat"/>
+    <pt_BR txt="Direção da estrada"/>
   </Msg>
   <Msg id="road_dirall">
     <en txt="Road all directions"/>
+    <de txt="Straße alle Richtungen"/>
+    <it txt="Strada multidirezione"/>
+    <nl txt="Beide richtingen straat"/>
+    <pt_BR txt="Todas as direções da estrada"/>
   </Msg>
   <Msg id="road_switch_left">
     <en txt="Left road turnout"/>
+    <de txt="Straßen-Weiche links"/>
+    <it txt="Deviatoio stradale sinistro"/>
+    <nl txt="Linkse straat wissel"/>
+    <pt_BR txt="Desvio esquerdo da estrada"/>
   </Msg>
   <Msg id="road_switch_right">
     <en txt="Right road turnout"/>
+    <de txt="Straßen-Weiche rechts"/>
+    <it txt="Deviatoio stradale destro"/>
+    <nl txt="Rechtse straat wissel"/>
+    <pt_BR txt="Desvio direito da estrada"/>
   </Msg>
   <Msg id="road_crossing">
     <en txt="Road crossing"/>
+    <de txt="Straßen-Kreuzung"/>
+    <it txt="Incrocio stradale"/>
+    <nl txt="Straat kruising"/>
+    <pt_BR txt="Cruzamento da estrada"/>
   </Msg>
   <Msg id="road_threeway">
     <en txt="Road threeway"/>
+    <de txt="Straßen-Dreiwegweiche"/>
+    <it txt="Strada a tre vie"/>
+    <nl txt="Drieweg straat"/>
+    <pt_BR txt="Estrada de três vias"/>
   </Msg>
   <Msg id="road_dcrossing">
     <en txt="Road double crossing"/>
+    <de txt="Doppelte Straßen-Kreuzung"/>
+    <it txt="Incrocio stradale doppio"/>
+    <nl txt="Dubbele straat kruising"/>
+    <pt_BR txt="Cruzamento duplo da estrada"/>
   </Msg>
   <Msg id="road_signal_main">
     <en txt="Traffic light"/>
+    <de txt="Ampel"/>
+    <it txt="Semaforo stradale"/>
+    <nl txt="Stoplicht"/>
+    <pt_BR txt="Semáforo"/>
   </Msg>
   <Msg id="road_signal_dwarf">
     <en txt="Small traffic light"/>
+    <de txt="Kleine Ampel"/>
+    <it txt="Semaforo stradale piccolo"/>
+    <nl txt="Klein stoplicht"/>
+    <pt_BR txt="Semáforo pequeno"/>
   </Msg>
   <Msg id="road_block">
     <en txt="Road block section"/>
+    <de txt="Straßen-Blockabschnitt"/>
+    <it txt="Sezione blocco strada"/>
+    <nl txt="Straat blok"/>
+    <pt_BR txt="Seção do bloco da estrada"/>
   </Msg>
   <Msg id="road_sensor">
     <en txt="Road sensor"/>
+    <de txt="Straßen-Rückmelder"/>
+    <it txt="Sensore strada"/>
+    <nl txt="Straat melder"/>
+    <pt_BR txt="Sensor da estrada"/>
   </Msg>
   <Msg id="removealltracks">
     <en txt="Delete all tracks linked to this level?"/>
+    <nl txt="Alle elementen verwijderen van dit nivo?"/>
   </Msg>
 </Messages>
