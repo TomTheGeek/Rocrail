@@ -171,7 +171,18 @@ static iONode __translate( iOSPL inst, iONode node ) {
     __setLED(inst, addr, port, state);
   }
 
-  /* Output command */
+  /* Signal command */
+  else if( StrOp.equals( NodeOp.getName( node ), wSignal.name() ) ) {
+    int addr   = wSignal.getaddr(node);
+    int aspect = wSignal.getaspect(node) + 1;
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "signal addr=%d aspect=%d", addr, aspect );
+    char* cmd = allocMem( 32 );
+    StrOp.fmtb(cmd+1, "H%02XS%02X\r", addr, aspect);
+    cmd[0] = StrOp.len(cmd+1);
+    ThreadOp.post( data->writer, (obj)cmd );
+  }
+
+  /* Program command */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
     if( wProgram.getcv(node) == 1 ) {
       char* cmd = allocMem( 32 );
