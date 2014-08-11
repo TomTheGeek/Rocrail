@@ -1215,6 +1215,7 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
       iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
       wSignal.setid( cmd, wSignal.getid( m_Props ) );
       wSignal.setcmd( cmd, wSignal.flip );
+      wSignal.setaspect( cmd, -1 );
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
