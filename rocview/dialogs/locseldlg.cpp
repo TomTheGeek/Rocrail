@@ -272,6 +272,11 @@ void LocSelDlg::InitIndex() {
         m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
         InitValues();
       }
+      else if(m_List->GetCount() > 0 ) {
+        m_List->SetSelection( 0 );
+        m_Props = wxGetApp().getFrame()->findLoc( m_List->GetStringSelection().mb_str(wxConvUTF8) );
+        InitValues();
+      }
       ListOp.base.del(list);
     }
   }
