@@ -172,13 +172,21 @@ Boolean __getFState(iONode fcmd, int fn) {
 
 static iOSlot __getSlot(iOBiDiB inst, iONode node) {
   iOBiDiBData data = Data(inst);
-  int    addr  = wLoc.getaddr(node);
-  iOSlot slot  = NULL;
+  const char* id = wLoc.getid(node);
+  int addr = wLoc.getaddr(node);
+  char addrStr[32] = {'\0'};
+  iOSlot slot = NULL;
   byte* packet = NULL;
 
-  slot = (iOSlot)MapOp.get( data->lcmap, wLoc.getid(node) );
+  if( id == NULL || StrOp.len(id) ) {
+    /* use address for map key */
+    StrOp.fmtb(addrStr, "%06d", addr );
+    id = addrStr;
+  }
+
+  slot = (iOSlot)MapOp.get( data->lcmap, id );
   if( slot != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", wLoc.getid(node) );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "slot exist for %s", id );
     return slot;
   }
 
@@ -192,11 +200,11 @@ static iOSlot __getSlot(iOBiDiB inst, iONode node) {
 
 
   if( MutexOp.wait( data->lcmux ) ) {
-    MapOp.put( data->lcmap, wLoc.getid(node), (obj)slot);
+    MapOp.put( data->lcmap, id, (obj)slot);
     MutexOp.post(data->lcmux);
   }
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for id=[%s] addr=%d", id, addr );
   return slot;
 }
 
