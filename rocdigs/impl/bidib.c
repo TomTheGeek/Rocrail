@@ -178,7 +178,7 @@ static iOSlot __getSlot(iOBiDiB inst, iONode node) {
   iOSlot slot = NULL;
   byte* packet = NULL;
 
-  if( id == NULL || StrOp.len(id) ) {
+  if( id == NULL || StrOp.len(id) == 0 ) {
     /* use address for map key */
     StrOp.fmtb(addrStr, "%06d", addr );
     id = addrStr;
