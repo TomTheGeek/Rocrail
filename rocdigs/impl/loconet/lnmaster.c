@@ -265,7 +265,7 @@ static iONode __locCmd(iOLocoNet loconet, int slotnr, struct __lnslot* slot, Boo
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "slot# %d format=%d steps=%d speed=%d(%d) dir=%s inuse=%d throttleID=%d",
+      "slot# %d format=%d steps=%d speed=%d(%d) dir=%s inuse=%d throttleID=%s",
       slotnr, slot[slotnr].format, slot[slotnr].steps, slot[slotnr].speed, (int)speed,
       slot[slotnr].dir?"fwd":"rev", slot[slotnr].inuse, wLoc.getthrottleid( nodeSpd ) );
 
