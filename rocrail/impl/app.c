@@ -1169,8 +1169,8 @@ static Boolean _shutdown( int network, const char* signame ) {
       SNMPOp.shutdown( data->snmp );
 
     /* Inform Model. */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing model..." );
-    if( data->model != NULL ) {
+    if( data->model != NULL && ModelOp.isSaveOnShutdown(data->model) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing model..." );
       ModelOp.save(data->model, True); /* Remove generated objects. */
     }
 

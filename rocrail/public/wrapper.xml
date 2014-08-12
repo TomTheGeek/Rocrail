@@ -1240,6 +1240,7 @@
 
   <model remark="Model command." wrappername="ModelCmd">
     <const name="save" vt="string" val="save"/>
+    <const name="dontsaveonexit" vt="string" val="dontsaveonexit"/>
     <const name="initfield" vt="string" val="initfield"/>
     <const name="add" vt="string" val="add"/>
     <const name="merge" vt="string" val="merge"/>

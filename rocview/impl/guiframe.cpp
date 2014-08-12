@@ -4448,13 +4448,12 @@ void RocGuiFrame::OnQuit(wxCommandEvent& WXUNUSED(event)) {
 void RocGuiFrame::OnClose(wxCloseEvent& event) {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "shutting down..." );
   if( wxGetApp().isLocalModelModified() ) {
-    int action = wxMessageDialog( this, wxGetApp().isOffline()?wxGetApp().getMsg("notsaved"):wxGetApp().getMsg("saveplan"),
-        _T("Rocrail"), (wxGetApp().isOffline()?wxYES_NO:wxOK) | wxCANCEL | wxICON_EXCLAMATION ).ShowModal();
+    int action = wxMessageDialog( this, wxGetApp().getMsg("notsaved"), _T("Rocrail"), wxYES_NO | wxCANCEL | wxICON_QUESTION ).ShowModal();
     if( action == wxID_CANCEL ) {
       return;
     }
 
-    if( action == wxID_YES || action == wxID_OK) {
+    if( action == wxID_YES ) {
       if( wxGetApp().isOffline() )
         Save();
       else {
@@ -4462,10 +4461,16 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
         wModelCmd.setcmd( cmd, wModelCmd.save );
         wxGetApp().sendToRocrail( cmd );
         cmd->base.del(cmd);
-
       }
     }
+    else if( !wxGetApp().isOffline() ) {
+      iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+      wModelCmd.setcmd( cmd, wModelCmd.dontsaveonexit );
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
 
+    wxGetApp().setLocalModelModified(false);
   }
 
 

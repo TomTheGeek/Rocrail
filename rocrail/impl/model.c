@@ -2144,6 +2144,10 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
   else if( StrOp.equals( wModelCmd.save, cmdVal ) ) {
     ModelOp.save( inst, False );
   }
+  else if( StrOp.equals( wModelCmd.dontsaveonexit, cmdVal ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "the model will not be saved on shutdown" );
+    data->saveonshutdown = False;
+  }
   else if( StrOp.equals( wModelCmd.initfield, cmdVal ) ) {
     ModelOp.initField( inst, True );
   }
@@ -5493,6 +5497,11 @@ static void _forceUnlock(iOModel inst) {
 }
 
 
+static Boolean _isSaveOnShutdown(iOModel inst) {
+  iOModelData data = Data(inst);
+  return data->saveonshutdown;
+}
+
 static iOModel _inst( const char* fileName, const char* locoFileName ) {
   iOModel     model = allocMem( sizeof( struct OModel ) );
   iOModelData data  = allocMem( sizeof( struct OModelData ) );
@@ -5503,6 +5512,7 @@ static iOModel _inst( const char* fileName, const char* locoFileName ) {
   /* Init fbAddresses: */
   MemOp.set( data->fbAddresses, 0, 256 );
 
+  data->saveonshutdown = True;
   data->fileName = fileName;
   data->locoFileName = locoFileName;
 
