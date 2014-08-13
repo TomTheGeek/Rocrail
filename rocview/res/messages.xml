@@ -2991,7 +2991,7 @@
     <ja txt="トラックパネルを削除"/>
     <zh_CN txt="删除轨道规划"/>
     <sl txt="Panel brisanja tirov"/>
-    <pt_BR txt="Remover painel de trilhos"/>
+    <pt_BR txt="Excluir painel de trilhos"/>
     <fi txt="Poista ratapaneeli"/>
   </Msg>
   <Msg id="panelprops" dialog="true">
@@ -8500,7 +8500,7 @@
     <ja txt="線路削除"/>
     <zh_CN txt="删除轨道"/>
     <sl txt="Izbriši tir"/>
-    <pt_BR txt="Remover trilho"/>
+    <pt_BR txt="Excluir trilho"/>
     <fi txt="Poista rataosa"/>
   </Msg>
   <Msg id="blockid">
@@ -24171,7 +24171,7 @@
   <Msg id="prefix">
     <en txt="Prefix"/>
     <nl txt="Voorvoegsel"/>
-    <de txt="Prefix"/>
+    <de txt="Präfix"/>
     <es txt="Prefijo"/>
     <ru txt="Префикс"/>
     <it txt="Prefisso"/>
@@ -25135,7 +25135,7 @@
     <en txt="Extended plan clean"/>
     <nl txt="Uitgebreid opschonen"/>
     <it txt="Pulizia estesa del progetto"/>
-    <de txt="Bereinigung inkonsistenter EInträge"/>
+    <de txt="Bereinigung inkonsistenter Einträge"/>
     <sr_latin txt="Prošireno čišćenje plana"/>
     <zh_CN txt="扩展计划清理"/>
     <sl txt="Razširjeno čisčenje načrta"/>
@@ -28323,6 +28323,7 @@
     <sl txt="Stolpec slike lokomotive"/>
     <en_GB txt="Loco image column"/>
     <ru txt="Колонка с изображениями локов"/>
+    <sr_latin txt="Kolona slika lokomotiva"/>
   </Msg>
   <Msg id="throttlebinstate">
     <en txt="Set/Reset BinState by Enter/Alt+Enter."/>
@@ -28331,6 +28332,9 @@
     <nl txt="Aan-/uitschakelen van een BinState d.m.v. Enter/Alt+Enter."/>
     <pt_BR txt="Definir/Redefinir BinState com Enter/Alt+Enter."/>
     <sl txt="Set/Reset BinState z Enter/Alt+Enter."/>
+    <en_GB txt="Set/Reset BinState by Enter/Alt+Enter."/>
+    <fr txt="(Ré)initialiser Binstate par Enter/Alt+Enter"/>
+    <sr_latin txt="Set./Reset BinState-a sa Enter/Alt+Enter"/>
   </Msg>
   <Msg id="track_straight">
     <en txt="Straight track"/>
@@ -28338,6 +28342,11 @@
     <it txt="Binario dritto"/>
     <nl txt="Rechte rails"/>
     <pt_BR txt="Trilho reto"/>
+    <en_GB txt="Straight track"/>
+    <fr txt="Voie droite"/>
+    <ru txt="Прямой путь"/>
+    <sl txt="Ravni tir"/>
+    <sr_latin txt="Prava šina"/>
   </Msg>
   <Msg id="track_curve">
     <en txt="Curved track"/>
@@ -28345,6 +28354,11 @@
     <it txt="Curva"/>
     <nl txt="Gebogen rails"/>
     <pt_BR txt="Trilho curvo"/>
+    <en_GB txt="Curved track"/>
+    <fr txt="Voie courbe"/>
+    <ru txt="Радиусный путь"/>
+    <sl txt="Zavoj"/>
+    <sr_latin txt="Kriva šina"/>
   </Msg>
   <Msg id="track_buffer">
     <en txt="Track bumper"/>
@@ -28352,6 +28366,11 @@
     <it txt="Binario di testa"/>
     <nl txt="Stootblok"/>
     <pt_BR txt="Fim-de-linha"/>
+    <en_GB txt="Track bumper"/>
+    <fr txt="Voie butoir"/>
+    <ru txt="Тупик"/>
+    <sl txt="Odbijač"/>
+    <sr_latin txt="Odbojnik"/>
   </Msg>
   <Msg id="track_dir">
     <en txt="Track direction"/>
@@ -28359,6 +28378,10 @@
     <it txt="Binario direzione"/>
     <nl txt="Richting rails"/>
     <pt_BR txt="Direção dos trilhos"/>
+    <fr txt="Voie de direction"/>
+    <ru txt="Направление"/>
+    <sl txt="Smer tira"/>
+    <sr_latin txt="Šina pravca"/>
   </Msg>
   <Msg id="track_dirall">
     <en txt="Track all directions"/>
@@ -28366,6 +28389,11 @@
     <it txt="Binario multidirezione"/>
     <nl txt="Beide richtingen rails"/>
     <pt_BR txt="Todas as direções dos trilhos"/>
+    <en_GB txt="Track all directions"/>
+    <fr txt="Voie toute direction"/>
+    <ru txt="Оба направления"/>
+    <sl txt="Trv v vse smeri"/>
+    <sr_latin txt="Šina za sve pravce"/>
   </Msg>
   <Msg id="track_connector">
     <en txt="Straight track connector"/>
@@ -28373,6 +28401,11 @@
     <it txt="Connettore binario dritto"/>
     <nl txt="Rechte verbinder"/>
     <pt_BR txt="Conector de trilho reto"/>
+    <en_GB txt="Straight track connector"/>
+    <fr txt="Voie connecteur droite"/>
+    <ru txt="Соединитель уровней прямой"/>
+    <sl txt="Ravni priključek tira"/>
+    <sr_latin txt="Vezna šina pravo"/>
   </Msg>
   <Msg id="track_connector_right">
     <en txt="Curved track connector right"/>
@@ -28380,6 +28413,11 @@
     <it txt="Connettore destro binario curvo"/>
     <nl txt="Gebogen verbinder rechts"/>
     <pt_BR txt="Conector de trilho curvo para direita"/>
+    <en_GB txt="Curved track connector right"/>
+    <fr txt="Voie connecteur courbe droite"/>
+    <ru txt="Соединитель уровней правый"/>
+    <sl txt="Priključek tira v odklonu desni"/>
+    <sr_latin txt="Vezna kriva šina desno"/>
   </Msg>
   <Msg id="track_connector_left">
     <en txt="Curved track connector left"/>
@@ -28387,6 +28425,11 @@
     <it txt="Connettore sinistro binario curvo"/>
     <nl txt="Gebogen verbinder links"/>
     <pt_BR txt="Conector de trilho curvo para esquerda"/>
+    <en_GB txt="Curved track connector left"/>
+    <fr txt="Voie connecteur courbe gauche"/>
+    <ru txt="Соединитель уровней левый"/>
+    <sl txt="Priključek tira v odklonu levi"/>
+    <sr_latin txt="Vezna kriva šina levo"/>
   </Msg>
   <Msg id="switch_left">
     <en txt="Left turnout"/>
@@ -28394,6 +28437,11 @@
     <it txt="Deviatoio sinistro"/>
     <nl txt="Linkse wissel"/>
     <pt_BR txt="Desvio esquerdo"/>
+    <en_GB txt="Left turnout"/>
+    <fr txt="Aiguillage gauche"/>
+    <ru txt="Стрелка левая"/>
+    <sl txt="Leva kretnica"/>
+    <sr_latin txt="Leva skretnica"/>
   </Msg>
   <Msg id="switch_right">
     <en txt="Right turnout"/>
@@ -28401,6 +28449,11 @@
     <it txt="Deviatoio destro"/>
     <nl txt="Rechtse wissel"/>
     <pt_BR txt="Desvio direito"/>
+    <en_GB txt="Right turnout"/>
+    <fr txt="Aiguillage droit"/>
+    <ru txt="Стрелка правая"/>
+    <sl txt="Desna kretnica"/>
+    <sr_latin txt="Desna skretnica"/>
   </Msg>
   <Msg id="crossing_right">
     <en txt="Right crossing"/>
@@ -28408,6 +28461,11 @@
     <it txt="Incrocio destro"/>
     <nl txt="Rechtse kruising"/>
     <pt_BR txt="Cruzamento para direita"/>
+    <en_GB txt="Right crossing"/>
+    <fr txt="Aiguillage croisement droit"/>
+    <ru txt="Перекрёсток правый"/>
+    <sl txt="Desno križanje"/>
+    <sr_latin txt="Desno ukrštanje"/>
   </Msg>
   <Msg id="crossing_left">
     <en txt="Left crossing"/>
@@ -28415,6 +28473,11 @@
     <it txt="Incrocio sinistro"/>
     <nl txt="Linkse kruising"/>
     <pt_BR txt="Cruzamento para esquerda"/>
+    <en_GB txt="Left crossing"/>
+    <fr txt="Aiguillage croisement gauche"/>
+    <ru txt="Перекрёсток левый"/>
+    <sl txt="Levo križanje"/>
+    <sr_latin txt="Levo ukrštanje"/>
   </Msg>
   <Msg id="dcrossing_right">
     <en txt="Right double slip switch"/>
@@ -28422,6 +28485,11 @@
     <it txt="Doppio inglese destro"/>
     <nl txt="Rechtse dubbele kruising"/>
     <pt_BR txt="Desvio duplo para direita"/>
+    <en_GB txt="Right double slip switch"/>
+    <fr txt="Traversée-jonction double droite"/>
+    <ru txt="Английская стрелка правая"/>
+    <sl txt="Densa dvojna kretnica"/>
+    <sr_latin txt="Desna dupla skretnica"/>
   </Msg>
   <Msg id="dcrossing_left">
     <en txt="Left double slip switch"/>
@@ -28429,6 +28497,10 @@
     <it txt="Doppio inglese sinistro"/>
     <nl txt="Linkse dubbele kruising"/>
     <pt_BR txt="Desvio duplo para esquerda"/>
+    <fr txt="Traversée-jonction double gauche"/>
+    <ru txt="Английская стрелка левая"/>
+    <sl txt="Leva dvojna kretnica"/>
+    <sr_latin txt="Leva dupla skretnica"/>
   </Msg>
   <Msg id="semaphore_distant">
     <en txt="Distant semaphore"/>
@@ -28436,6 +28508,11 @@
     <it txt="Semaforo di distanza"/>
     <nl txt="Armsein (Voorsein)"/>
     <pt_BR txt="Sinal de aproximação"/>
+    <en_GB txt="Distant semaphore"/>
+    <fr txt="Signal distant"/>
+    <ru txt="Предупредительный семафор"/>
+    <sl txt="Predsignal"/>
+    <sr_latin txt="Semafor rastojanja"/>
   </Msg>
   <Msg id="semaphore_main">
     <en txt="Main semaphore"/>
@@ -28443,6 +28520,11 @@
     <it txt="Semaforo principale"/>
     <nl txt="Armsein"/>
     <pt_BR txt="Sinal principal"/>
+    <en_GB txt="Main semaphore"/>
+    <fr txt="Signal principal"/>
+    <ru txt="Основной семафор"/>
+    <sl txt="Glavni signal"/>
+    <sr_latin txt="Glavni semafor"/>
   </Msg>
   <Msg id="semaphore_shunting">
     <en txt="Shunting semaphore"/>
@@ -28450,6 +28532,11 @@
     <it txt="Semaforo di manovra"/>
     <nl txt="Armsein (Rangeersein)"/>
     <pt_BR txt="Sinal de manobras"/>
+    <en_GB txt="Shunting semaphore"/>
+    <fr txt="Signal de manoeuvre"/>
+    <ru txt="Маневровый семафор"/>
+    <sl txt="Ranžirni signal"/>
+    <sr_latin txt="Ranžirni semafor"/>
   </Msg>
   <Msg id="block_small">
     <en txt="Short block"/>
@@ -28457,6 +28544,11 @@
     <it txt="Blocco corto"/>
     <nl txt="Kort blok"/>
     <pt_BR txt="Bloco curto"/>
+    <en_GB txt="Short block"/>
+    <fr txt="Bloc court"/>
+    <ru txt="Короткий блок"/>
+    <sl txt="Kratki odsek"/>
+    <sr_latin txt="Kratki blok"/>
   </Msg>
   <Msg id="sensor_curve">
     <en txt="Curved sensor"/>
@@ -28464,6 +28556,11 @@
     <it txt="Sensore curvo"/>
     <nl txt="Gebogen melder"/>
     <pt_BR txt="Sensor curvo"/>
+    <en_GB txt="Curved sensor"/>
+    <fr txt="Détecteur courbe"/>
+    <ru txt="Датчик(кривая)"/>
+    <sl txt="Tipalo v odklonu"/>
+    <sr_latin txt="Senzor na krivini"/>
   </Msg>
   <Msg id="sensor_notrack">
     <en txt="General sensor"/>
@@ -28471,6 +28568,11 @@
     <it txt="Sensore generico"/>
     <nl txt="Melder"/>
     <pt_BR txt="Sensor geral"/>
+    <en_GB txt="General sensor"/>
+    <fr txt="Détecteur général"/>
+    <ru txt="Датчик общий"/>
+    <sl txt="Splošno tipalo"/>
+    <sr_latin txt="Glavni senzor"/>
   </Msg>
   <Msg id="level_crossing">
     <en txt="Level crossing"/>
@@ -28478,6 +28580,11 @@
     <it txt="Passaggio a livello"/>
     <nl txt="Overweg"/>
     <pt_BR txt="Passagem de nível"/>
+    <en_GB txt="Level crossing"/>
+    <fr txt="PAssage à niveau"/>
+    <ru txt="Переезд"/>
+    <sl txt="Nivojski prehod"/>
+    <sr_latin txt="Ukrštanje nivoa"/>
   </Msg>
   <Msg id="building">
     <en txt="Building"/>
@@ -28485,6 +28592,11 @@
     <it txt="Edificio"/>
     <nl txt="Gebouw"/>
     <pt_BR txt="Edificação"/>
+    <en_GB txt="Building"/>
+    <fr txt="Bâtiment"/>
+    <ru txt="Здание"/>
+    <sl txt="Zgradba"/>
+    <sr_latin txt="Zgrada"/>
   </Msg>
   <Msg id="platform">
     <en txt="Platform"/>
@@ -28492,6 +28604,10 @@
     <it txt="Banchina"/>
     <nl txt="Perron"/>
     <pt_BR txt="Plataforma"/>
+    <fr txt="Plateforme"/>
+    <ru txt="Платформа"/>
+    <sl txt="Ploščad"/>
+    <sr_latin txt="Peron"/>
   </Msg>
   <Msg id="industry">
     <en txt="Industry"/>
@@ -28499,6 +28615,11 @@
     <it txt="Fabbrica"/>
     <nl txt="Industrie"/>
     <pt_BR txt="Indústria"/>
+    <en_GB txt="Industry"/>
+    <fr txt="Industrie"/>
+    <ru txt="Промышленность"/>
+    <sl txt="Industija"/>
+    <sr_latin txt="Industrija"/>
   </Msg>
   <Msg id="bascule_bridge">
     <en txt="Bascule bridge"/>
@@ -28506,6 +28627,11 @@
     <it txt="Ponte basculante"/>
     <nl txt="Ophaalbrug"/>
     <pt_BR txt="Ponte basculante"/>
+    <en_GB txt="Bascule bridge"/>
+    <fr txt="Pont à bascule"/>
+    <ru txt="Подъемный мост"/>
+    <sl txt="Premični most"/>
+    <sr_latin txt="Pokretni most"/>
   </Msg>
   <Msg id="road_straight">
     <en txt="Straight road"/>
@@ -28513,6 +28639,11 @@
     <it txt="Strada rettilinea"/>
     <nl txt="Rechte straat"/>
     <pt_BR txt="Estrada reta"/>
+    <en_GB txt="Straight road"/>
+    <fr txt="route droite"/>
+    <ru txt="Прямая (дорога)"/>
+    <sl txt="Ravna cesta"/>
+    <sr_latin txt="Prav put"/>
   </Msg>
   <Msg id="road_curve">
     <en txt="Curved road"/>
@@ -28520,6 +28651,11 @@
     <it txt="Strada curva"/>
     <nl txt="Gebogen straat"/>
     <pt_BR txt="Estrada curva"/>
+    <en_GB txt="Curved road"/>
+    <fr txt="Route courbe"/>
+    <ru txt="Радиусная (дорога)"/>
+    <sl txt="Cestni zavoj"/>
+    <sr_latin txt="Krivina puta"/>
   </Msg>
   <Msg id="road_dir">
     <en txt="Road direction"/>
@@ -28527,6 +28663,11 @@
     <it txt="Strada direzione"/>
     <nl txt="Richting straat"/>
     <pt_BR txt="Direção da estrada"/>
+    <en_GB txt="Road direction"/>
+    <fr txt="Route de direction"/>
+    <ru txt="Направление (дорога)"/>
+    <sl txt="Smer ceste"/>
+    <sr_latin txt="Putni pravac"/>
   </Msg>
   <Msg id="road_dirall">
     <en txt="Road all directions"/>
@@ -28534,6 +28675,11 @@
     <it txt="Strada multidirezione"/>
     <nl txt="Beide richtingen straat"/>
     <pt_BR txt="Todas as direções da estrada"/>
+    <en_GB txt="Road all directions"/>
+    <fr txt="Route toute direction"/>
+    <ru txt="Оба направления (дорога)"/>
+    <sl txt="Cesta v vse smeri"/>
+    <sr_latin txt="Put u svim pravcima"/>
   </Msg>
   <Msg id="road_switch_left">
     <en txt="Left road turnout"/>
@@ -28541,6 +28687,11 @@
     <it txt="Deviatoio stradale sinistro"/>
     <nl txt="Linkse straat wissel"/>
     <pt_BR txt="Desvio esquerdo da estrada"/>
+    <en_GB txt="Left road turnout"/>
+    <fr txt="Aiguillage de route gauche"/>
+    <ru txt="Левая стрелка(дорога)"/>
+    <sl txt="Levi cestni zavoj"/>
+    <sr_latin txt="Levo putno skretanje"/>
   </Msg>
   <Msg id="road_switch_right">
     <en txt="Right road turnout"/>
@@ -28548,6 +28699,11 @@
     <it txt="Deviatoio stradale destro"/>
     <nl txt="Rechtse straat wissel"/>
     <pt_BR txt="Desvio direito da estrada"/>
+    <en_GB txt="Right road turnout"/>
+    <fr txt="Aiguillage de route droit"/>
+    <ru txt="Правая стрелка(дорога)"/>
+    <sl txt="Desni cestni zavoj"/>
+    <sr_latin txt="Desno putno skretanje"/>
   </Msg>
   <Msg id="road_crossing">
     <en txt="Road crossing"/>
@@ -28555,6 +28711,11 @@
     <it txt="Incrocio stradale"/>
     <nl txt="Straat kruising"/>
     <pt_BR txt="Cruzamento da estrada"/>
+    <en_GB txt="Road crossing"/>
+    <fr txt="Croisement de route"/>
+    <ru txt="Перекрёсток(дорога)"/>
+    <sl txt="Križišče"/>
+    <sr_latin txt="Raskrsnica"/>
   </Msg>
   <Msg id="road_threeway">
     <en txt="Road threeway"/>
@@ -28562,6 +28723,11 @@
     <it txt="Strada a tre vie"/>
     <nl txt="Drieweg straat"/>
     <pt_BR txt="Estrada de três vias"/>
+    <en_GB txt="Road threeway"/>
+    <fr txt="Carrefour à trois voies"/>
+    <ru txt="Тройная стрелка(дорога)"/>
+    <sl txt="Trojno cestno križišče"/>
+    <sr_latin txt="Trostruka raskrsnica"/>
   </Msg>
   <Msg id="road_dcrossing">
     <en txt="Road double crossing"/>
@@ -28569,6 +28735,10 @@
     <it txt="Incrocio stradale doppio"/>
     <nl txt="Dubbele straat kruising"/>
     <pt_BR txt="Cruzamento duplo da estrada"/>
+    <fr txt="Route double croisement"/>
+    <ru txt="Двойное пересечение(дорога)"/>
+    <sl txt="Dvojno cestno križišče"/>
+    <sr_latin txt="Dvostruka raskrsnica"/>
   </Msg>
   <Msg id="road_signal_main">
     <en txt="Traffic light"/>
@@ -28576,6 +28746,10 @@
     <it txt="Semaforo stradale"/>
     <nl txt="Stoplicht"/>
     <pt_BR txt="Semáforo"/>
+    <fr txt="Feux de circulation"/>
+    <ru txt="Светофор"/>
+    <sl txt="Semafor"/>
+    <sr_latin txt="Semafor"/>
   </Msg>
   <Msg id="road_signal_dwarf">
     <en txt="Small traffic light"/>
@@ -28583,6 +28757,10 @@
     <it txt="Semaforo stradale piccolo"/>
     <nl txt="Klein stoplicht"/>
     <pt_BR txt="Semáforo pequeno"/>
+    <fr txt="Petit feu de circulation"/>
+    <ru txt="Светофор малый"/>
+    <sl txt="Majhen semafor"/>
+    <sr_latin txt="Mali semafor"/>
   </Msg>
   <Msg id="road_block">
     <en txt="Road block section"/>
@@ -28590,6 +28768,10 @@
     <it txt="Sezione blocco strada"/>
     <nl txt="Straat blok"/>
     <pt_BR txt="Seção do bloco da estrada"/>
+    <fr txt="Bloc de route"/>
+    <ru txt="Блочная секция(дорога)"/>
+    <sl txt="Cestni odsek"/>
+    <sr_latin txt="Blok sekcija puta"/>
   </Msg>
   <Msg id="road_sensor">
     <en txt="Road sensor"/>
@@ -28597,9 +28779,20 @@
     <it txt="Sensore strada"/>
     <nl txt="Straat melder"/>
     <pt_BR txt="Sensor da estrada"/>
+    <fr txt="Détecteur de route"/>
+    <ru txt="Датчик(дорога)"/>
+    <sl txt="Cestni tipalo"/>
+    <sr_latin txt="Putni senzor"/>
   </Msg>
   <Msg id="removealltracks">
     <en txt="Delete all tracks linked to this level?"/>
     <nl txt="Alle elementen verwijderen van dit nivo?"/>
+    <de txt="Alle Objekte dieser Ebene löschen?"/>
+    <fr txt="Effacer toutes les voies liées  à ce niveau?"/>
+    <it txt="Cancellare tutti i binari collegati a questo livello?"/>
+    <pt_BR txt="Excluir todos os trilhos conectados a este nível?"/>
+    <ru txt="Удалить все пути, связанные с этим уровнем?"/>
+    <sl txt="Zbrišem vse povezave na ta nivo?"/>
+    <sr_latin txt="Obriši sve šine vezane za ovaj nivo?"/>
   </Msg>
 </Messages>
