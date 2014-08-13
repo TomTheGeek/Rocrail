@@ -1403,6 +1403,7 @@
     <var name="dir" vt="bool" defval="false" remark="false=left, true=right"/>
     <var name="state" vt="string" defval="-"/>
     <var name="generated" vt="bool" defval="false" remark="On the fly generated for an unknown address. Triggered by a client."/>
+    <var name="copy" vt="bool" defval="false" remark="Copy marker for clients."/>
   </item>
 
   <modplan wrappername="ModPlan" remark="Root node of the module master plan.">

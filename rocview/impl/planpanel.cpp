@@ -617,7 +617,7 @@ void PlanPanel::copySelection(iONode sel) {
       wItem.setx( copy, wItem.getx(props) + destx - x );
       wItem.sety( copy, wItem.gety(props) + desty - y );
       wItem.setz( copy, destz );
-      NodeOp.setBool( copy, "copy", True );
+      wItem.setcopy( copy, True );
 
       TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "copy [%s] from(%d,%d,%d) to (%d,%d,%d)",
           wItem.getid(copy),
@@ -842,7 +842,7 @@ iONode PlanPanel::GetClipboardNode(bool clear) {
 void PlanPanel::OnPaste(wxCommandEvent& event) {
   iONode node = GetClipboardNode();
   if( node != NULL ) {
-    NodeOp.setBool( node, "copy", False );
+    wItem.setcopy( node, False );
     wItem.setid(node, "");
     addItemAttr( node );
   }
@@ -1537,13 +1537,14 @@ void PlanPanel::addItemAttr( iONode node ) {
   int x, y;
   GetViewStart( &x, &y );
 
-  if( !NodeOp.getBool( node, "copy", False ) ) {
+  if( wItem.iscopy( node ) ) {
+    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "copied item added, z=%d", wItem.getz(node) );
+    wItem.setcopy( node, False ); // reset copy flag
+  }
+  else {
     wItem.setx( node, m_X+x );
     wItem.sety( node, m_Y+y );
     wItem.setz( node, m_Z );
-  }
-  else {
-    TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "copied item added, z=%d", wItem.getz(node) );
   }
 
   addItemInList( node ); // Allways add new Items locally to prevent two nodes after getting a server modify event!
