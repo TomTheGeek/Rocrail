@@ -2143,6 +2143,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
   }
   else if( StrOp.equals( wModelCmd.save, cmdVal ) ) {
     ModelOp.save( inst, False );
+    data->saveonshutdown = True;
   }
   else if( StrOp.equals( wModelCmd.dontsaveonexit, cmdVal ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "the model will not be saved on shutdown" );

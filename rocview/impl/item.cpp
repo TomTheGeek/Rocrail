@@ -2594,6 +2594,8 @@ void Symbol::OnDelete(wxCommandEvent& event) {
     m_PlanPanel->removeItemFromList( m_Props );
   }
 
+  wxGetApp().setLocalModelModified(true);
+
   /* Notify RocRail. */
   iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
   wModelCmd.setcmd( cmd, wModelCmd.remove );

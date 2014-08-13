@@ -532,6 +532,7 @@ void PlanPanel::moveSelection(iONode sel) {
   // iterate the items in this panel
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
+  bool modified = false;
   wxNode* node = (wxNode*)m_ChildTable->Next();
   // model event node
   iONode move = NodeOp.inst( wItem.name(), NULL, ELEMENT_NODE );
@@ -564,9 +565,13 @@ void PlanPanel::moveSelection(iONode sel) {
       wItem.sety( moveditem, wItem.gety( props ) );
       wItem.setz( moveditem, wItem.getz( props ) );
       NodeOp.addChild( cmd, moveditem );
+      modified = true;
     }
     node = (wxNode*)m_ChildTable->Next();
   }
+
+  if( modified )
+    wxGetApp().setLocalModelModified(true);
 
   // TODO: if the move is to another level, remove from this child table and put it in the other
 
@@ -603,6 +608,7 @@ void PlanPanel::copySelection(iONode sel) {
   Symbol* item = NULL;
   wxNode* node = (wxNode*)m_ChildTable->Next();
 
+  bool modified = false;
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
     iONode props = item->getProperties();
@@ -624,9 +630,13 @@ void PlanPanel::copySelection(iONode sel) {
           wItem.getx(props), wItem.gety(props), wItem.getz(props),
           wItem.getx(copy), wItem.gety(copy), wItem.getz(copy) );
       addItemAttr( copy );
+      modified = true;
     }
     node = (wxNode*)m_ChildTable->Next();
   }
+
+  if( modified )
+    wxGetApp().setLocalModelModified(true);
 
 }
 
@@ -649,6 +659,7 @@ void PlanPanel::deleteSelection(iONode sel) {
   Symbol* item = NULL;
   wxNode* node = (wxNode*)m_ChildTable->Next();
 
+  bool modified = false;
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
     iONode props = item->getProperties();
@@ -656,12 +667,15 @@ void PlanPanel::deleteSelection(iONode sel) {
         wItem.gety(props) >= y && wItem.gety(props) < y+cy )
     {
       NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( props ) );
-
+      modified = true;
       if( wxGetApp().isOffline() )
         removeItemFromList( props );
     }
     node = (wxNode*)m_ChildTable->Next();
   }
+
+  if( modified )
+    wxGetApp().setLocalModelModified(true);
 
   /* notify RocRail */
   if( NodeOp.getChildCnt(cmd) > 0 ) {
@@ -691,6 +705,7 @@ void PlanPanel::routeidSelection(iONode sel) {
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
   wxNode* node = (wxNode*)m_ChildTable->Next();
+  bool modified = false;
 
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
@@ -710,9 +725,13 @@ void PlanPanel::routeidSelection(iONode sel) {
         wItem.setrouteids(props, newroutes );
 
       NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( props ) );
+      modified = true;
     }
     node = (wxNode*)m_ChildTable->Next();
   }
+
+  if( modified )
+    wxGetApp().setLocalModelModified(true);
 
   /* notify RocRail */
   if( NodeOp.getChildCnt(cmd) > 0 ) {
@@ -741,6 +760,7 @@ void PlanPanel::blockidSelection(iONode sel) {
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
   wxNode* node = (wxNode*)m_ChildTable->Next();
+  bool modified = false;
 
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
@@ -750,9 +770,13 @@ void PlanPanel::blockidSelection(iONode sel) {
     {
       wItem.setblockid(props, NodeOp.getStr(sel, "blockid", "" ) );
       NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( props ) );
+      modified = true;
     }
     node = (wxNode*)m_ChildTable->Next();
   }
+
+  if( modified )
+    wxGetApp().setLocalModelModified(true);
 
   /* notify RocRail */
   if( NodeOp.getChildCnt(cmd) > 0 ) {
