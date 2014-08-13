@@ -79,6 +79,10 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, in
 
 
 bool SymbolRenderer::hasSVG(const char* svgname) {
+  if( StrOp.equals( seltabtype::seltab, svgname) || StrOp.equals( turntabletype::turntable, svgname) ) {
+    // internal symbols
+    return true;
+  }
   svgSymbol* SvgSym = (svgSymbol*)MapOp.get( m_SymMap, svgname );
   if( SvgSym != NULL )
     return true;
