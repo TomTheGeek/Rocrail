@@ -1819,6 +1819,10 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_bLocoImageColumn   = wGui.islocoimagecolumn(m_Ini)?true:false;
   m_TrackPickerDlg     = NULL;
 
+
+  m_bExpired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor);
+
   if( wxTheClipboard != NULL ) {
     if( wxTheClipboard->Open() ) {
       wxTheClipboard->Clear();
@@ -2263,8 +2267,6 @@ void RocGuiFrame::initFrame() {
 
 
   // Create tool bar
-  Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
-      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor);
   bool l_useDisableIcons = false;
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "wxWidgets %d",  wxMAJOR_VERSION );
@@ -2292,7 +2294,7 @@ void RocGuiFrame::initFrame() {
     m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall_32, l_useDisableIcons?*_img_stopall_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
 
     m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator_32, l_useDisableIcons?*_img_operator_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
-    if( !l_Expired )
+    if( !m_bExpired )
       m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), *_img_rocpro_32, wxNullBitmap, wxITEM_NORMAL );
     m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic_32, l_useDisableIcons?*_img_mic_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
     m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl_32, l_useDisableIcons?*_img_locctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
@@ -4008,6 +4010,8 @@ void RocGuiFrame::OnDonKey( wxCommandEvent& event ) {
     DonKey* dlg = new DonKey(this, m_Ini );
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "key is expired");
     if( wxID_OK == dlg->ShowModal() ) {
+      m_bExpired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
+          StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor);
     }
     dlg->Destroy();
   }
@@ -4030,8 +4034,6 @@ void RocGuiFrame::OnDonKeyInfo( wxCommandEvent& event ) {
 
 void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   bool l_bOffline = wxGetApp().isOffline();
-  Boolean l_Expired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
-      StrOp.len(wxGetApp().m_donkey)/2, wxGetApp().m_doneml), NULL, NULL, wGlobal.vmajor, wGlobal.vminor);
 
   wxMenuItem* mi = menuBar->FindItem(ME_New);
   if( mi != NULL ) mi->Enable( l_bOffline );
@@ -4320,10 +4322,10 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   wxMenuItem* mi_locowidgets  = menuBar->FindItem(ME_LocoWidgets);
   mi_locowidgets->Check( wGui.islocowidgetstab(m_Ini) );
-  mi_locowidgets->Enable( !l_Expired );
+  mi_locowidgets->Enable( !m_bExpired );
 
   wxMenuItem* mi_rocpro  = menuBar->FindItem(ME_RocPro);
-  mi_rocpro->Enable( !l_Expired );
+  mi_rocpro->Enable( !m_bExpired );
 
   wxMenuItem* mi_planbook  = menuBar->FindItem(ME_PlanBook);
   mi_planbook->Check( m_bPlanBook );

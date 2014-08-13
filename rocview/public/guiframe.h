@@ -445,6 +445,7 @@ private:
   bool  m_bInitialized;
   bool  m_bActiveWorkspace;
   bool  m_bEnableCom;
+  Boolean m_bExpired;
 
   bool  showlogo;
   bool  m_bEditMode;
