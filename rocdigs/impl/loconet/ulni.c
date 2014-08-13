@@ -82,6 +82,28 @@ Needed instance variables:
   #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
 #endif
 
+
+static Boolean __Connect( iOLocoNet inst ) {
+  iOLocoNetData data = Data(inst);
+
+  data->subSendEcho = True;
+
+  data->serial = SerialOp.inst( data->device );
+  SerialOp.setFlow( data->serial, 0 );
+  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
+  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
+
+  if( SerialOp.open( data->serial ) ) {
+    return True;
+  }
+  else {
+    SerialOp.base.del( data->serial );
+    data->serial = NULL;
+    return False;
+  }
+}
+
+
 static void __reader( void* threadinst ) {
   iOThread      th      = (iOThread)threadinst;
   iOLocoNet     loconet = (iOLocoNet)ThreadOp.getParm( th );
@@ -100,29 +122,41 @@ static void __reader( void* threadinst ) {
     Boolean  ok = True;
     Boolean  ignore = False;
 
-  
+    if( data->serial == NULL ) {
+      if( !__Connect(loconet) ) {
+        ThreadOp.sleep(1000);
+        continue;
+      }
+    }
+
     do {
-		  if( SerialOp.available(data->serial) ) {
-				ok = SerialOp.read(data->serial, (char*)&c, 1);
-				if(c < 0x80) {
-				  ThreadOp.sleep(10);
-				  bucket[garbage] = c;
-				  garbage++;
-				}
-		  }
-		  else {
-		    ThreadOp.sleep(10);
-		  }
+      if( data->serial != NULL ) {
+        int available = SerialOp.available(data->serial);
+        if( available > 0 ) {
+          ok = SerialOp.read(data->serial, (char*)&c, 1);
+          if(c < 0x80) {
+            ThreadOp.sleep(10);
+            bucket[garbage] = c;
+            garbage++;
+          }
+        }
+        else if( available == -1 || SerialOp.getRc(data->serial) > 0 ) {
+          /* device error */
+          SerialOp.close(data->serial);
+          SerialOp.base.del( data->serial );
+          data->serial = NULL;
+          TraceOp.trc( "ulni", TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
+        }
+        else {
+          ThreadOp.sleep(10);
+        }
+      }
+      else {
+        ok = False;
+      }
 		} while (ok && data->run && c < 0x80 && garbage < 10);
 
-		if( garbage > 0 ) {
-		   TraceOp.trc( "ulni", TRCLEVEL_INFO, __LINE__, 9999, "garbage=%d", garbage );
-		   TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)bucket, garbage );
-		}
-  
-  
-  
-  
+
 		if( !data->run || !ok ) {
 		  if( data->comm ) {
 		    data->comm = False;
@@ -138,6 +172,11 @@ static void __reader( void* threadinst ) {
       TraceOp.trc( "ulni", TRCLEVEL_INFO, __LINE__, 9999, "stateChanged: comm=%d", data->comm );
 		  LocoNetOp.stateChanged(loconet);
 		}
+
+		if( garbage > 0 ) {
+       TraceOp.trc( "ulni", TRCLEVEL_INFO, __LINE__, 9999, "garbage=%d", garbage );
+       TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)bucket, garbage );
+    }
 
 		msg[0] = c;
     ignore = False;
@@ -233,8 +272,14 @@ static void __writer( void* threadinst ) {
   int busyTimer = 0;
 
   TraceOp.trc( "ulni", TRCLEVEL_INFO, __LINE__, 9999, "ULNI writer started." );
-  do {
+
+  while( data->run ) {
     Boolean  ok = False;
+
+    if( data->serial == NULL ) {
+      ThreadOp.sleep(1000);
+      continue;
+    }
 
     /* TODO: copy packet for the reader to compair */
 		if( !data->busy && data->subSendEcho && !QueueOp.isEmpty(data->subWriteQueue) ) {
@@ -274,7 +319,7 @@ static void __writer( void* threadinst ) {
     }
 
     ThreadOp.sleep(10);
-  } while( data->run );
+  };
 
   TraceOp.trc( "ulni", TRCLEVEL_INFO, __LINE__, 9999, "ULNI writer stopped." );
 }
@@ -282,36 +327,23 @@ static void __writer( void* threadinst ) {
 
 Boolean ulniConnect( obj inst ) {
   iOLocoNetData data = Data(inst);
-
-  data->subSendEcho = True;
-
   data->bps = wDigInt.getbps( data->ini );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device  =%s", data->device );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "bps     =%d", data->bps );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout =%d", wDigInt.gettimeout( data->ini ) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
+  //__Connect(inst);
 
-  data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, 0 );
-  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
-  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
+  data->subReadQueue = QueueOp.inst(1000);
+  data->subWriteQueue = QueueOp.inst(1000);
+  data->run = True;
+  data->subReader = ThreadOp.inst( "ulnireader", &__reader, inst );
+  ThreadOp.start( data->subReader );
+  data->subWriter = ThreadOp.inst( "ulniwriter", &__writer, inst );
+  ThreadOp.start( data->subWriter );
 
-  if( SerialOp.open( data->serial ) ) {
-    data->subReadQueue = QueueOp.inst(1000);
-    data->subWriteQueue = QueueOp.inst(1000);
-    data->run = True;
-    data->subReader = ThreadOp.inst( "ulnireader", &__reader, inst );
-    ThreadOp.start( data->subReader );
-    data->subWriter = ThreadOp.inst( "ulniwriter", &__writer, inst );
-    ThreadOp.start( data->subWriter );
-    return True;
-  }
-  else {
-    SerialOp.base.del( data->serial );
-    data->serial = NULL;
-    return False;
-  }
+  return True;
 }
 
 void ulniDisconnect( obj inst ) {
