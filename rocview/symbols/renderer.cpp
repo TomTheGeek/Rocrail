@@ -78,6 +78,14 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, in
 }
 
 
+bool SymbolRenderer::hasSVG(const char* svgname) {
+  svgSymbol* SvgSym = (svgSymbol*)MapOp.get( m_SymMap, svgname );
+  if( SvgSym != NULL )
+    return true;
+  return false;
+}
+
+
 /**
  * determine symbol type and subtype
  */

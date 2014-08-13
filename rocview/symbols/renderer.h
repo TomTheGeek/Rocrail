@@ -140,6 +140,7 @@ public:
   double getRadians(double degrees);
 
   bool hasAlt() { return m_bHasAlt; }
+  bool hasSVG(const char* svgname);
 
 };
 
