@@ -47,7 +47,6 @@
 
 ////@begin control identifiers
 #define ID_DIALOG 10115
-#define ID_BITMAPBUTTON_INFO_SPLASH 10172
 #define wxID_STATIC_INFO_BUILD 10002
 #define wxID_STATIC_INFO_HOME 10003
 #define wxID_STATIC_INFO_SUPPORT 10004
@@ -90,9 +89,6 @@ public:
 
 ////@begin InfoDialog event handler declarations
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON_INFO_SPLASH
-    void OnBitmapbuttonInfoSplashClick( wxCommandEvent& event );
-
     /// wxEVT_LEFT_UP event handler for wxID_STATIC_INFO_BUILD
     void onBuildRevision( wxMouseEvent& event );
 
@@ -111,7 +107,7 @@ public:
     static bool ShowToolTips();
 
 ////@begin InfoDialog member variables
-    wxBitmapButton* m_Splash;
+    wxStaticBitmap* m_Splash;
     wxStaticText* m_Build;
     wxStaticText* m_RocrailVersion;
     wxStaticText* m_RocrailPwd;
@@ -121,6 +117,8 @@ public:
     wxStaticText* m_ThanksLine;
     wxTextCtrl* m_Thanks;
 ////@end InfoDialog member variables
+    ~InfoDialog();
+    void OnSplash( wxMouseEvent& event );
 };
 
 #endif

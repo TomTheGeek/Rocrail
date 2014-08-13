@@ -54,8 +54,9 @@ DonKeyGen( parent )
   Raise();
 }
 
-void DonKey::OnSplash( wxCommandEvent& event ) {
-  OnLoadKey(event);
+void DonKey::OnSplash( wxMouseEvent& event ) {
+  wxCommandEvent cmd;
+  OnLoadKey(cmd);
   Raise();
 }
 void DonKey::OnLoadKey( wxCommandEvent& event )
@@ -110,7 +111,7 @@ void DonKey::OnOK( wxCommandEvent& event )
 }
 
 void DonKey::initLabels() {
-  m_Splash->SetBitmapLabel( *_img_rocrail_logo );
+  m_Splash->SetBitmap( *_img_rocrail_logo );
   m_Splash->Refresh();
 
   m_labEmail->SetLabel( wxGetApp().getMsg( "email" ) );

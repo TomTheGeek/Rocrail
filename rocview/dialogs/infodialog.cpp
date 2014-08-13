@@ -63,8 +63,6 @@ IMPLEMENT_DYNAMIC_CLASS( InfoDialog, wxDialog )
 BEGIN_EVENT_TABLE( InfoDialog, wxDialog )
 
 ////@begin InfoDialog event table entries
-    EVT_BUTTON( ID_BITMAPBUTTON_INFO_SPLASH, InfoDialog::OnBitmapbuttonInfoSplashClick )
-
 ////@end InfoDialog event table entries
 
 END_EVENT_TABLE()
@@ -82,7 +80,7 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   Create(parent, id, caption, pos, size, style);
 
 
-  m_Splash->SetBitmapLabel( *_img_rocrail_logo );
+  m_Splash->SetBitmap( *_img_rocrail_logo );
   m_Splash->Refresh();
 
   char* str = StrOp.fmt("%s revision %d", wGui.buildDate, wxGetApp().getRevisionNr());
@@ -122,6 +120,14 @@ InfoDialog::InfoDialog( wxWindow* parent, wxWindowID id, const wxString& caption
   GetSizer()->Fit(this);
   GetSizer()->SetSizeHints(this);
   Centre();
+
+  m_Splash->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( InfoDialog::OnSplash ), NULL, this );
+
+}
+
+InfoDialog::~InfoDialog( )
+{
+  m_Splash->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( InfoDialog::OnSplash ), NULL, this );
 }
 
 /*!
@@ -171,8 +177,8 @@ void InfoDialog::CreateControls()
     wxFlexGridSizer* itemFlexGridSizer3 = new wxFlexGridSizer(0, 1, 0, 0);
     itemBoxSizer2->Add(itemFlexGridSizer3, 1, wxGROW|wxALL, 5);
 
-    m_Splash = new wxBitmapButton( itemDialog1, ID_BITMAPBUTTON_INFO_SPLASH, wxNullBitmap, wxDefaultPosition, wxSize(360, 115), wxBU_AUTODRAW );
-    itemFlexGridSizer3->Add(m_Splash, 0, wxGROW|wxGROW|wxALL, 5);
+    m_Splash = new wxStaticBitmap( itemDialog1, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer3->Add(m_Splash, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Build = new wxStaticText( itemDialog1, wxID_STATIC_INFO_BUILD, _("build"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
     m_Build->SetFont(wxFont(10, wxDEFAULT, wxNORMAL, wxBOLD, false, wxT("Ubuntu")));
@@ -249,7 +255,7 @@ wxIcon InfoDialog::GetIconResource( const wxString& name )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BITMAPBUTTON_INFO_SPLASH
  */
 
-void InfoDialog::OnBitmapbuttonInfoSplashClick( wxCommandEvent& event )
+void InfoDialog::OnSplash( wxMouseEvent& event )
 {
   EndModal( wxID_OK );
 }
@@ -266,4 +272,7 @@ void InfoDialog::onBuildRevision( wxMouseEvent& event )
   wxLaunchDefaultBrowser(wxString(url,wxConvUTF8), wxBROWSER_NEW_WINDOW );
   StrOp.free(url);
 }
+
+
+
 

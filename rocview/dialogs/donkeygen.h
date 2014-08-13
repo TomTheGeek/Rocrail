@@ -11,16 +11,16 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/bmpbuttn.h>
+#include <wx/statbmp.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/string.h>
-#include <wx/button.h>
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
 #include <wx/sizer.h>
+#include <wx/button.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -34,7 +34,7 @@ class DonKeyGen : public wxDialog
 	private:
 	
 	protected:
-		wxBitmapButton* m_Splash;
+		wxStaticBitmap* m_Splash;
 		wxTextCtrl* m_DonateText;
 		wxStaticText* m_labEmail;
 		wxTextCtrl* m_Email;
@@ -47,7 +47,7 @@ class DonKeyGen : public wxDialog
 		wxButton* m_stdButtonHelp;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnSplash( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSplash( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnLoadKey( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDonateNow( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onHelp( wxCommandEvent& event ) { event.Skip(); }

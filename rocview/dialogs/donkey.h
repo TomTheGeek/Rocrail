@@ -38,7 +38,7 @@ class DonKey : public DonKeyGen
 {
 protected:
 	// Handlers for DonKeyGen events.
-	void OnSplash( wxCommandEvent& event );
+	void OnSplash( wxMouseEvent& event );
 	void OnLoadKey( wxCommandEvent& event );
 	void OnDonateNow( wxCommandEvent& event );
   void OnOK( wxCommandEvent& event );

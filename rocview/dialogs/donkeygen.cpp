@@ -16,7 +16,7 @@ DonKeyGen::DonKeyGen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
-	m_Splash = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 360,115 ), wxBU_AUTODRAW );
+	m_Splash = new wxStaticBitmap( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer1->Add( m_Splash, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_DonateText = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,100 ), wxTE_MULTILINE|wxTE_READONLY );
@@ -71,7 +71,7 @@ DonKeyGen::DonKeyGen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	m_Splash->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DonKeyGen::OnSplash ), NULL, this );
+	m_Splash->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( DonKeyGen::OnSplash ), NULL, this );
 	m_LoadKey->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DonKeyGen::OnLoadKey ), NULL, this );
 	m_Donate->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DonKeyGen::OnDonateNow ), NULL, this );
 	m_stdButtonHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DonKeyGen::onHelp ), NULL, this );
@@ -81,7 +81,7 @@ DonKeyGen::DonKeyGen( wxWindow* parent, wxWindowID id, const wxString& title, co
 DonKeyGen::~DonKeyGen()
 {
 	// Disconnect Events
-	m_Splash->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DonKeyGen::OnSplash ), NULL, this );
+	m_Splash->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( DonKeyGen::OnSplash ), NULL, this );
 	m_LoadKey->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DonKeyGen::OnLoadKey ), NULL, this );
 	m_Donate->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DonKeyGen::OnDonateNow ), NULL, this );
 	m_stdButtonHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DonKeyGen::onHelp ), NULL, this );

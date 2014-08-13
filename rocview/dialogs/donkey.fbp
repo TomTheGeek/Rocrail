@@ -88,29 +88,22 @@
                     <property name="border">5</property>
                     <property name="flag">wxALL|wxALIGN_CENTER_HORIZONTAL</property>
                     <property name="proportion">0</property>
-                    <object class="wxBitmapButton" expanded="1">
+                    <object class="wxStaticBitmap" expanded="1">
                         <property name="bg"></property>
                         <property name="bitmap"></property>
                         <property name="context_help"></property>
                         <property name="context_menu">1</property>
-                        <property name="default">0</property>
-                        <property name="disabled"></property>
                         <property name="enabled">1</property>
                         <property name="fg"></property>
-                        <property name="focus"></property>
                         <property name="font"></property>
                         <property name="hidden">0</property>
-                        <property name="hover"></property>
                         <property name="id">wxID_ANY</property>
-                        <property name="label">RR</property>
                         <property name="maximum_size"></property>
                         <property name="minimum_size"></property>
                         <property name="name">m_Splash</property>
                         <property name="permission">protected</property>
                         <property name="pos"></property>
-                        <property name="selected"></property>
-                        <property name="size">360,115</property>
-                        <property name="style">wxBU_AUTODRAW</property>
+                        <property name="size"></property>
                         <property name="subclass"></property>
                         <property name="tooltip"></property>
                         <property name="validator_data_type"></property>
@@ -120,7 +113,6 @@
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
                         <property name="window_style"></property>
-                        <event name="OnButtonClick">OnSplash</event>
                         <event name="OnChar"></event>
                         <event name="OnEnterWindow"></event>
                         <event name="OnEraseBackground"></event>
@@ -130,7 +122,7 @@
                         <event name="OnLeaveWindow"></event>
                         <event name="OnLeftDClick"></event>
                         <event name="OnLeftDown"></event>
-                        <event name="OnLeftUp"></event>
+                        <event name="OnLeftUp">OnSplash</event>
                         <event name="OnMiddleDClick"></event>
                         <event name="OnMiddleDown"></event>
                         <event name="OnMiddleUp"></event>
