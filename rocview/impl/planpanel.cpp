@@ -842,6 +842,7 @@ iONode PlanPanel::GetClipboardNode(bool clear) {
 void PlanPanel::OnPaste(wxCommandEvent& event) {
   iONode node = GetClipboardNode();
   if( node != NULL ) {
+    NodeOp.setBool( node, "copy", False );
     wItem.setid(node, "");
     addItemAttr( node );
   }
