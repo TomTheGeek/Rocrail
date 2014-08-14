@@ -44,8 +44,9 @@
 Boolean rocs_serial_close( iOSerial inst ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
+  o->rc = 0;
   if( o->handle ) {
-    o->rc = CloseHandle( o->handle );
+    int rc = CloseHandle( o->handle );
     if( !o->blocking ) {
       freeMem( o->overlapped );
       timeEndPeriod(1);
@@ -68,6 +69,8 @@ Boolean rocs_serial_open( iOSerial inst ) {
   strcpy (port,"\\\\.\\");
   strncat (port, o->device ,5 );
   rocs_serial_close( inst );
+
+  o->rc = 0;
 
   if( o->portbase == 0 ) {
     if( StrOp.equalsi( "com1", o->device ) )
@@ -196,7 +199,6 @@ Boolean rocs_serial_open( iOSerial inst ) {
     }
     return True;
   }
-  o->rc = rc;
 
 #endif
   return False;
@@ -229,11 +231,12 @@ void rocs_serial_setDTR( iOSerial inst, Boolean dtr ) {
   iOSerialData o = Data(inst);
   int func = dtr?SETDTR:CLRDTR;
   int rc = EscapeCommFunction( o->handle, func );
+  o->rc = 0;
   if( rc == 0 ) {
     rc = GetLastError();
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Serial[%s] setDTR [error=%d][function=%d]", o->device, rc, func );
+    o->rc = rc;
   }
-  o->rc = rc;
 #else
   return;
 #endif
@@ -331,7 +334,7 @@ void rocs_serial_setOutputFlow( iOSerial inst, Boolean flow ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
   int rc = 0;
-  o->rc = rc;
+  o->rc = 0;
   /* TODO: output flow on/off */
 #endif
 }
@@ -341,11 +344,12 @@ void rocs_serial_flush( iOSerial inst ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
   int rc = PurgeComm( o->handle, PURGE_TXABORT | PURGE_TXCLEAR );
+  o->rc = 0;
   if( rc == 0 ) {
     rc = GetLastError();
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Serial[%s] Flush error [error=%d]", o->device, rc );
+    o->rc = rc;
   }
-  o->rc = rc;
 #endif
 }
 
@@ -436,8 +440,8 @@ Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
     if( !ok ) {
       rc = GetLastError();
       SerialOp.available( inst );
+      o->rc = rc;
     }
-    o->rc = rc;
     if( rc == 0 )
       readcnt += cnt;
     /* Check for timeout: */
@@ -453,7 +457,7 @@ Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
   else
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Serial[%s] %d read.[rc=%d]", o->device, readcnt, rc );
 
-  o->rc = rc;
+  o->rc = 0;
   o->ioState = ok;
   o->read = readcnt;
   return readcnt == size ? True:False;
