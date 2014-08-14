@@ -45,7 +45,7 @@ Boolean rocs_serial_close( iOSerial inst ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
   if( o->handle ) {
-    int rc = CloseHandle( o->handle );
+    o->rc = CloseHandle( o->handle );
     if( !o->blocking ) {
       freeMem( o->overlapped );
       timeEndPeriod(1);
@@ -196,6 +196,7 @@ Boolean rocs_serial_open( iOSerial inst ) {
     }
     return True;
   }
+  o->rc = rc;
 
 #endif
   return False;
@@ -205,6 +206,7 @@ void rocs_serial_setRTS( iOSerial inst, Boolean rts ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
   int func = rts?SETRTS:CLRRTS;
+  o->rc = 0;
   EscapeCommFunction( o->handle, func );
 #else
 
@@ -231,6 +233,7 @@ void rocs_serial_setDTR( iOSerial inst, Boolean dtr ) {
     rc = GetLastError();
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Serial[%s] setDTR [error=%d][function=%d]", o->device, rc, func );
   }
+  o->rc = rc;
 #else
   return;
 #endif
@@ -239,8 +242,8 @@ void rocs_serial_setDTR( iOSerial inst, Boolean dtr ) {
 Boolean rocs_serial_isCTS( iOSerial inst ) {
   long state = 0;
 #ifdef __ROCS_SERIAL__
-
   iOSerialData o = Data(inst);
+  o->rc = 0;
   GetCommModemStatus( o->handle, &state );
 #endif
 
@@ -250,8 +253,8 @@ Boolean rocs_serial_isCTS( iOSerial inst ) {
 Boolean rocs_serial_isDSR( iOSerial inst ) {
   long state = 0;
 #ifdef __ROCS_SERIAL__
-
   iOSerialData o = Data(inst);
+  o->rc = 0;
   GetCommModemStatus( o->handle, &state );
 #endif
 
@@ -261,8 +264,8 @@ Boolean rocs_serial_isDSR( iOSerial inst ) {
 Boolean rocs_serial_isRI( iOSerial inst ) {
   long state = 0;
 #ifdef __ROCS_SERIAL__
-
   iOSerialData o = Data(inst);
+  o->rc = 0;
   if (o->directIO) {
     int msr = SystemOp.readPort( o->portbase + 6 );
     if( msr & 0x04 ) /* RI changed */
@@ -276,17 +279,17 @@ Boolean rocs_serial_isRI( iOSerial inst ) {
 int rocs_serial_getWaiting( iOSerial inst ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
+  o->rc = 0;
   if (o->blocking) {
     //      int lsr = SystemOp.readPort( o->portbase + 5 );
     /* 0x40 = Transmitter Holding Register is empty and the shift register too */
     /* this flag turns high on empty */
     //      return (lsr & 0x40) ? 0:1;
     return 0;  /*When using blocking io there are no waiting bytes, as write hangs until empty.*/
-  } else {
-
+  }
+  else {
     COMSTAT comStat;
     DWORD   dwErrors;
-
     // Get and clear current errors on the port.
     ClearCommError(o->handle, &dwErrors, &comStat);
     return comStat.cbOutQue;
@@ -298,18 +301,22 @@ int rocs_serial_getWaiting( iOSerial inst ) {
 Boolean rocs_serial_isUartEmpty( iOSerial inst, Boolean soft ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
+  o->rc = 0;
   if (o->blocking) {
     return True; /*When using blocking io there are no waiting bytes, as write hangs until empty.*/
-  } else {
+  }
+  else {
     if ((o->directIO) || (!soft)) {
       if (!rocs_serial_getWaiting(inst)) {
         int lsr = SystemOp.readPort( o->portbase + 5 );
         /* 0x40 = Transmitter Holding Register is empty and the shift register too */
         /* this flag turns high on empty */
         return (lsr & 0x40) ? True:False;
-      } else
+      }
+      else
         return False;
-    } else {
+    }
+    else {
       if (!rocs_serial_getWaiting(inst))
         return True; //TODO: add code for non-directIO.
       else
@@ -324,6 +331,7 @@ void rocs_serial_setOutputFlow( iOSerial inst, Boolean flow ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
   int rc = 0;
+  o->rc = rc;
   /* TODO: output flow on/off */
 #endif
 }
@@ -337,6 +345,7 @@ void rocs_serial_flush( iOSerial inst ) {
     rc = GetLastError();
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Serial[%s] Flush error [error=%d]", o->device, rc );
   }
+  o->rc = rc;
 #endif
 }
 
@@ -349,10 +358,12 @@ Boolean rocs_serial_write( iOSerial inst, char* buffer, int size ) {
   iOSerialData o = Data(inst);
   long sended = 0;
   int ok     = 0;
+  o->rc = 0;
 
   if (o->blocking) {
     ok = WriteFile( o->handle, buffer, size, &sended, NULL );
-  } else {
+  }
+  else {
     ok = WriteFile( o->handle, buffer, size, &sended, o->overlapped );
   }
   if( !ok ) {
@@ -368,7 +379,8 @@ Boolean rocs_serial_write( iOSerial inst, char* buffer, int size ) {
     o->ioState = ok;
     o->rc = rc;
     return rc > 0 ? False:True;
-  } else {
+  }
+  else {
     o->ioState = 1;
     o->rc = 0;
     return True;
@@ -379,9 +391,10 @@ Boolean rocs_serial_write( iOSerial inst, char* buffer, int size ) {
 int rocs_serial_avail( iOSerial inst ) {
 #ifdef __ROCS_SERIAL__
   iOSerialData o = Data(inst);
-  unsigned short etat;
+  DWORD etat;
   struct _COMSTAT comstat;
   int rc = ClearCommError( o->handle, &etat, &comstat );
+  o->rc = 0;
   if( rc == 0 ) {
     /*
       CE_BREAK    0x0010 The hardware detected a break condition.
@@ -391,6 +404,7 @@ int rocs_serial_avail( iOSerial inst ) {
       CE_RXPARITY 0x0004 The hardware detected a parity error.
      */
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Serial[%s] error=0x%04X", o->device, etat );
+    o->rc = etat;
     return -1;
   }
   else
@@ -410,6 +424,7 @@ Boolean rocs_serial_read( iOSerial inst, char* buffer, int size ) {
   int  tries  = 0;
 
   o->read = 0;
+  o->rc = 0;
 
   do {
     if (o->blocking) {
@@ -452,6 +467,7 @@ void rocs_serial_setSerialMode( iOSerial inst, serial_mode mode ) {
   iOSerialData o = Data(inst);
   DCB   dcb;
   int rc = 0;
+  o->rc = 0;
   if (!o->directIO) {
     memset( &dcb, 0, sizeof( dcb ) );
     if (!GetCommState( o->handle, &dcb )) {
@@ -470,7 +486,8 @@ void rocs_serial_setSerialMode( iOSerial inst, serial_mode mode ) {
         SystemOp.writePort( o->portbase + 0, 0x03 );
         SystemOp.writePort( o->portbase + 1, 0x00 );
         SystemOp.writePort( o->portbase + 3, 0x01 );
-      } else {
+      }
+      else {
         dcb.BaudRate = 38400;
         dcb.ByteSize = 6;
         dcb.Parity = NOPARITY;
@@ -487,7 +504,8 @@ void rocs_serial_setSerialMode( iOSerial inst, serial_mode mode ) {
         SystemOp.writePort( o->portbase + 0, 0x06 );
         SystemOp.writePort( o->portbase + 1, 0x00 );
         SystemOp.writePort( o->portbase + 3, 0x03 );
-      } else {
+      }
+      else {
         dcb.BaudRate = 19200;
         dcb.ByteSize = 8;
         dcb.Parity = NOPARITY;
@@ -504,7 +522,8 @@ void rocs_serial_setSerialMode( iOSerial inst, serial_mode mode ) {
         SystemOp.writePort( o->portbase + 0, 0x01 );
         SystemOp.writePort( o->portbase + 1, 0x00 );
         SystemOp.writePort( o->portbase + 3, 0x1F );
-      } else {
+      }
+      else {
         dcb.BaudRate = 115200;
         dcb.ByteSize = 8;
         dcb.Parity = EVENPARITY;
@@ -518,6 +537,7 @@ void rocs_serial_setSerialMode( iOSerial inst, serial_mode mode ) {
   if (!o->directIO && !SetCommState( o->handle, &dcb )) {
     rc = GetLastError();
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "SetCommState failed.[rc=%d]", rc );
+    o->rc = rc;
   }
   //        tcgetattr( o->sh, &tio );
   //    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Current output baud rate is %d\n", (int) cfgetospeed(&tio) );
@@ -526,6 +546,7 @@ void rocs_serial_setSerialMode( iOSerial inst, serial_mode mode ) {
 
 void rocs_serial_waitMM( iOSerial inst, int usperiod, int uspause  ) {
   iOSerialData o = Data(inst);
+  o->rc = 0;
   if( o->directIO ) {
     while( !SerialOp.isUartEmpty( inst, True ) )
       ;
