@@ -85,19 +85,21 @@ Needed instance variables:
 
 static Boolean __Connect( iOLocoNet inst ) {
   iOLocoNetData data = Data(inst);
+  iOSerial serial = NULL;
 
   data->subSendEcho = True;
 
-  data->serial = SerialOp.inst( data->device );
-  SerialOp.setFlow( data->serial, 0 );
-  SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
-  SerialOp.setTimeout( data->serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
+  serial = SerialOp.inst( data->device );
+  SerialOp.setFlow( serial, 0 );
+  SerialOp.setLine( serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( data->ini ) );
+  SerialOp.setTimeout( serial, wDigInt.gettimeout( data->ini ), wDigInt.gettimeout( data->ini ) );
 
-  if( SerialOp.open( data->serial ) ) {
+  if( SerialOp.open( serial ) ) {
+    data->serial = serial;
     return True;
   }
   else {
-    SerialOp.base.del( data->serial );
+    SerialOp.base.del( serial );
     data->serial = NULL;
     return False;
   }
