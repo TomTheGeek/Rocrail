@@ -3091,9 +3091,12 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       locoid = "";
     }
     else if( wGui.isshowlocoimageinblock(wxGetApp().getIni()) ) {
-      iONode loc = wxGetApp().getFrame()->findLoc( locoid );
-      if( loc != NULL )
+      TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "show loco image for [%s]", updateEnterside ? wBlock.getlocid(m_Props):locoid );
+      iONode loc = wxGetApp().getFrame()->findLoc( updateEnterside ? wBlock.getlocid(m_Props):locoid );
+      if( loc != NULL ) {
         m_Renderer->setLocoImage(wLoc.getimage(loc));
+        TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "loco image: %s", wLoc.getimage(loc) );
+      }
     }
 
 

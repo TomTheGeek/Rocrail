@@ -2080,7 +2080,8 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
 
 
   bool l_ImageOK = false;
-  if( m_LocoImage != NULL && StrOp.len(m_LocoImage) > 0 ) {
+  TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "occupied=%d locoimage=%s", m_iOccupied, m_LocoImage );
+  if( (m_iOccupied == 1 || m_iOccupied == 3) && m_LocoImage != NULL && StrOp.len(m_LocoImage) > 0 ) {
     // Show loco image.
     const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
     static char pixpath[256];
