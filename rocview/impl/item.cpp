@@ -3085,9 +3085,17 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     int occupied = 0;
     Boolean showID = True;
 
+    m_Renderer->setLocoImage("");
+
     if( locoid == NULL ) {
       locoid = "";
     }
+    else {
+      iONode loc = wxGetApp().getFrame()->findLoc( locoid );
+      if( loc != NULL )
+        m_Renderer->setLocoImage(wLoc.getimage(loc));
+    }
+
 
     if( updateEnterside ) {
       // reset update flag

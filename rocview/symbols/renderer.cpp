@@ -75,6 +75,7 @@ SymbolRenderer::SymbolRenderer( iONode props, wxWindow* parent, iOMap symmap, in
   m_iItemIDps = itemidps;
   m_iTextps = textps;
   m_DC = NULL;
+  m_LocoImage = "";
 }
 
 
@@ -2077,7 +2078,50 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
 
   drawBlockTriangle( dc, ori );
 
-  if( StrOp.len(m_Label) > 0 ) {
+
+  bool l_ImageOK = false;
+  if( m_LocoImage != NULL && StrOp.len(m_LocoImage) > 0 ) {
+    // Show loco image.
+    const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
+    static char pixpath[256];
+    StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( m_LocoImage ) );
+
+    if( FileOp.exist(pixpath)) {
+      wxBitmap* imageBitmap = NULL;
+      wxImage img(wxString(pixpath,wxConvUTF8), wxBITMAP_TYPE_PNG);
+      int maxheight = 20;
+      if( img.GetHeight() > maxheight ) {
+        int h = img.GetHeight();
+        int w = img.GetWidth();
+        float scale = (float)h / (float)maxheight;
+        float width = (float)w / scale;
+        imageBitmap = new wxBitmap(img.Scale((int)width, maxheight, wxIMAGE_QUALITY_HIGH));
+      }
+      else {
+        imageBitmap = new wxBitmap(img);
+      }
+
+      int x = 10;
+      int y = (32-maxheight)/2;
+
+      if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
+        wxImage img = imageBitmap->ConvertToImage();
+        delete imageBitmap;
+        img = img.Rotate90( StrOp.equals( ori, wItem.north ) ? true:false );
+        y = 10;
+        x = (32-maxheight)/2;
+        imageBitmap = new wxBitmap(img);
+      }
+
+      if( m_UseGC )
+        m_GC->DrawBitmap(*imageBitmap, x, y, imageBitmap->GetWidth(), imageBitmap->GetHeight());
+      else
+        dc.DrawBitmap(*imageBitmap, x, y);
+      l_ImageOK = true;
+    }
+  }
+
+  if( !l_ImageOK && StrOp.len(m_Label) > 0 ) {
     int red = 0;
     int green = 0;
     int blue = 0;

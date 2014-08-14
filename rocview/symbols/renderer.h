@@ -94,6 +94,7 @@ class SymbolRenderer {
   bool m_bHasAlt;
   bool m_UseGC;
   wxPaintDC* m_DC;
+  const char* m_LocoImage;
 
 
 public:
@@ -103,6 +104,7 @@ public:
   void sizeToScale( double size, double scale, double bktext, int* cx, int* cy, const char* ori );
   void setLabel( const char* label, int occupied );
   void setLabel( const char* label, int occupied, bool rotate );
+  void setLocoImage( const char* locoimage ) { m_LocoImage = locoimage;}
   int getcx() {return m_cx;}
   int getcy() {return m_cy;}
   bool isRotateable() { return m_bRotateable; }
