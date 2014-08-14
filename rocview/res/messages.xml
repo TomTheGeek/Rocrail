@@ -28795,4 +28795,7 @@
     <sl txt="Zbrišem vse povezave na ta nivo?"/>
     <sr_latin txt="Obriši sve šine vezane za ovaj nivo?"/>
   </Msg>
+  <Msg id="showlocoimageinblock">
+    <en txt="Show loco image in block"/>
+  </Msg>
 </Messages>

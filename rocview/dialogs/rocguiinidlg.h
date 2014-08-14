@@ -203,6 +203,7 @@ public:
     wxCheckBox* m_MonitorDontWrap;
     wxCheckBox* m_ShowSpeedOMeter;
     wxCheckBox* m_LocoImageColumn;
+    wxCheckBox* m_ShowLocoImageInBlock;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;

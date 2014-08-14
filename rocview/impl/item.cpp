@@ -3090,7 +3090,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( locoid == NULL ) {
       locoid = "";
     }
-    else {
+    else if( wGui.isshowlocoimageinblock(wxGetApp().getIni()) ) {
       iONode loc = wxGetApp().getFrame()->findLoc( locoid );
       if( loc != NULL )
         m_Renderer->setLocoImage(wLoc.getimage(loc));

@@ -7385,3 +7385,9 @@ msgstr ""
 msgid "Delete all tracks linked to this level?"
 msgstr ""
 
+#. 
+# id="showlocoimageinblock"
+#, c-format
+msgid "Show loco image in block"
+msgstr ""
+
