@@ -61,6 +61,7 @@
 //                                 added FEATURE_GEN_POM_REPEAT
 //            2014-06-11       kw  added FEATURE_GEN_START_STATE
 //            2014-06-25       kw  added Makrocommand BIDIB_MSYS_SERVOMOVE_QUERY
+//            2014-08-13       kw  changed: XPOM (enums, type)
 //
 //===============================================================================
 //
@@ -526,7 +527,7 @@ typedef struct                              // t_bidib_cs_pom
         unsigned int  cv_addr;              // true cv address (start with 0)
       };
     unsigned char cv_addrx;                 //
-    unsigned char data;
+    unsigned char data[4];
   } t_bidib_cs_pom;
 
 typedef struct                              // t_bidib_cs_pom
@@ -586,8 +587,8 @@ typedef struct                              // t_bidib_cs_pom
 #define FEATURE_BST_VOLT                   16   // booster output voltage setting (unit: V)
 #define FEATURE_BST_CUTOUT_AVAIALABLE      17   // booster can do cutout for railcom
 #define FEATURE_BST_CUTOUT_ON              18   // cutout is enabled
-#define FEATURE_BST_TURNOFF_TIME           19   // time in ms until booster turns off in case of a short
-#define FEATURE_BST_INRUSH_TURNOFF_TIME    20   // time in ms until booster turns off in case of a short after the first power up
+#define FEATURE_BST_TURNOFF_TIME           19   // time in ms until booster turns off in case of a short (unit 2ms)
+#define FEATURE_BST_INRUSH_TURNOFF_TIME    20   // time in ms until booster turns off in case of a short after the first power up (unit 2ms)
 #define FEATURE_BST_AMPERE_ADJUSTABLE      21   // booster output current is adjustable
 #define FEATURE_BST_AMPERE                 22   // booster output current value (special coding)
 #define FEATURE_BST_CURMEAS_INTERVAL       23   // current update interval
@@ -761,14 +762,17 @@ typedef struct                              // t_bidib_cs_pom
 #define BIDIB_CS_DRIVE_F13F20_BIT   (1<<4)
 #define BIDIB_CS_DRIVE_F21F28_BIT   (1<<5)
 
-#define BIDIB_CS_POM_RD_BLOCK             0
-#define BIDIB_CS_POM_RD_BYTE              1
-#define BIDIB_CS_POM_WR_BIT               2
+#define BIDIB_CS_POM_RD_BLOCK             0 // bit 0,1: CC-Bits
+#define BIDIB_CS_POM_RD_BYTE              1 // bit 2,3: no. of bytes to write (-1)
+#define BIDIB_CS_POM_WR_BIT               2 // bit 7: pom/xpom
 #define BIDIB_CS_POM_WR_BYTE              3
-#define BIDIB_CS_xPOM_RD_BLOCK         0x80
-#define BIDIB_CS_xPOM_RD_BYTE          0x81
+#define BIDIB_CS_xPOM_reserved         0x80
+#define BIDIB_CS_xPOM_RD_BLOCK         0x81
 #define BIDIB_CS_xPOM_WR_BIT           0x82
-#define BIDIB_CS_xPOM_WR_BYTE          0x83
+#define BIDIB_CS_xPOM_WR_BYTE1         0x83
+#define BIDIB_CS_xPOM_WR_BYTE2         0x87
+#define BIDIB_CS_xPOM_WR_BYTE3         0x8B
+#define BIDIB_CS_xPOM_WR_BYTE4         0x8F
 
 #define BIDIB_CS_PROG_BREAK             0   // service mode commands (MSG_CS_PROG)
 #define BIDIB_CS_PROG_QUERY             1
