@@ -451,3 +451,9 @@ void TrackPickerDlg::onClose( wxCloseEvent& event ) {
 }
 
 
+void TrackPickerDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "rocgui-menu", "additem" );
+
+}
+
+
