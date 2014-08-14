@@ -142,9 +142,10 @@ static void __reader( void* threadinst ) {
         }
         else if( available == -1 || SerialOp.getRc(data->serial) > 0 ) {
           /* device error */
-          SerialOp.close(data->serial);
-          SerialOp.base.del( data->serial );
+          iOSerial serial = data->serial;
           data->serial = NULL;
+          SerialOp.close( serial );
+          SerialOp.base.del( serial );
           TraceOp.trc( "ulni", TRCLEVEL_EXCEPTION, __LINE__, 9999, "device error" );
         }
         else {
@@ -288,7 +289,12 @@ static void __writer( void* threadinst ) {
 		  busyTimer = 0;
 		  MemOp.copy( ln, &p[1], min(size, 127) );
 		  freeMem(p);
-      ok = SerialOp.write( data->serial, (char*)ln, size );
+	    if( data->serial != NULL ) {
+	      TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)ln, size );
+        ok = SerialOp.write( data->serial, (char*)ln, size );
+        ThreadOp.sleep(1000);
+        continue;
+	    }
       if(ok) {
         echoTimer = 0;
         data->subSendLen = size;
@@ -381,7 +387,6 @@ Boolean ulniWrite( obj inst, unsigned char *msg, int len ) {
     p[0] = len;
     MemOp.copy( p+1, msg, min(len,127));
     QueueOp.post( data->subWriteQueue, (obj)p, normal);
-    TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)msg, len );
     return True;
   }
   
