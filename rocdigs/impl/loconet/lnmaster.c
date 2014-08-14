@@ -487,6 +487,14 @@ static void __longAck( iOLocoNet loconet, int opc, int rc ) {
   LocoNetOp.write( loconet, rsp, 4 );
 }
 
+static void __GPBUSY( iOLocoNet loconet ) {
+  byte rsp[32];
+  rsp[0] = OPC_GPBUSY;
+  rsp[1] = LocoNetOp.checksum( rsp, 1);
+  LocoNetOp.write( loconet, rsp, 2 );
+}
+
+
 
 static int __locoaddress(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   iOLocoNetData data = Data(loconet);
@@ -691,6 +699,10 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
     data->listenerFun( data->listenerObj, __locCmd( loconet, slotnr, slot, __setstat1byte( slot, slotnr, msg[3])), TRCLEVEL_INFO );
     data->listenerFun( data->listenerObj, __funCmd( loconet, slotnr, slot, 1), TRCLEVEL_INFO );
   }
+
+  // for Uhlenbrock FRED in dispatch mode
+  __GPBUSY(loconet);
+
   __longAck( loconet, OPC_WR_SL_DATA, -1 );
 
   if( slotnr == FC_SLOT && slot[slotnr].init == 0) {
