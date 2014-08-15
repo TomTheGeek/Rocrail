@@ -701,7 +701,7 @@ static int __setslotdata(iOLocoNet loconet, byte* msg, struct __lnslot* slot) {
   }
 
   // for Uhlenbrock FRED in dispatch mode
-  __GPBUSY(loconet);
+  // __GPBUSY(loconet);
 
   __longAck( loconet, OPC_WR_SL_DATA, -1 );
 
