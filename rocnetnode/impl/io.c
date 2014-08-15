@@ -139,16 +139,24 @@ int raspiSetupIO(void)
 
 
 void raspiConfigPort(int port, int type) {
+  if( gpio == NULL )
+    return;
+
   INP_GPIO(port);
   if( type == 0 )
     OUT_GPIO(port);
 }
 
 int raspiRead(int port) {
+  if( gpio == NULL )
+    return 0;
   return GPIO_READ(port);
 }
 
 void raspiWrite(int port, int val) {
+  if( gpio == NULL )
+    return;
+
   if(val)
     GPIO_SET = 1 << port;
   else
@@ -165,6 +173,9 @@ void raspiSetPWM(int percent)
   int bitCount;
   unsigned int bits = 0;
 
+  if( pwm == NULL )
+    return;
+
   bitCount = (32 * percent) / 100;
   if (bitCount > 32) bitCount = 32;
   bits = 0;
@@ -179,6 +190,9 @@ void raspiSetPWM(int percent)
 /* init hardware */
 void raspiInitPWM(int maxpwm)
 {
+  if( gpio == NULL )
+    return;
+
   /* set PWM alternate function for GPIO18 */
   SET_GPIO_ALT(18, 5);
 

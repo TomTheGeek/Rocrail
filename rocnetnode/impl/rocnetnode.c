@@ -1523,6 +1523,7 @@ static void __scanI2C(iORocNetNode rocnetnode) {
       rc = raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x12, &data->iodata[i*2+0]);
       if( rc < 0 ) {
         data->i2caddrError[i]++;
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not read from I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x20+i, errno );
         __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_READ, i);
       }
       else {
@@ -1535,6 +1536,7 @@ static void __scanI2C(iORocNetNode rocnetnode) {
       rc = raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x13, &data->iodata[i*2+1]);
       if( rc < 0 ) {
         data->i2caddrError[i]++;
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not read from I2C device %s addr 0x%02X errno=%d", data->i2cdevice, 0x20+i, errno );
         __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_READ, i);
       }
       else {
@@ -3409,7 +3411,7 @@ static int _Main( iORocNetNode inst, int argc, char** argv ) {
   ThreadOp.start( data->scanner );
   data->pwm = ThreadOp.inst( "rnpwm", &__pwm, __RocNetNode );
   ThreadOp.start( data->pwm );
-  data->rfidAckWD = ThreadOp.inst( "rnpwm", &__rfidAckWD, __RocNetNode );
+  data->rfidAckWD = ThreadOp.inst( "rfidack", &__rfidAckWD, __RocNetNode );
   ThreadOp.start( data->rfidAckWD );
   data->macroprocessor = ThreadOp.inst( "rnmacro", &__macroProcessor, __RocNetNode );
   ThreadOp.start( data->macroprocessor );
