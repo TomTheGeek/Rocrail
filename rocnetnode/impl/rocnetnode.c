@@ -1512,12 +1512,21 @@ static void __scanI2C(iORocNetNode rocnetnode) {
     if( !data->i2caddr[i] )
       continue;
 
+    if( data->i2caddrError[i] > 10 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "skip i2c %d errors=%d", i, data->i2caddrError[i] );
+      data->i2caddr[i] = False;
+      continue;
+    }
+
     if( data->iomap[i] & 0x00FF ) {
       byte iodata = data->iodata[i*2+0];
       rc = raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x12, &data->iodata[i*2+0]);
       if( rc < 0 ) {
-        data->i2caddr[i] = False;
+        data->i2caddrError[i]++;
         __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_READ, i);
+      }
+      else {
+        data->i2caddrError[i] = 0;
       }
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dA [0x%02X]", i, data->iodata[i*2+0] );
     }
@@ -1525,8 +1534,11 @@ static void __scanI2C(iORocNetNode rocnetnode) {
       byte iodata = data->iodata[i*2+1];
       rc = raspiReadRegI2C(data->i2cdescriptor, 0x20+i, 0x13, &data->iodata[i*2+1]);
       if( rc < 0 ) {
-        data->i2caddr[i] = False;
+        data->i2caddrError[i]++;
         __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_READ, i);
+      }
+      else {
+        data->i2caddrError[i] = 0;
       }
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "i2c %dB [0x%02X]", i, data->iodata[i*2+1] );
     }
@@ -1548,6 +1560,13 @@ static void __writeChannel(iORocNetNode rocnetnode, int channel, int pos) {
   i2caddr = (data->channels[channel]->channel - 1) / 16;
   devchannel = ((data->channels[channel]->channel - 1) % 16);
 
+  if( data->i2caddr40Error[i2caddr] > 10 ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "skip channel %d(%d) to I2C device %s addr 0x%02X errors=%d",
+        channel, devchannel, data->i2cdevice, 0x40+i2caddr, data->i2caddr40Error[i2caddr] );
+    data->i2caddr40[i2caddr] = False;
+    return;
+  }
+
   MutexOp.wait( data->i2cmux );
   rc = pwmSetChannel(data->i2cdescriptor, 0x40+i2caddr, devchannel, -1, pos);
   MutexOp.post( data->i2cmux );
@@ -1555,10 +1574,12 @@ static void __writeChannel(iORocNetNode rocnetnode, int channel, int pos) {
   if( rc < 0 ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not write channel %d(%d) to I2C device %s addr 0x%02X errno=%d",
         channel, devchannel, data->i2cdevice, 0x40+i2caddr, errno );
-    data->i2caddr40[i2caddr] = False;
+    data->i2caddr40Error[i2caddr]++;
     __errorReport(rocnetnode, RN_ERROR_RC_I2C, RN_ERROR_RS_WRITE, 0x40+i2caddr);
   }
-
+  else {
+    data->i2caddr40Error[i2caddr] = 0;
+  }
 }
 
 
