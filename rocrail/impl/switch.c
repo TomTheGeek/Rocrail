@@ -335,9 +335,8 @@ static void __normalizeAddr( int* addr, int* port ) {
   if( *addr > 0 && *port == 0 ) {
     /* flat */
     l_addr = (*addr / 8) + 1;
-    l_port = (*addr % 8) / 2 + 1;
-    if( (*addr % 8) % 2 > 0 )
-      l_port++;
+    l_port = (*addr % 8) / 4 + 1;
+    l_port += (*addr % 8) % 4;
   }
   else if( *addr == 0 && *port > 0 ) {
     /* port */
