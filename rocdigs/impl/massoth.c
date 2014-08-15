@@ -307,6 +307,25 @@ static void __releaseSlot(iOMassothData data, iOSlot slot) {
 }
 
 
+static iOSlot __getSlotByAddr(iOMassothData data, int addr) {
+  iOSlot foundSlot = NULL;
+
+  if( MutexOp.wait( data->lcmux ) ) {
+    iOSlot slot = (iOSlot)MapOp.first(data->lcmap);
+    while( slot != NULL ) {
+      if( slot->addr == addr ) {
+        foundSlot = slot;
+        break;
+      }
+      slot = (iOSlot)MapOp.next(data->lcmap);
+    }
+    MutexOp.post(data->lcmux);
+  }
+
+  return foundSlot;
+}
+
+
 static iOSlot __getSlot(iOMassothData data, iONode node) {
   int steps = wLoc.getspcnt(node);
   int addr  = wLoc.getaddr(node);
@@ -892,6 +911,72 @@ static void __handleContact(iOMassothData data, byte* in) {
 }
 
 
+static void __handleLocoSpeed( iOMassothData data, byte* in) {
+  int     addr  = in[2] * 256 + in[3];
+  int     speed = in[4] & 0x7F;
+  Boolean dir   = (in[4] & 0x80) ? True:False;
+  iOSlot  slot  = __getSlotByAddr(data, addr);
+  iONode  nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+
+  if( slot != NULL ) {
+    /* update slot */
+    slot->speed = speed;
+    slot->dir   = dir;
+  }
+
+  if( data->iid != NULL )
+    wLoc.setiid( nodeC, data->iid );
+  if( slot != NULL )
+    wLoc.setid( nodeC, slot->id );
+
+  wLoc.setaddr( nodeC, addr );
+  wLoc.setV_raw( nodeC, speed );
+  wLoc.setdir( nodeC, dir );
+  wLoc.setcmd( nodeC, wLoc.velocity );
+  wLoc.setthrottleid( nodeC, "dimax" );
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+      "loco=%s addr=%d speed=%d dir=%s", slot!=NULL?slot->id:"-", addr, speed, dir?"fwd":"rev" );
+
+  data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+}
+
+
+static void __handleLocoFunctions( iOMassothData data, byte* in) {
+  int     addr   = in[2] * 256 + in[3];
+  Boolean lights = (in[4] & 0x80) ? True:False;
+  int     fn     = (in[4] & 0x18);
+  Boolean on     = (in[4] & 0x20) ? True:False;
+  iOSlot  slot  = __getSlotByAddr(data, addr);
+  iONode  nodeD  = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+
+  int group = fn / 4;
+  if( fn % 4 != 0 )
+    group++;
+
+  if( slot != NULL ) {
+    /* update slot */
+    slot->lights = lights;
+  }
+
+  if( data->iid != NULL )
+    wLoc.setiid( nodeD, data->iid );
+  if( slot != NULL )
+    wFunCmd.setid( nodeD, slot->id );
+  wFunCmd.setaddr( nodeD, addr );
+  wLoc.setthrottleid( nodeD, "dimax" );
+
+  wLoc.setfn( nodeD, lights );
+  wFunCmd.setf0( nodeD, lights );
+  wFunCmd.setfnchanged(nodeD, fn);
+  wFunCmd.setgroup( nodeD, group );
+  char f[32];
+  StrOp.fmtb(f, "f%d", fn);
+  NodeOp.setBool(nodeD, f, on?True:False);
+  data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+}
+
 
 static void __evaluatePacket(iOMassothData data, byte* in) {
   switch( in[0] ) {
@@ -911,6 +996,14 @@ static void __evaluatePacket(iOMassothData data, byte* in) {
     /* vehicle report */
     __handleVehicle(data, in);
     break;
+  case 0x61:
+    /* loco speed */
+    __handleLocoSpeed(data, in);
+    break;
+  case 0x62:
+    /* loco functions */
+    __handleLocoFunctions(data, in);
+    break;
   case 0x4B:
     /* sensor report */
     if( data->fbreset)
@@ -923,7 +1016,7 @@ static void __evaluatePacket(iOMassothData data, byte* in) {
     __handlePT(data, in);
     break;
   default:
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not (jet) evaluated", in[0] );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "message 0x%02X not evaluated", in[0] );
     break;
   }
 }

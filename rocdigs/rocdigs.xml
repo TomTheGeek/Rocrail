@@ -1206,6 +1206,7 @@
       <var name="lights" vt="Boolean"/>
       <var name="f1_8" vt="byte"/>
       <var name="f9_16" vt="byte"/>
+      <var name="f17_32" vt="byte"/>
       <var name="idle" vt="long"/>
     </struct>
     <data>
