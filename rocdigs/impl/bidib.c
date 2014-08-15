@@ -2842,6 +2842,7 @@ static void __handleDriveManual(iOBiDiB bidib, int uid, byte* pdata) {
 
     wLoc.setaddr( nodeC, addr );
     wLoc.setV_raw( nodeC, speed );
+    wLoc.setV_rawMax( nodeC, 127 );
     wLoc.setdir( nodeC, dir );
     wLoc.setcmd( nodeC, wLoc.velocity );
     wLoc.setthrottleid( nodeC, "bidib" );
