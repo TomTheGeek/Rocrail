@@ -992,6 +992,8 @@ static iONode _setModule( iOModPlan inst, iONode module ) {
 
   wModule.settitle( planmodule, wModule.gettitle(module) );
   wModule.setfilename( planmodule, wModule.getfilename(module) );
+  wModule.setid( planmodule, wModule.getid(module) );
+  wModule.setnr( planmodule, wModule.getnr(module) );
 
   wModule.setcx( planmodule, wModule.getcx(module) );
   wModule.setcy( planmodule, wModule.getcy(module) );
@@ -1395,6 +1397,7 @@ static Boolean _modify( iOModPlan inst, iONode item ) {
             iONode zlevel = NodeOp.inst( wZLevel.name(), NULL, ELEMENT_NODE );
             wZLevel.settitle(zlevel, wModule.gettitle( module ) );
             wZLevel.setmodid(zlevel, wModule.getid( module ) );
+            wZLevel.setmodnr(zlevel, wModule.getnr( module ) );
             wZLevel.setz(zlevel, level );
             wZLevel.setmodviewx( zlevel, wModule.getx(module));
             wZLevel.setmodviewy( zlevel, wModule.gety(module));
