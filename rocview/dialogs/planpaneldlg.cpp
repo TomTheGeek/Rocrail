@@ -99,7 +99,6 @@ PlanPanelProps::PlanPanelProps( wxWindow* parent, iONode zlevel, int newlevel )
 void PlanPanelProps::initLabels() {
   m_LabelTitle->SetLabel( wxGetApp().getMsg( "title" ) );
   m_LabelZLevel->SetLabel( wxGetApp().getMsg( "level" ) );
-  m_labModNr->SetLabel( wxGetApp().getMsg( "modnr" ) );
 
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
@@ -111,7 +110,6 @@ void PlanPanelProps::initValues() {
   // General
   m_Title->SetValue( wxString( wZLevel.gettitle( m_Props ),wxConvUTF8 ) );
   m_ZLevel->SetValue( wZLevel.getz( m_Props ) );
-  m_ModNr->SetValue( wZLevel.getmodnr( m_Props ) );
 }
 
 
@@ -121,7 +119,6 @@ void PlanPanelProps::evaluate() {
   // General
   wZLevel.settitle( m_Props, m_Title->GetValue().mb_str(wxConvUTF8) );
   wZLevel.setz( m_Props, m_ZLevel->GetValue() );
-  wZLevel.setmodnr( m_Props, m_ModNr->GetValue() );
 }
 
 
@@ -138,8 +135,6 @@ bool PlanPanelProps::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     m_Title = NULL;
     m_LabelZLevel = NULL;
     m_ZLevel = NULL;
-    m_labModNr = NULL;
-    m_ModNr = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end PlanPanelProps member initialisation
@@ -186,28 +181,22 @@ void PlanPanelProps::CreateControls()
     m_ZLevel = new wxSpinCtrl( itemDialog1, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer3->Add(m_ZLevel, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_labModNr = new wxStaticText( itemDialog1, wxID_ANY, _("Module number"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer3->Add(m_labModNr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_ModNr = new wxSpinCtrl( itemDialog1, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 65535, 0 );
-    itemFlexGridSizer3->Add(m_ModNr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
     itemFlexGridSizer3->AddGrowableCol(1);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer10 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer8 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer10, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer8, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer10->AddButton(m_OK);
+    itemStdDialogButtonSizer8->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer10->AddButton(m_Cancel);
+    itemStdDialogButtonSizer8->AddButton(m_Cancel);
 
-    wxButton* itemButton13 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer10->AddButton(itemButton13);
+    wxButton* itemButton11 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer8->AddButton(itemButton11);
 
-    itemStdDialogButtonSizer10->Realize();
+    itemStdDialogButtonSizer8->Realize();
 
 ////@end PlanPanelProps content construction
 }

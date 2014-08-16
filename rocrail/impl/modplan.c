@@ -683,6 +683,7 @@ static iONode __mergeModule( iOModPlanData data, iONode model, iONode module, in
     iONode zlevel = NodeOp.inst( wZLevel.name(), model, ELEMENT_NODE );
     wZLevel.settitle(zlevel, wModule.gettitle( module ) );
     wZLevel.setmodid(zlevel, wModule.getid( module ) );
+    wZLevel.setmodnr(zlevel, wModule.getnr( module ) );
     wZLevel.setz(zlevel, level );
     wZLevel.setmodviewx( zlevel, wModule.getx(module));
     wZLevel.setmodviewy( zlevel, wModule.gety(module));

@@ -538,8 +538,10 @@ static int __sortSubIP(obj* _a, obj* _b)
 }
 
 iONode RocnetNodeDlg::getZLevel(int level, char* sLevel) {
+  TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "look up location %d in %s...", level, wPlan.ismodplan(wxGetApp().getModel())?"modplan":"plan" );
   iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
   while( zlevel != NULL ) {
+    TraceOp.trc( "rocnetnode", TRCLEVEL_INFO, __LINE__, 9999, "level=%d modnr=%d", wZLevel.getz(zlevel), wZLevel.getmodnr(zlevel) );
     if( wPlan.ismodplan(wxGetApp().getModel()) ) {
       if( wZLevel.getmodnr(zlevel) == level ) {
         StrOp.copy( sLevel, wZLevel.gettitle(zlevel) );

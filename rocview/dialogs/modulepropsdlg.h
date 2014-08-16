@@ -114,6 +114,8 @@ public:
     wxTextCtrl* m_Title;
     wxStaticText* m_labID;
     wxTextCtrl* m_ModuleID;
+    wxStaticText* m_labModNr;
+    wxSpinCtrl* m_ModNr;
     wxStaticText* m_labFile;
     wxTextCtrl* m_File;
     wxStaticText* m_labX;

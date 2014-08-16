@@ -1420,6 +1420,7 @@
       <var name="title" vt="string" defval="Rename me!" required="true" range="*" remark="Text to show in the tab."/>
       <var name="filename" vt="string" defval="m1.xml" range="*" remark="File name of module track plan."/>
       <var name="id" vt="string" defval="" range="*" required="true" remark="Module ID."/>
+      <var name="nr" vt="int" defval="0" range="0-*" remark="Module number."/>
       <var name="idprefix" vt="string" defval="" range="*" remark="Add a prefix to all objects to make them unique."/>
       <var name="x" vt="int" defval="0" range="0-*" remark="x position on an overview panel"/>
       <var name="y" vt="int" defval="0" range="0-*" remark="y position on an overview panel"/>
