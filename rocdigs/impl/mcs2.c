@@ -336,7 +336,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       else
         gate = 1;
     }
-    __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, gate, dccswitch?0:action, swtime/256, swtime%256);
+    __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, gate, action, swtime/256, swtime%256);
 
     ThreadOp.post( data->writer, (obj)out );
     return rsp;
