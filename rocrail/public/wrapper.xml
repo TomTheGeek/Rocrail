@@ -1529,6 +1529,7 @@
       <var name="z" vt="int" defval="0" range="0-9"/>
       <var name="active" vt="bool" defval="false" remark="active notebook page"/>
       <var name="modid" vt="string" defval="" range="*" remark="module ID"/>
+      <var name="modnr" vt="int" defval="0" range="0-*" remark="module number"/>
       <var name="modviewx" vt="int" defval="0" range="0-*" remark="x position on an overview panel"/>
       <var name="modviewy" vt="int" defval="0" range="0-*" remark="y position on an overview panel"/>
       <var name="modviewcx" vt="int" defval="0" range="0-*" remark="x size on an overview panel"/>

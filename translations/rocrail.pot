@@ -7391,3 +7391,9 @@ msgstr ""
 msgid "Show loco image in block"
 msgstr ""
 
+#. 
+# id="modnr"
+#, c-format
+msgid "Module number"
+msgstr ""
+

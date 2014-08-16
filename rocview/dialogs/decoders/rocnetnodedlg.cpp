@@ -540,7 +540,13 @@ static int __sortSubIP(obj* _a, obj* _b)
 iONode RocnetNodeDlg::getZLevel(int level, char* sLevel) {
   iONode zlevel = wPlan.getzlevel( wxGetApp().getModel() );
   while( zlevel != NULL ) {
-    if( wZLevel.getz(zlevel) == level ) {
+    if( wPlan.ismodplan(wxGetApp().getModel()) ) {
+      if( wZLevel.getmodnr(zlevel) == level ) {
+        StrOp.copy( sLevel, wZLevel.gettitle(zlevel) );
+        return zlevel;
+      }
+    }
+    else if( wZLevel.getz(zlevel) == level ) {
       StrOp.copy( sLevel, wZLevel.gettitle(zlevel) );
       return zlevel;
     }

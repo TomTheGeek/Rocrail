@@ -28798,4 +28798,7 @@
   <Msg id="showlocoimageinblock">
     <en txt="Show loco image in block"/>
   </Msg>
+  <Msg id="modnr">
+    <en txt="Module number"/>
+  </Msg>
 </Messages>

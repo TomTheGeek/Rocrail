@@ -130,6 +130,8 @@ public:
     wxTextCtrl* m_Title;
     wxStaticText* m_LabelZLevel;
     wxSpinCtrl* m_ZLevel;
+    wxStaticText* m_labModNr;
+    wxSpinCtrl* m_ModNr;
     wxButton* m_OK;
     wxButton* m_Cancel;
     iONode m_Props;
