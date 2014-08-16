@@ -2104,6 +2104,13 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
       int x = 10;
       int y = (32-maxheight)/2;
 
+      if( m_rotate ) {
+        wxImage img = imageBitmap->ConvertToImage();
+        delete imageBitmap;
+        img = img.Mirror();
+        imageBitmap = new wxBitmap(img);
+      }
+
       if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
         wxImage img = imageBitmap->ConvertToImage();
         delete imageBitmap;
