@@ -307,18 +307,13 @@ static void __control( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL control started." );
 
   while( data->run ) {
-    ThreadOp.sleep(2500);
+    ThreadOp.sleep(1000);
     if( data->fromAddr > 0 && data->toAddr > data->fromAddr ) {
-      int i = 0;
-      for( i = data->fromAddr; i <= data->toAddr && data->run; i++ ) {
-        int n = 0;
-        for( n = 1; n <= data->nrLEDs && data->run; n++ ) {
-          int randNumber = rand();
-          __setLED(spl, i, n, randNumber & 0x01 ? True:False);
-          ThreadOp.sleep(500);
-        }
-      }
-
+      int randAddr   = rand() % ((data->toAddr - data->fromAddr) + 2);
+      int randPort   = rand() % (data->nrLEDs + 1);
+      int randAction = rand();
+      if( randAddr > 0 && randPort > 0 )
+        __setLED(spl, randAddr, randPort, randAction & 0x01 ? True:False);
     }
   }
 
