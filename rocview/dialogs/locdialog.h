@@ -79,6 +79,7 @@ class wxGrid;
 #define ID_TEXTCTRL_ID 10005
 #define wxID_STATIC_DESCRIPTION 10018
 #define ID_TEXTCTRL_DESCRIPTION 10006
+#define ID_SELECT_LOCOIMAGE 10172
 #define wxID_STATIC_LENGTH 10019
 #define wxID_STATIC_CATALOGNR 10020
 #define ID_TEXTCTRL_CATALOGNR 10008
@@ -255,6 +256,9 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_LOC_SHOW
     void OnShowClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SELECT_LOCOIMAGE
+    void OnSelectLocoimage( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SHOWDOC
     void OnButtonShowdocClick( wxCommandEvent& event );
 
@@ -406,6 +410,7 @@ public:
     wxTextCtrl* m_Description;
     wxStaticText* m_labImageName;
     wxTextCtrl* m_ImageName;
+    wxButton* m_SelectLocoImag;
     wxStaticText* m_labImageNr;
     wxSpinCtrl* m_ImageNr;
     wxStaticText* m_Label_Length;
