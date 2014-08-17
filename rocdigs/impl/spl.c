@@ -135,7 +135,7 @@ static void* __event( void* inst, const void* evt ) {
 static void __setLED(iOSPL inst, int addr, int port, Boolean state ) {
   iOSPLData data = Data(inst);
 
-  if( addr < 256 && addr > 0 && port < 6 && port > 0 ) {
+  if( addr < 256 && addr > 0 && port <= 8 && port > 0 ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "home=%d LED=%d %s", addr, port, state?"ON":"OFF" );
     byte led = 1 << (port-1);
     data->home[addr] = data->home[addr] & (~led);
