@@ -320,6 +320,7 @@ public:
   void OnCBusNode(wxCommandEvent& event);
   void OnBiDiB(wxCommandEvent& event);
   void OnRocNet(wxCommandEvent& event);
+  void OnSPL(wxCommandEvent& event);
   void OnRocNetShutdown(wxCommandEvent& event);
   void OnRocPro(wxCommandEvent& event);
 
@@ -658,6 +659,7 @@ enum
     ME_BiDiB,
     ME_RocNet,
     ME_RocNetShutdown,
+    ME_SPL,
     ME_RocPro,
     ME_DTOpSw,
     ME_Uhlenbrock,

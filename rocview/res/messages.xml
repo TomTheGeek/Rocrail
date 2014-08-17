@@ -28801,4 +28801,7 @@
   <Msg id="modnr">
     <en txt="Module number"/>
   </Msg>
+  <Msg id="newaddress">
+    <en txt="New address"/>
+  </Msg>
 </Messages>

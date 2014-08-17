@@ -112,6 +112,7 @@
 #include "rocview/dialogs/decoders/mgv141dlg.h"
 #include "rocview/dialogs/decoders/dtopswdlg.h"
 #include "rocview/dialogs/decoders/uhl68610dlg.h"
+#include "rocview/dialogs/decoders/spldlg.h"
 
 #include "rocview/public/guiapp.h"
 #include "rocview/public/swdlg.h"
@@ -345,6 +346,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_BiDiB          , RocGuiFrame::OnBiDiB)
     EVT_MENU( ME_RocNet         , RocGuiFrame::OnRocNet)
     EVT_MENU( ME_RocNetShutdown , RocGuiFrame::OnRocNetShutdown)
+    EVT_MENU( ME_SPL            , RocGuiFrame::OnSPL)
     EVT_MENU( ME_RocPro         , RocGuiFrame::OnRocPro)
     EVT_MENU( ME_ZoomX          , RocGuiFrame::OnZoomX)
     EVT_MENU( ME_Zoom25         , RocGuiFrame::OnZoom25)
@@ -2175,6 +2177,7 @@ void RocGuiFrame::initFrame() {
   menuRocnet->Append( ME_RocNet, wxGetApp().getMenu("setup") + wxT("..."), wxGetApp().getTip("setup") );
   menuRocnet->Append( ME_RocNetShutdown, wxGetApp().getMenu("shutdownall"), wxGetApp().getTip("shutdownall") );
   menuProgramming->Append( -1, _T("RocNet"), menuRocnet );
+  menuProgramming->Append( ME_SPL, _T("SPL..."), _T("SPL Programming") );
   menuProgramming->Append( ME_RocPro, _T("RocPro..."), _T("RocPro Decoder Programming") );
 
   // the "About" item should be in the help menu
@@ -3980,6 +3983,13 @@ void RocGuiFrame::OnRocNetShutdown( wxCommandEvent& event ) {
   wSysCmd.setbus(cmd, 0);
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnSPL( wxCommandEvent& event ) {
+  SplDlg* dlg = new SplDlg(this);
+  dlg->ShowModal();
+  dlg->Destroy();
+  dlg = NULL;
 }
 
 void RocGuiFrame::OnRocPro( wxCommandEvent& event ) {

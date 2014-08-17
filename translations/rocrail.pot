@@ -7397,3 +7397,9 @@ msgstr ""
 msgid "Module number"
 msgstr ""
 
+#. 
+# id="newaddress"
+#, c-format
+msgid "New address"
+msgstr ""
+

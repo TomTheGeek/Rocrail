@@ -187,7 +187,7 @@ static iONode __translate( iOSPL inst, iONode node ) {
     if( wProgram.getcv(node) == 1 ) {
       char* cmd = allocMem( 32 );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "programming module address to 0x%02X", wProgram.getvalue(node) );
-      StrOp.fmtb(cmd+1, "HFFPaa55%02X\r", wProgram.getvalue(node));
+      StrOp.fmtb(cmd+1, "H%02XPaa55%02X\r", wProgram.getaddr(node), wProgram.getvalue(node));
       cmd[0] = StrOp.len(cmd+1);
       ThreadOp.post( data->writer, (obj)cmd );
 
