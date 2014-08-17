@@ -213,10 +213,11 @@ static iONode __translate( iOSPL inst, iONode node ) {
 
     else if( wProgram.getcmd( node ) == wProgram.nvset ) {
       if( wProgram.getcv(node) == 1 ) {
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "random range address from 0x%02X to 0x%02X",
-            wProgram.getval1(node), wProgram.getval2(node) );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "random range address from 0x%02X to 0x%02X with %d LEDs",
+            wProgram.getval1(node), wProgram.getval2(node), wProgram.getval3(node) );
         data->fromAddr = wProgram.getval1(node);
         data->toAddr = wProgram.getval2(node);
+        data->nrLEDs = wProgram.getval3(node);
       }
     }
   }
@@ -311,7 +312,7 @@ static void __control( void* threadinst ) {
       int i = 0;
       for( i = data->fromAddr; i <= data->toAddr && data->run; i++ ) {
         int n = 0;
-        for( n = 1; n <= 5 && data->run; n++ ) {
+        for( n = 1; n <= data->nrLEDs && data->run; n++ ) {
           int randNumber = rand();
           __setLED(spl, i, n, randNumber & 0x01 ? True:False);
           ThreadOp.sleep(500);
@@ -383,6 +384,7 @@ static struct OSPL* _inst( const iONode ini ,const iOTrace trc ) {
   data->ini      = ini;
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
   data->run      = True;
+  data->nrLEDs   = 5;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL %d.%d.%d", vmajor, vminor, patch );

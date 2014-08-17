@@ -1954,7 +1954,8 @@
       <var name="control" vt="iOThread"/>
       <var name="fromAddr" vt="int"/>
       <var name="toAddr" vt="int"/>
-      </data>
+      <var name="nrLEDs" vt="int"/>
+    </data>
   </object>
 
 </Project>
