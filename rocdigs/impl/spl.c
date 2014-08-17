@@ -215,6 +215,8 @@ static iONode __translate( iOSPL inst, iONode node ) {
       if( wProgram.getcv(node) == 1 ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "random range address from 0x%02X to 0x%02X",
             wProgram.getval1(node), wProgram.getval2(node) );
+        data->fromAddr = wProgram.getval1(node);
+        data->toAddr = wProgram.getval2(node);
       }
     }
   }
@@ -295,6 +297,34 @@ static int _version( obj inst ) {
 }
 
 
+static void __control( void* threadinst ) {
+  iOThread  th       = (iOThread)threadinst;
+  iOSPL     spl      = (iOSPL)ThreadOp.getParm( th );
+  iOSPLData data     = Data(spl);
+  Boolean   serialOK = False;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL control started." );
+
+  while( data->run ) {
+    ThreadOp.sleep(2500);
+    if( data->fromAddr > 0 && data->toAddr > data->fromAddr ) {
+      int i = 0;
+      for( i = data->fromAddr; i <= data->toAddr && data->run; i++ ) {
+        int n = 0;
+        for( n = 1; n <= 5 && data->run; n++ ) {
+          int randNumber = rand();
+          __setLED(spl, i, n, randNumber & 0x01 ? True:False);
+          ThreadOp.sleep(500);
+        }
+      }
+
+    }
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL control ended." );
+}
+
+
 static void __serialWriter( void* threadinst ) {
   iOThread  th       = (iOThread)threadinst;
   iOSPL     spl      = (iOSPL)ThreadOp.getParm( th );
@@ -364,6 +394,9 @@ static struct OSPL* _inst( const iONode ini ,const iOTrace trc ) {
   /* 9600-n-1 */
   data->writer = ThreadOp.inst( "splwriter", &__serialWriter, __SPL );
   ThreadOp.start( data->writer );
+
+  data->control = ThreadOp.inst( "splctrl", &__control, __SPL );
+  ThreadOp.start( data->control );
 
   return __SPL;
 }
