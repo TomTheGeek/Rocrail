@@ -1943,6 +1943,7 @@
     </fun>
     <data>
       <var name="ini" vt="iONode"/>
+      <var name="splini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="serial" vt="iOSerial"/>
       <var name="run" vt="Boolean"/>

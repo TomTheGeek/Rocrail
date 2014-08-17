@@ -34,6 +34,7 @@
 #include "rocrail/wrapper/public/Signal.h"
 #include "rocrail/wrapper/public/Output.h"
 #include "rocrail/wrapper/public/Program.h"
+#include "rocrail/wrapper/public/SPL.h"
 
 static int instCnt = 0;
 
@@ -218,6 +219,9 @@ static iONode __translate( iOSPL inst, iONode node ) {
         data->fromAddr = wProgram.getval1(node);
         data->toAddr = wProgram.getval2(node);
         data->nrLEDs = wProgram.getval3(node);
+        wSPL.setfromaddr(data->splini, data->fromAddr );
+        wSPL.settoaddr(data->splini, data->toAddr );
+        wSPL.setnrleds(data->splini, data->nrLEDs );
       }
     }
   }
@@ -379,13 +383,26 @@ static struct OSPL* _inst( const iONode ini ,const iOTrace trc ) {
   data->ini      = ini;
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
   data->run      = True;
+  data->splini   = wDigInt.getspl(ini);
   data->nrLEDs   = 5;
+
+  if( data->splini == NULL ) {
+    data->splini = NodeOp.inst( wSPL.name(), ini, ELEMENT_NODE );
+    NodeOp.addChild(ini, data->splini);
+  }
+
+  data->fromAddr = wSPL.getfromaddr(data->splini);
+  data->toAddr   = wSPL.gettoaddr(data->splini);
+  data->nrLEDs   = wSPL.getnrleds(data->splini);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   = %s", wDigInt.getdevice( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid       = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device    = %s", wDigInt.getdevice( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "from addr = %d", data->fromAddr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "to addr   = %d", data->toAddr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LEDs      = %d", data->nrLEDs );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* 9600-n-1 */

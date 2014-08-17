@@ -563,6 +563,12 @@
       <var name="udpportRX" vt="int" defval="0" remark="receive port."/>
       <var name="localip" vt="string" defval="" remark="Local interface IP."/>
 
+      <spl remark="SPL options" wrappername="SPL">
+        <var name="fromaddr" vt="int" defval="0"/>
+        <var name="toaddr" vt="int" defval="0"/>
+        <var name="nrleds" vt="int" defval="5"/>
+      </spl>
+
       <opendcc remark="OpenDCC options" wrappername="OpenDCC">
         <var name="lib" vt="string" defval="p50x"/>
         <var name="loccnfg" vt="bool" defval="false" remark="send loco config commands"/>
