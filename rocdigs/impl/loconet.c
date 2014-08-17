@@ -1094,7 +1094,7 @@ static void __evaluatePacket(iOLocoNet loconet, byte* rsp, int size ) {
   data->rcvpkg++;
   if( data->monitor )
     traceLocoNet(rsp, data->GBM16xn);
-  TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "*** read dump:" );
+
   TraceOp.dump ( name, TRCLEVEL_BYTE, (char*)rsp, size );
 
   switch(rsp[0]) {

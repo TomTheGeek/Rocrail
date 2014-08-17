@@ -450,6 +450,10 @@ static void __slotdataRsp( iOLocoNet loconet, struct __lnslot* slot, int slotnr 
   rsp[11] = slot[slotnr].idl;
   rsp[12] = slot[slotnr].idh;
   rsp[13] = LocoNetOp.checksum( rsp, 13);
+
+  char msg[64];
+  LocoNetOp.byte2ascii( rsp, 14, msg );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send slot data [%s] to LocoNet", msg );
   LocoNetOp.write( loconet, rsp, 14 );
 }
 
@@ -458,7 +462,6 @@ static void __slotdataRsp( iOLocoNet loconet, struct __lnslot* slot, int slotnr 
 
 static void __slotclockRsp( iOLocoNet loconet, struct __lnslot* slot ) {
   byte rsp[32];
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fast clock slot response" );
   rsp[0] = OPC_SL_RD_DATA;
   rsp[1] = 0x0E;
   rsp[2] = FC_SLOT;
@@ -473,6 +476,9 @@ static void __slotclockRsp( iOLocoNet loconet, struct __lnslot* slot ) {
   rsp[11] = 0x7F;
   rsp[12] = 0x70;
   rsp[13] = LocoNetOp.checksum( rsp, 13);
+  char msg[64];
+  LocoNetOp.byte2ascii( rsp, 14, msg );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send fast clock [%s] to LocoNet", msg );
   LocoNetOp.write( loconet, rsp, 14 );
 }
 
@@ -484,6 +490,9 @@ static void __longAck( iOLocoNet loconet, int opc, int rc ) {
   rsp[1] = (opc & 0x7F);
   rsp[2] = (rc & 0x7F);
   rsp[3] = LocoNetOp.checksum( rsp, 3);
+  char msg[64];
+  LocoNetOp.byte2ascii( rsp, 4, msg );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send long ack [%s] to LocoNet", msg );
   LocoNetOp.write( loconet, rsp, 4 );
 }
 
@@ -491,6 +500,9 @@ static void __GPBUSY( iOLocoNet loconet ) {
   byte rsp[32];
   rsp[0] = OPC_GPBUSY;
   rsp[1] = LocoNetOp.checksum( rsp, 1);
+  char msg[64];
+  LocoNetOp.byte2ascii( rsp, 2, msg );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send busy [%s] to LocoNet", msg );
   LocoNetOp.write( loconet, rsp, 2 );
 }
 
