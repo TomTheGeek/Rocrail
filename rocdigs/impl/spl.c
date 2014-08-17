@@ -184,28 +184,38 @@ static iONode __translate( iOSPL inst, iONode node ) {
 
   /* Program command */
   else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
-    if( wProgram.getcv(node) == 1 ) {
-      char* cmd = allocMem( 32 );
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "programming module address to 0x%02X", wProgram.getvalue(node) );
-      StrOp.fmtb(cmd+1, "H%02XPaa55%02X\r", wProgram.getaddr(node), wProgram.getvalue(node));
-      cmd[0] = StrOp.len(cmd+1);
-      ThreadOp.post( data->writer, (obj)cmd );
+    if( wProgram.getcmd( node ) == wProgram.set ) {
+      if( wProgram.getcv(node) == 1 ) {
+        char* cmd = allocMem( 32 );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "programming module address from 0x%02X to 0x%02X",
+            wProgram.getaddr(node), wProgram.getvalue(node) );
+        StrOp.fmtb(cmd+1, "H%02XPaa55%02X\r", wProgram.getaddr(node), wProgram.getvalue(node));
+        cmd[0] = StrOp.len(cmd+1);
+        ThreadOp.post( data->writer, (obj)cmd );
 
-      rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-      if( data->iid != NULL )
-        wProgram.setiid( rsp, data->iid );
-      wProgram.setcmd( rsp, wProgram.datarsp );
-      wProgram.setcv( rsp, wProgram.getcv( node ) );
-      wProgram.setvalue( rsp, wProgram.getvalue( node ) );
+        rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        if( data->iid != NULL )
+          wProgram.setiid( rsp, data->iid );
+        wProgram.setcmd( rsp, wProgram.datarsp );
+        wProgram.setcv( rsp, wProgram.getcv( node ) );
+        wProgram.setvalue( rsp, wProgram.getvalue( node ) );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unsupported cv %d", wProgram.getcv(node) );
+        rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+        if( data->iid != NULL )
+          wProgram.setiid( rsp, data->iid );
+        wProgram.setcmd( rsp, wProgram.statusrsp );
+        wProgram.setcv( rsp, wProgram.getcv( node ) );
+        wProgram.setvalue( rsp, -1 );
+      }
     }
-    else {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unsupported cv %d", wProgram.getcv(node) );
-      rsp = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
-      if( data->iid != NULL )
-        wProgram.setiid( rsp, data->iid );
-      wProgram.setcmd( rsp, wProgram.statusrsp );
-      wProgram.setcv( rsp, wProgram.getcv( node ) );
-      wProgram.setvalue( rsp, -1 );
+
+    else if( wProgram.getcmd( node ) == wProgram.nvset ) {
+      if( wProgram.getcv(node) == 1 ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "random range address from 0x%02X to 0x%02X",
+            wProgram.getval1(node), wProgram.getval2(node) );
+      }
     }
   }
 
