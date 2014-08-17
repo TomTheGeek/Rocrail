@@ -563,6 +563,7 @@ static int __moveslots(iOLocoNet loconet, byte* msg, struct __lnslot* slot, int*
     }
     else {
       /* send slot data */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dispatch get: slot# %d", *dispatchedslot );
       __slotdataRsp( loconet, slot, *dispatchedslot );
       *dispatchedslot = 0;
     }
@@ -577,7 +578,7 @@ static int __moveslots(iOLocoNet loconet, byte* msg, struct __lnslot* slot, int*
     /* DISPATCH PUT */
     *dispatchedslot = src;
     /* send slot data */
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set slot# %d dispatched", src );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dispatch put: slot# %d", src );
     slot[src].inuse = True;
     __slotdataRsp( loconet, slot, *dispatchedslot );
   }

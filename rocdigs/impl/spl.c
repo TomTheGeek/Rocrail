@@ -152,6 +152,15 @@ static void __setLED(iOSPL inst, int addr, int port, Boolean state ) {
   }
 }
 
+
+static void __flipLED(iOSPL inst, int addr, int port ) {
+  iOSPLData data = Data(inst);
+  byte led = 1 << (port-1);
+  Boolean state = (data->home[addr] & led) ? True:False;
+  __setLED(inst, addr, port, !state );
+}
+
+
 static iONode __translate( iOSPL inst, iONode node ) {
   iOSPLData data = Data(inst);
   iONode    rsp  = NULL;
@@ -311,13 +320,13 @@ static void __control( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL control started." );
 
   while( data->run ) {
-    ThreadOp.sleep(1000);
-    if( data->fromAddr > 0 && data->toAddr > data->fromAddr ) {
+    int randSleep = (rand() % 3000) + 500;
+    ThreadOp.sleep(randSleep);
+    if( data->fromAddr > 0 && data->toAddr >= data->fromAddr ) {
       int randAddr   = rand() % ((data->toAddr - data->fromAddr) + 2);
       int randPort   = rand() % (data->nrLEDs + 1);
-      int randAction = rand();
       if( randAddr > 0 && randPort > 0 )
-        __setLED(spl, randAddr, randPort, randAction & 0x01 ? True:False);
+        __flipLED(spl, randAddr, randPort);
     }
   }
 
@@ -391,9 +400,9 @@ static struct OSPL* _inst( const iONode ini ,const iOTrace trc ) {
     NodeOp.addChild(ini, data->splini);
   }
 
-  data->fromAddr = wSPL.getfromaddr(data->splini);
-  data->toAddr   = wSPL.gettoaddr(data->splini);
-  data->nrLEDs   = wSPL.getnrleds(data->splini);
+  data->fromAddr    = wSPL.getfromaddr(data->splini);
+  data->toAddr      = wSPL.gettoaddr(data->splini);
+  data->nrLEDs      = wSPL.getnrleds(data->splini);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL %d.%d.%d", vmajor, vminor, patch );
