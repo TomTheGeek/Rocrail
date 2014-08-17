@@ -55,6 +55,7 @@
 #include "rocview/dialogs/controllers/rocnetdlg.h"
 #include "rocview/dialogs/controllers/cbusdlg.h"
 #include "rocview/dialogs/controllers/ucons88dlg.h"
+#include "rocview/dialogs/controllers/spldlg.h"
 
 #include "rocrail/wrapper/public/RocRail.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -2186,6 +2187,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.ucons88, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new uConS88Dlg(this,m_Controller,devices);
+  else if( StrOp.equals( wDigInt.spl, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new SplDlg(this,m_Controller, devices);
   else
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 0, NULL, devices);
 
