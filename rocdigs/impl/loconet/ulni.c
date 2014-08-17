@@ -291,14 +291,10 @@ static void __writer( void* threadinst ) {
 		  busyTimer = 0;
 		  MemOp.copy( ln, &p[1], min(size, 127) );
 		  freeMem(p);
-	    if( data->serial != NULL ) {
-	      TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)ln, size );
-        ok = SerialOp.write( data->serial, (char*)ln, size );
-        ThreadOp.sleep(1000);
-        continue;
-	    }
+      ok = SerialOp.write( data->serial, (char*)ln, size );
       if(ok) {
-        echoTimer = 0;
+	      TraceOp.dump ( "ulni", TRCLEVEL_BYTE, (char*)ln, size );
+         echoTimer = 0;
         data->subSendLen = size;
 		    MemOp.copy( data->subSendPacket, ln, min(size,127) );
 		    data->subSendEcho = False;
