@@ -2028,7 +2028,7 @@ static void __runner( void* threadinst ) {
       }
     }
 
-    if( !wLoc.isusebbt(data->props) ) {
+    if( data->gomanual || !wLoc.isusebbt(data->props) ) {
       ThreadOp.sleep( RUNNERTICK );
     }
     tick++;
