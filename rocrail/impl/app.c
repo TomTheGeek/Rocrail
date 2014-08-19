@@ -1331,6 +1331,16 @@ static void _play( const char* record ) {
 }
 
 
+static void _stopPlay( void ) {
+  if( __appinst != NULL ) {
+    iOAppData data = Data(__appinst);
+    if( data->script != NULL ) {
+      ScriptOp.Stop(data->script);
+    }
+  }
+}
+
+
 static iOApp _inst(void) {
   if( __appinst == NULL ) {
     iOApp     app  = allocMem( sizeof( struct OApp ) );

@@ -1777,6 +1777,9 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
 static void __reset( iOModel inst, Boolean saveCurBlock ) {
   iOModelData data = Data(inst);
 
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Stop script player before Reset." );
+  AppOp.stopPlay();
+
   if( wCtrl.ispoweroffatreset( wRocRail.getctrl( AppOp.getIni() ) ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Sending safety Power Off before Reset." );
     AppOp.stop(  );

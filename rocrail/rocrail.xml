@@ -75,6 +75,7 @@
     <fun name="play" vt="void">
       <param name="record" vt="const char*"/>
     </fun>
+    <fun name="stopPlay" vt="void"/>
     <data>
       <var name="ini" vt="iONode" remark="RocRail ini"/>
       <var name="newini" vt="iONode" remark="RocRail ini"/>

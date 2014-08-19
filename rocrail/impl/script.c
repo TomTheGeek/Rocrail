@@ -491,6 +491,7 @@ static void _Pause( struct OScript* inst ) {
 /**  */
 static void _Stop( struct OScript* inst ) {
   iOScriptData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Stop script player." );
   data->playing = False;
   data->pause = False;
   data->pline = data->record;
