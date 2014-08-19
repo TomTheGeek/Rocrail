@@ -133,11 +133,11 @@ static void* __event( void* inst, const void* evt ) {
 
  */
 
-static void __setLED(iOSPL inst, int addr, int port, Boolean state ) {
+static void __setLED(iOSPL inst, int addr, int port, Boolean state, Boolean trace ) {
   iOSPLData data = Data(inst);
 
   if( addr < 256 && addr > 0 && port <= 8 && port > 0 ) {
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "home=%d LED=%d %s", addr, port, state?"ON":"OFF" );
+    TraceOp.trc( name, trace?TRCLEVEL_MONITOR:TRCLEVEL_DEBUG, __LINE__, 9999, "home=%d LED=%d %s", addr, port, state?"ON":"OFF" );
     byte led = 1 << (port-1);
     data->home[addr] = data->home[addr] & (~led);
     if( state )
@@ -157,7 +157,7 @@ static void __flipLED(iOSPL inst, int addr, int port ) {
   iOSPLData data = Data(inst);
   byte led = 1 << (port-1);
   Boolean state = (data->home[addr] & led) ? True:False;
-  __setLED(inst, addr, port, !state );
+  __setLED(inst, addr, port, !state, False );
 }
 
 
@@ -170,7 +170,7 @@ static iONode __translate( iOSPL inst, iONode node ) {
     int addr  = wSwitch.getaddr1( node );
     int port  = wSwitch.getport1( node );
     Boolean state = StrOp.equals( wSwitch.getcmd( node ), wSwitch.straight ) ? 1:0;
-    __setLED(inst, addr, port, state);
+    __setLED(inst, addr, port, state, True);
   }
 
   /* Output command */
@@ -178,7 +178,7 @@ static iONode __translate( iOSPL inst, iONode node ) {
     int addr   = wOutput.getaddr( node );
     int port   = wOutput.getport( node );
     Boolean state = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
-    __setLED(inst, addr, port, state);
+    __setLED(inst, addr, port, state, True);
   }
 
   /* Signal command */
@@ -304,7 +304,7 @@ static Boolean _supportPT( obj inst ) {
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 2;
 static int vminor = 0;
-static int patch  = 99;
+static int patch  = 0;
 static int _version( obj inst ) {
   iOSPLData data = Data(inst);
   return vmajor*10000 + vminor*100 + patch;
@@ -407,11 +407,10 @@ static struct OSPL* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid       = %s", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device    = %s", wDigInt.getdevice( data->ini ) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "from addr = %d", data->fromAddr );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "to addr   = %d", data->toAddr );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LEDs      = %d", data->nrLEDs );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid        = %s", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device     = %s", wDigInt.getdevice( data->ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "addr range = %d-%d", data->fromAddr, data->toAddr );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "LEDs       = %d", data->nrLEDs );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   /* 9600-n-1 */
