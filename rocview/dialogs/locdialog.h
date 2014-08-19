@@ -504,6 +504,8 @@ public:
     wxPanel* m_DetailsPanel;
     wxStaticText* m_Label_Blockwait;
     wxTextCtrl* m_Blockwait;
+    wxStaticText* m_labMaxWaitTime;
+    wxTextCtrl* m_MaxWaitTime;
     wxStaticText* m_labEventTimer;
     wxTextCtrl* m_EventTimer;
     wxStaticText* m_labEvtCorrection;

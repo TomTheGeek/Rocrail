@@ -28804,4 +28804,7 @@
   <Msg id="newaddress">
     <en txt="New address"/>
   </Msg>
+  <Msg id="maxwaittime">
+    <en txt="Max. wait time"/>
+  </Msg>
 </Messages>

@@ -138,8 +138,12 @@ void statusInitDest( iILcDriverInt inst ) {
       /* TODO: wait and getWait reverse signal flag */
       if( data->curBlock->wait(data->curBlock, data->loc, False, &oppwait ) ) {
         data->pause = data->curBlock->getWait(data->curBlock, data->loc, False, &ioppwait );
-        if( data->pause != -1 )
+        if( data->pause != -1 ) {
+          int maxwaittime = wLoc.getmaxwaittime( data->loc->base.properties( data->loc ) );
           data->pause = data->pause * wLoc.getpriority( data->loc->base.properties( data->loc ) );
+          if( maxwaittime > 0 && data->pause > maxwaittime )
+            data->pause = maxwaittime;
+        }
       }
       else {
         if( wBlock.ismainline(data->curBlock->base.properties(data->curBlock) ) )

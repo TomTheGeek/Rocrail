@@ -7403,3 +7403,9 @@ msgstr ""
 msgid "New address"
 msgstr ""
 
+#. 
+# id="maxwaittime"
+#, c-format
+msgid "Max. wait time"
+msgstr ""
+
