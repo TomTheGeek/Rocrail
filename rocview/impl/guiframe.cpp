@@ -1952,25 +1952,15 @@ void RocGuiFrame::initFrame() {
   menuAnalyze->Append(ME_AnalyzeExtClean, wxGetApp().getMenu("extendedclean"), wxGetApp().getTip("analyze") );
   menuFile->Append( -1, wxGetApp().getMenu("analyze"), menuAnalyze );
   menuFile->AppendSeparator();
-
-  wxMenuItem *upload_menuFile = new wxMenuItem(menuFile, ME_Upload, wxGetApp().getMenu("upload"), wxGetApp().getTip("upload") );
-  upload_menuFile->SetBitmap(*_img_upload);
-  menuFile->Append(upload_menuFile);
+  menuFile->Append(ME_Upload, wxGetApp().getMenu("upload"), wxGetApp().getTip("upload") );
 
   menuFile->AppendSeparator();
 
-  wxMenuItem *shutdown_menuFile = new wxMenuItem(menuFile, ME_ShutdownRocRail, wxGetApp().getMenu("shutdown"), wxGetApp().getTip("shutdown") );
-  shutdown_menuFile->SetBitmap(*_img_server);
-  menuFile->Append(shutdown_menuFile);
-  //menuFile->Append(ME_ShutdownRocRail, wxGetApp().getMenu("shutdown"), wxGetApp().getTip("shutdown") );
+  menuFile->Append(ME_ShutdownRocRail, wxGetApp().getMenu("shutdown"), wxGetApp().getTip("shutdown") );
 
 #ifndef __APPLE__
-
   menuFile->AppendSeparator();
-
-  wxMenuItem *exit_menuFile = new wxMenuItem(menuFile, wxID_EXIT, wxGetApp().getMenu("exit"), wxGetApp().getTip("exit") );
-  exit_menuFile->SetBitmap(*_img_exit);
-  menuFile->Append(exit_menuFile);
+  menuFile->Append(wxID_EXIT, wxGetApp().getMenu("exit"), wxGetApp().getTip("exit") );
 #endif
 
   wxMenu *menuEdit = new wxMenu();
@@ -2008,9 +1998,6 @@ void RocGuiFrame::initFrame() {
   menuTables->Append(ME_EditBoosters, wxGetApp().getMenu("boostertable"), wxGetApp().getTip("boostertable") );
   menuTables->Append(ME_EditActions, wxGetApp().getMenu("systemactions"), wxGetApp().getTip("systemactions") );
   menuTables->Append(ME_EditAccDecs, wxGetApp().getMenu("accdectable"), wxGetApp().getTip("accdectable") );
-
-  // Turntable dialog has no index tab... disable
-  //menuTables->Append(ME_EditTurntables, wxGetApp().getMenu("turntabletable"), wxGetApp().getTip("turntabletable") );
 
   wxMenu *menuControl = new wxMenu();
   menuControl->AppendCheckItem(ME_Go, wxGetApp().getMenu("poweron"), wxGetApp().getTip("poweron") );
@@ -2116,10 +2103,7 @@ void RocGuiFrame::initFrame() {
   menuZoom->Append( ME_ZoomX, wxGetApp().getMenu("zoom") + wxT("..."), wxGetApp().getTip("zoom") );
 
   wxMenu *menuView = new wxMenu();
-
-  wxMenuItem *clear_menuView = new wxMenuItem(menuView, ME_ClearMsg, wxGetApp().getMenu("clearmsg"), wxGetApp().getTip("clearmsg") );
-  clear_menuView->SetBitmap(*_img_clear);
-  menuView->Append(clear_menuView);
+  menuView->Append(ME_ClearMsg, wxGetApp().getMenu("clearmsg"), wxGetApp().getTip("clearmsg") );
 
   menuView->AppendSeparator();
   menuView->Append( -1, wxGetApp().getMenu("language"), menuLang );
@@ -2183,45 +2167,21 @@ void RocGuiFrame::initFrame() {
   help_menuHelp->SetBitmap(*_img_manual);
   menuHelp->Append(help_menuHelp);
 
-  wxMenuItem *rug_menuHelp = new wxMenuItem(menuHelp, ME_RUG, wxT("Forum") );
-  rug_menuHelp->SetBitmap(*_img_rug);
-  menuHelp->Append(rug_menuHelp);
-
-  wxMenuItem *translations_menuHelp = new wxMenuItem(menuHelp, ME_Translations, wxGetApp().getMenu("translations"), wxGetApp().getTip("translations") );
-  translations_menuHelp->SetBitmap(*_img_lp);
-  menuHelp->Append(translations_menuHelp);
+  menuHelp->Append(ME_RUG, wxT("Forum") );
+  menuHelp->Append(ME_Translations, wxGetApp().getMenu("translations"), wxGetApp().getTip("translations") );
 
   menuHelp->AppendSeparator();
-  wxMenuItem *gca_menuHelp = new wxMenuItem(menuHelp,
-      ME_GCA, wxT("Giling Computer Applications..."), wxT("LocoNet - CBus - Interfaces") );
-  gca_menuHelp->SetBitmap(*_img_gca);
-  menuHelp->Append(gca_menuHelp);
+  menuHelp->Append(ME_GCA, wxT("Giling Computer Applications..."), wxT("LocoNet - CBus - Interfaces") );
 
-  wxMenuItem *rocnet_menuHelp = new wxMenuItem(menuHelp,
-      ME_ROCNETHELP, wxT("RocNet..."), wxT("RocNetNode on RaspBerryPi(c)") );
-  rocnet_menuHelp->SetBitmap(*_img_rocnet_logo);
-  menuHelp->Append(rocnet_menuHelp);
+  menuHelp->Append(ME_ROCNETHELP, wxT("RocNet..."), wxT("RocNetNode on RaspBerryPi(c)") );
 
-  wxMenuItem *opendcc_menuHelp = new wxMenuItem(menuHelp,
-      ME_OPENDCC, wxT("OpenDCC..."), wxT("OpenDCC Z1 - BiDiB") );
-  opendcc_menuHelp->SetBitmap(*_img_bidib48);
-  menuHelp->Append(opendcc_menuHelp);
+  menuHelp->Append(ME_OPENDCC, wxT("OpenDCC..."), wxT("OpenDCC Z1 - BiDiB") );
 
   menuHelp->AppendSeparator();
 
 
-  wxMenuItem *bug_menuHelp = new wxMenuItem(menuHelp, ME_Bug,
-      wxGetApp().getMsg("bug") + wxT(" / ") + wxGetApp().getMenu("feature"), wxGetApp().getTip("bug") );
-  bug_menuHelp->SetBitmap(*_img_bug);
-  menuHelp->Append(bug_menuHelp);
-/*
-  wxMenuItem *feature_menuHelp = new wxMenuItem(menuHelp, ME_Feature, wxGetApp().getMenu("feature"), wxGetApp().getTip("feature") );
-  feature_menuHelp->SetBitmap(*_img_lp);
-  menuHelp->Append(feature_menuHelp);
-*/
-  wxMenuItem *issue_menuHelp = new wxMenuItem(menuHelp, ME_Issue, wxGetApp().getMenu("issue"), wxGetApp().getTip("issue") );
-  issue_menuHelp->SetBitmap(*_img_trace);
-  menuHelp->Append(issue_menuHelp);
+  menuHelp->Append(ME_Bug, wxGetApp().getMsg("bug") + wxT(" / ") + wxGetApp().getMenu("feature"), wxGetApp().getTip("bug") );
+  menuHelp->Append(ME_Issue, wxGetApp().getMenu("issue"), wxGetApp().getTip("issue") );
 
 /*
   menuHelp->AppendSeparator();
@@ -2230,17 +2190,13 @@ void RocGuiFrame::initFrame() {
   menuHelp->Append(update_menuHelp);
 */
   menuHelp->AppendSeparator();
-  wxMenuItem *donkey_menuHelp = new wxMenuItem(menuHelp, ME_DonKeyInfo, wxGetApp().getMenu("donkey"), wxGetApp().getTip("donkey") );
-  donkey_menuHelp->SetBitmap(*_img_donate);
-  menuHelp->Append(donkey_menuHelp);
+  menuHelp->Append(ME_DonKeyInfo, wxGetApp().getMenu("donkey"), wxGetApp().getTip("donkey") );
 
 #ifndef __APPLE__
   menuHelp->AppendSeparator();
 #endif
 
-  wxMenuItem *info_menuHelp = new wxMenuItem(menuHelp, wxID_ABOUT, wxGetApp().getMenu("about"), wxGetApp().getTip("about") );
-  info_menuHelp->SetBitmap(*_img_info);
-  menuHelp->Append(info_menuHelp);
+  menuHelp->Append(wxID_ABOUT, wxGetApp().getMenu("about"), wxGetApp().getTip("about") );
 
   // now append the freshly created menu to the menu bar...
   menuBar = new wxMenuBar();
@@ -2274,32 +2230,32 @@ void RocGuiFrame::initFrame() {
   m_ToolBar = NULL;
   if( wGui.istoolbar(m_Ini) ) {
     if( SystemOp.isWindows() && wxMAJOR_VERSION < 3 ) {
-      l_useDisableIcons = true;
+      //l_useDisableIcons = true;
     }
     m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
-    m_ToolBar->SetToolBitmapSize(wxSize(32, 32));
+    m_ToolBar->SetToolBitmapSize(wxSize(24, 24));
 
-    m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect_32, l_useDisableIcons?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
-    m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system_32, l_useDisableIcons?*_img_system_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
+    m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect, l_useDisableIcons?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
+    m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
 
-    m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new_32, l_useDisableIcons?*_img_new_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
-    m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open_32, l_useDisableIcons?*_img_open_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
-    m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save_32, l_useDisableIcons?*_img_save_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
-    m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo_32, l_useDisableIcons?*_img_undo_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
+    m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
+    m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
+    m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
+    m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
     m_ToolBar->EnableTool(ME_Undo, false );
 
-    m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron_32, l_useDisableIcons?*_img_poweron_32_disabled:wxNullBitmap, wxGetApp().getTip("poweron") );
-    m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode_32, l_useDisableIcons?*_img_automode_32_disabled:wxNullBitmap, wxGetApp().getTip("automode") );
-    m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop_32, l_useDisableIcons?*_img_stop_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
-    m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall_32, l_useDisableIcons?*_img_stopall_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
+    m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron, wxNullBitmap, wxGetApp().getTip("poweron") );
+    m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode, wxNullBitmap, wxGetApp().getTip("automode") );
+    m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
+    m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
 
-    m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator_32, l_useDisableIcons?*_img_operator_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
+    m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
     if( !m_bExpired )
-      m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), *_img_rocpro_32, wxNullBitmap, wxITEM_NORMAL );
-    m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic_32, l_useDisableIcons?*_img_mic_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
-    m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl_32, l_useDisableIcons?*_img_locctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
-    m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl_32, l_useDisableIcons?*_img_swctrl_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
-    m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes_32, l_useDisableIcons?*_img_routes_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
+      m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), *_img_rocpro, wxNullBitmap, wxITEM_NORMAL );
+    m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
+    m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
+    m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
+    m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
 
     m_ScaleComboBox = NULL;
     if( !wGui.isverticaltoolbar(m_Ini) ) {
@@ -2329,8 +2285,8 @@ void RocGuiFrame::initFrame() {
       m_ToolBar->AddControl(m_ScaleComboBox);
     }
 
-    //m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates_32, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
-    m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual_32, l_useDisableIcons?*_img_manual_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
+    //m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
+    m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
 
     m_ToolBar->Realize();
 
