@@ -49,7 +49,7 @@ CmdRecorder::CmdRecorder( wxWindow* parent )
   :CmdRecorderGen( parent )
 {
   m_Me = NULL;
-  m_Stop->SetBitmapLabel(*_img_stop_32);
+  m_Stop->SetBitmapLabel(*_img_stop);
   m_Pause->SetBitmapLabel(*_img_pause);
   m_Record->SetBitmapLabel(*_img_record);
   m_Play->SetBitmapLabel(*_img_play);
