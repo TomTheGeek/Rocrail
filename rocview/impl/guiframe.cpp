@@ -2249,8 +2249,10 @@ void RocGuiFrame::initFrame() {
     m_ToolBar->AddSeparator();
 
     m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron, wxNullBitmap, wxGetApp().getTip("poweron") );
+    m_ToolBar->AddSeparator();
     m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode, wxNullBitmap, wxGetApp().getTip("automode") );
     m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
+    m_ToolBar->AddSeparator();
     m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
 
     m_ToolBar->AddSeparator();
