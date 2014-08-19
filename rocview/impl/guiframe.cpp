@@ -2235,7 +2235,7 @@ void RocGuiFrame::initFrame() {
     m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
     m_ToolBar->SetToolBitmapSize(wxSize(24, 24));
 
-    m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect, l_useDisableIcons?*_img_connect_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
+    m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
     m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
 
     m_ToolBar->AddSeparator();
