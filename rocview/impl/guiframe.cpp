@@ -2267,6 +2267,7 @@ void RocGuiFrame::initFrame() {
 
     m_ScaleComboBox = NULL;
     if( !wGui.isverticaltoolbar(m_Ini) ) {
+      /*
       m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(75,-1), 0, NULL, wxTE_PROCESS_ENTER );
       m_ScaleComboBox->Append(_T("10"));
       m_ScaleComboBox->Append(_T("20"));
@@ -2291,9 +2292,10 @@ void RocGuiFrame::initFrame() {
       m_ScaleComboBox->Append(_T("190"));
       m_ScaleComboBox->Append(_T("200"));
       m_ToolBar->AddControl(m_ScaleComboBox);
+      */
     }
 
-    m_ToolBar->AddSeparator();
+    //m_ToolBar->AddSeparator();
     //m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
     m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
 
