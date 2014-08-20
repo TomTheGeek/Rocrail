@@ -2161,7 +2161,10 @@ void RocGuiFrame::initFrame() {
   menuRocnet->Append( ME_RocNet, wxGetApp().getMenu("setup") + wxT("..."), wxGetApp().getTip("setup") );
   menuRocnet->Append( ME_RocNetShutdown, wxGetApp().getMenu("shutdownall"), wxGetApp().getTip("shutdownall") );
   menuProgramming->Append( -1, _T("RocNet"), menuRocnet );
-  menuProgramming->Append( ME_RocPro, _T("RocPro..."), _T("RocPro Decoder Programming") );
+  wxMenuItem *rocpro = new wxMenuItem(menuProgramming, ME_RocPro, _T("RocPro..."), _T("RocPro Decoder Programming") );
+  rocpro->SetBitmap(l_grayIcons?*_img_rocpro:*_img_rocpro_c);
+  menuProgramming->Append(rocpro);
+
 
   // the "About" item should be in the help menu
   wxMenu *menuHelp = new wxMenu();
@@ -2173,14 +2176,20 @@ void RocGuiFrame::initFrame() {
   menuHelp->Append(ME_Translations, wxGetApp().getMenu("translations"), wxGetApp().getTip("translations") );
 
   menuHelp->AppendSeparator();
-  menuHelp->Append(ME_GCA, wxT("Giling Computer Applications..."), wxT("LocoNet - CBus - Interfaces") );
 
-  menuHelp->Append(ME_ROCNETHELP, wxT("RocNet..."), wxT("RocNetNode on RaspBerryPi(c)") );
+  wxMenuItem *gca = new wxMenuItem(menuHelp, ME_GCA, wxT("Giling Computer Applications..."), wxT("RocNetNode - CBus - LocoNet - Interfaces") );
+  if( !l_grayIcons ) gca->SetBitmap(*_img_gca);
+  menuHelp->Append(gca);
 
-  menuHelp->Append(ME_OPENDCC, wxT("OpenDCC..."), wxT("OpenDCC Z1 - BiDiB") );
+  wxMenuItem *rocnet = new wxMenuItem(menuHelp, ME_ROCNETHELP, wxT("RocNet..."), wxT("RocNetNode on RaspBerryPi(c)")  );
+  if( !l_grayIcons ) rocnet->SetBitmap(*_img_rocnet_logo);
+  menuHelp->Append(rocnet);
+
+  wxMenuItem *bidib = new wxMenuItem(menuHelp, ME_OPENDCC, wxT("OpenDCC..."), wxT("OpenDCC Z1 - BiDiB") );
+  if( !l_grayIcons ) bidib->SetBitmap(*_img_bidib);
+  menuHelp->Append(bidib);
 
   menuHelp->AppendSeparator();
-
 
   menuHelp->Append(ME_Bug, wxGetApp().getMsg("bug") + wxT(" / ") + wxGetApp().getMenu("feature"), wxGetApp().getTip("bug") );
   menuHelp->Append(ME_Issue, wxGetApp().getMenu("issue"), wxGetApp().getTip("issue") );
