@@ -204,6 +204,7 @@ public:
     wxCheckBox* m_ShowSpeedOMeter;
     wxCheckBox* m_LocoImageColumn;
     wxCheckBox* m_ShowLocoImageInBlock;
+    wxCheckBox* m_GrayIcons;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;

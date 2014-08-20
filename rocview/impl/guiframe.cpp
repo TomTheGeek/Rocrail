@@ -2232,75 +2232,79 @@ void RocGuiFrame::initFrame() {
     if( SystemOp.isWindows() ) {
       l_useDisableIcons = true;
     }
+    bool l_grayIcons = wGui.isgrayicons(m_Ini);
+    if( l_useDisableIcons )
+      l_useDisableIcons = l_grayIcons;
+
     m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
     m_ToolBar->SetToolBitmapSize(wxSize(24, 24));
     m_ToolBar->SetToolSeparation(25);
 
-    m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect, l_useDisableIcons?*_img_connect_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
-    m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system, l_useDisableIcons?*_img_system_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
+    m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), l_grayIcons?*_img_connect:*_img_connect_c, l_useDisableIcons?*_img_connect_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
+    m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), l_grayIcons?*_img_system:*_img_system_c, l_useDisableIcons?*_img_system_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
 
     m_ToolBar->AddSeparator();
 
-    m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new, l_useDisableIcons?*_img_new_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
-    m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open, l_useDisableIcons?*_img_open_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
-    m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
-    m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo, l_useDisableIcons?*_img_undo_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
+    m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), l_grayIcons?*_img_new:*_img_new_c, l_useDisableIcons?*_img_new_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
+    m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), l_grayIcons?*_img_open:*_img_open_c, l_useDisableIcons?*_img_open_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
+    m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), l_grayIcons?*_img_save:*_img_save_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
+    m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), l_grayIcons?*_img_undo:*_img_undo_c, l_useDisableIcons?*_img_undo_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
     m_ToolBar->EnableTool(ME_Undo, false );
 
     m_ToolBar->AddSeparator();
 
-    m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), *_img_poweron, wxNullBitmap, wxGetApp().getTip("poweron") );
+    m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), l_grayIcons?*_img_poweron:*_img_poweron_c, wxGetApp().getTip("poweron") );
     m_ToolBar->AddSeparator();
-    m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), *_img_automode, wxNullBitmap, wxGetApp().getTip("automode") );
-    m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), *_img_stop, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
+    m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), l_grayIcons?*_img_automode:*_img_automode_c, wxNullBitmap, wxGetApp().getTip("automode") );
+    m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), l_grayIcons?*_img_stop:*_img_stop_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
     m_ToolBar->AddSeparator();
-    m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), *_img_stopall, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
+    m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), l_grayIcons?*_img_stopall:*_img_stopall_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
 
     m_ToolBar->AddSeparator();
 
-    m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), *_img_operator, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
+    m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), l_grayIcons?*_img_operator:*_img_operator_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
     if( !m_bExpired )
-      m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), *_img_rocpro, wxNullBitmap, wxITEM_NORMAL );
-    m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), *_img_mic, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
-    m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), *_img_locctrl, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
-    m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), *_img_swctrl, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
-    m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), *_img_routes, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
+      m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), l_grayIcons?*_img_rocpro:*_img_rocpro_c, wxNullBitmap, wxITEM_NORMAL );
+    m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), l_grayIcons?*_img_mic:*_img_mic_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
+    m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), l_grayIcons?*_img_locctrl:*_img_locctrl_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
+    m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), l_grayIcons?*_img_swctrl:*_img_swctrl_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );
+    m_ToolBar->AddTool(ME_RouteDlg, wxGetApp().getMsg("stctrl"), l_grayIcons?*_img_routes:*_img_routes_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stctrl") );
 
     m_ToolBar->AddSeparator();
 
     m_ScaleComboBox = NULL;
     if( !wGui.isverticaltoolbar(m_Ini) ) {
-      /*
-      m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(75,-1), 0, NULL, wxTE_PROCESS_ENTER );
-      m_ScaleComboBox->Append(_T("10"));
-      m_ScaleComboBox->Append(_T("20"));
-      m_ScaleComboBox->Append(_T("25"));
-      m_ScaleComboBox->Append(_T("30"));
-      m_ScaleComboBox->Append(_T("40"));
-      m_ScaleComboBox->Append(_T("50"));
-      m_ScaleComboBox->Append(_T("60"));
-      m_ScaleComboBox->Append(_T("70"));
-      m_ScaleComboBox->Append(_T("75"));
-      m_ScaleComboBox->Append(_T("80"));
-      m_ScaleComboBox->Append(_T("90"));
-      m_ScaleComboBox->Append(_T("100"));
-      m_ScaleComboBox->Append(_T("110"));
-      m_ScaleComboBox->Append(_T("120"));
-      m_ScaleComboBox->Append(_T("130"));
-      m_ScaleComboBox->Append(_T("140"));
-      m_ScaleComboBox->Append(_T("150"));
-      m_ScaleComboBox->Append(_T("160"));
-      m_ScaleComboBox->Append(_T("170"));
-      m_ScaleComboBox->Append(_T("180"));
-      m_ScaleComboBox->Append(_T("190"));
-      m_ScaleComboBox->Append(_T("200"));
-      m_ToolBar->AddControl(m_ScaleComboBox);
-      */
+      if(!l_grayIcons) {
+        m_ScaleComboBox = new wxComboBox(m_ToolBar, ID_SCALE_COMBO, wxEmptyString, wxDefaultPosition, wxSize(75,-1), 0, NULL, wxTE_PROCESS_ENTER );
+        m_ScaleComboBox->Append(_T("10"));
+        m_ScaleComboBox->Append(_T("20"));
+        m_ScaleComboBox->Append(_T("25"));
+        m_ScaleComboBox->Append(_T("30"));
+        m_ScaleComboBox->Append(_T("40"));
+        m_ScaleComboBox->Append(_T("50"));
+        m_ScaleComboBox->Append(_T("60"));
+        m_ScaleComboBox->Append(_T("70"));
+        m_ScaleComboBox->Append(_T("75"));
+        m_ScaleComboBox->Append(_T("80"));
+        m_ScaleComboBox->Append(_T("90"));
+        m_ScaleComboBox->Append(_T("100"));
+        m_ScaleComboBox->Append(_T("110"));
+        m_ScaleComboBox->Append(_T("120"));
+        m_ScaleComboBox->Append(_T("130"));
+        m_ScaleComboBox->Append(_T("140"));
+        m_ScaleComboBox->Append(_T("150"));
+        m_ScaleComboBox->Append(_T("160"));
+        m_ScaleComboBox->Append(_T("170"));
+        m_ScaleComboBox->Append(_T("180"));
+        m_ScaleComboBox->Append(_T("190"));
+        m_ScaleComboBox->Append(_T("200"));
+        m_ToolBar->AddControl(m_ScaleComboBox);
+        m_ToolBar->AddSeparator();
+      }
     }
 
-    //m_ToolBar->AddSeparator();
     //m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
-    m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), *_img_manual, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
+    m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), l_grayIcons?*_img_manual:*_img_manual_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
 
     m_ToolBar->Realize();
 

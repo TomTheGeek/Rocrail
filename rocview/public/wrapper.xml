@@ -109,6 +109,7 @@
     <var name="restrictedit4auto" vt="bool" defval="true"/>
     <var name="monitoring" vt="bool" defval="true"/>
     <var name="id" vt="string" defval="rocview" range="*" remark="rocview ID"/>
+    <var name="grayicons" vt="bool" defval="true"/>
     <var name="lncvtab" vt="bool" defval="false"/>
     <var name="locowidgetstab" vt="bool" defval="false"/>
     <var name="locowidgetwidth" vt="int" defval="260"/>

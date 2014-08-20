@@ -7409,3 +7409,9 @@ msgstr ""
 msgid "Max. wait time"
 msgstr ""
 
+#. 
+# id="grayicons"
+#, c-format
+msgid "Gray icons"
+msgstr ""
+

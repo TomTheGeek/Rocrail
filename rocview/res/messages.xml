@@ -28807,4 +28807,7 @@
   <Msg id="maxwaittime">
     <en txt="Max. wait time"/>
   </Msg>
+  <Msg id="grayicons">
+    <en txt="Gray icons"/>
+  </Msg>
 </Messages>
