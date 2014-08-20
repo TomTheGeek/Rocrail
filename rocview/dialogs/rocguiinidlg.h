@@ -316,6 +316,10 @@ public:
     wxStaticText* m_labMICStep;
     wxSpinCtrl* m_MICStep;
     wxCheckBox* m_MICStopOnExit;
+    wxPanel* m_AcceleratorPanel;
+    wxStaticText* m_labEmergencyBreak;
+    wxComboBox* m_EmergencyBreakList;
+    wxRadioBox* m_EmergencyBreakModifier;
     wxButton* m_OK;
     wxButton* m_Cancel;
 ////@end RocguiIniDialog member variables

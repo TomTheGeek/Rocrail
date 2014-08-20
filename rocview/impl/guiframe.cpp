@@ -135,6 +135,7 @@
 #include "rocview/wrapper/public/WorkSpaces.h"
 #include "rocview/wrapper/public/WorkSpace.h"
 #include "rocview/wrapper/public/Tab.h"
+#include "rocview/wrapper/public/Accelerator.h"
 
 #include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/Item.h"
@@ -1840,7 +1841,7 @@ void RocGuiFrame::initFrame() {
   SetIcon(wxIcon(rocrail_32_xpm));
 
   // define accelerator keys for some frequently used functions
-  wxAcceleratorEntry acc_entries[46];
+  wxAcceleratorEntry acc_entries[50];
   acc_entries[0].Set(wxACCEL_CTRL, (int) 'Z', ME_Undo);
   acc_entries[1].Set(wxACCEL_CTRL, (int) 'N', ME_New);
   acc_entries[2].Set(wxACCEL_CTRL, (int) 'S', ME_Save);
@@ -1875,26 +1876,35 @@ void RocGuiFrame::initFrame() {
   acc_entries[29].Set(wxACCEL_NORMAL, WXK_F10, ME_F10);
   acc_entries[30].Set(wxACCEL_NORMAL, WXK_F11, ME_F11);
   acc_entries[31].Set(wxACCEL_NORMAL, WXK_F12, ME_F12);
-  acc_entries[32].Set(wxACCEL_ALT, WXK_SPACE, ME_EmergencyBreak);
 
-  acc_entries[33].Set(wxACCEL_ALT, (int) '3', ME_EditTimedActions);
-  acc_entries[34].Set(wxACCEL_ALT, (int) '4', ME_EditCars);
-  acc_entries[35].Set(wxACCEL_ALT, (int) '5', ME_EditWaybills);
-  acc_entries[36].Set(wxACCEL_ALT, (int) '6', ME_EditOperators);
+  acc_entries[32].Set(wxACCEL_ALT, (int) '3', ME_EditTimedActions);
+  acc_entries[33].Set(wxACCEL_ALT, (int) '4', ME_EditCars);
+  acc_entries[34].Set(wxACCEL_ALT, (int) '5', ME_EditWaybills);
+  acc_entries[35].Set(wxACCEL_ALT, (int) '6', ME_EditOperators);
 
-  acc_entries[37].Set(wxACCEL_CTRL, (int) 'W', ME_OpenWorkspace);
-  acc_entries[38].Set(wxACCEL_CTRL, (int) 'D', ME_ShutdownRocRail);
+  acc_entries[36].Set(wxACCEL_CTRL, (int) 'W', ME_OpenWorkspace);
+  acc_entries[37].Set(wxACCEL_CTRL, (int) 'D', ME_ShutdownRocRail);
 
-  acc_entries[39].Set(wxACCEL_ALT, (int) 'A', ME_LocoViewAll);
-  acc_entries[40].Set(wxACCEL_ALT, (int) 'S', ME_LocoViewSteam);
-  acc_entries[41].Set(wxACCEL_ALT, (int) 'I', ME_LocoViewDiesel);
-  acc_entries[42].Set(wxACCEL_ALT, (int) 'E', ME_LocoViewElectric);
-  acc_entries[43].Set(wxACCEL_ALT, (int) 'C', ME_LocoViewCommuter);
-  acc_entries[44].Set(wxACCEL_ALT, (int) 'K', ME_ClearMsg);
+  acc_entries[38].Set(wxACCEL_ALT, (int) 'A', ME_LocoViewAll);
+  acc_entries[39].Set(wxACCEL_ALT, (int) 'S', ME_LocoViewSteam);
+  acc_entries[40].Set(wxACCEL_ALT, (int) 'I', ME_LocoViewDiesel);
+  acc_entries[41].Set(wxACCEL_ALT, (int) 'E', ME_LocoViewElectric);
+  acc_entries[42].Set(wxACCEL_ALT, (int) 'C', ME_LocoViewCommuter);
+  acc_entries[43].Set(wxACCEL_ALT, (int) 'K', ME_ClearMsg);
 
-  wxAcceleratorTable m_accel(45, acc_entries);
+  int idx = 44;
+  iONode accelerator = wGui.getaccelerator(m_Ini);
+  while( accelerator != NULL ) {
+    if( StrOp.equals( wAccelerator.ebreak, wAccelerator.getfunction(accelerator) ) ) {
+      acc_entries[idx].Set(wAccelerator.getmodifier(accelerator), wAccelerator.getkeycode(accelerator), ME_EmergencyBreak);
+      idx++;
+      break;
+    }
+    accelerator = wGui.nextaccelerator(m_Ini, accelerator);
+  }
+
+  wxAcceleratorTable m_accel(idx, acc_entries);
   this->SetAcceleratorTable(m_accel);
-//DA
 
 
   // create a menu bar

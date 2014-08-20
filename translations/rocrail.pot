@@ -7415,3 +7415,21 @@ msgstr ""
 msgid "Gray icons"
 msgstr ""
 
+#. 
+# id="accelerators"
+#, c-format
+msgid "Accelerators"
+msgstr ""
+
+#. 
+# id="alt"
+#, c-format
+msgid "Alt"
+msgstr ""
+
+#. 
+# id="ctrl"
+#, c-format
+msgid "Ctrl"
+msgstr ""
+

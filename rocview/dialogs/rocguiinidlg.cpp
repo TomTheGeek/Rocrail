@@ -51,6 +51,8 @@
 #include "rocview/wrapper/public/ModPanel.h"
 #include "rocview/wrapper/public/MIC.h"
 #include "rocview/wrapper/public/CVconf.h"
+#include "rocview/wrapper/public/Accelerator.h"
+
 #include "rocrail/wrapper/public/JsMap.h"
 #include "rocrail/wrapper/public/Trace.h"
 
@@ -128,6 +130,7 @@ void RocguiIniDialog::initLabels() {
   m_Notebook->SetPageText( 3, _T( "SVG" ) );
   m_Notebook->SetPageText( 4, wxGetApp().getMsg( "gamepad" ) );
   m_Notebook->SetPageText( 5, wxGetApp().getMsg( "mic" ) );
+  m_Notebook->SetPageText( 6, wxGetApp().getMsg( "accelerators" ) );
 
     // Trace:
   m_TraceLevel->GetStaticBox()->SetLabel( wxGetApp().getMsg( "tracelevel" ) );
@@ -220,6 +223,16 @@ void RocguiIniDialog::initLabels() {
   m_TabAlignType->SetString( 0, wxGetApp().getMsg( "default" ) );
   m_TabAlignType->SetString( 1, wxGetApp().getMsg( "left" ) );
   m_TabAlignType->SetString( 2, wxGetApp().getMsg( "multiline" ) );
+
+  // Accelerators
+  m_labEmergencyBreak->SetLabel( wxGetApp().getMsg( "ebreak" ) );
+  m_EmergencyBreakModifier->SetString( 0, wxGetApp().getMsg( "none" ) );
+  m_EmergencyBreakModifier->SetString( 1, wxGetApp().getMsg( "alt" ) );
+  m_EmergencyBreakModifier->SetString( 2, wxGetApp().getMsg( "ctrl" ) );
+  m_EmergencyBreakList->Append( wxT("") );
+  m_EmergencyBreakList->Append( wxT("Pause") );
+  m_EmergencyBreakList->Append( wxT("Space") );
+  m_EmergencyBreakList->SetSelection(0);
 }
 
 
@@ -422,6 +435,28 @@ void RocguiIniDialog::initValues() {
   m_DirImageFwd->SetValue( wxString(wGui.getdirimagefwd(m_Ini),wxConvUTF8) );
   m_DirImageRev->SetValue( wxString(wGui.getdirimagerev(m_Ini),wxConvUTF8) );
 
+  // Accelerators
+  iONode accelerator = wGui.getaccelerator(m_Ini);
+  while( accelerator != NULL ) {
+    if( StrOp.equals( wAccelerator.ebreak, wAccelerator.getfunction(accelerator) ) ) {
+      //wAccelerator.getmodifier(accelerator), wAccelerator.getkeycode(accelerator)
+      if( wAccelerator.getkeycode(accelerator) == WXK_PAUSE )
+        m_EmergencyBreakList->SetSelection(1);
+      else if( wAccelerator.getkeycode(accelerator) == WXK_SPACE )
+        m_EmergencyBreakList->SetSelection(2);
+      else
+        m_EmergencyBreakList->SetSelection(0);
+
+      if( wAccelerator.getmodifier(accelerator) == wxACCEL_ALT )
+        m_EmergencyBreakModifier->SetSelection(1);
+      else if( wAccelerator.getmodifier(accelerator) == wxACCEL_CTRL )
+        m_EmergencyBreakModifier->SetSelection(2);
+      else // wxACCEL_NORMAL
+        m_EmergencyBreakModifier->SetSelection(0);
+    }
+    accelerator = wGui.nextaccelerator(m_Ini, accelerator);
+  }
+
 }
 
 
@@ -570,6 +605,42 @@ void RocguiIniDialog::evaluate() {
   wGui.setdefaultworkspace( m_Ini, m_Workspace->GetValue().mb_str(wxConvUTF8) );
   wGui.setdirimagefwd( m_Ini, m_DirImageFwd->GetValue().mb_str(wxConvUTF8) );
   wGui.setdirimagerev( m_Ini, m_DirImageRev->GetValue().mb_str(wxConvUTF8) );
+
+  // Accelerators
+  iONode accelerator = wGui.getaccelerator(m_Ini);
+  iONode accelEBreak = NULL;
+  while( accelerator != NULL ) {
+    if( StrOp.equals( wAccelerator.ebreak, wAccelerator.getfunction(accelerator) ) ) {
+      accelEBreak = accelerator;
+      break;
+    }
+    accelerator = wGui.nextaccelerator(m_Ini, accelerator);
+  }
+
+  if( accelEBreak != NULL &&  m_EmergencyBreakList->GetSelection() == 0 ) {
+    NodeOp.removeChild(m_Ini, accelEBreak );
+    NodeOp.base.del(accelEBreak);
+    accelEBreak = NULL;
+  }
+
+  if( m_EmergencyBreakList->GetSelection() > 0 ) {
+    if( accelEBreak == NULL ) {
+      accelEBreak = NodeOp.inst(wAccelerator.name(), m_Ini, ELEMENT_NODE);
+      wAccelerator.setfunction(accelEBreak, wAccelerator.ebreak);
+      NodeOp.addChild(m_Ini, accelEBreak);
+    }
+    if( m_EmergencyBreakList->GetSelection() == 1 )
+      wAccelerator.setkeycode(accelEBreak, WXK_PAUSE) ;
+    else if( m_EmergencyBreakList->GetSelection() == 2 )
+      wAccelerator.setkeycode(accelEBreak, WXK_SPACE) ;
+    if( m_EmergencyBreakModifier->GetSelection() == 1 )
+      wAccelerator.setmodifier(accelEBreak, wxACCEL_ALT );
+    else if( m_EmergencyBreakModifier->GetSelection() == 2 )
+      wAccelerator.setmodifier(accelEBreak, wxACCEL_CTRL );
+    else
+      wAccelerator.setmodifier(accelEBreak, wxACCEL_NORMAL );
+  }
+
 }
 
 
@@ -732,6 +803,10 @@ bool RocguiIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& c
     m_labMICStep = NULL;
     m_MICStep = NULL;
     m_MICStopOnExit = NULL;
+    m_AcceleratorPanel = NULL;
+    m_labEmergencyBreak = NULL;
+    m_EmergencyBreakList = NULL;
+    m_EmergencyBreakModifier = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
 ////@end RocguiIniDialog member initialisation
@@ -1332,22 +1407,45 @@ void RocguiIniDialog::CreateControls()
 
     m_Notebook->AddPage(m_MICpanel, _("MIC"));
 
+    m_AcceleratorPanel = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer184 = new wxBoxSizer(wxVERTICAL);
+    m_AcceleratorPanel->SetSizer(itemBoxSizer184);
+
+    wxFlexGridSizer* itemFlexGridSizer185 = new wxFlexGridSizer(0, 3, 0, 0);
+    itemBoxSizer184->Add(itemFlexGridSizer185, 0, wxALIGN_LEFT, 5);
+    m_labEmergencyBreak = new wxStaticText( m_AcceleratorPanel, wxID_ANY, _("Emergencybreak"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer185->Add(m_labEmergencyBreak, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxArrayString m_EmergencyBreakListStrings;
+    m_EmergencyBreakList = new wxComboBox( m_AcceleratorPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EmergencyBreakListStrings, wxCB_READONLY );
+    itemFlexGridSizer185->Add(m_EmergencyBreakList, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxArrayString m_EmergencyBreakModifierStrings;
+    m_EmergencyBreakModifierStrings.Add(_("&Normal"));
+    m_EmergencyBreakModifierStrings.Add(_("&Alt"));
+    m_EmergencyBreakModifierStrings.Add(_("&Ctrl"));
+    m_EmergencyBreakModifier = new wxRadioBox( m_AcceleratorPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_EmergencyBreakModifierStrings, 1, wxRA_SPECIFY_ROWS );
+    m_EmergencyBreakModifier->SetSelection(0);
+    itemFlexGridSizer185->Add(m_EmergencyBreakModifier, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_Notebook->AddPage(m_AcceleratorPanel, _("Accelerators"));
+
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer183 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer189 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer183, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer189, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer183->AddButton(m_OK);
+    itemStdDialogButtonSizer189->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer183->AddButton(m_Cancel);
+    itemStdDialogButtonSizer189->AddButton(m_Cancel);
 
-    wxButton* itemButton186 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer183->AddButton(itemButton186);
+    wxButton* itemButton192 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer189->AddButton(itemButton192);
 
-    itemStdDialogButtonSizer183->Realize();
+    itemStdDialogButtonSizer189->Realize();
 
 ////@end RocguiIniDialog content construction
 }
