@@ -2229,21 +2229,22 @@ void RocGuiFrame::initFrame() {
 
   m_ToolBar = NULL;
   if( wGui.istoolbar(m_Ini) ) {
-    if( SystemOp.isWindows() && wxMAJOR_VERSION < 3 ) {
-      //l_useDisableIcons = true;
+    if( SystemOp.isWindows() ) {
+      l_useDisableIcons = true;
     }
     m_ToolBar = CreateToolBar( (wGui.isverticaltoolbar(m_Ini)?wxTB_VERTICAL:wxTB_HORIZONTAL) | wxNO_BORDER | wxTB_FLAT | wxTB_DOCKABLE );
     m_ToolBar->SetToolBitmapSize(wxSize(24, 24));
+    m_ToolBar->SetToolSeparation(25);
 
-    m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
-    m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
+    m_ToolBar->AddTool(ME_Connect, wxGetApp().getMsg("connect"), *_img_connect, l_useDisableIcons?*_img_connect_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("connect") );
+    m_ToolBar->AddTool(ME_OpenWorkspace, wxGetApp().getMsg("openworkspace"), *_img_system, l_useDisableIcons?*_img_system_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("openworkspace") );
 
     m_ToolBar->AddSeparator();
 
-    m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
-    m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
+    m_ToolBar->AddTool(ME_New, wxGetApp().getMsg("new"), *_img_new, l_useDisableIcons?*_img_new_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("new") );
+    m_ToolBar->AddTool(ME_Open, wxGetApp().getMsg("open"), *_img_open, l_useDisableIcons?*_img_open_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("open") );
     m_ToolBar->AddTool(ME_Save, wxGetApp().getMsg("save"), *_img_save, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("save") );
-    m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
+    m_ToolBar->AddTool(ME_Undo, wxGetApp().getMsg("undo"), *_img_undo, l_useDisableIcons?*_img_undo_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("undo") );
     m_ToolBar->EnableTool(ME_Undo, false );
 
     m_ToolBar->AddSeparator();
