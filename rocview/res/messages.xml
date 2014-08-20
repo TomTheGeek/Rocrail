@@ -17208,7 +17208,7 @@
     <pl txt="Stół operatora"/>
   </Msg>
   <Msg id="operator" dialog="true">
-    <en txt="Operator"/>
+    <en txt="Operator" tip="Dialog for operator control"/>
     <cs txt="Operátor"/>
     <hu txt="Kezelő"/>
     <de txt="Fahrdienstleiter"/>

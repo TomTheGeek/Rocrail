@@ -2273,7 +2273,7 @@ void RocGuiFrame::initFrame() {
 
     m_ToolBar->AddSeparator();
 
-    m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), l_grayIcons?*_img_poweron:*_img_poweron_c, wxGetApp().getTip("poweron") );
+    m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), l_grayIcons?*_img_poweron:*_img_poweron_c, wxNullBitmap, wxGetApp().getTip("poweron") );
     m_ToolBar->AddSeparator();
     m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), l_grayIcons?*_img_automode:*_img_automode_c, wxNullBitmap, wxGetApp().getTip("automode") );
     m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), l_grayIcons?*_img_stop:*_img_stop_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
@@ -2284,7 +2284,7 @@ void RocGuiFrame::initFrame() {
 
     m_ToolBar->AddTool(ME_OperatorDlg, wxGetApp().getMsg("operator"), l_grayIcons?*_img_operator:*_img_operator_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("operator") );
     if( !m_bExpired )
-      m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), l_grayIcons?*_img_rocpro:*_img_rocpro_c, wxNullBitmap, wxITEM_NORMAL );
+      m_ToolBar->AddTool(ME_RocPro, _T("RocPro"), l_grayIcons?*_img_rocpro:*_img_rocpro_c, wxNullBitmap, wxITEM_NORMAL, wxT("RocPro") );
     m_ToolBar->AddTool(ME_MIC, wxGetApp().getMsg("mic"), l_grayIcons?*_img_mic:*_img_mic_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("mic") );
     m_ToolBar->AddTool(ME_LcDlg, wxGetApp().getMsg("locctrl"), l_grayIcons?*_img_locctrl:*_img_locctrl_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("locctrl") );
     m_ToolBar->AddTool(ME_SwDlg, wxGetApp().getMsg("swctrl"), l_grayIcons?*_img_swctrl:*_img_swctrl_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("swctrl") );

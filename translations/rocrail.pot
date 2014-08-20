@@ -3864,6 +3864,12 @@ msgid "Operator"
 msgstr ""
 
 #. 
+# id="operator"
+#, c-format
+msgid "Dialog for operator control"
+msgstr ""
+
+#. 
 # id="waybill"
 #, c-format
 msgid "Waybill"
