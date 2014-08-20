@@ -1861,7 +1861,6 @@ void RocGuiFrame::initFrame() {
   acc_entries[16].Set(wxACCEL_CTRL, (int) '8', ME_EditSignals);
   acc_entries[17].Set(wxACCEL_CTRL, (int) '9', ME_EditOutputs);
   acc_entries[18].Set(wxACCEL_ALT, (int) '1', ME_EditSensors);
-  //acc_entries[19].Set(wxACCEL_ALT, (int) '2', ME_EditTurntables);
   acc_entries[19].Set(wxACCEL_ALT, (int) '2', ME_EditMVTrack);
 
   acc_entries[20].Set(wxACCEL_NORMAL, WXK_F1 , ME_F1 );
@@ -1876,7 +1875,7 @@ void RocGuiFrame::initFrame() {
   acc_entries[29].Set(wxACCEL_NORMAL, WXK_F10, ME_F10);
   acc_entries[30].Set(wxACCEL_NORMAL, WXK_F11, ME_F11);
   acc_entries[31].Set(wxACCEL_NORMAL, WXK_F12, ME_F12);
-  acc_entries[32].Set(wxACCEL_NORMAL, WXK_PAUSE, ME_EmergencyBreak);
+  acc_entries[32].Set(wxACCEL_ALT, WXK_SPACE, ME_EmergencyBreak);
 
   acc_entries[33].Set(wxACCEL_ALT, (int) '3', ME_EditTimedActions);
   acc_entries[34].Set(wxACCEL_ALT, (int) '4', ME_EditCars);
