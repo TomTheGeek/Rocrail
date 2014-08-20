@@ -225,6 +225,9 @@ void RocguiIniDialog::initLabels() {
   m_TabAlignType->SetString( 2, wxGetApp().getMsg( "multiline" ) );
 
   // Accelerators
+  m_labAccelFunction->SetLabel( wxGetApp().getMsg( "function" ) );
+  m_labAccelKeyCode->SetLabel( wxGetApp().getMsg( "keycode" ) );
+  m_labAccelModifier->SetLabel( wxGetApp().getMsg( "modifier" ) );
   m_labEmergencyBreak->SetLabel( wxGetApp().getMsg( "ebreak" ) );
   m_EmergencyBreakModifier->SetString( 0, wxGetApp().getMsg( "none" ) );
   m_EmergencyBreakModifier->SetString( 1, wxGetApp().getMsg( "alt" ) );
@@ -804,6 +807,9 @@ bool RocguiIniDialog::Create( wxWindow* parent, wxWindowID id, const wxString& c
     m_MICStep = NULL;
     m_MICStopOnExit = NULL;
     m_AcceleratorPanel = NULL;
+    m_labAccelFunction = NULL;
+    m_labAccelKeyCode = NULL;
+    m_labAccelModifier = NULL;
     m_labEmergencyBreak = NULL;
     m_EmergencyBreakList = NULL;
     m_EmergencyBreakModifier = NULL;
@@ -1413,6 +1419,15 @@ void RocguiIniDialog::CreateControls()
 
     wxFlexGridSizer* itemFlexGridSizer185 = new wxFlexGridSizer(0, 3, 0, 0);
     itemBoxSizer184->Add(itemFlexGridSizer185, 0, wxALIGN_LEFT, 5);
+    m_labAccelFunction = new wxStaticText( m_AcceleratorPanel, wxID_ANY, _("Function"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer185->Add(m_labAccelFunction, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labAccelKeyCode = new wxStaticText( m_AcceleratorPanel, wxID_ANY, _("Key code"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer185->Add(m_labAccelKeyCode, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labAccelModifier = new wxStaticText( m_AcceleratorPanel, wxID_ANY, _("Modifier"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer185->Add(m_labAccelModifier, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_labEmergencyBreak = new wxStaticText( m_AcceleratorPanel, wxID_ANY, _("Emergencybreak"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer185->Add(m_labEmergencyBreak, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -1432,20 +1447,20 @@ void RocguiIniDialog::CreateControls()
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer189 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer192 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer189, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer192, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer189->AddButton(m_OK);
+    itemStdDialogButtonSizer192->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer189->AddButton(m_Cancel);
+    itemStdDialogButtonSizer192->AddButton(m_Cancel);
 
-    wxButton* itemButton192 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer189->AddButton(itemButton192);
+    wxButton* itemButton195 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer192->AddButton(itemButton195);
 
-    itemStdDialogButtonSizer189->Realize();
+    itemStdDialogButtonSizer192->Realize();
 
 ////@end RocguiIniDialog content construction
 }

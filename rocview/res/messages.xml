@@ -28819,4 +28819,10 @@
   <Msg id="ctrl">
     <en txt="Ctrl"/>
   </Msg>
+  <Msg id="keycode">
+    <en txt="Key code"/>
+  </Msg>
+  <Msg id="modifier">
+    <en txt="Modifier"/>
+  </Msg>
 </Messages>

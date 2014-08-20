@@ -317,6 +317,9 @@ public:
     wxSpinCtrl* m_MICStep;
     wxCheckBox* m_MICStopOnExit;
     wxPanel* m_AcceleratorPanel;
+    wxStaticText* m_labAccelFunction;
+    wxStaticText* m_labAccelKeyCode;
+    wxStaticText* m_labAccelModifier;
     wxStaticText* m_labEmergencyBreak;
     wxComboBox* m_EmergencyBreakList;
     wxRadioBox* m_EmergencyBreakModifier;
