@@ -32,8 +32,6 @@
 
 ZoomDlg::ZoomDlg( wxWindow* parent, int percent ):ZoomDlgGen( parent )
 {
-  m_ZoomValue->Append(_T("10"));
-  m_ZoomValue->Append(_T("20"));
   m_ZoomValue->Append(_T("25"));
   m_ZoomValue->Append(_T("30"));
   m_ZoomValue->Append(_T("40"));
@@ -83,7 +81,10 @@ void ZoomDlg::onZoomEnter( wxCommandEvent& event ) {
 
 
 void ZoomDlg::onZoomThumb( wxScrollEvent& event ) {
-  m_ZoomValue->SetValue( wxString::Format( _T("%d"), m_ZoomSlider->GetValue() ) );
+  int percent = m_ZoomSlider->GetValue();
+  m_ZoomValue->SetValue( wxString::Format( _T("%d"), percent ) );
+  wxGetApp().getFrame()->Zoom(percent);
+  event.Skip();
 }
 
 
@@ -96,6 +97,7 @@ void ZoomDlg::onZoomRelease( wxScrollEvent& event ) {
   m_ZoomValue->SetValue( wxString::Format( _T("%d"), percent) );
   m_ZoomSlider->SetValue(percent);
   wxGetApp().getFrame()->Zoom(percent);
+  event.Skip();
 }
 
 

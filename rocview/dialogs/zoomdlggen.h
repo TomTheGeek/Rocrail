@@ -42,8 +42,8 @@ class ZoomDlgGen : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void onZoomSelect( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onZoomEnter( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onZoomRelease( wxScrollEvent& event ) { event.Skip(); }
 		virtual void onZoomThumb( wxScrollEvent& event ) { event.Skip(); }
+		virtual void onZoomRelease( wxScrollEvent& event ) { event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onHelp( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }

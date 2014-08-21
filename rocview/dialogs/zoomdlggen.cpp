@@ -30,7 +30,7 @@ ZoomDlgGen::ZoomDlgGen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	bSizer1->Add( fgSizer1, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	m_ZoomSlider = new wxSlider( this, wxID_ANY, 100, 10, 200, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_HORIZONTAL|wxSL_LABELS );
+	m_ZoomSlider = new wxSlider( this, wxID_ANY, 100, 25, 200, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS|wxSL_BOTTOM|wxSL_HORIZONTAL|wxSL_LABELS );
 	bSizer1->Add( m_ZoomSlider, 0, wxALL|wxEXPAND, 5 );
 	
 	m_sdbSizer1 = new wxStdDialogButtonSizer();
@@ -52,6 +52,19 @@ ZoomDlgGen::ZoomDlgGen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	// Connect Events
 	m_ZoomValue->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( ZoomDlgGen::onZoomSelect ), NULL, this );
 	m_ZoomValue->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ZoomDlgGen::onZoomEnter ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
 	m_ZoomSlider->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ZoomDlgGen::onZoomRelease ), NULL, this );
 	m_ZoomSlider->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
 	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ZoomDlgGen::onCancel ), NULL, this );
@@ -64,6 +77,19 @@ ZoomDlgGen::~ZoomDlgGen()
 	// Disconnect Events
 	m_ZoomValue->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( ZoomDlgGen::onZoomSelect ), NULL, this );
 	m_ZoomValue->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ZoomDlgGen::onZoomEnter ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
+	m_ZoomSlider->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
 	m_ZoomSlider->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ZoomDlgGen::onZoomRelease ), NULL, this );
 	m_ZoomSlider->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
 	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ZoomDlgGen::onCancel ), NULL, this );
