@@ -45,6 +45,7 @@
 #include "rocrail/wrapper/public/CVByte.h"
 
 #include "rocview/wrapper/public/Gui.h"
+#include "rocview/res/icons.hpp"
 
 #include "rocs/public/trace.h"
 #include "rocs/public/strtok.h"
@@ -352,7 +353,10 @@ void CarDlg::initIndex(){
   SetTitle(wxGetApp().getMsg( "cartable" ));
 
   m_CarList2->DeleteAllItems();
-  m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+  if( wGui.isgrayicons(wxGetApp().getIni()) )
+    m_CarImage->SetBitmapLabel( *_img_noimg );
+  else
+    m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
   m_CarImage->Refresh();
   m_Props = NULL;
 
@@ -531,7 +535,10 @@ void CarDlg::initValues() {
     }
     else {
       TraceOp.trc( "cardlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
-      m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+      if( wGui.isgrayicons(wxGetApp().getIni()) )
+        m_CarImage->SetBitmapLabel( *_img_noimg );
+      else
+        m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
       // request the image from server:
       iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
       wDataReq.setid( node, wCar.getid(m_Props) );
@@ -547,7 +554,10 @@ void CarDlg::initValues() {
     //m_CarImageIndex->SetBitmapLabel( wxBitmap(wxString(wLoc.getimage( m_Props ),wxConvUTF8), bmptype) );
   }
   else {
-    m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    if( wGui.isgrayicons(wxGetApp().getIni()) )
+      m_CarImage->SetBitmapLabel( *_img_noimg );
+    else
+      m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
     //m_CarImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
   }
   m_CarImage->Refresh();
