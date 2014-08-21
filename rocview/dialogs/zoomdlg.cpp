@@ -71,12 +71,12 @@ void ZoomDlg::onOK( wxCommandEvent& event )
 }
 
 void ZoomDlg::onZoomSelect( wxCommandEvent& event ) {
-  m_ZoomSlider->SetValue( atoi( m_ZoomValue->GetValue() ) );
+  m_ZoomSlider->SetValue( atoi( (const char*)m_ZoomValue->GetValue().c_str() ) );
 }
 
 
 void ZoomDlg::onZoomEnter( wxCommandEvent& event ) {
-  m_ZoomSlider->SetValue( atoi( m_ZoomValue->GetValue() ) );
+  m_ZoomSlider->SetValue( atoi( (const char*)m_ZoomValue->GetValue().c_str() ) );
 }
 
 
@@ -97,7 +97,7 @@ void ZoomDlg::onZoomRelease( wxScrollEvent& event ) {
 
 
 int ZoomDlg::GetValue() {
-  return atoi( m_ZoomValue->GetValue() );
+  return atoi( (const char*)m_ZoomValue->GetValue().c_str() );
 }
 
 
