@@ -41,6 +41,7 @@ class ZoomDlg : public ZoomDlgGen
     void onZoomEnter( wxCommandEvent& event );
     void onZoomThumb( wxScrollEvent& event );
     void onZoomRelease( wxScrollEvent& event );
+    void onHelp( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		ZoomDlg( wxWindow* parent, int percent );

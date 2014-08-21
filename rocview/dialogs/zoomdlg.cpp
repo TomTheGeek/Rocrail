@@ -100,5 +100,7 @@ int ZoomDlg::GetValue() {
   return atoi( (const char*)m_ZoomValue->GetValue().c_str() );
 }
 
-
+void ZoomDlg::onHelp( wxCommandEvent& event ) {
+  wxGetApp().openLink( "rocgui-menu", "zoom" );
+}
 

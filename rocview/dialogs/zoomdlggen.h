@@ -37,6 +37,7 @@ class ZoomDlgGen : public wxDialog
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
 		wxButton* m_sdbSizer1Cancel;
+		wxButton* m_sdbSizer1Help;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onZoomSelect( wxCommandEvent& event ) { event.Skip(); }
@@ -44,6 +45,7 @@ class ZoomDlgGen : public wxDialog
 		virtual void onZoomRelease( wxScrollEvent& event ) { event.Skip(); }
 		virtual void onZoomThumb( wxScrollEvent& event ) { event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onHelp( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOK( wxCommandEvent& event ) { event.Skip(); }
 		
 	

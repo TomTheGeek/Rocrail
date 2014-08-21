@@ -38,6 +38,8 @@ ZoomDlgGen::ZoomDlgGen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_sdbSizer1->AddButton( m_sdbSizer1OK );
 	m_sdbSizer1Cancel = new wxButton( this, wxID_CANCEL );
 	m_sdbSizer1->AddButton( m_sdbSizer1Cancel );
+	m_sdbSizer1Help = new wxButton( this, wxID_HELP );
+	m_sdbSizer1->AddButton( m_sdbSizer1Help );
 	m_sdbSizer1->Realize();
 	bSizer1->Add( m_sdbSizer1, 0, wxALL|wxALIGN_RIGHT, 5 );
 	
@@ -53,6 +55,7 @@ ZoomDlgGen::ZoomDlgGen( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_ZoomSlider->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ZoomDlgGen::onZoomRelease ), NULL, this );
 	m_ZoomSlider->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
 	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ZoomDlgGen::onCancel ), NULL, this );
+	m_sdbSizer1Help->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ZoomDlgGen::onHelp ), NULL, this );
 	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ZoomDlgGen::onOK ), NULL, this );
 }
 
@@ -64,6 +67,7 @@ ZoomDlgGen::~ZoomDlgGen()
 	m_ZoomSlider->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ZoomDlgGen::onZoomRelease ), NULL, this );
 	m_ZoomSlider->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ZoomDlgGen::onZoomThumb ), NULL, this );
 	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ZoomDlgGen::onCancel ), NULL, this );
+	m_sdbSizer1Help->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ZoomDlgGen::onHelp ), NULL, this );
 	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ZoomDlgGen::onOK ), NULL, this );
 	
 }
