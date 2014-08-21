@@ -2581,8 +2581,12 @@ void RocGuiFrame::create() {
   m_WarningPanel = new wxTextCtrl( warningPanel, 4, _T(""),
                          wxDefaultPosition, wxDefaultSize,
                          wxTE_MULTILINE | wxTE_READONLY | (dontwrap?wxTE_DONTWRAP:0) );
-  if(wGui.isgrayicons(m_Ini))
+  if(wGui.isgrayicons(m_Ini)) {
     m_WarningPanel->SetBackgroundColour(Base::getGrey());
+    wxFont font = m_WarningPanel->GetFont();
+    font.SetPointSize( font.GetPointSize() -2 );
+    m_WarningPanel->SetFont(font);
+  }
   warningSizer->Add(warningTitle, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
   warningSizer->Add(m_WarningPanel, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
 
@@ -2595,8 +2599,12 @@ void RocGuiFrame::create() {
   m_MonitorPanel = new wxTextCtrl( monitorPanel, 4, _T(""),
                          wxDefaultPosition, wxDefaultSize,
                          wxTE_MULTILINE | wxTE_READONLY | (dontwrap?wxTE_DONTWRAP:0) );
-  if(wGui.isgrayicons(m_Ini))
+  if(wGui.isgrayicons(m_Ini)) {
     m_MonitorPanel->SetBackgroundColour(Base::getGrey());
+    wxFont font = m_MonitorPanel->GetFont();
+    font.SetPointSize( font.GetPointSize() -2 );
+    m_MonitorPanel->SetFont(font);
+  }
   monitorSizer->Add(monitorTitle, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
   monitorSizer->Add(m_MonitorPanel, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
 
