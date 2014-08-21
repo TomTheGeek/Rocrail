@@ -37,7 +37,8 @@ class ZoomDlg : public ZoomDlgGen
 		// Handlers for MyFrame1 events.
 		void onCancel( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
-    void onZoomSpin( wxSpinEvent& event );
+    void onZoomSelect( wxCommandEvent& event );
+    void onZoomEnter( wxCommandEvent& event );
     void onZoomThumb( wxScrollEvent& event );
     void onZoomRelease( wxScrollEvent& event );
 	public:

@@ -9,7 +9,7 @@
 #define __zoomdlggen__
 
 #include <wx/string.h>
-#include <wx/spinctrl.h>
+#include <wx/combobox.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
@@ -31,7 +31,7 @@ class ZoomDlgGen : public wxDialog
 	private:
 	
 	protected:
-		wxSpinCtrl* m_ZoomValue;
+		wxComboBox* m_ZoomValue;
 		wxStaticText* m_labPercent;
 		wxSlider* m_ZoomSlider;
 		wxStdDialogButtonSizer* m_sdbSizer1;
@@ -39,7 +39,8 @@ class ZoomDlgGen : public wxDialog
 		wxButton* m_sdbSizer1Cancel;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void onZoomSpin( wxSpinEvent& event ) { event.Skip(); }
+		virtual void onZoomSelect( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onZoomEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onZoomRelease( wxScrollEvent& event ) { event.Skip(); }
 		virtual void onZoomThumb( wxScrollEvent& event ) { event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ) { event.Skip(); }
