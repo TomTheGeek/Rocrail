@@ -71,7 +71,9 @@ void ZoomDlg::onOK( wxCommandEvent& event )
 }
 
 void ZoomDlg::onZoomSelect( wxCommandEvent& event ) {
-  m_ZoomSlider->SetValue( atoi( (const char*)m_ZoomValue->GetValue().c_str() ) );
+  int percent = atoi( (const char*)m_ZoomValue->GetValue().c_str() );
+  m_ZoomSlider->SetValue( percent );
+  wxGetApp().getFrame()->Zoom(percent);
 }
 
 
@@ -93,6 +95,7 @@ void ZoomDlg::onZoomRelease( wxScrollEvent& event ) {
     percent += 5;
   m_ZoomValue->SetValue( wxString::Format( _T("%d"), percent) );
   m_ZoomSlider->SetValue(percent);
+  wxGetApp().getFrame()->Zoom(percent);
 }
 
 
