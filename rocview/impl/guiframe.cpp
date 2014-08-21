@@ -2464,6 +2464,8 @@ void RocGuiFrame::create() {
   m_StatNotebook = new wxNotebook( m_PlanSplitter, -1, wxDefaultPosition, wxDefaultSize, wxNB_TOP );
 
   m_ActiveLocsPanel = new wxPanel( m_StatNotebook, -1, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+  if(wGui.isgrayicons(wxGetApp().getIni()))
+    m_ActiveLocsPanel->SetBackgroundColour(Base::getGrey());
   wxBoxSizer* activeLocsSizer = new wxBoxSizer(wxVERTICAL);
   m_ActiveLocsPanel->SetSizer(activeLocsSizer);
 
@@ -2475,6 +2477,8 @@ void RocGuiFrame::create() {
   }
 
   m_ActiveLocs = new wxGrid( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
+  if(wGui.isgrayicons(wxGetApp().getIni()))
+    m_ActiveLocs->SetBackgroundColour(Base::getGrey());
   m_ActiveLocs->SetRowLabelSize(0);
   m_ActiveLocs->CreateGrid(1, m_bLocoImageColumn?8:7, wxGrid::wxGridSelectRows);
 
@@ -2504,7 +2508,11 @@ void RocGuiFrame::create() {
 
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Creating LocPanel..." );
   m_LCPanel = new wxPanel( m_ActiveLocsPanel, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-  m_LCPanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+
+  if(wGui.isgrayicons(m_Ini))
+    m_LCPanel->SetBackgroundColour(Base::getGrey());
+  else
+    m_LCPanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 
   m_LC = NULL;
   m_LC = new LC( m_LCPanel );
@@ -2564,6 +2572,8 @@ void RocGuiFrame::create() {
   m_WarningPanel = new wxTextCtrl( warningPanel, 4, _T(""),
                          wxDefaultPosition, wxDefaultSize,
                          wxTE_MULTILINE | wxTE_READONLY | (dontwrap?wxTE_DONTWRAP:0) );
+  if(wGui.isgrayicons(m_Ini))
+    m_WarningPanel->SetBackgroundColour(Base::getGrey());
   warningSizer->Add(warningTitle, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
   warningSizer->Add(m_WarningPanel, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
 
@@ -2576,6 +2586,8 @@ void RocGuiFrame::create() {
   m_MonitorPanel = new wxTextCtrl( monitorPanel, 4, _T(""),
                          wxDefaultPosition, wxDefaultSize,
                          wxTE_MULTILINE | wxTE_READONLY | (dontwrap?wxTE_DONTWRAP:0) );
+  if(wGui.isgrayicons(m_Ini))
+    m_MonitorPanel->SetBackgroundColour(Base::getGrey());
   monitorSizer->Add(monitorTitle, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
   monitorSizer->Add(m_MonitorPanel, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
 

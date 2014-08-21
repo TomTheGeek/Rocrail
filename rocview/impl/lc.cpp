@@ -971,6 +971,8 @@ void LC::CreateControls() {
 
 #ifdef USENEWLOOK
   m_Vslider = new Slider( m_Parent, 35, 106 );
+  if(wGui.isgrayicons(wxGetApp().getIni()))
+    m_Vslider->SetBackgroundColour(Base::getGrey());
 #else
   m_Vslider = new wxSlider( m_Parent, -1, 0, 0, 100, wxDefaultPosition, wxSize(-1, -1), wxSL_VERTICAL|wxSL_INVERSE );
 #endif
@@ -995,6 +997,8 @@ void LC::CreateControls() {
   if( wGui.isshowspeedometer( wxGetApp().getIni() ) ) {
     TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating meter...");
     m_Meter = new Meter(m_Parent, -1, 0, 0, 1);
+    if(wGui.isgrayicons(wxGetApp().getIni()))
+      m_Meter->SetBackgroundColour(Base::getGrey());
     m_MainSizer->Add(m_Meter, 0, wxALIGN_TOP|wxALL|wxFIXED_MINSIZE, 2);
   }
   else {
@@ -1004,6 +1008,8 @@ void LC::CreateControls() {
   if( !StrOp.equals( wGui.clock_none, clocktype ) ) {
     TraceOp.trc( "lc", TRCLEVEL_INFO, __LINE__, 9999, "creating clock...");
     m_Clock = new Clock(m_Parent, -1, 0, 0, 2, 1, type, wGui.isshowsecondhand( wxGetApp().getIni() ));
+    if(wGui.isgrayicons(wxGetApp().getIni()))
+      m_Clock->SetBackgroundColour(Base::getGrey());
     m_MainSizer->Add(m_Clock, 0, wxALIGN_TOP|wxALL|wxFIXED_MINSIZE, 2);
   }
   else {

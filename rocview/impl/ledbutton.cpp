@@ -38,6 +38,9 @@
 #include "rocs/public/trace.h"
 
 #include "rocview/public/ledbutton.h"
+#include "rocview/public/guiapp.h"
+#include "rocview/public/base.h"
+#include "rocview/wrapper/public/Gui.h"
 
 
 BEGIN_EVENT_TABLE(LEDButton, wxPanel)
@@ -118,8 +121,13 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
 
   if(textOnly)
     gc->SetBrush( *wxWHITE_BRUSH );
-  else
-    gc->SetBrush( pressedDown ? *wxGREY_BRUSH:(ON?wxBrush(wxColour(255,200,200)):(useLED?wxBrush(wxColour(200,255,200)):wxBrush(wxColour(230,230,230)))) );
+  else {
+    if( wGui.isgrayicons(wxGetApp().getIni()) )
+      gc->SetBrush( pressedDown ? *wxGREY_BRUSH:(ON?wxBrush(Base::getDarkGrey()):(useLED?wxBrush(Base::getGrey()):wxBrush(wxColour(230,230,230)))) );
+    else
+      gc->SetBrush( pressedDown ? *wxGREY_BRUSH:(ON?wxBrush(wxColour(255,200,200)):(useLED?wxBrush(wxColour(200,255,200)):wxBrush(wxColour(230,230,230)))) );
+  }
+
 
   if( !IsEnabled() ) {
     gc->SetBrush(wxBrush(wxColour(230,230,230)));
@@ -127,9 +135,12 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
   //gc->DrawRoundedRectangle(1, 1, buttonWidth-2, buttonHeight-2, 5.0);
   gc->DrawRoundedRectangle(0, 0, buttonWidth-2, buttonHeight-2, 3.0);
 
-  if( useLED && ON) {
-    //gc->SetBrush( ON ? wxBrush(wxColour(255,255,0)):wxBrush(wxColour(200,255,200)) );
-    //gc->DrawEllipse(2.5, 2.5, 7.0, 7.0);
+  if( useLED && ON && wGui.isgrayicons(wxGetApp().getIni()) ) {
+    wxPen pen( wxColour(200, 0, 0), wxSOLID );
+    pen.SetWidth(1);
+    gc->SetPen( pen );
+    gc->SetBrush( wxBrush(wxColour(200,0,0)) );
+    gc->DrawEllipse(2.5, 2.5, 3.0, 3.0);
   }
 
   if(textOnly) {
@@ -177,19 +188,19 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
       double height;
       double descent;
       double externalLeading;
-      gc->Clip(0, 0, buttonWidth-2, buttonHeight-2);
+      gc->Clip(0, 0, buttonWidth-4, buttonHeight-4);
       gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
       int border = (w*10)/100;
       if( width > (w-border) ) {
-        wxFont font(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        wxFont font(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
         gc->SetFont(font,*wxBLACK);
         gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
         if( width > (w-border) ) {
-          wxFont font(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+          wxFont font(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
           gc->SetFont(font,*wxBLACK);
           gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
           if( width > (w-border) ) {
-            wxFont font(6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+            wxFont font(5, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
             gc->SetFont(font,*wxBLACK);
             gc->GetTextExtent( text,(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
           }

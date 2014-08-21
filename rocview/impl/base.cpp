@@ -56,6 +56,8 @@ wxColor Base::getRed   (){ return wxColor( 255, 200, 200 ); }
 wxColor Base::getYellow(){ return wxColor( 255, 255,   0 ); }
 wxColor Base::getGreen (){ return wxColor( 200, 255, 200 ); }
 wxColor Base::getBlue  (){ return wxColor( 200, 200, 255 ); }
+wxColor Base::getGrey  (){ return wxColor( 225, 225, 225 ); }
+wxColor Base::getDarkGrey  (){ return wxColor( 200, 200, 200 ); }
 wxColor Base::getNoneActiveColor(){ return wxColor( 240, 200, 200 ); }
 wxColor Base::getResColor(){ return wxColor( 255, 255, 200 ); }
 wxColor Base::getRes2Color(){ return wxColor( 255, 255, 170 ); }

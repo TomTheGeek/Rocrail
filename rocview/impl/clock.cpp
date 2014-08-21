@@ -323,7 +323,10 @@ void Clock::drawNewClock() {
 
 #if defined __WIN32
   //Background workaround
-  gc->SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+  if(wGui.isgrayicons(wxGetApp().getIni()))
+    gc->SetBrush(Base::getGrey());
+  else
+    gc->SetBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
   gc->DrawRectangle(0, 0, width, height);
 #endif
 
