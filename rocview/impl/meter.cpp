@@ -43,6 +43,8 @@
 
 #include "rocview/public/guiapp.h"
 #include "rocview/dialogs/clockdialog.h"
+#include "rocview/public/base.h"
+#include "rocview/wrapper/public/Gui.h"
 
 #include "rocview/public/meter.h"
 

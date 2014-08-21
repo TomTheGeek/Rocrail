@@ -57,6 +57,9 @@
 #include "rocview/public/guiapp.h"
 #include "rocview/public/guiframe.h"
 #include "rocview/res/icons.hpp"
+#include "rocview/public/base.h"
+#include "rocview/wrapper/public/Gui.h"
+
 
 BEGIN_EVENT_TABLE(Clock, wxPanel)
   EVT_PAINT(Clock::OnPaint)
