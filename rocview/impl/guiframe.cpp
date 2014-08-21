@@ -104,6 +104,7 @@
 #include "rocview/dialogs/sensorevents.h"
 #include "rocview/dialogs/stagedlg.h"
 #include "rocview/dialogs/trackpickerdlg.h"
+#include "rocview/dialogs/zoomdlg.h"
 
 
 
@@ -2326,6 +2327,11 @@ void RocGuiFrame::initFrame() {
       }
     }
 
+    if(l_grayIcons) {
+      m_ToolBar->AddTool(ME_ZoomX, wxGetApp().getMsg("zoom"), *_img_zoom, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("zoom") );
+      m_ToolBar->AddSeparator();
+    }
+
     //m_ToolBar->AddTool(ME_Update, wxGetApp().getMsg("softwareupdates"), *_img_updates, l_useDisableIcons?*_img_updates_32_disabled:wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("softwareupdates") );
     m_ToolBar->AddTool(wxID_HELP, wxGetApp().getMsg("documentation"), l_grayIcons?*_img_manual:*_img_manual_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("documentation") );
 
@@ -3339,9 +3345,9 @@ void RocGuiFrame::OnCtrlMode( wxCommandEvent& event ) {
 
 
 void RocGuiFrame::OnZoomX( wxCommandEvent& event ) {
-  wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getTip("zoom"), wxGetApp().getMsg("zoom"), wxString::Format(wxT("%d"), (int)(m_Scale*100)) );
+  ZoomDlg* dlg = new ZoomDlg(this, (int)(m_Scale*100) );
   if( wxID_OK == dlg->ShowModal() ) {
-    int l_Zoom = atoi(dlg->GetValue().mb_str(wxConvUTF8));
+    int l_Zoom = dlg->GetValue();
     if( l_Zoom >= 10 && l_Zoom <= 250 )
       Zoom(l_Zoom);
   }
