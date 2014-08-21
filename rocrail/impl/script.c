@@ -228,6 +228,8 @@ static iONode _parseLine(const char* scriptline, Boolean playpause) {
       parm4 = (char*)StrTokOp.nextToken( tok );
       __stripNewline(parm4);
     }
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "nodename=%s parm1=%s parm2=%s parm3=%s parm4=%s", nodename!=NULL?nodename:"-",
+        parm1!=NULL?parm1:"-", parm2!=NULL?parm2:"-", parm3!=NULL?parm3:"-", parm4!=NULL?parm4:"-");
 
     if( nodename != NULL ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "parsing command: %s", nodename);
@@ -268,6 +270,8 @@ static iONode _parseLine(const char* scriptline, Boolean playpause) {
               wLoc.setscheduleid(node, parm3);
             if( StrOp.equalsi(wLoc.assigntrain, parm2) )
               wLoc.settrain(node, parm3);
+            if( StrOp.equalsi(wLoc.block, parm2) )
+              wLoc.setblockid(node, parm3);
           }
         }
       }
