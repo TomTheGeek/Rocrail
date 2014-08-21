@@ -17232,7 +17232,7 @@
     <ja txt="オペレータ"/>
     <sv txt="Operatör"/>
     <zh_CN txt="操作" tip="操作员控制对话框"/>
-    <sl txt="Operater"/>
+    <sl txt="Operater" tip="Dialog za operaterjev nadzor"/>
     <pt_BR txt="Operador"/>
     <fi txt="Kuljettaja"/>
     <pl txt="Operator"/>
@@ -28830,35 +28830,42 @@
     <en txt="Max. wait time"/>
     <de txt="Max. Wartezeit"/>
     <nl txt="Max. wacht tijd"/>
+    <sl txt="Max. čas čakanja"/>
   </Msg>
   <Msg id="grayicons">
     <en txt="Gray icons"/>
     <de txt="Graue Symbole"/>
     <nl txt="Grijze pictogrammen"/>
+    <sl txt="Sive ikone"/>
   </Msg>
   <Msg id="accelerators">
     <en txt="Accelerators"/>
     <de txt="Tastenkürzel"/>
     <nl txt="Sneltoetsen"/>
+    <sl txt="Pospeševalci"/>
   </Msg>
   <Msg id="alt">
     <en txt="Alt"/>
     <de txt="Alt"/>
     <nl txt="Alt"/>
+    <sl txt="Alt"/>
   </Msg>
   <Msg id="ctrl">
     <en txt="Ctrl"/>
     <de txt="Strg"/>
     <nl txt="Ctrl"/>
+    <sl txt="Ctrl"/>
   </Msg>
   <Msg id="keycode">
     <en txt="Key code"/>
     <de txt="Tastencode"/>
     <nl txt="Toets code"/>
+    <sl txt="Ključ"/>
   </Msg>
   <Msg id="modifier">
     <en txt="Modifier"/>
     <de txt="Sondertaste"/>
     <nl txt="Toets combinatie"/>
+    <sl txt="Spreminjevalec"/>
   </Msg>
 </Messages>
