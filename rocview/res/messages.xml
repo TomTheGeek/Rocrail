@@ -15098,7 +15098,7 @@
     <en txt="Switch sensor offset" tip=""/>
     <nl txt="Offset voor wissel melders" tip=""/>
     <sv txt="Växelsensoroffset" tip=""/>
-    <fr txt="Switch sensor offset" tip=""/>
+    <fr txt="Offset du détecteur d'aiguillage" tip=""/>
     <tr txt="Switch sensor offset" tip=""/>
     <es txt="Switch sensor offset" tip=""/>
     <it txt="Offset sensore deviatoio" tip=""/>
@@ -15126,7 +15126,7 @@
     <en txt="Switch sensor mode" tip=""/>
     <nl txt="Wissel terugmeldings mode" tip=""/>
     <sv txt="Typ av växelsensor" tip=""/>
-    <fr txt="Mode détecteur Switch" tip=""/>
+    <fr txt="Mode détecteur d'aiguillage" tip=""/>
     <tr txt="Switch sensor mode" tip=""/>
     <es txt="Switch sensor mode" tip=""/>
     <it txt="Modalità sensore deviatoio" tip=""/>
@@ -17211,12 +17211,12 @@
     <en txt="Operator" tip="Dialog for operator control"/>
     <cs txt="Operátor"/>
     <hu txt="Kezelő"/>
-    <de txt="Fahrdienstleiter"/>
+    <de txt="Fahrdienstleiter" tip="Dialog für Fahrdienstleiter-Steuerung"/>
     <bg txt="Оператор"/>
     <el txt="Λειτουργίας"/>
     <fr txt="Opérateur"/>
     <it txt="Operatore  composizione"/>
-    <nl txt="Bestuurder"/>
+    <nl txt="Bestuurder" tip="Dialoog voor verkeersleider"/>
     <pt txt="Operador"/>
     <ru txt="Оператор"/>
     <bs txt="Operator"/>
@@ -17231,7 +17231,7 @@
     <sr_latin txt="Operator"/>
     <ja txt="オペレータ"/>
     <sv txt="Operatör"/>
-    <zh_CN txt="操作"/>
+    <zh_CN txt="操作" tip="操作员控制对话框"/>
     <sl txt="Operater"/>
     <pt_BR txt="Operador"/>
     <fi txt="Kuljettaja"/>
@@ -22595,7 +22595,7 @@
     <de txt="Start-Fahrplan"/>
     <en_AU txt="Startup schedule"/>
     <ru txt="Начальное расписание"/>
-    <fr txt="Planification au démarrage"/>
+    <fr txt="Trajet  de démarrage"/>
     <es txt="Iniciar horario"/>
     <it txt="Avviare pianificazione"/>
     <sr_latin txt="Pokreni raspored"/>
@@ -23889,7 +23889,7 @@
     <ja txt="間接表示"/>
     <zh_CN txt="显示二手"/>
     <sl txt="Prikaži rabljene"/>
-    <pt_BR txt="Mostrar usados"/>
+    <pt_BR txt="Exibir usados"/>
     <en_GB txt="Show secondhand"/>
     <sv txt="Visa andrahands"/>
     <fi txt="Näytä toissijainen"/>
@@ -24087,7 +24087,7 @@
     <en txt="Start of Day" tip="Initialize accessories and query sensors."/>
     <de txt="Weichen/Signale/Zähler initialisieren" tip="Zubehör initialisieren und Rückmelder abfragen"/>
     <es txt="Inicio de Día" tip="Inicializar accesorios y sensores de consulta"/>
-    <fr txt="Début de journée" tip="initialisation des accessoires et capteurs"/>
+    <fr txt="Début de journée" tip="Initialisation des accessoires et capteurs"/>
     <nl txt="Begin van de dag" tip="Initialiseer wissels, seinen en bezetmelders"/>
     <zh_CN txt="起始日" tip="初始化配件和查询传感器"/>
     <it txt="Inizializzazione (Start of Day)" tip="Inizializza accessori e sensori di interrogazione"/>
@@ -24120,7 +24120,7 @@
     <sv txt="Hämta sensorstatus" tip="Efterfråga aktuell status på alla sensorer"/>
     <en_GB txt="Query sensors" tip="Query actual state of all sensors."/>
     <fi txt="Hae antureiden tilat" tip="Kysy jokaisen anturin oikea tila"/>
-    <fr txt="Questionner les détecteurs" tip="etat de tous les capteurs"/>
+    <fr txt="Etat des détecteurs" tip="Etat de tous les détecteurs"/>
     <pl txt="Sprawdzenie stanu czujników" tip="Sprawdzenie aktualnego stanu wszystkich czujników."/>
     <en_AU txt="Query sensors" tip="Query actual state of all sensors."/>
     <en_CA txt="Query sensors" tip="Query actual state of all sensors."/>
@@ -24513,7 +24513,7 @@
     <pt_BR txt="Restaurar agendamentos"/>
     <en_GB txt="Restore schedule"/>
     <fi txt="Palauta aikataulu"/>
-    <fr txt="reinitialisation de la pendule"/>
+    <fr txt="Réinitialiser le trajet"/>
     <en_AU txt="Restore schedule"/>
     <en_CA txt="Restore schedule"/>
   </Msg>
@@ -24970,7 +24970,7 @@
     <pt_BR txt="Sensor de energia"/>
     <en_GB txt="Power sensor"/>
     <fi txt="Virta-anturi"/>
-    <fr txt="détecteur de courant"/>
+    <fr txt="Détecteur de courant"/>
     <en_AU txt="Power sensor"/>
     <en_CA txt="Power sensor"/>
   </Msg>
@@ -26383,6 +26383,7 @@
     <en_CA txt="Calculation"/>
     <pl txt="Obliczenia"/>
     <fr txt="Calcul"/>
+    <zh_CN txt="计算"/>
   </Msg>
   <Msg id="freeallwarning">
     <en txt="This action will free all section reservations. Proceed?"/>
@@ -26990,7 +26991,7 @@
     <pl txt="Sygnały boczne Plus(+)"/>
     <en_AU txt="Plus(+) side signals"/>
     <en_CA txt="Plus(+) side signals"/>
-    <fr txt="Signale côté Plus(+)"/>
+    <fr txt="Signal côté Plus(+)"/>
   </Msg>
   <Msg id="identify">
     <en txt="Identify"/>
@@ -27097,10 +27098,10 @@
   <Msg id="showcounters">
     <en txt="Show counters"/>
     <nl txt="Toon tellerstanden"/>
-    <pt_BR txt="Mostrar contadores"/>
+    <pt_BR txt="Exibir contadores"/>
     <ru txt="Показать счётчики"/>
     <sv txt="Visa Räknare"/>
-    <de txt="Zählerstand anzeigen"/>
+    <de txt="Zähler anzeigen"/>
     <it txt="Mostrare contatori"/>
     <sl txt="Prikaži števce"/>
     <en_GB txt="Show counters"/>
@@ -27866,7 +27867,7 @@
     <pt_BR txt="Sem envolvimento dos monitores"/>
     <sl txt="Pogled brez prehajanja"/>
     <ru txt="Мониторинг без переноса строк"/>
-    <fr txt="Moniteur en recouvre pas"/>
+    <fr txt="Lignes de surveillance non-coupées"/>
   </Msg>
   <Msg id="subject">
     <en txt="Subject"/>
@@ -28028,6 +28029,7 @@
     <sl txt="Uporabi samo prvi identifikator"/>
     <fr txt="Utiliser seulement le premier identifiant"/>
     <zh_CN txt="仅用第一标识"/>
+    <ru txt="Использовать только первый Идентификатор"/>
   </Msg>
   <Msg id="useident">
     <en txt="Use identifier to set in block"/>
@@ -28797,32 +28799,66 @@
   </Msg>
   <Msg id="showlocoimageinblock">
     <en txt="Show loco image in block"/>
+    <de txt="Zeige Lok-Bild im Block"/>
+    <fr txt="Montrer l'image de loco dans le bloc"/>
+    <it txt="Mostrare immagine loco nel blocco"/>
+    <nl txt="Toon lok afbeelding in het blok"/>
+    <pt_BR txt="Exibir imagem da locomotiva no bloco"/>
+    <ru txt="Показывать картинку лока в блоке"/>
+    <sl txt="Prikaži sliko lokomotive v odseku"/>
+    <sr_latin txt="Prikaz slike loko. u bloku"/>
   </Msg>
   <Msg id="modnr">
     <en txt="Module number"/>
+    <de txt="Modul-Nummer"/>
+    <fr txt="Numéro de module"/>
+    <it txt="Numero modulo"/>
+    <nl txt="Module nummer"/>
+    <pt_BR txt="Número do módulo"/>
+    <sl txt="Številka modula"/>
   </Msg>
   <Msg id="newaddress">
     <en txt="New address"/>
+    <de txt="Neue Adresse"/>
+    <fr txt="Nouvelle adresse"/>
+    <it txt="Nuovo indirizzo"/>
+    <nl txt="Nieuw adres"/>
+    <pt_BR txt="Novo endereço"/>
+    <sl txt="Nov naslov"/>
   </Msg>
   <Msg id="maxwaittime">
     <en txt="Max. wait time"/>
+    <de txt="Max. Wartezeit"/>
+    <nl txt="Max. wacht tijd"/>
   </Msg>
   <Msg id="grayicons">
     <en txt="Gray icons"/>
+    <de txt="Graue Symbole"/>
+    <nl txt="Grijze pictogrammen"/>
   </Msg>
   <Msg id="accelerators">
     <en txt="Accelerators"/>
+    <de txt="Tastenkürzel"/>
+    <nl txt="Sneltoetsen"/>
   </Msg>
   <Msg id="alt">
     <en txt="Alt"/>
+    <de txt="Alt"/>
+    <nl txt="Alt"/>
   </Msg>
   <Msg id="ctrl">
     <en txt="Ctrl"/>
+    <de txt="Strg"/>
+    <nl txt="Ctrl"/>
   </Msg>
   <Msg id="keycode">
     <en txt="Key code"/>
+    <de txt="Tastencode"/>
+    <nl txt="Toets code"/>
   </Msg>
   <Msg id="modifier">
     <en txt="Modifier"/>
+    <de txt="Sondertaste"/>
+    <nl txt="Toets combinatie"/>
   </Msg>
 </Messages>
