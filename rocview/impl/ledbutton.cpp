@@ -139,7 +139,7 @@ void LEDButton::OnPaint(wxPaintEvent& WXUNUSED(event))
     wxPen pen( wxColour(200, 0, 0), wxSOLID );
     pen.SetWidth(1);
     gc->SetPen( pen );
-    gc->SetBrush( wxBrush(wxColour(200,0,0)) );
+    gc->SetBrush( wxBrush(wxColour(225,0,0)) );
     gc->DrawEllipse(2.5, 2.5, 3.0, 3.0);
   }
 
