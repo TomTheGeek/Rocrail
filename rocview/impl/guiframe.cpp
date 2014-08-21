@@ -1153,7 +1153,10 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
   }
 
   if( m_LocImage != NULL ) {
-    m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    if( wGui.isgrayicons(m_Ini) )
+      m_LocImage->SetBitmapLabel( *_img_noimg );
+    else
+      m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
     m_LocImage->Refresh();
   }
 
@@ -5001,7 +5004,10 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
 
         }
         else {
-          m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+          if( wGui.isgrayicons(m_Ini) )
+            m_LocImage->SetBitmapLabel( *_img_noimg );
+          else
+            m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
           // request the image from server:
           iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
           wDataReq.setid( node, wLoc.getid(lc) );
@@ -5013,7 +5019,10 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
       }
       else {
         if( m_LocImage != NULL )
-          m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+          if( wGui.isgrayicons(m_Ini) )
+            m_LocImage->SetBitmapLabel( *_img_noimg );
+          else
+            m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
       }
 
       if( m_LocImage != NULL ) {

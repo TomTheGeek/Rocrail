@@ -44,6 +44,8 @@
 ////@end XPM images
 
 #include "rocview/public/guiapp.h"
+#include "rocview/res/icons.hpp"
+
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Loc.h"
@@ -187,7 +189,10 @@ void LocSelDlg::InitValues() {
       }
     }
     else {
-      m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
+      if( wGui.isgrayicons(wxGetApp().getIni()) )
+        m_LocImageIndex->SetBitmapLabel( *_img_noimg );
+      else
+        m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
       if( StrOp.len(imagename) > 0 ) {
         TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s] not found; request it from server.", pixpath );
         // request the image from server:
@@ -206,7 +211,10 @@ void LocSelDlg::InitValues() {
     //m_LocImageIndex->SetBitmapLabel( wxBitmap(wxString(wLoc.getimage( m_Props ),wxConvUTF8), bmptype) );
   }
   else {
-    m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    if( wGui.isgrayicons(wxGetApp().getIni()) )
+      m_LocImageIndex->SetBitmapLabel( *_img_noimg );
+    else
+      m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
     //m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
   }
   m_LocImageIndex->Refresh();

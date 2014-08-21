@@ -35,6 +35,7 @@
 #include "rocview/public/guiapp.h"
 #include "rocview/public/base.h"
 #include "rocview/dialogs/locseldlg.h"
+#include "rocview/res/icons.hpp"
 
 #include "rocrail/wrapper/public/Plan.h"
 #include "rocrail/wrapper/public/Loc.h"
@@ -393,12 +394,18 @@ void ThrottleDlg::updateImage() {
     }
     else {
       TraceOp.trc( "throttledlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
-      m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+      if( wGui.isgrayicons(wxGetApp().getIni()) )
+        m_LocoImage->SetBitmapLabel( *_img_noimg );
+      else
+        m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
     }
     m_LocoImage->SetToolTip(wxString(wLoc.getdesc( lc ),wxConvUTF8));
   }
   else {
-    m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    if( wGui.isgrayicons(wxGetApp().getIni()) )
+      m_LocoImage->SetBitmapLabel( *_img_noimg );
+    else
+      m_LocoImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
   }
 
   m_LocoImage->Refresh();
