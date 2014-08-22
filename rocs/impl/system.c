@@ -469,10 +469,10 @@ static char* _latin2utf( const char* latinstr ) {
 static char* _utf2latin( const char* utfstr ) {
   /* */
   int len = StrOp.len( utfstr );
-  char* latinstr = allocIDMem( len + 1, RocsStrID );
+  char* latinstr = allocIDMem( len + 10, RocsStrID );
   int i = 0;
   int idx = 0;
-  for( i = 0; i < len; i++ ) {
+  for( i = 0; i < len && idx < len; i++ ) {
     unsigned short val = utfstr[i];
     val &= 0xFF;
     if( val > 0x007F ) {
