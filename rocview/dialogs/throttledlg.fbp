@@ -33,8 +33,8 @@
             <property name="font"></property>
             <property name="hidden">0</property>
             <property name="id">wxID_ANY</property>
-            <property name="maximum_size"></property>
-            <property name="minimum_size"></property>
+            <property name="maximum_size">-1,320</property>
+            <property name="minimum_size">240,300</property>
             <property name="name">ThrottleDlgGen</property>
             <property name="pos"></property>
             <property name="size">-1,-1</property>
