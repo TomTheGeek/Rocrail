@@ -315,18 +315,27 @@ static void __control( void* threadinst ) {
   iOThread  th       = (iOThread)threadinst;
   iOSPL     spl      = (iOSPL)ThreadOp.getParm( th );
   iOSPLData data     = Data(spl);
-  Boolean   serialOK = False;
+  Boolean   sleep    = True;
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "SPL control started." );
 
   while( data->run ) {
     int randSleep = (rand() % 3000) + 500;
-    ThreadOp.sleep(randSleep);
+    ThreadOp.sleep(sleep?randSleep:100);
     if( data->fromAddr > 0 && data->toAddr >= data->fromAddr ) {
-      int randAddr   = rand() % ((data->toAddr - data->fromAddr) + 2);
+      int randAddr   = (rand() % ((data->toAddr - data->fromAddr) + 2)) + data->fromAddr - 1;
       int randPort   = rand() % (data->nrLEDs + 1);
-      if( randAddr > 0 && randPort > 0 )
+      /*
+      if(data->toAddr - data->fromAddr == 0)
+        randAddr = data->fromAddr;
+        */
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "addr=%d port=%d", randAddr, randPort );
+      if( randAddr > 0 && randPort > 0 && randAddr >= data->fromAddr && randAddr <= data->toAddr ) {
         __flipLED(spl, randAddr, randPort);
+        sleep = True;
+      }
+      else
+        sleep = False;
     }
   }
 
