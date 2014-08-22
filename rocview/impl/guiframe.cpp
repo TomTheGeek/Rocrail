@@ -2280,6 +2280,8 @@ void RocGuiFrame::initFrame() {
     m_ToolBar->AddCheckTool(ME_Go, wxGetApp().getMenu("poweron"), l_grayIcons?*_img_poweron:*_img_poweron_c, wxNullBitmap, wxGetApp().getTip("poweron") );
     m_ToolBar->AddSeparator();
     m_ToolBar->AddCheckTool(ME_AutoMode, wxGetApp().getMenu("automode"), l_grayIcons?*_img_automode:*_img_automode_c, wxNullBitmap, wxGetApp().getTip("automode") );
+    m_ToolBar->AddTool(ME_AutoGo, wxGetApp().getMsg("startall"), l_grayIcons?*_img_startall:*_img_startall_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("startall") );
+    GetToolBar()->EnableTool(ME_AutoGo, m_bAutoMode );
     m_ToolBar->AddTool(ME_AutoStop, wxGetApp().getMsg("stopall"), l_grayIcons?*_img_stop:*_img_stop_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getTip("stopall") );
     m_ToolBar->AddSeparator();
     m_ToolBar->AddTool(ME_EmergencyBreak, wxGetApp().getMsg("ebreak"), l_grayIcons?*_img_stopall:*_img_stopall_c, wxNullBitmap, wxITEM_NORMAL, wxGetApp().getMsg("ebreak") );
@@ -4401,6 +4403,9 @@ void RocGuiFrame::OnAutoMode( wxCommandEvent& event ) {
   wAutoCmd.setcmd( cmd, m_bAutoMode ? wAutoCmd.on:wAutoCmd.off );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
+
+  GetToolBar()->EnableTool(ME_AutoGo, m_bAutoMode );
+
 }
 
 void RocGuiFrame::OnAutoGo( wxCommandEvent& event ) {
