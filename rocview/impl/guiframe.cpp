@@ -3386,7 +3386,7 @@ void RocGuiFrame::OnScaleComboCheck(wxCommandEvent& event)
 void RocGuiFrame::OnScaleCombo(wxCommandEvent& event)
 {
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999,
-      "Combobox string '%s' selected", (const char*)m_ScaleComboBox->GetValue().c_str() );
+      "Combobox string '%s' selected", (const char*)m_ScaleComboBox->GetValue().mb_str(wxConvUTF8) );
   int zoom = 100;
 
   if( m_ScaleComboBox->GetValue().IsNumber() ) {
@@ -5032,11 +5032,12 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
         }
       }
       else {
-        if( m_LocImage != NULL )
+        if( m_LocImage != NULL ) {
           if( wGui.isgrayicons(m_Ini) )
             m_LocImage->SetBitmapLabel( *_img_noimg );
           else
             m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+        }
       }
 
       if( m_LocImage != NULL ) {
