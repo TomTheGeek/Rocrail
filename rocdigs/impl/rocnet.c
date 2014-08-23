@@ -301,8 +301,6 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     int bus    = wSwitch.getbus( node );
     int addr   = wSwitch.getaddr1( node );
     int single = wSwitch.issinglegate( node );
-    int delay  = wSwitch.getdelay(node);
-    Boolean actdelay = wSwitch.isactdelay(node);
     byte cmd   = 0;
 
     if( single ) {
@@ -324,17 +322,6 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       rn[RN_PACKET_DATA + 2] = wSwitch.getdelay(node);
       rn[RN_PACKET_DATA + 3] = addr;
       rn[RN_PACKET_DATA + 4] = 0;
-
-      if( actdelay ) {
-        /* deactivate the gate to be used */
-        iQCmd qcmd = allocMem(sizeof(struct QCmd));
-        qcmd->time   = SystemOp.getTick();
-        qcmd->delay  = delay / 10;
-        MemOp.copy( qcmd->out, rn, 128);
-        qcmd->out[RN_PACKET_DATA + 0] = (cmd == 1 ? 0:1);
-        ThreadOp.post( data->timedQueue, (obj)qcmd );
-      }
-
     }
     else {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch CS addr=%d cmd=%d type=%d", wSwitch.getaddr1( node ), cmd, wSwitch.getporttype(node) );
@@ -1888,56 +1875,6 @@ static void __writer( void* threadinst ) {
 }
 
 
-static void __timedqueue( void* threadinst ) {
-  iOThread     th     = (iOThread)threadinst;
-  iOrocNet     rocnet = (iOrocNet)ThreadOp.getParm(th);
-  iOrocNetData data   = Data(rocnet);
-
-  iOList list = ListOp.inst();
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue started" );
-
-  while( data->run ) {
-    iQCmd cmd = (iQCmd)ThreadOp.getPost( th );
-    if (cmd != NULL) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "new timed command time=%d delay=%d tick=%d", cmd->time, cmd->delay, SystemOp.getTick() );
-      ListOp.add(list, (obj)cmd);
-    }
-
-    int i = 0;
-    for( i = 0; i < ListOp.size(list); i++ ) {
-      iQCmd cmd = (iQCmd)ListOp.get(list, i);
-      if( (cmd->time + cmd->delay) <= SystemOp.getTick() ) {
-        byte* outa = allocMem(128);
-        MemOp.copy( outa, cmd->out, 128 );
-        /*
-      rn[RN_PACKET_GROUP] |= RN_GROUP_OUTPUT;
-      rnReceipientAddresToPacket( bus, rn, data->seven );
-      rn[RN_PACKET_ACTION] = RN_STATIONARY_SINGLE_PORT;
-      rn[RN_PACKET_LEN] = 5;
-      rn[RN_PACKET_DATA + 0] = cmd;
-      rn[RN_PACKET_DATA + 1] = wSwitch.getporttype(node);
-      rn[RN_PACKET_DATA + 2] = wSwitch.getdelay(node);
-      rn[RN_PACKET_DATA + 3] = addr;
-      rn[RN_PACKET_DATA + 4] = 0;
-         */
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "timed command: group=%d action=%d cmd=%d addr=%d",
-            outa[RN_GROUP_OUTPUT], outa[RN_PACKET_ACTION], outa[RN_PACKET_DATA + 0], outa[RN_PACKET_DATA + 3] );
-        ThreadOp.post( data->writer, (obj)outa );
-        ListOp.removeObj(list, (obj)cmd);
-        freeMem(cmd);
-        break;
-      }
-    }
-
-    ThreadOp.sleep(10);
-  }
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timed queue ended" );
-}
-
-
-
-
 
 /* VERSION: */
 static int vmajor = 2;
@@ -2044,10 +1981,6 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
       data->watchdog = ThreadOp.inst( "rnwatchdog", &__watchdog, __rocNet );
       ThreadOp.start( data->watchdog );
     }
-
-    data->timedQueue = ThreadOp.inst( "timedqueue", &__timedqueue, __rocNet );
-    ThreadOp.start( data->timedQueue );
-
   }
 
   instCnt++;
