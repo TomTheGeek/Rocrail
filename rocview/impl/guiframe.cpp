@@ -2736,6 +2736,9 @@ void RocGuiFrame::OnAddException( wxCommandEvent& event ) {
       m_MonitorPanel->SetDefaultStyle(wxTextAttr(*wxBLACK));
       m_MonitorPanel->WriteText( now.FormatTime() + wxT(" ") + wxString(text,wxConvUTF8) + wxT("\n") );
     }
+    else if( level == TRCLEVEL_STATUS ) {
+      SetStatusText( wxString(text,wxConvUTF8), status_info );
+    }
     else {
       m_WarningPanel->SetDefaultStyle(wxTextAttr(*wxBLUE));
       m_WarningPanel->WriteText( now.FormatTime() + wxT(" ") + wxString(text,wxConvUTF8) + wxT("\n") );

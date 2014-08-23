@@ -1720,7 +1720,7 @@
                         TRCLEVEL_BYTE     =0x0010,TRCLEVEL_METHOD=0x0020,TRCLEVEL_MEMORY =0x0040,TRCLEVEL_PARAM  =0x0080,
                         TRCLEVEL_PROTOCOL =0x0100,TRCLEVEL_ERROR =0x0200,TRCLEVEL_PARSE  =0x0400,TRCLEVEL_WRAPPER=0x0800,
                         TRCLEVEL_USER1    =0x1000,TRCLEVEL_USER2 =0x2000,TRCLEVEL_MONITOR=0x4000,TRCLEVEL_XMLH   =0x8000,
-                        TRCLEVEL_USER     =0xF000,TRCLEVEL_CALC  =0x10000,TRCLEVEL_ALL   =0xFFFFFF} tracelevel" remark="Trace levels."/>
+                        TRCLEVEL_USER     =0xF000,TRCLEVEL_CALC  =0x10000,TRCLEVEL_STATUS=0x20000,TRCLEVEL_ALL   =0xFFFFFF} tracelevel" remark="Trace levels."/>
     <def name="TRC_DUMPSIZE" vt="int" val="128"/>
     <def name="TRC_FILESIZE" vt="int" val="100"/>
     <def name="TRC_NRFILES" vt="int" val="10"/>

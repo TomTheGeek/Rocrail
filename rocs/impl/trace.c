@@ -278,6 +278,8 @@ static char __level( int level ) {
     clevel = 'd';
   else if( level == TRCLEVEL_CALC )
     clevel = 'v';
+  else if( level == TRCLEVEL_STATUS )
+    clevel = 's';
 
   return clevel;
 }
@@ -539,7 +541,7 @@ static void _trc( const char* objectname, tracelevel level, int line, int id, co
     }
 
     if( t->excListener != NULL ) {
-      if( t->excAll || level == TRCLEVEL_EXCEPTION || level == TRCLEVEL_WARNING || level == TRCLEVEL_MONITOR || level == TRCLEVEL_CALC )
+      if( t->excAll || level == TRCLEVEL_EXCEPTION || level == TRCLEVEL_WARNING || level == TRCLEVEL_MONITOR || level == TRCLEVEL_CALC || level == TRCLEVEL_STATUS )
         t->excListener(level, t->excTimestamp?fmtMsg:msg);
     }
     StrOp.freeID( tname, RocsTraceID );

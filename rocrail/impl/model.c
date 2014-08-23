@@ -2085,6 +2085,7 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
         wAutoCmd.setcmd( cmd, autoMode?wAutoCmd.on:wAutoCmd.off );
       }
       */
+      TraceOp.trc( name, TRCLEVEL_STATUS, __LINE__, 9999, "Automatic mode is %s.", cmdVal );
 
       if( !autoMode && data->autoMode ) {
         __stopAllLocs( inst );
@@ -2467,7 +2468,7 @@ static void _createCoAddrMap( iOModelData o ) {
 
 static void _save( iOModel inst, Boolean removeGen ) {
   iOModelData o = Data(inst);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Saving plan [%s]...", o->fileName );
+  TraceOp.trc( name, TRCLEVEL_STATUS, __LINE__, 9999, "Saving plan [%s]...", o->fileName );
 
   if( removeGen && o->model != NULL ) {
     _removeGenerated(o, wLocList.name(), wLoc.name());
@@ -2511,7 +2512,7 @@ static void _save( iOModel inst, Boolean removeGen ) {
       __backupSave( o->fileName, xml );
     }
     StrOp.free( xml );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Plan Saved." );
+    TraceOp.trc( name, TRCLEVEL_STATUS, __LINE__, 9999, "Plan file saved." );
   }
   ModelOp.saveBlockOccupancy(inst, NULL);
 }

@@ -729,7 +729,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     cd = FileOp.cd( wd );
   }
 
-  trc = TraceOp.inst( debug | dump | monitor | parse | info | TRCLEVEL_WARNING | TRCLEVEL_CALC, tf, True );
+  trc = TraceOp.inst( debug | dump | monitor | parse | info | TRCLEVEL_WARNING | TRCLEVEL_CALC | TRCLEVEL_STATUS, tf, True );
   TraceOp.setAppID( trc, "r" );
 
   if( wd != NULL ) {
@@ -847,7 +847,7 @@ static int _Main( iOApp inst, int argc, char** argv ) {
     Boolean infoParam = wTrace.isinfo( wRocRail.gettrace( data->ini ) );
     Boolean   infoCmd = (info & TRCLEVEL_INFO) ? True:False;
     if( infoCmd != infoParam ) {
-      level &= 0xffff ^ TRCLEVEL_INFO;
+      level &= 0xfffff ^ TRCLEVEL_INFO;
       level |= infoParam ? TRCLEVEL_INFO:0;
       TraceOp.setLevel( trc, level );
     }
