@@ -842,6 +842,11 @@
       <var name="baseaddr" vt="int"/>
       <var name="lcaddr" vt="int"/>
     </struct>
+    <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
+      <var name="out[128]" vt="byte"/>
+      <var name="time" vt="unsigned long"/>
+      <var name="delay" vt="unsigned long"/>
+    </struct>
     <fun name="inst" vt="this">
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
@@ -879,6 +884,7 @@
       <var name="sack" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
       <var name="sensor" vt="Boolean"/>
+      <var name="timedQueue" vt="iOThread"/>
     </data>
   </object>
 
