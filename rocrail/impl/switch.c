@@ -61,6 +61,7 @@ static int instCnt = 0;
 static Boolean __unregisterCallback( iOSwitch inst );
 static void __polariseFrog(iOSwitch inst, int frog, Boolean relays1, Boolean relays2);
 static void __testThread( void* threadinst );
+static void __accThread( void* threadinst );
 
 
 /*
@@ -1517,6 +1518,18 @@ static void _modify( iOSwitch inst, iONode props ) {
 
   __initCTC(inst, False);
 
+  if( o->accctrl == NULL ) {
+    o->accctrl = wSwitch.getaccessoryctrl(o->props);
+  }
+
+  if( o->accctrl != NULL ) {
+    o->run = wAccessoryCtrl.isactive(o->accctrl);
+    if( o->run && o->accThread == NULL ) {
+      o->accThread = ThreadOp.inst( o->id, &__accThread, inst );
+      ThreadOp.start( o->accThread );
+    }
+  }
+
   /* Broadcast to clients. */
   {
     iONode clone = (iONode)NodeOp.base.clone( o->props );
@@ -1911,6 +1924,9 @@ static void __accThread( void* threadinst ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Accessory control thread for \"%s\" ended.", data->id );
   data->accrun = False;
 
+  iOThread t = data->accThread;
+  data->accThread = NULL;
+  ThreadOp.base.del(t);
 }
 
 
