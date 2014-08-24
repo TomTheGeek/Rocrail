@@ -236,7 +236,7 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       return rsp;
     }
     else if( StrOp.equals( cmd, wClock.sync ) ) {
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Clock sync" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Clock sync" );
       rn[RN_PACKET_ACTION] = RN_CLOCK_SYNC;
       rn[RN_PACKET_LEN] = 8;
       rn[RN_PACKET_DATA + 2] = mon;
