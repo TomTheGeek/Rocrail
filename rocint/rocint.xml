@@ -390,7 +390,12 @@
     <fun name="setTempWait" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>
       <param name="wait" vt="Boolean"/>
-      </fun>
-    </interface>
+    </fun>
+    <fun name="setGhostDetected" vt="void">
+      <param name="inst" vt="this" remark="Block instance"/>
+      <param name="key" vt="const char*"/>
+      <param name="ident" vt="const char*"/>
+    </fun>
+  </interface>
 
 </Project>

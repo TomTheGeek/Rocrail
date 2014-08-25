@@ -1541,6 +1541,9 @@ static void _init( iIBlockBase inst ) {
   __initTrackBlocks( inst );
 }
 
+static void _setGhostDetected(iIBlockBase inst, const char* key, const char* ident) {
+  iOSelTabData data = Data(inst);
+}
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/seltab.fm"

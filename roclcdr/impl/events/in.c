@@ -233,6 +233,8 @@ void eventIn( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolean c
     wLoc.setV( cmd, 0 );
     wLoc.setdir( cmd, wLoc.isdir( data->loc->base.properties( data->loc ) ) );
     data->loc->cmd( data->loc, cmd );
+    if( data->next1Block != NULL )
+      data->next1Block->setGhostDetected(data->next1Block, "-", "-" );
   }
   else {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,

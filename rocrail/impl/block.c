@@ -377,6 +377,52 @@ static void __measureVelocity( iOBlock inst, int event ) {
 }
 
 
+static void _setGhostDetected(iIBlockBase inst, const char* key, const char* ident) {
+  iOBlockData data = Data(inst);
+  /* ghost train! */
+
+  if( ModelOp.isAuto( AppOp.getModel() ) ) {
+    if( !__acceptGhost((obj)inst) ) {
+      int tl = TRCLEVEL_USER1;
+      data->ghost = True;
+
+      if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
+        iOControl control = AppOp.getControl();
+        /* power off */
+        if( !ControlOp.power4Block(control, data->id, False) )
+          AppOp.stop();
+        if( wCtrl.iscloseonghost(wRocRail.getctrl( AppOp.getIni() ) ) )
+          wBlock.setstate( data->props, wBlock.closed );
+      }
+      if( wCtrl.isebreakatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
+        /* power off */
+        AppOp.ebreak();
+      }
+
+      _resetTD(inst);
+
+      /* broadcast ghost state */
+      {
+        iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
+        wBlock.setid( nodeD, data->id );
+        wBlock.setstate( nodeD, wBlock.ghost );
+        wBlock.setlocid( nodeD, data->locId );
+        wBlock.setfifoids(nodeD, wBlock.getfifoids(data->props));
+        wBlock.setacceptident(nodeD, data->acceptident);
+        AppOp.broadcastEvent( nodeD );
+        __checkAction((iOBlock)inst, "ghost");
+      }
+      tl = TRCLEVEL_EXCEPTION;
+
+      TraceOp.trc( name, tl, __LINE__, 9999, "Ghost train in block %s, fbid=%s, ident=%s",
+          data->id, key, ident );
+
+    }
+  }
+
+}
+
+
 /**
  * event listener callback for all fbevents
  */
@@ -638,50 +684,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
   }
   else if( data->fromBlockId == NULL && puls && loc == NULL ) {
     /* ghost train! */
-
-    if( ModelOp.isAuto( AppOp.getModel() ) ) {
-      if( !__acceptGhost((obj)inst) ) {
-        int tl = TRCLEVEL_USER1;
-        data->ghost = True;
-
-        if( wCtrl.ispoweroffatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
-          iOControl control = AppOp.getControl();
-          /* power off */
-          if( !ControlOp.power4Block(control, data->id, False) )
-            AppOp.stop();
-          if( wCtrl.iscloseonghost(wRocRail.getctrl( AppOp.getIni() ) ) )
-            wBlock.setstate( data->props, wBlock.closed );
-        }
-        if( wCtrl.isebreakatghost( AppOp.getIniNode( wCtrl.name() ) ) ) {
-          /* power off */
-          AppOp.ebreak();
-        }
-
-        _resetTD(inst);
-
-        /* broadcast ghost state */
-        {
-          iONode nodeD = NodeOp.inst( wBlock.name(), NULL, ELEMENT_NODE );
-          wBlock.setid( nodeD, data->id );
-          wBlock.setstate( nodeD, wBlock.ghost );
-          wBlock.setlocid( nodeD, data->locId );
-          wBlock.setfifoids(nodeD, wBlock.getfifoids(data->props));
-          wBlock.setacceptident(nodeD, data->acceptident);
-          AppOp.broadcastEvent( nodeD );
-          __checkAction((iOBlock)inst, "ghost");
-        }
-        tl = TRCLEVEL_EXCEPTION;
-
-        TraceOp.trc( name, tl, __LINE__, 9999, "Ghost train in block %s, fbid=%s, ident=%s",
-            data->id, key, ident );
-
-      }
-    }
-    else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-          "train in block [%s], fbid=[%s], ident=[%s]", data->id, key, ident );
-    }
-
+    _setGhostDetected(inst, key, ident);
   }
   else if( data->fromBlockId == NULL && !puls && loc == NULL && data->ghost ) {
     /* ghost train! */

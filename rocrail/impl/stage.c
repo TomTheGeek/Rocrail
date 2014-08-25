@@ -1994,6 +1994,10 @@ static void __watchdog( void* threadinst ) {
 static void _setTempWait(iIBlockBase inst, Boolean wait) {
 }
 
+static void _setGhostDetected(iIBlockBase inst, const char* key, const char* ident) {
+  iOStageData data = Data(inst);
+}
+
 
 /**  */
 static struct OStage* _inst( iONode props ) {

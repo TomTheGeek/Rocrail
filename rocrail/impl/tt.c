@@ -3421,6 +3421,10 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
 static void _setTempWait(iIBlockBase inst, Boolean wait) {
 }
 
+static void _setGhostDetected(iIBlockBase inst, const char* key, const char* ident) {
+  iOTTData data = Data(inst);
+}
+
 
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
