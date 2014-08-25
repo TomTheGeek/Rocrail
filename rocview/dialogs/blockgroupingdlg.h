@@ -34,6 +34,7 @@
 ////@begin includes
 #include "wx/notebook.h"
 #include "wx/spinctrl.h"
+#include "wx/listctrl.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -45,6 +46,7 @@
 ////@begin forward declarations
 class wxNotebook;
 class wxSpinCtrl;
+class wxListCtrl;
 ////@end forward declarations
 
 /*!
@@ -75,7 +77,7 @@ class wxSpinCtrl;
 #define ID_BUTTON_LINK_REMOVE 10011
 #define ID_CHECKBOX 10013
 #define ID_PANEL_LINK_CONDS 10230
-#define ID_LINK_COND_LIST 10394
+#define ID_LINK_COND_LIST2 10445
 #define ID_BUTTON_LINK_ADD_COND 11110
 #define ID_BUTTON_LINK_MOD_COND 11111
 #define ID_BUTTON_LINK_DEL_COND 11112
@@ -108,6 +110,7 @@ class BlockGroupingDialog: public wxDialog
   void initValues();
   bool evaluate();
   int m_TabAlign;
+  int m_CondSel;
 
 public:
     /// Constructors
@@ -158,8 +161,8 @@ public:
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
     void OnCheckboxClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LINK_COND_LIST
-    void OnLinkCondListSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LINK_COND_LIST2
+    void OnLinkCondList2Selected( wxListEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_LINK_ADD_COND
     void OnButtonLinkAddCondClick( wxCommandEvent& event );
@@ -227,7 +230,7 @@ public:
     wxCheckBox* m_AllowFollowUp;
     wxSpinCtrl* m_MaxFollowUp;
     wxPanel* m_ConditionsPanel;
-    wxListBox* m_CondList;
+    wxListCtrl* m_CondList2;
     wxStaticText* m_labCondFrom;
     wxComboBox* m_CondFrom;
     wxStaticText* m_labCondFree;

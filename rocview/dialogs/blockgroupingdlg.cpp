@@ -81,7 +81,7 @@ BEGIN_EVENT_TABLE( BlockGroupingDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_LINK_ADD, BlockGroupingDialog::OnButtonLinkAddClick )
     EVT_BUTTON( ID_BUTTON_LINK_REMOVE, BlockGroupingDialog::OnButtonLinkRemoveClick )
     EVT_CHECKBOX( ID_CHECKBOX, BlockGroupingDialog::OnCheckboxClick )
-    EVT_LISTBOX( ID_LINK_COND_LIST, BlockGroupingDialog::OnLinkCondListSelected )
+    EVT_LIST_ITEM_SELECTED( ID_LINK_COND_LIST2, BlockGroupingDialog::OnLinkCondList2Selected )
     EVT_BUTTON( ID_BUTTON_LINK_ADD_COND, BlockGroupingDialog::OnButtonLinkAddCondClick )
     EVT_BUTTON( ID_BUTTON_LINK_MOD_COND, BlockGroupingDialog::OnButtonLinkModCondClick )
     EVT_BUTTON( ID_BUTTON_LINK_DEL_COND, BlockGroupingDialog::OnButtonLinkDelCondClick )
@@ -105,6 +105,7 @@ BlockGroupingDialog::BlockGroupingDialog()
 BlockGroupingDialog::BlockGroupingDialog( wxWindow* parent, iONode props, bool save )
 {
   m_TabAlign = wxGetApp().getTabAlign();
+  m_CondSel = wxNOT_FOUND;
   Create(parent, -1, wxGetApp().getMsg("blockgrouptable") );
   m_Props = props;
   m_bSave = save;
@@ -134,6 +135,8 @@ BlockGroupingDialog::BlockGroupingDialog( wxWindow* parent, wxWindowID id, const
 
 
 void BlockGroupingDialog::initLabels() {
+  SetTitle(wxGetApp().getMsg( "blockgrouptable" ));
+
   m_Notebook->SetPageText( 0, wxGetApp().getMsg( "index" ) );
   m_Notebook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
   m_Notebook->SetPageText( 2, wxGetApp().getMsg( "properties" ) );
@@ -180,6 +183,9 @@ void BlockGroupingDialog::initLabels() {
   m_CondModify->SetLabel( wxGetApp().getMsg( "modify" ) );
   m_CondDelete->SetLabel( wxGetApp().getMsg( "delete" ) );
 
+  m_CondList2->InsertColumn(0, wxGetApp().getMsg( "fromblock" ), wxLIST_FORMAT_LEFT );
+  m_CondList2->InsertColumn(1, wxGetApp().getMsg( "free" ), wxLIST_FORMAT_LEFT );
+
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -206,6 +212,7 @@ void BlockGroupingDialog::initIndex() {
       if( m_Props != NULL ) {
         m_List->SetStringSelection( wxString(wLink.getid( m_Props ),wxConvUTF8) );
         m_List->SetFirstItem( wxString(wLink.getid( m_Props ),wxConvUTF8) );
+        initValues();
       }
 
     }
@@ -218,6 +225,10 @@ void BlockGroupingDialog::OnSelectPage(wxCommandEvent& event) {
 }
 
 void BlockGroupingDialog::initValues() {
+  char* title = StrOp.fmt( "%s %s", (const char*)wxGetApp().getMsg("blockgrouptable").mb_str(wxConvUTF8), wLink.getid( m_Props ) );
+  SetTitle( wxString(title,wxConvUTF8) );
+  StrOp.free( title );
+
   // General
   m_ID->SetValue( wxString(wLink.getid( m_Props ),wxConvUTF8) );
   m_Desc->SetValue( wxString(wLink.getdesc( m_Props ),wxConvUTF8) );
@@ -243,11 +254,27 @@ void BlockGroupingDialog::initValues() {
     }
   }
 
-  m_CondList->Clear();
+  m_CondList2->DeleteAllItems();
+  m_CondSel = wxNOT_FOUND;
+
+  int idx = 0;
   iONode cond = wLink.getlinkcond(m_Props);
   while( cond != NULL ) {
-    m_CondList->Append( wxString(wLinkCond.getfirst(cond) ,wxConvUTF8), cond );
+    m_CondList2->InsertItem( idx, wxString(wLinkCond.getfirst(cond),wxConvUTF8) );
+    m_CondList2->SetItem( idx, 1, wxString(wLinkCond.getfree(cond), wxConvUTF8) );
+    m_CondList2->SetItemPtrData(idx, (wxUIntPtr)cond);
+    idx++;
     cond = wLink.nextlinkcond(m_Props, cond);
+  }
+
+  // resize
+  for( int n = 0; n < 2; n++ ) {
+    m_CondList2->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+    int autoheadersize = m_CondList2->GetColumnWidth(n);
+    m_CondList2->SetColumnWidth(n, wxLIST_AUTOSIZE);
+    int autosize = m_CondList2->GetColumnWidth(n);
+    if(autoheadersize > autosize )
+      m_CondList2->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
   }
 
 }
@@ -319,7 +346,7 @@ bool BlockGroupingDialog::Create( wxWindow* parent, wxWindowID id, const wxStrin
     m_AllowFollowUp = NULL;
     m_MaxFollowUp = NULL;
     m_ConditionsPanel = NULL;
-    m_CondList = NULL;
+    m_CondList2 = NULL;
     m_labCondFrom = NULL;
     m_CondFrom = NULL;
     m_labCondFree = NULL;
@@ -454,7 +481,7 @@ void BlockGroupingDialog::CreateControls()
     m_AllowFollowUp->SetValue(false);
     itemBoxSizer33->Add(m_AllowFollowUp, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_MaxFollowUp = new wxSpinCtrl( m_PropertiesPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 99, 0 );
+    m_MaxFollowUp = new wxSpinCtrl( m_PropertiesPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 99, 0 );
     itemBoxSizer33->Add(m_MaxFollowUp, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Notebook->AddPage(m_PropertiesPanel, _("Properties"));
@@ -463,9 +490,8 @@ void BlockGroupingDialog::CreateControls()
     wxBoxSizer* itemBoxSizer37 = new wxBoxSizer(wxVERTICAL);
     m_ConditionsPanel->SetSizer(itemBoxSizer37);
 
-    wxArrayString m_CondListStrings;
-    m_CondList = new wxListBox( m_ConditionsPanel, ID_LINK_COND_LIST, wxDefaultPosition, wxDefaultSize, m_CondListStrings, wxLB_SINGLE );
-    itemBoxSizer37->Add(m_CondList, 1, wxGROW|wxALL, 5);
+    m_CondList2 = new wxListCtrl( m_ConditionsPanel, ID_LINK_COND_LIST2, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT );
+    itemBoxSizer37->Add(m_CondList2, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer39 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer37->Add(itemFlexGridSizer39, 0, wxGROW|wxALL, 5);
@@ -807,10 +833,9 @@ void BlockGroupingDialog::OnCheckboxClick( wxCommandEvent& event )
 
 void BlockGroupingDialog::OnButtonLinkDelCondClick( wxCommandEvent& event )
 {
-  int cursel = m_CondList->GetSelection();
 
-  if( cursel != wxNOT_FOUND ) {
-    iONode node = (iONode)m_CondList->GetClientData(cursel);
+  if( m_CondSel != wxNOT_FOUND ) {
+    iONode node = (iONode)m_CondList2->GetItemData(m_CondSel);
     NodeOp.removeChild( m_Props, node );
     NodeOp.base.del(node);
     initValues();
@@ -824,10 +849,8 @@ void BlockGroupingDialog::OnButtonLinkDelCondClick( wxCommandEvent& event )
 
 void BlockGroupingDialog::OnButtonLinkModCondClick( wxCommandEvent& event )
 {
-  int cursel = m_CondList->GetSelection();
-
-  if( cursel != wxNOT_FOUND ) {
-    iONode cond = (iONode)m_CondList->GetClientData(cursel);
+  if( m_CondSel != wxNOT_FOUND ) {
+    iONode cond = (iONode)m_CondList2->GetItemData(m_CondSel);
     wLinkCond.setfirst(cond, m_CondFrom->GetStringSelection().mb_str(wxConvUTF8));
     wLinkCond.setfree(cond, m_CondFree->GetValue().mb_str(wxConvUTF8));
     initValues();
@@ -843,29 +866,9 @@ void BlockGroupingDialog::OnButtonLinkAddCondClick( wxCommandEvent& event )
   NodeOp.addChild( m_Props, cond );
   wLinkCond.setfirst(cond, m_CondFrom->GetStringSelection().mb_str(wxConvUTF8));
   wLinkCond.setfree(cond, m_CondFree->GetValue().mb_str(wxConvUTF8));
-  m_CondList->Append( wxString(wLinkCond.getfirst(cond) ,wxConvUTF8), cond );
+  initValues();
 }
 
-
-/*!
- * wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LINK_COND_LIST
- */
-
-void BlockGroupingDialog::OnLinkCondListSelected( wxCommandEvent& event )
-{
-  int cursel = m_CondList->GetSelection();
-
-  if( cursel != wxNOT_FOUND ) {
-    iONode cond = (iONode)m_CondList->GetClientData(cursel);
-    m_CondFrom->SetStringSelection( wxString(wLinkCond.getfirst( cond ),wxConvUTF8) );
-    m_CondFree->SetValue( wxString(wLinkCond.getfree( cond ),wxConvUTF8) );
-  }
-}
-
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_HELP
- */
 
 void BlockGroupingDialog::OnHelpClick( wxCommandEvent& event )
 {
@@ -875,6 +878,22 @@ void BlockGroupingDialog::OnHelpClick( wxCommandEvent& event )
   case 2: wxGetApp().openLink( "blockgroups-props" ); break;
   case 3: wxGetApp().openLink( "blockgroups-cond" ); break; // position
   default: wxGetApp().openLink( "blockgroups" ); break;
+  }
+}
+
+
+/*!
+ * wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_LINK_COND_LIST2
+ */
+
+void BlockGroupingDialog::OnLinkCondList2Selected( wxListEvent& event )
+{
+  m_CondSel = event.GetIndex();
+
+  if( m_CondSel != wxNOT_FOUND ) {
+    iONode cond = (iONode)m_CondList2->GetItemData(m_CondSel);
+    m_CondFrom->SetStringSelection( wxString(wLinkCond.getfirst( cond ),wxConvUTF8) );
+    m_CondFree->SetValue( wxString(wLinkCond.getfree( cond ),wxConvUTF8) );
   }
 }
 
