@@ -358,7 +358,6 @@ void CarDlg::initIndex(){
   else
     m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
   m_CarImage->Refresh();
-  m_Props = NULL;
 
   iONode model = wxGetApp().getModel();
   if( model != NULL ) {
