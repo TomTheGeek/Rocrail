@@ -249,6 +249,8 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       if( StrOp.len(symsub2) > 0 ) {
         if( StrOp.equals(symsub2, "road"))
           wItem.setroad( node, True );
+        if( StrOp.equals(symdir, wSignal.main ) )
+          wSignal.setaspects(node, atoi(symsub2));
       }
       m_PlanPanel->addItemAttr( node );
       ok = true;

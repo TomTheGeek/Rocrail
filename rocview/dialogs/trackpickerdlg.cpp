@@ -285,6 +285,8 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::signalmain_r, "main_signal" );
   ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:%s::2:,%s,%s", wSignal.name(), wSignal.light, wSignal.main, signaltype::signalmain_2_r, "main_signal" );
+  ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:%s:%s::,%s,%s", wSignal.name(), wSignal.light, wSignal.main, "dwarf", signaltype::signalmain_dwarf_r, "dwarfsignal" );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.light, wSignal.shunting, signaltype::signalshunting_2_r, "shunting_signal" );
@@ -293,6 +295,8 @@ void TrackPickerDlg::initSymbols() {
   symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.semaphore, wSignal.distant, signaltype::semaphoredistant_2_r, "semaphore_distant" );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.semaphore, wSignal.main, signaltype::semaphoremain_r, "semaphore_main" );
+  ListOp.add( m_SymbolList, (obj) symname );
+  symname = StrOp.fmt("%s:%s:%s::2:,%s,%s", wSignal.name(), wSignal.semaphore, wSignal.main, signaltype::semaphoremain_2_r, "semaphore_main" );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:%s:::,%s,%s", wSignal.name(), wSignal.semaphore, wSignal.shunting, signaltype::semaphoreshunting_2_r, "semaphore_shunting" );
   ListOp.add( m_SymbolList, (obj) symname );
