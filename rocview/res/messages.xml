@@ -17214,8 +17214,8 @@
     <de txt="Fahrdienstleiter" tip="Dialog für Fahrdienstleiter-Steuerung"/>
     <bg txt="Оператор"/>
     <el txt="Λειτουργίας"/>
-    <fr txt="Opérateur"/>
-    <it txt="Operatore  composizione"/>
+    <fr txt="Opérateur" tip="Dialogue pour le contrôle de l'opérateur"/>
+    <it txt="Operatore  composizione" tip="Finestra per il controllo operatore"/>
     <nl txt="Bestuurder" tip="Dialoog voor verkeersleider"/>
     <pt txt="Operador"/>
     <ru txt="Оператор"/>
@@ -17228,12 +17228,12 @@
     <en_CA txt="Operator"/>
     <en_GB txt="Operator"/>
     <nb txt="Operatør"/>
-    <sr_latin txt="Operator"/>
+    <sr_latin txt="Operator" tip="Dijalog za kontrolu operatora"/>
     <ja txt="オペレータ"/>
     <sv txt="Operatör"/>
     <zh_CN txt="操作" tip="操作员控制对话框"/>
     <sl txt="Operater" tip="Dialog za operaterjev nadzor"/>
-    <pt_BR txt="Operador"/>
+    <pt_BR txt="Operador" tip="Painel para controle do operador"/>
     <fi txt="Kuljettaja"/>
     <pl txt="Operator"/>
   </Msg>
@@ -28816,6 +28816,7 @@
     <nl txt="Module nummer"/>
     <pt_BR txt="Número do módulo"/>
     <sl txt="Številka modula"/>
+    <sr_latin txt="Broj modula"/>
   </Msg>
   <Msg id="newaddress">
     <en txt="New address"/>
@@ -28825,47 +28826,80 @@
     <nl txt="Nieuw adres"/>
     <pt_BR txt="Novo endereço"/>
     <sl txt="Nov naslov"/>
+    <ru txt="Новый адрес"/>
+    <sr_latin txt="Nova adresa"/>
   </Msg>
   <Msg id="maxwaittime">
     <en txt="Max. wait time"/>
     <de txt="Max. Wartezeit"/>
     <nl txt="Max. wacht tijd"/>
     <sl txt="Max. čas čakanja"/>
+    <fr txt="Temps d'attente max."/>
+    <it txt="Tempo attesa max"/>
+    <pt_BR txt="Tempo máximo de espera"/>
+    <ru txt="Макс.время ожидания"/>
+    <sr_latin txt="Maks. vreme čekanja"/>
   </Msg>
   <Msg id="grayicons">
     <en txt="Gray icons"/>
     <de txt="Graue Symbole"/>
     <nl txt="Grijze pictogrammen"/>
     <sl txt="Sive ikone"/>
+    <fr txt="Icônes grises"/>
+    <it txt="Icone grigie"/>
+    <pt_BR txt="Ícones cinza"/>
+    <ru txt="Серые иконки"/>
+    <sr_latin txt="Sive ikone"/>
   </Msg>
   <Msg id="accelerators">
     <en txt="Accelerators"/>
     <de txt="Tastenkürzel"/>
     <nl txt="Sneltoetsen"/>
     <sl txt="Pospeševalci"/>
+    <fr txt="Raccourcis"/>
+    <it txt="Scorciatoie"/>
+    <pt_BR txt="Aceleradores"/>
+    <ru txt="Ускорители"/>
+    <sr_latin txt="Ubrzivači"/>
   </Msg>
   <Msg id="alt">
     <en txt="Alt"/>
     <de txt="Alt"/>
     <nl txt="Alt"/>
     <sl txt="Alt"/>
+    <fr txt="Alt"/>
+    <it txt="Alt"/>
+    <pt_BR txt="Alt"/>
+    <sr_latin txt="Alt"/>
   </Msg>
   <Msg id="ctrl">
     <en txt="Ctrl"/>
     <de txt="Strg"/>
     <nl txt="Ctrl"/>
     <sl txt="Ctrl"/>
+    <fr txt="Ctrl"/>
+    <it txt="Ctrl"/>
+    <pt_BR txt="Ctrl"/>
+    <sr_latin txt="Ctrl"/>
   </Msg>
   <Msg id="keycode">
     <en txt="Key code"/>
     <de txt="Tastencode"/>
     <nl txt="Toets code"/>
     <sl txt="Ključ"/>
+    <fr txt="Code clé"/>
+    <it txt="Codice tasto"/>
+    <pt_BR txt="Senha"/>
+    <sr_latin txt="Kod ključa"/>
   </Msg>
   <Msg id="modifier">
     <en txt="Modifier"/>
     <de txt="Sondertaste"/>
     <nl txt="Toets combinatie"/>
     <sl txt="Spreminjevalec"/>
+    <fr txt="Modificateur"/>
+    <pt_BR txt="Modificador"/>
+    <ru txt="Модификатор"/>
+    <sr_latin txt="Izmenjivač"/>
   </Msg>
 </Messages>
