@@ -2621,8 +2621,9 @@
         <const name="cargo_none" vt="string" val="none"/>
         <const name="cargo_ice" vt="string" val="ice"/>
         <const name="cargo_post" vt="string" val="post"/>
+        <const name="cargo_shunting" vt="string" val="shunting"/>
         <const name="cargo_cleaning" vt="string" val="cleaning" remark="should not wait in blocks"/>
-        <var name="cargo" vt="string" defval="none" range="none,ice,persons,goods,mixed,cleaning"/>
+        <var name="cargo" vt="string" defval="none" range="*"/>
         <var name="commuter" vt="bool" defval="false" remark="Commuter train?"/>
         <const name="engine_diesel" vt="string" val="diesel"/>
         <const name="engine_electric" vt="string" val="electric"/>

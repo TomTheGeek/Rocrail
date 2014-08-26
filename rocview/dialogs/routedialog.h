@@ -316,6 +316,7 @@ public:
     wxCheckBox* m_PermTypeCleaning;
     wxCheckBox* m_PermTypePost;
     wxCheckBox* m_PermTypeLight;
+    wxCheckBox* m_PermTypeShunting;
     wxStaticText* m_labMaxLen;
     wxSpinCtrl* m_MaxLen;
     wxStaticText* m_labMinLen;
