@@ -1376,7 +1376,7 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
     wxPostEvent( this, event );
   }
 
-  m_ActiveLocs->AutoSizeColumns(false);
+  m_ActiveLocs->AutoSizeColumns();
   if( m_bLocoImageColumn )
     m_ActiveLocs->AutoSizeColumn(LOC_COL_IMAGE);
   m_ActiveLocs->SelectRow(m_iLcRowSelection);
@@ -1752,7 +1752,8 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
       }
     }
   }
-  m_ActiveLocs->AutoSizeColumns(false);
+  if( !m_bAutoMode )
+    m_ActiveLocs->AutoSizeColumns();
   //m_ActiveLocs->FitInside();
   //m_ActiveLocsPanel->GetSizer()->Layout();
 
@@ -2515,8 +2516,8 @@ void RocGuiFrame::create() {
   m_ActiveLocs->SetColLabelValue(LOC_COL_CONSIST, wxGetApp().getMsg("train") );
   if( m_bLocoImageColumn )
     m_ActiveLocs->SetColLabelValue(LOC_COL_IMAGE, wxGetApp().getMsg("image") );
-  m_ActiveLocs->AutoSizeColumns(false);
-  m_ActiveLocs->AutoSizeRows(false);
+  m_ActiveLocs->AutoSizeColumns();
+  m_ActiveLocs->AutoSizeRows();
 
   activeLocsSizer->Add(m_ActiveLocs, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
