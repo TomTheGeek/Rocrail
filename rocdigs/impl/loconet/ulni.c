@@ -136,7 +136,7 @@ static void __reader( void* threadinst ) {
         int available = SerialOp.available(data->serial);
         if( available > 0 ) {
           ok = SerialOp.read(data->serial, (char*)&c, 1);
-          if(c < 0x80) {
+          if(c <= 0x80) {
             ThreadOp.sleep(10);
             bucket[garbage] = c;
             garbage++;
@@ -157,7 +157,7 @@ static void __reader( void* threadinst ) {
       else {
         ok = False;
       }
-		} while (ok && data->run && c < 0x80 && garbage < 10);
+		} while (ok && data->run && c <= 0x80 && garbage < 10);
 
 
 		if( !data->run || !ok ) {
