@@ -491,6 +491,7 @@
       <var name="fbmiddle" vt="int"/>
       <var name="run" vt="Boolean"/>
       <var name="smooth" vt="Boolean"/>
+      <var name="triggertime" vt="int"/>
       <var name="fbstate" vt="iOFBState"/>
       <var name="serialOK" vt="Boolean"/>
       <var name="initOK" vt="Boolean"/>

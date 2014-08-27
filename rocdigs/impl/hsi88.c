@@ -421,7 +421,7 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
     int modcnt = (data->fbleft + data->fbmiddle + data->fbright) * 16;
     for( i = 0; i < modcnt; i++ ) {
       iOFBState fb = &data->fbstate[ i ];
-      if( fb->state && fb->lowtime >= fb->hightime && SystemOp.getTick() - fb->lowtime >= 10 ) {
+      if( fb->state && fb->lowtime >= fb->hightime && SystemOp.getTick() - fb->lowtime >= data->triggertime ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         fb->state = False;
         wFeedback.setstate( evt, fb->state );
@@ -797,6 +797,10 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   }
 
   data->smooth   = wHSI88.issmooth( hsi88ini );
+  data->triggertime = wHSI88.gettriggertime( hsi88ini ) / 10;
+
+  if( data->triggertime < 100 )
+    data->triggertime = 100;
 
   /* HSI-88 specific settings */
   data->fbleft   = wHSI88.getfbleft( hsi88ini );
@@ -807,15 +811,16 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "hsi88 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid      =%s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"");
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device   =%s", data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "type     =%s", data->usb ? "USB":"RS232" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "handshake=%s", wDigInt.getflow(ini) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbleft   =%d", data->fbleft );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbmiddle =%d", data->fbmiddle );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbright  =%d", data->fbright );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout  =%d", data->timeout );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dummyio  =%s", data->dummyio?"true":"false" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid          = %s", wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"");
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device       = %s", data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "type         = %s", data->usb ? "USB":"RS232" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "handshake    = %s", wDigInt.getflow(ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbleft       = %d", data->fbleft );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbmiddle     = %d", data->fbmiddle );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "fbright      = %d", data->fbright );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "timeout      = %d", data->timeout );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trigger      = %s", data->smooth ? "ON":"OFF" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trigger time = %d", data->triggertime * 10 );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   if( data->usb ) {

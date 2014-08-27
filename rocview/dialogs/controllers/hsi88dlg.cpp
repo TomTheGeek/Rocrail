@@ -104,7 +104,8 @@ void Hsi88CntrlDlg::initLabels() {
   m_labMid->SetLabel( wxGetApp().getMsg( "middle" ) );
   m_labRight->SetLabel( wxGetApp().getMsg( "right" ) );
   m_OptionsBox->SetLabel( wxGetApp().getMsg( "options" ) );
-  m_Smooth->SetLabel( wxGetApp().getMsg( "triggerlowevents" ) );
+  m_Smooth->SetLabel( wxGetApp().getMsg( "delay" ) );
+  m_labTriggerMS->SetLabel( wxT( "ms" ) );
 }
 
 void Hsi88CntrlDlg::initValues() {
@@ -139,6 +140,7 @@ void Hsi88CntrlDlg::initValues() {
   m_Right->SetValue( wxString( val, wxConvUTF8 ) );
   StrOp.free( val );
   m_Smooth->SetValue( wHSI88.issmooth( hsi88ini )?true:false );
+  m_TriggerTime->SetValue( wHSI88.gettriggertime( hsi88ini ) );
   m_CTS->SetValue( StrOp.equals( wDigInt.cts, wDigInt.getflow( m_Props ))?true:false );
 }
 
@@ -161,6 +163,7 @@ void Hsi88CntrlDlg::evaluate() {
   wHSI88.setfbmiddle( hsi88ini, atoi( m_Mid->GetValue().mb_str(wxConvUTF8) ) );
   wHSI88.setfbright( hsi88ini, atoi( m_Right->GetValue().mb_str(wxConvUTF8) ) );
   wHSI88.setsmooth( hsi88ini, m_Smooth->IsChecked()?True:False );
+  wHSI88.settriggertime( hsi88ini, m_TriggerTime->GetValue() );
   wDigInt.setflow( m_Props, m_CTS->IsChecked() ? wDigInt.cts:wDigInt.none );
 }
 
@@ -188,6 +191,8 @@ bool Hsi88CntrlDlg::Create( wxWindow* parent, wxWindowID id, const wxString& cap
     m_Right = NULL;
     m_OptionsBox = NULL;
     m_Smooth = NULL;
+    m_TriggerTime = NULL;
+    m_labTriggerMS = NULL;
     m_CTS = NULL;
     m_OK = NULL;
     m_Cancel = NULL;
@@ -282,28 +287,37 @@ void Hsi88CntrlDlg::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer19 = new wxStaticBoxSizer(m_OptionsBox, wxVERTICAL);
     itemBoxSizer4->Add(itemStaticBoxSizer19, 0, wxGROW|wxALL, 5);
 
-    m_Smooth = new wxCheckBox( m_Panel, wxID_ANY, _("Low events stable at 100ms"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxFlexGridSizer* itemFlexGridSizer20 = new wxFlexGridSizer(0, 3, 0, 0);
+    itemStaticBoxSizer19->Add(itemFlexGridSizer20, 0, wxALIGN_LEFT, 5);
+
+    m_Smooth = new wxCheckBox( m_Panel, wxID_ANY, _("Low events stable at"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Smooth->SetValue(false);
-    itemStaticBoxSizer19->Add(m_Smooth, 0, wxALIGN_LEFT|wxALL, 5);
+    itemFlexGridSizer20->Add(m_Smooth, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_TriggerTime = new wxSpinCtrl( m_Panel, wxID_ANY, wxT("100"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 100, 2000, 100 );
+    itemFlexGridSizer20->Add(m_TriggerTime, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_labTriggerMS = new wxStaticText( m_Panel, wxID_ANY, _("ms"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer20->Add(m_labTriggerMS, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxRIGHT|wxTOP|wxBOTTOM, 5);
 
     m_CTS = new wxCheckBox( m_Panel, wxID_ANY, _("CTS"), wxDefaultPosition, wxDefaultSize, 0 );
     m_CTS->SetValue(false);
     itemStaticBoxSizer19->Add(m_CTS, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer22 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer22, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer25, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer22->AddButton(m_OK);
+    itemStdDialogButtonSizer25->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer22->AddButton(m_Cancel);
+    itemStdDialogButtonSizer25->AddButton(m_Cancel);
 
-    wxButton* itemButton25 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer22->AddButton(itemButton25);
+    wxButton* itemButton28 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer25->AddButton(itemButton28);
 
-    itemStdDialogButtonSizer22->Realize();
+    itemStdDialogButtonSizer25->Realize();
 
 ////@end Hsi88CntrlDlg content construction
 }

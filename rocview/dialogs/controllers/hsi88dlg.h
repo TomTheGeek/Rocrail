@@ -33,6 +33,7 @@
  */
 
 ////@begin includes
+#include "wx/spinctrl.h"
 ////@end includes
 #include "rocs/public/node.h"
 
@@ -42,6 +43,7 @@
  */
 
 ////@begin forward declarations
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -141,6 +143,8 @@ public:
     wxTextCtrl* m_Right;
     wxStaticBox* m_OptionsBox;
     wxCheckBox* m_Smooth;
+    wxSpinCtrl* m_TriggerTime;
+    wxStaticText* m_labTriggerMS;
     wxCheckBox* m_CTS;
     wxButton* m_OK;
     wxButton* m_Cancel;
