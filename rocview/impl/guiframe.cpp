@@ -1610,7 +1610,8 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
               int pagecnt = getNotebook()->GetPageCount();
               for( int i = 0; i < pagecnt; i++ ) {
                 PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
-                p->modelEvent( block );
+                if( p->getZ() == wBlock.getz(block))
+                  p->modelEvent( block );
               }
             }
           }
@@ -1634,7 +1635,8 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
               int pagecnt = getNotebook()->GetPageCount();
               for( int i = 0; i < pagecnt; i++ ) {
                 PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
-                p->modelEvent( block );
+                if( p->getZ() == wBlock.getz(block))
+                  p->modelEvent( block );
               }
             }
           }
@@ -1689,9 +1691,9 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
     if( id != NULL ) {
       if( locid != NULL ) {
         TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "Block event %s, locid=%s",
-                     NodeOp.getStr(node, "id", "?"), wBlock.getlocid( node ) );
-
-        block = wxGetApp().getFrame()->findBlock4Loc(wBlock.getlocid( node ), wBlock.getid( node ));
+                     NodeOp.getStr(node, "id", "?"), locid );
+        if( locid != NULL && StrOp.len(locid) > 0 )
+          block = wxGetApp().getFrame()->findBlock4Loc(locid, id);
       }
 
       if(block != NULL ) {
@@ -1704,7 +1706,8 @@ void RocGuiFrame::UpdateActiveLocs( wxCommandEvent& event ) {
           int pagecnt = getNotebook()->GetPageCount();
           for( int i = 0; i < pagecnt; i++ ) {
             PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
-            p->modelEvent( block );
+            if( p->getZ() == wBlock.getz(block))
+              p->modelEvent( block );
           }
         }
       }
@@ -2512,8 +2515,8 @@ void RocGuiFrame::create() {
   m_ActiveLocs->SetColLabelValue(LOC_COL_CONSIST, wxGetApp().getMsg("train") );
   if( m_bLocoImageColumn )
     m_ActiveLocs->SetColLabelValue(LOC_COL_IMAGE, wxGetApp().getMsg("image") );
-  m_ActiveLocs->AutoSizeColumns();
-  m_ActiveLocs->AutoSizeRows();
+  m_ActiveLocs->AutoSizeColumns(false);
+  m_ActiveLocs->AutoSizeRows(false);
 
   activeLocsSizer->Add(m_ActiveLocs, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
@@ -4699,7 +4702,8 @@ void RocGuiFrame::OnCarEvent( wxCommandEvent& event ) {
           int pagecnt = getNotebook()->GetPageCount();
           for( int i = 0; i < pagecnt; i++ ) {
             PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
-            p->modelEvent( block );
+            if( p->getZ() == wBlock.getz(block))
+              p->modelEvent( block );
           }
         }
       }
@@ -4716,7 +4720,8 @@ void RocGuiFrame::OnCarEvent( wxCommandEvent& event ) {
           int pagecnt = getNotebook()->GetPageCount();
           for( int i = 0; i < pagecnt; i++ ) {
             PlanPanel* p = (PlanPanel*)wxGetApp().getFrame()->getNotebook()->GetPage(i);
-            p->modelEvent( block );
+            if( p->getZ() == wBlock.getz(block))
+              p->modelEvent( block );
           }
         }
       }

@@ -1392,9 +1392,15 @@ static void rocrailCallback( obj me, iONode node ) {
         }
         else {
           int pagecnt = guiApp->getFrame()->getNotebook()->GetPageCount();
+          const char* nodeName = NodeOp.getName(node);
           for( int i = 0; i < pagecnt; i++ ) {
             PlanPanel* p = (PlanPanel*)guiApp->getFrame()->getNotebook()->GetPage(i);
-            p->modelEvent( node );
+            if( StrOp.equals( wRoute.name(), nodeName ) )
+              p->modelEvent( node );
+            else if( StrOp.equals( wFeedback.name(), nodeName ) && !wFeedback.isshow(node) )
+              p->modelEvent( node );
+            else if( p->getZ() == wItem.getz(node))
+              p->modelEvent( node );
           }
 
           /* Update the loco grid? */
