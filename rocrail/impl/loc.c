@@ -680,6 +680,8 @@ static void* __event( void* inst, const void* evt ) {
   iONode evtNode = (iONode)evt;
   Boolean broadcast = False;
 
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event for loco %s: %s", wLoc.getid(data->props), NodeOp.getName(evtNode) );
+
   if( evtNode == NULL )
     return NULL;
 
@@ -2876,6 +2878,12 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     return False;
   }
 
+  if( !MutexOp.trywait( data->muxCmd, 100 ) ) {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "timeout on loco command mutex: [%s] [%s:%s]", wLoc.getid(data->props), nodename, cmd );
+    NodeOp.base.del(nodeA);
+    return False;
+  }
+
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%scommand %s:%s for loco %s",
       wLoc.isconsistcmd(nodeA)?"consist ":"", nodename, (cmd==NULL?"-":cmd), wLoc.getid( data->props ) );
 
@@ -2889,6 +2897,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
             nodename, (cmd==NULL?"-":cmd), wLoc.getid( data->props ), LocOp.getId(master) );
         wLoc.setignorefn(nodeA, True);
         LocOp.cmd(master, nodeA);
+        MutexOp.post( data->muxCmd );
         return True;
       }
       else {
@@ -2903,6 +2912,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     wBinStateCmd.setbus(nodeA, wLoc.getbus(data->props) );
     wBinStateCmd.setaddr(nodeA, wLoc.getaddr(data->props) );
     ControlOp.cmd( control, nodeA, NULL );
+    MutexOp.post( data->muxCmd );
     return True;
   }
 
@@ -2920,6 +2930,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
               wLoc.getthrottleid( data->props )
               );
           NodeOp.base.del(nodeA);
+          MutexOp.post( data->muxCmd );
           return False;
         }
       }
@@ -2966,6 +2977,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
                      "Ignoring go commands for %s when not in AutoMode!",
                       LocOp.getId( inst ) );
         nodeA->base.del(nodeA);
+        MutexOp.post( data->muxCmd );
         return False;
       }
     }
@@ -3127,6 +3139,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
 
     nodeA->base.del(nodeA);
 
+    MutexOp.post( data->muxCmd );
     return True;
   }
   else {
@@ -3150,6 +3163,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   /* Broadcast to clients. */
   __broadcastLocoProps( inst, NULL, nodeF, NULL );
 
+  MutexOp.post( data->muxCmd );
   return True;
 }
 
@@ -3764,6 +3778,7 @@ static iOLoc _inst( iONode props ) {
   data->released = True;
   data->bbtMap = MapOp.inst();
   data->muxEngine = MutexOp.inst( NULL, True );
+  data->muxCmd = MutexOp.inst( NULL, True );
 
   wLoc.setmode(data->props, wLoc.mode_idle);
 

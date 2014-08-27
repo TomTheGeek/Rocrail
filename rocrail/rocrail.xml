@@ -836,6 +836,7 @@
       <var name="lastfncmd" vt="long"/>
       <var name="govirtual" vt="Boolean"/>
       <var name="muxEngine" vt="iOMutex"/>
+      <var name="muxCmd" vt="iOMutex"/>
       <var name="savedSpeed" vt="int"/>
       <var name="v0sleep" vt="int"/>
       <var name="v0pending" vt="Boolean"/>
