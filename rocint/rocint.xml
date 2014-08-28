@@ -146,6 +146,7 @@
     <fun name="isDepartureAllowed" vt="Boolean">
       <param name="inst" vt="this"/>
       <param name="LocoId" vt="const char*"/>
+      <param name="force" vt="Boolean"/>
     </fun>
     <fun name="isReady" vt="Boolean">
       <param name="inst" vt="this"/>

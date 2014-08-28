@@ -100,6 +100,7 @@
       <var name="pendingSwap" vt="Boolean"/>
       <var name="entryActionsChecked" vt="int"/>
       <var name="stopatin4gomanual" vt="Boolean"/>
+      <var name="forceDeparture" vt="Boolean"/>
     </data>
   </object>
 

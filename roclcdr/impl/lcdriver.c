@@ -434,6 +434,7 @@ static void _gogo( iILcDriverInt inst ) {
   if( data->timer > 0 ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset wait timer for %s from %d to 0", data->loc->getId(data->loc), data->timer );
     data->timer = 0;
+    data->forceDeparture = True;
   }
   if( data->reqstop ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset stop request for %s", data->loc->getId(data->loc) );

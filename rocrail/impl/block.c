@@ -1969,12 +1969,17 @@ static Boolean _setLocTour( iIBlockBase inst, const char* tourid, Boolean manual
   return ok;
 }
 
-static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id ) {
+static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id, Boolean force ) {
   iOBlockData data = Data(inst);
   iOLocation location = ModelOp.getBlockLocation(AppOp.getModel(), data->id );
 
   if( wBlock.ismainline(data->props) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block [%s] is mainline; allow departure", wBlock.getid(data->props));
+    return True;
+  }
+
+  if( force ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block [%s] is forced; allow departure", wBlock.getid(data->props));
     return True;
   }
 

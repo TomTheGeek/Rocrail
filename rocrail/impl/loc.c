@@ -2564,7 +2564,7 @@ static Boolean _go( iOLoc inst ) {
       iIBlockBase block = ModelOp.getBlock( model, data->curBlock );
       if( block != NULL ) {
         if( StrOp.equals( wStage.name(), NodeOp.getName(block->base.properties(block)) ) &&
-            !block->isDepartureAllowed( block, wLoc.getid(data->props) ) )
+            !block->isDepartureAllowed( block, wLoc.getid(data->props), False ) )
         {
           /* Staging block will manage this loco. */
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,

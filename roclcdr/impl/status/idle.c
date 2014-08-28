@@ -61,13 +61,13 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
   }
 
   /* Waiting for run-flag. */
-  if( data->run && !data->reqstop && data->loc->getCurBlock( data->loc ) != NULL &&
-      wait != -1 &&
-      data->curBlock->isDepartureAllowed(data->curBlock, data->loc->getId(data->loc)) )
+  if( data->run && !data->reqstop && data->loc->getCurBlock( data->loc ) != NULL && wait != -1 &&
+      data->curBlock->isDepartureAllowed(data->curBlock, data->loc->getId(data->loc), data->forceDeparture) )
   {
 
     data->state = LC_FINDDEST;
     data->loc->setMode(data->loc, wLoc.mode_auto);
+    data->forceDeparture = False; /* reset departure override */
 
     /* Check if we are on a tour: */
     if( data->tour != NULL && (data->scheduleended || data->tourIdx == 0) ) {
@@ -144,7 +144,7 @@ void statusIdle( iILcDriverInt inst, Boolean reverse ) {
         data->loc->getId( data->loc ), data->loc->getCurBlock( data->loc ) );
   }
   else if( data->run && data->reqstop && data->curBlock != NULL ) {
-    if( !data->curBlock->isDepartureAllowed(data->curBlock, data->loc->getId(data->loc)) ) {
+    if( !data->curBlock->isDepartureAllowed(data->curBlock, data->loc->getId(data->loc), data->forceDeparture) ) {
       data->state = LC_WAITBLOCK;
       data->prevState = LC_FINDDEST; /* to force a minimal wait of 10 cycles depending of the priority */
       data->loc->setMode(data->loc, wLoc.mode_wait);
