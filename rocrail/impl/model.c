@@ -2778,7 +2778,7 @@ static obj _getSwByAddress( iOModel inst, const char* iid, int bus, int addr, in
     }
     sw = ListOp.next( o->switchList );
   };
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no switch found by address [%d,%d]", addr, port );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "no more switches found by address [%d,%d]", addr, port );
   return NULL;
 }
 

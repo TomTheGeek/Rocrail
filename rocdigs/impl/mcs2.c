@@ -339,6 +339,30 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     __setSysMsg(out, 0, CMD_ACC_SWITCH, False, 8, address, gate, action, swtime/256, swtime%256);
 
     ThreadOp.post( data->writer, (obj)out );
+
+    {
+      int addr = wSwitch.getaddr1( node );
+      int port = wSwitch.getport1( node );
+      int gate = wSwitch.getgate1( node );
+      iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+
+      if( port == 0 && addr > 0 )
+        AddrOp.fromFADA( addr, &addr, &port, &gate );
+      else if( addr == 0 && port > 0 )
+        AddrOp.fromPADA( port, &addr, &port );
+
+      wSwitch.setbus( nodeC, wSwitch.getbus( node ) );
+      wSwitch.setaddr1( nodeC, wSwitch.getaddr1( node ) );
+      wSwitch.setport1( nodeC, wSwitch.getport1( node ) );
+
+      if( wSwitch.getiid(node) != NULL )
+        wSwitch.setiid( nodeC, wSwitch.getiid(node) );
+
+      wSwitch.setstate( nodeC, wSwitch.getcmd( node ) );
+
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    }
+
     return rsp;
   }
 
