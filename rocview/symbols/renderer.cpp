@@ -1945,7 +1945,7 @@ double SymbolRenderer::getRadians( double degrees ) {
  * Block object
  */
 void SymbolRenderer::drawBlockTriangle( wxPaintDC& dc, const char* ori ) {
-  if( ! ( m_iOccupied != 0 && m_iOccupied != 2 && m_iOccupied != 4 && m_iOccupied != 7 ) )
+  if( m_iOccupied == 0 || m_iOccupied == 2 || m_iOccupied == 4 || m_iOccupied == 6 || m_iOccupied == 7  )
     return;
 
   const wxBrush& b = dc.GetBrush();

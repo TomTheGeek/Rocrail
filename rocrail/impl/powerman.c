@@ -370,18 +370,19 @@ static void __initBoosters( iOPowerMan inst ) {
     wBooster.setvolt( booster, 0 );
     wBooster.settemp( booster, 0 );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "adding booster [%s]...", wBooster.getid(booster) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "adding booster [%s]...", wBooster.getid(booster) );
 
     MapOp.put( data->boostermap, wBooster.getid(booster), (obj)booster );
 
-    if( scfb != NULL && pwfb != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-          "Init sensors for booster [%s]...", wBooster.getid(booster) );
+    if( scfb != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init shortcut sensors for booster [%s]...", wBooster.getid(booster) );
       FBackOp.addListener( scfb, (obj)inst );
+      MapOp.put( data->scmap, wBooster.getscfb( booster ), (obj)booster );
+    }
+    if( pwfb != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init power sensors for booster [%s]...", wBooster.getid(booster) );
       FBackOp.addListener( pwfb, (obj)inst );
       MapOp.put( data->scmap, wBooster.getscfb( booster ), (obj)booster );
-      MapOp.put( data->pwmap, wBooster.getpowerfb( booster ), (obj)booster );
     }
 
     booster = wBoosterList.nextbooster(data->props, booster);
