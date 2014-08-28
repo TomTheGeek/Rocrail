@@ -1395,11 +1395,14 @@ static void rocrailCallback( obj me, iONode node ) {
           const char* nodeName = NodeOp.getName(node);
           for( int i = 0; i < pagecnt; i++ ) {
             PlanPanel* p = (PlanPanel*)guiApp->getFrame()->getNotebook()->GetPage(i);
+            // ToDo: Item Z must be set for this to function...
+            /*
             if( StrOp.equals( wRoute.name(), nodeName ) )
               p->modelEvent( node );
             else if( StrOp.equals( wFeedback.name(), nodeName ) && !wFeedback.isshow(node) )
               p->modelEvent( node );
             else if( p->getZ() == wItem.getz(node))
+            */
               p->modelEvent( node );
           }
 
