@@ -204,6 +204,25 @@ static iONode __translate( iODCC232 dcc232, iONode node, char* outa ) {
     MemOp.copy(cmd+1, dccpacket, packetlen );
     ThreadOp.post( data->writer, (obj)cmd );
 
+    {
+      iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+
+      if( port == 0 && addr > 0 )
+        AddrOp.fromFADA( addr, &addr, &port, &gate );
+      else if( addr == 0 && port > 0 )
+        AddrOp.fromPADA( port, &addr, &port );
+
+      wSwitch.setbus( nodeC, wSwitch.getbus( node ) );
+      wSwitch.setaddr1( nodeC, wSwitch.getaddr1( node ) );
+      wSwitch.setport1( nodeC, wSwitch.getport1( node ) );
+
+      if( wSwitch.getiid(node) != NULL )
+        wSwitch.setiid( nodeC, wSwitch.getiid(node) );
+
+      wSwitch.setstate( nodeC, wSwitch.getcmd( node ) );
+
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    }
   }
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
