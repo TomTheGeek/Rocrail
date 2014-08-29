@@ -423,6 +423,7 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
       iOFBState fb = &data->fbstate[ i ];
       if( fb->state && fb->lowtime >= fb->hightime && SystemOp.getTick() - fb->lowtime >= data->triggertime ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "report sensor %d low (delayed)", i+1 );
         fb->state = False;
         wFeedback.setstate( evt, fb->state );
         wFeedback.setaddr( evt, i+1 );
@@ -606,6 +607,8 @@ static void __HSI88feedbackReader( void* threadinst ) {
   int waitcounter = 0;
   Boolean ok;
   int avail = 0;
+  Boolean l_dummy = True;
+  int l_iLoop = 0;
 
   memset(fb,0,256);
 
@@ -633,8 +636,22 @@ static void __HSI88feedbackReader( void* threadinst ) {
 
     __fbstatetrigger( pHSI88, NULL );
 
-    if( o->dummyio )
+    if( o->dummyio ) {
+      l_iLoop++;
+      if( l_iLoop > 200 ) {
+        iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        int addr = 4;
+        wFeedback.setaddr( nodeC, addr );
+        wFeedback.setstate( nodeC, l_dummy );
+        if( o->iid != NULL )
+          wFeedback.setiid( nodeC, o->iid );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d %s",addr, wFeedback.isstate( nodeC )?"high":"low" );
+        __fbstatetrigger( pHSI88, nodeC );
+        l_dummy = !l_dummy;
+        l_iLoop = 0;
+      }
       continue;
+    }
 
     avail = __availBytes(o);
 
@@ -799,8 +816,8 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
   data->smooth   = wHSI88.issmooth( hsi88ini );
   data->triggertime = wHSI88.gettriggertime( hsi88ini ) / 10;
 
-  if( data->triggertime < 100 )
-    data->triggertime = 100;
+  if( data->triggertime < 10 )
+    data->triggertime = 10;
 
   /* HSI-88 specific settings */
   data->fbleft   = wHSI88.getfbleft( hsi88ini );
