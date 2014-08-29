@@ -1040,7 +1040,7 @@ void RocguiIniDialog::CreateControls()
 
     m_labImagePath = new wxStaticBox(m_GeneralTab, wxID_ANY, _("Image Path"));
     wxStaticBoxSizer* itemStaticBoxSizer60 = new wxStaticBoxSizer(m_labImagePath, wxHORIZONTAL);
-    itemBoxSizer54->Add(itemStaticBoxSizer60, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP, 5);
+    itemBoxSizer54->Add(itemStaticBoxSizer60, 0, wxGROW|wxLEFT|wxRIGHT, 5);
     m_ImagePath = new wxTextCtrl( m_GeneralTab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(200, -1), 0 );
     itemStaticBoxSizer60->Add(m_ImagePath, 1, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
