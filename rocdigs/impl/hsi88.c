@@ -402,9 +402,15 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
     if( state && !fb->state ) {
       /* Current state is low. */
       fb->hightime = SystemOp.getTick();
+      fb->lowtime = SystemOp.getTick();
       fb->state = state;
       if( data->listenerFun != NULL )
         data->listenerFun( data->listenerObj, fbnode, TRCLEVEL_INFO );
+    }
+    else if( state && fb->state ) {
+      fb->hightime = SystemOp.getTick();
+      fb->lowtime = SystemOp.getTick();
+      NodeOp.base.del( fbnode );
     }
     else if( !state && fb->state ) {
       fb->lowtime = SystemOp.getTick();
