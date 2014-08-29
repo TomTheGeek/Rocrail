@@ -203,12 +203,14 @@ static iIBlockBase __getBlock4Loc(iIBlockBase inst, const char* locid, Boolean* 
     iIBlockBase block = ModelOp.getBlock( model, wSelTabPos.getbkid(pos) );
     if( block != NULL && StrOp.equals( locid, block->getLoc(block) ) ) {
       if( inBlock != NULL && block->getInLoc(block) != NULL) {
-        *inBlock = StrOp.equals( locid, block->getInLoc(block) );
+        iONode blockProps = block->base.properties(block);
+        if( !wBlock.isreserved(blockProps) )
+          *inBlock = StrOp.equals( locid, block->getInLoc(block) );
       }
       return block;
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block=0x%08X does not have set locid to %s...", block, locid );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block=0x%08X does not have set locid to %s...", block, locid );
     }
     pos = wSelTab.nextseltabpos( data->props, pos );
   };
