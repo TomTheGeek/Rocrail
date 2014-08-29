@@ -421,7 +421,7 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
     int modcnt = (data->fbleft + data->fbmiddle + data->fbright) * 16;
     for( i = 0; i < modcnt; i++ ) {
       iOFBState fb = &data->fbstate[ i ];
-      if( fb->state && fb->lowtime >= fb->hightime && SystemOp.getTick() - fb->lowtime >= data->triggertime ) {
+      if( fb->state && fb->lowtime >= fb->hightime && (SystemOp.getTick() - fb->lowtime) >= data->triggertime ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "report sensor %d low (delayed)", i+1 );
         fb->state = False;
