@@ -310,6 +310,7 @@ public:
   void OnTooltip(wxCommandEvent& event);
   void OnBackColor(wxCommandEvent& event);
   void OnFullScreen(wxCommandEvent& event);
+  void OnFlipFullScreen(wxCommandEvent& event);
 
   void OnMGV(wxCommandEvent& event);
   void OnMGV141(wxCommandEvent& event);
@@ -636,6 +637,7 @@ enum
     ME_ShowCounters,
     ME_ShowLocked,
     ME_FullScreen,
+    ME_FlipFullScreen,
     ME_Raster,
     ME_Tooltip,
     NEWUPDATES_EVENT,

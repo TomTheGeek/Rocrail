@@ -18813,7 +18813,7 @@
     <fi txt="Tunnin välein"/>
     <pl txt="Co godzinę"/>
   </Msg>
-  <Msg id="fullscreen">
+  <Msg id="fullscreen" key="Ctrl-U">
     <en txt="Full screen"/>
     <de txt="Vollbild"/>
     <fr txt="Plein écran"/>

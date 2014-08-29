@@ -370,6 +370,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_ShowCounters   , RocGuiFrame::OnShowCounters)
     EVT_MENU( ME_ShowLocked     , RocGuiFrame::OnShowLocked)
     EVT_MENU( ME_FullScreen     , RocGuiFrame::OnFullScreen)
+    EVT_MENU( ME_FlipFullScreen , RocGuiFrame::OnFlipFullScreen)
     EVT_MENU( ME_Raster         , RocGuiFrame::OnRaster)
     EVT_MENU( ME_Tooltip        , RocGuiFrame::OnTooltip)
     EVT_MENU( ME_BackColor      , RocGuiFrame::OnBackColor)
@@ -1899,8 +1900,9 @@ void RocGuiFrame::initFrame() {
   acc_entries[41].Set(wxACCEL_ALT, (int) 'E', ME_LocoViewElectric);
   acc_entries[42].Set(wxACCEL_ALT, (int) 'C', ME_LocoViewCommuter);
   acc_entries[43].Set(wxACCEL_ALT, (int) 'K', ME_ClearMsg);
+  acc_entries[44].Set(wxACCEL_CTRL, (int) 'U', ME_FlipFullScreen);
 
-  int idx = 44;
+  int idx = 45;
   iONode accelerator = wGui.getaccelerator(m_Ini);
   while( accelerator != NULL ) {
     if( StrOp.equals( wAccelerator.ebreak, wAccelerator.getfunction(accelerator) ) ) {
@@ -3482,15 +3484,25 @@ void RocGuiFrame::OnShowLocked( wxCommandEvent& event ) {
 }
 
 
+void RocGuiFrame::OnFlipFullScreen( wxCommandEvent& event ) {
+  wxMenuItem* mi_fullscreen = menuBar->FindItem(ME_FullScreen);
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "flip full screen..." );
+  mi_fullscreen->Check( !mi_fullscreen->IsChecked() );
+  OnFullScreen(event);
+}
+
+
 void RocGuiFrame::OnFullScreen( wxCommandEvent& event ) {
   wxMenuItem* mi_fullscreen = menuBar->FindItem(ME_FullScreen);
+  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "full screen..." );
 
   if( event.GetInt() == 4711 )
     mi_fullscreen->Check(true);
 
   if( mi_fullscreen->IsChecked() ) {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "full screen on" );
-    ShowFullScreen(true, wxFULLSCREEN_NOTOOLBAR | wxFULLSCREEN_NOSTATUSBAR | wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION );
+    //ShowFullScreen(true, wxFULLSCREEN_NOTOOLBAR | wxFULLSCREEN_NOSTATUSBAR | wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION );
+    ShowFullScreen(true, wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION );
   }
   else {
     TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "full screen off" );
