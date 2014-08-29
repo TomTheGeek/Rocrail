@@ -336,7 +336,7 @@ static void __measureVelocity( iOBlock inst, int event ) {
   /*if( !wBlock.ismvactive( data->props ) )*/
   if( wBlock.getmvdistance(data->props) == 0 || wBlock.getmvscale(data->props) == 0 )
   {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "measure velocity not set...");
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "measure velocity not set...");
     return;
   }
   else {
@@ -476,9 +476,10 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
   }
 
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] fbid=%s state=%s ident=%s fbfrom=%s from=%s byroute=%s",
-      data->id, key, puls?"true":"false", ident != NULL ? ident:"-",
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block[%s] id=%s fbid=%s state=%s ident=%s fbfrom=%s fbaction=%s from=%s byroute=%s",
+      data->id, id, key, puls?"true":"false", ident != NULL ? ident:"-",
                  fbevt != NULL ? wFeedbackEvent.getfrom(fbevt):"NULL",
+                 fbevt != NULL ? wFeedbackEvent.getaction(fbevt):"?",
                  data->fromBlockId?data->fromBlockId:"?",
                  data->byRouteId?data->byRouteId:"?" );
 

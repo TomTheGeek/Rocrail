@@ -148,7 +148,8 @@ static iIBlockBase __getActiveTrackBlock(iIBlockBase inst, const char* msg ) {
     }
     pos = wSelTab.nextseltabpos( data->props, pos );
   };
-  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no active block found for track %d.", data->tablepos );
+  TraceOp.trc( name, data->tablepos==-1?TRCLEVEL_DEBUG:TRCLEVEL_WARNING, __LINE__, 9999,
+      "no active block found for track %d.", data->tablepos );
   return NULL;
 }
 
@@ -473,7 +474,7 @@ static void _fbEvent( obj inst ,Boolean state ,const char* id ,const char* ident
           }
 
           /* dispatch */
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dispatching [%s]", key);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dispatching [%s] to [%s]", key, block->base.id(block));
           block->event( block, state, id, ident, NULL, NULL, NULL, val, 0, fbevt, True );
         }
         break;
@@ -1356,8 +1357,13 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
   iOSelTabData data = Data(inst);
   iIBlockBase block = __getActiveTrackBlock(inst, "enterBlock");
   /* dispatch to active tracke block */
-  if( block != NULL )
+  if( block != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dispatch enter to block [%s] id=%s", block->base.id(block), id );
     block->enterBlock( block, id );
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "no block found for dispatching enter... id=%s", id );
+  }
 }
 
 static void _exitBlock( iIBlockBase inst, const char* id, Boolean unexpected ) {
