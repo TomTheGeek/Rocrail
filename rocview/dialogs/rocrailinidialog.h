@@ -357,8 +357,6 @@ public:
     wxSpinCtrl* m_SyncRouteTimeout;
     wxStaticText* m_labVirtualTimer;
     wxSpinCtrl* m_VirtualTimer;
-    wxCheckBox* m_ResetFxSp;
-    wxCheckBox* m_ProcessSignalEvents;
     wxCheckBox* m_secondNextBlock;
     wxCheckBox* m_EnableSwFb;
     wxCheckBox* m_DisableRouteVreduce;
@@ -392,6 +390,8 @@ public:
     wxCheckBox* m_V0AtPowerOn;
     wxCheckBox* m_GreenAspect;
     wxRadioBox* m_DefAspect;
+    wxCheckBox* m_ResetFxSp;
+    wxCheckBox* m_ProcessSignalEvents;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;
     wxButton* m_ControllerDelete;
