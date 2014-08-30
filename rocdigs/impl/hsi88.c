@@ -388,7 +388,7 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
   int addr = wFeedback.getaddr( fbnode );
   Boolean state = wFeedback.isstate( fbnode );
 
-  if( !data->smooth ) {
+  if( !data->smooth && fbnode != NULL ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d is %s; report", addr, state?"ON":"OFF" );
     if( data->listenerFun != NULL )
       data->listenerFun( data->listenerObj, fbnode, TRCLEVEL_INFO );
@@ -433,7 +433,7 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
       iOFBState fb = &data->fbstate[ i ];
       if( fb->state && fb->lowtime > fb->hightime && (SystemOp.getTick() - fb->lowtime) >= data->triggertime ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "report sensor %d delayed OFF; report", i+1 );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d delayed OFF; report", i+1 );
         fb->state = False;
         wFeedback.setstate( evt, fb->state );
         wFeedback.setaddr( evt, i+1 );
