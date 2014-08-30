@@ -476,6 +476,7 @@
       <var name="devh" vt="long"/>
       <var name="mux" vt="iOMutex"/>
       <var name="feedbackReader" vt="iOThread"/>
+      <var name="delayedOffHandler" vt="iOThread"/>
       <var name="device" vt="const char*"/>
       <var name="bps" vt="serial_bps"/>
       <var name="bits" vt="serial_databits"/>

@@ -424,28 +424,6 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
       NodeOp.base.del( fbnode );
     }
   }
-
-  /* Loop throug all feedbacks to check for low state. */
-  {
-    int i = 0;
-    int modcnt = (data->fbleft + data->fbmiddle + data->fbright) * 16;
-    for( i = 0; i < modcnt; i++ ) {
-      iOFBState fb = &data->fbstate[ i ];
-      if( fb->state && fb->lowtime > fb->hightime && (SystemOp.getTick() - fb->lowtime) >= data->triggertime ) {
-        iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d delayed OFF; report", i+1 );
-        fb->state = False;
-        wFeedback.setstate( evt, fb->state );
-        wFeedback.setaddr( evt, i+1 );
-        if( data->iid != NULL )
-          wFeedback.setiid( evt, data->iid );
-
-        if( data->listenerFun != NULL )
-          data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
-      }
-    }
-  }
-
 }
 
 
@@ -605,6 +583,39 @@ static Boolean __initHSI88( iOHSI88 inst ) {
 }
 
 
+static void __delayedOffHandler( void* threadinst ) {
+  iOThread th = (iOThread)threadinst;
+  iOHSI88 pHSI88 = (iOHSI88)ThreadOp.getParm( th );
+  iOHSI88Data data = Data(pHSI88);
+
+  ThreadOp.sleep(1000);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HSI88 delayed OFF handler started");
+
+  while( data->run ) {
+    /* Loop throug all feedbacks to check for low state. */
+    int i = 0;
+    int modcnt = (data->fbleft + data->fbmiddle + data->fbright) * 16;
+    for( i = 0; i < modcnt; i++ ) {
+      iOFBState fb = &data->fbstate[ i ];
+      if( fb->state && fb->lowtime > fb->hightime && (SystemOp.getTick() - fb->lowtime) >= data->triggertime ) {
+        iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d delayed OFF; report", i+1 );
+        fb->state = False;
+        wFeedback.setstate( evt, fb->state );
+        wFeedback.setaddr( evt, i+1 );
+        if( data->iid != NULL )
+          wFeedback.setiid( evt, data->iid );
+
+        if( data->listenerFun != NULL )
+          data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
+      }
+    }
+    ThreadOp.sleep(100);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "HSI88 delayed OFF handler ended");
+}
+
+
 static void __HSI88feedbackReader( void* threadinst ) {
   iOThread th = (iOThread)threadinst;
   iOHSI88 pHSI88 = (iOHSI88)ThreadOp.getParm( th );
@@ -643,8 +654,6 @@ static void __HSI88feedbackReader( void* threadinst ) {
 
     ThreadOp.sleep(10);
 
-
-    __fbstatetrigger( pHSI88, NULL );
 
     if( o->dummyio ) {
       l_iLoop++;
@@ -871,6 +880,11 @@ static struct OHSI88* _inst( const iONode ini ,const iOTrace trc )
     SystemOp.inst();
     data->feedbackReader = ThreadOp.inst( "hsi88fb", &__HSI88feedbackReader, __HSI88 );
     ThreadOp.start( data->feedbackReader );
+
+    if( data->smooth ) {
+      data->delayedOffHandler = ThreadOp.inst( "hsi88Off", &__delayedOffHandler, __HSI88 );
+      ThreadOp.start( data->delayedOffHandler );
+    }
   }
   else
     TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Could not init HSI88 port!" );
