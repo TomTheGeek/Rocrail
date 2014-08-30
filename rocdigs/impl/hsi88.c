@@ -400,6 +400,7 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
     fb = &data->fbstate[ addr-1 ];
 
     if( state && !fb->state ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor %d is high and was low; report", addr );
       /* Current state is low. */
       fb->hightime = SystemOp.getTick();
       fb->lowtime = SystemOp.getTick();
@@ -408,11 +409,13 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
         data->listenerFun( data->listenerObj, fbnode, TRCLEVEL_INFO );
     }
     else if( state && fb->state ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor %d is high and was high", addr );
       fb->hightime = SystemOp.getTick();
       fb->lowtime = SystemOp.getTick();
       NodeOp.base.del( fbnode );
     }
     else if( !state && fb->state ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "sensor %d is low and was high", addr );
       fb->lowtime = SystemOp.getTick();
       NodeOp.base.del( fbnode );
     }
@@ -427,9 +430,9 @@ static void __fbstatetrigger( iOHSI88 inst, iONode fbnode ) {
     int modcnt = (data->fbleft + data->fbmiddle + data->fbright) * 16;
     for( i = 0; i < modcnt; i++ ) {
       iOFBState fb = &data->fbstate[ i ];
-      if( fb->state && fb->lowtime >= fb->hightime && (SystemOp.getTick() - fb->lowtime) >= data->triggertime ) {
+      if( fb->state && fb->lowtime > fb->hightime && (SystemOp.getTick() - fb->lowtime) >= data->triggertime ) {
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "report sensor %d low (delayed)", i+1 );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "report sensor %d low (delayed); report", i+1 );
         fb->state = False;
         wFeedback.setstate( evt, fb->state );
         wFeedback.setaddr( evt, i+1 );
