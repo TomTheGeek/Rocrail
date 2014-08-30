@@ -718,7 +718,7 @@ static void __HSI88feedbackReader( void* threadinst ) {
             if( o->iid != NULL )
               wFeedback.setiid( nodeC, o->iid );
 
-            TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "sensor %d %s",addr, wFeedback.isstate( nodeC )?"high":"low" );
+            TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "sensor %d %s",addr, wFeedback.isstate( nodeC )?"high":"low" );
             __fbstatetrigger( pHSI88, nodeC );
           }
 
