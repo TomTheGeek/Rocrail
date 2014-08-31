@@ -786,6 +786,92 @@ static Boolean checkTrains( iOAnalyse inst, Boolean repair ) {
 }
 
 
+/* check signal attributes */
+static Boolean checkSgAttrs( iOAnalyse inst, Boolean repair ) {
+  iOAnalyseData data = Data(inst);
+  iONode list = wPlan.getsglist(data->plan);
+  int checkedTotal = 0;
+  int sumProblems = 0;
+  int sumModifiedItems = 0;
+  int listSize = 0;
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSgAttrs: Checking [%08.8X]", list );
+  if( list != NULL ) {
+    listSize = NodeOp.getChildCnt( list );
+  }
+
+  if( listSize > 0 ) {
+    iONode node;
+    const char* listType = NodeOp.getName( NodeOp.getChild(list, 0));
+    int i = 0;
+    Boolean thisNodeChanged ;
+
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSgAttrs: Checking %d %s nodes", listSize, listType );
+    /* loop all signals */
+    for( i = 0 ; i < listSize ; i++ ) {
+      node = NodeOp.getChild(list, i);
+      if( node ) {
+        thisNodeChanged = False;
+        int problems = 0; 
+        int usepatterns = wSignal.getusepatterns( node );
+        const char* id = wSignal.getid( node );
+        int cnt = NodeOp.getAttrCnt( node );
+        int j = 0;
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "checkSgAttrs: id[%s] usepatterns[%d]",
+            id, usepatterns );
+
+        /* loop over "original" xml attributes and values */
+        for( j = 0; j < cnt; j++ ) {
+          iOAttr attr = NodeOp.getAttr( node, j );
+          const char* name  = AttrOp.getName( attr );
+          const char* value = AttrOp.getVal( attr );
+          checkedTotal++;
+          if( StrOp.equalsi( name, "usepatterns" ) ) {
+            if(  StrOp.equalsi( value, "false" )
+              || StrOp.equalsi( value, "true" )
+              ) {
+              /* usepatterns with boolean value detected */
+              problems++;
+              TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "check signal attributes: signal[%s] still using deprecated usepattern value[%s]",
+                  id, value );
+              if( repair ) {
+                if( StrOp.equalsi( value, "true" ) ) {
+                  wSignal.setusepatterns( node, 1 );
+                } else {
+                  wSignal.setusepatterns( node, 0 );
+                }
+                thisNodeChanged = True;
+                TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "check signal attributes: signal[%s] changed usepattern value[%s] to integer[%d]",
+                    id, value, wSignal.getusepatterns( node ) );
+              }
+            }
+          }
+        }
+
+        if( problems > 0 ) {
+          sumProblems += problems;
+        }
+
+        if( thisNodeChanged == True ) {
+          sumModifiedItems++ ;
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "WARNING: something was wrong with signal[%s] (see previous lines)",
+              id );
+        }
+      }
+    }
+    /* statistics */
+    if( sumProblems > 0 ) {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "%s %slist [%5d/%5d] problem attributes in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, sumProblems, checkedTotal, sumModifiedItems, listSize );
+    }else {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  %s %slist [%5d/%5d] problem attributes in [%4d/%4d] nodes", 
+          repair?"cleaned":"checked", listType, sumProblems, checkedTotal, sumModifiedItems, listSize );
+    }
+  }
+  return( sumProblems == 0 );
+}
+
+
 /* check if state is a valid loco identifier */
 static Boolean isLocoIdentifier( iOAnalyse inst, const char* state ) {
   iOAnalyseData data = Data(inst);
@@ -8684,6 +8770,11 @@ static Boolean _checkExtended(iOAnalyse inst) {
     res = checkTrains( inst, False );
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train test: %s problems detected", res?"no":"some" );
 
+    /* check signal attributes */
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " signal attribute test: in progress..." );
+    res = checkSgAttrs( inst, False );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " signal attribute test: %s problems detected", res?"no":"some" );
+
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Basic checks finished" );
   }
 
@@ -8873,6 +8964,13 @@ static Boolean _cleanExtended(iOAnalyse inst) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train clean: in progress..." );
       res = checkTrains( inst, True );
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " train clean: %s items deleted", res?"no":"some" );
+      if( res == False )
+        planChanged = True;
+
+      /* repair signal attributes */
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " signal attribute repair: in progress..." );
+      res = checkSgAttrs( inst, True );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, " signal attribute repair: %s items changed", res?"no":"some" );
       if( res == False )
         planChanged = True;
 
