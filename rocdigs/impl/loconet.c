@@ -637,7 +637,6 @@ static void __handleTransponding(iOLocoNet loconet, byte* msg) {
     iONode nodeC = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
 
     wFeedback.setaddr( nodeC, addr );
-    wFeedback.setbus( nodeC, wFeedback.fbtype_transponder );
     wFeedback.setzone( nodeC, zone );
     wFeedback.setfbtype( nodeC, wFeedback.fbtype_transponder );
 
