@@ -1120,7 +1120,7 @@
     <sl txt="Panel tirnih lastnosti" tip="Pogovorno okno za pogled in nastavitev lastnosti tirnega panela."/>
   </Msg>
   <Msg id="startall">
-    <de txt="Alle Loks starten" tip="Alle Loks in Automatik-Modus versetzen"/>
+    <de txt="Alle Loks starten" tip="Alle Loks starten"/>
     <en txt="Start all locs" tip="Put all locs in auto mode."/>
     <nl txt="Start alle loc's" tip="Zet alle loc's in auto mode"/>
     <sv txt="Starta alla lok" tip="Sätt alla lok i autoläge."/>
@@ -17226,7 +17226,7 @@
     <tr txt="Kullanıcı"/>
     <en_AU txt="Operator"/>
     <en_CA txt="Operator"/>
-    <en_GB txt="Operator"/>
+    <en_GB txt="Operator" tip="Dialogue for operator control"/>
     <nb txt="Operatør"/>
     <sr_latin txt="Operator" tip="Dijalog za kontrolu operatora"/>
     <ja txt="オペレータ"/>
@@ -28419,6 +28419,7 @@
     <sl txt="Smer tira"/>
     <sr_latin txt="Šina pravca"/>
     <fi txt="Radan suunta"/>
+    <en_GB txt="Track direction"/>
   </Msg>
   <Msg id="track_dirall">
     <en txt="Track all directions"/>
@@ -28548,6 +28549,7 @@
     <sl txt="Leva dvojna kretnica"/>
     <sr_latin txt="Leva dupla skretnica"/>
     <fi txt="Vasen kaksoisristeysvaihde"/>
+    <en_GB txt="Left double slip switch"/>
   </Msg>
   <Msg id="semaphore_distant">
     <en txt="Distant semaphore"/>
@@ -28664,6 +28666,7 @@
     <sl txt="Ploščad"/>
     <sr_latin txt="Peron"/>
     <fi txt="Laituri"/>
+    <en_GB txt="Platform"/>
   </Msg>
   <Msg id="industry">
     <en txt="Industry"/>
@@ -28806,6 +28809,7 @@
     <sl txt="Dvojno cestno križišče"/>
     <sr_latin txt="Dvostruka raskrsnica"/>
     <fi txt="Teiden kaksoiristeys"/>
+    <en_GB txt="Road double crossing"/>
   </Msg>
   <Msg id="road_signal_main">
     <en txt="Traffic light"/>
@@ -28818,6 +28822,7 @@
     <sl txt="Semafor"/>
     <sr_latin txt="Semafor"/>
     <fi txt="Liikennevalo"/>
+    <en_GB txt="Traffic light"/>
   </Msg>
   <Msg id="road_signal_dwarf">
     <en txt="Small traffic light"/>
@@ -28830,6 +28835,7 @@
     <sl txt="Majhen semafor"/>
     <sr_latin txt="Mali semafor"/>
     <fi txt="Pieni liikennevalo"/>
+    <en_GB txt="Small traffic light"/>
   </Msg>
   <Msg id="road_block">
     <en txt="Road block section"/>
@@ -28842,6 +28848,7 @@
     <sl txt="Cestni odsek"/>
     <sr_latin txt="Blok sekcija puta"/>
     <fi txt="Tien valvontaosuus"/>
+    <en_GB txt="Road block section"/>
   </Msg>
   <Msg id="road_sensor">
     <en txt="Road sensor"/>
@@ -28854,6 +28861,7 @@
     <sl txt="Cestni tipalo"/>
     <sr_latin txt="Putni senzor"/>
     <fi txt="Tieanturi"/>
+    <en_GB txt="Road sensor"/>
   </Msg>
   <Msg id="removealltracks">
     <en txt="Delete all tracks linked to this level?"/>
@@ -28866,6 +28874,7 @@
     <sl txt="Zbrišem vse povezave na ta nivo?"/>
     <sr_latin txt="Obriši sve šine vezane za ovaj nivo?"/>
     <fi txt="Poistetaanko kaikki tälle tasolle linkitetyt raiteet?"/>
+    <en_GB txt="Delete all tracks linked to this level?"/>
   </Msg>
   <Msg id="showlocoimageinblock">
     <en txt="Show loco image in block"/>
@@ -28878,6 +28887,7 @@
     <sl txt="Prikaži sliko lokomotive v odseku"/>
     <sr_latin txt="Prikaz slike loko. u bloku"/>
     <fi txt="Näytä veturin kuva raideosuudella"/>
+    <en_GB txt="Show loco image in block"/>
   </Msg>
   <Msg id="modnr">
     <en txt="Module number"/>
@@ -28888,6 +28898,7 @@
     <pt_BR txt="Número do módulo"/>
     <sl txt="Številka modula"/>
     <sr_latin txt="Broj modula"/>
+    <en_GB txt="Module number"/>
   </Msg>
   <Msg id="newaddress">
     <en txt="New address"/>
@@ -28900,6 +28911,7 @@
     <ru txt="Новый адрес"/>
     <sr_latin txt="Nova adresa"/>
     <fi txt="Uusi osoite"/>
+    <en_GB txt="New address"/>
   </Msg>
   <Msg id="maxwaittime">
     <en txt="Max. wait time"/>
@@ -28912,6 +28924,7 @@
     <ru txt="Макс.время ожидания"/>
     <sr_latin txt="Maks. vreme čekanja"/>
     <fi txt="Maksimi odotusaika"/>
+    <en_GB txt="Max. wait time"/>
   </Msg>
   <Msg id="grayicons">
     <en txt="Gray icons"/>
@@ -28924,6 +28937,7 @@
     <ru txt="Серые иконки"/>
     <sr_latin txt="Sive ikone"/>
     <fi txt="Harmaat kuvakkeet"/>
+    <en_GB txt="Grey icons"/>
   </Msg>
   <Msg id="accelerators">
     <en txt="Accelerators"/>
@@ -28936,6 +28950,7 @@
     <ru txt="Ускорители"/>
     <sr_latin txt="Ubrzivači"/>
     <fi txt="Tehonsäädöt"/>
+    <en_GB txt="Accelerators"/>
   </Msg>
   <Msg id="alt">
     <en txt="Alt"/>
@@ -28947,6 +28962,7 @@
     <pt_BR txt="Alt"/>
     <sr_latin txt="Alt"/>
     <fi txt="Alt"/>
+    <en_GB txt="Alt"/>
   </Msg>
   <Msg id="ctrl">
     <en txt="Ctrl"/>
@@ -28958,6 +28974,7 @@
     <pt_BR txt="Ctrl"/>
     <sr_latin txt="Ctrl"/>
     <fi txt="Ctrl"/>
+    <en_GB txt="Ctrl"/>
   </Msg>
   <Msg id="keycode">
     <en txt="Key code"/>
@@ -28969,6 +28986,7 @@
     <pt_BR txt="Senha"/>
     <sr_latin txt="Kod ključa"/>
     <fi txt="Avainkoodi"/>
+    <en_GB txt="Key code"/>
   </Msg>
   <Msg id="modifier">
     <en txt="Modifier"/>
@@ -28980,5 +28998,6 @@
     <ru txt="Модификатор"/>
     <sr_latin txt="Izmenjivač"/>
     <fi txt="Muunnin"/>
+    <en_GB txt="Modifier"/>
   </Msg>
 </Messages>
