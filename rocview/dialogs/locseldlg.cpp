@@ -162,19 +162,25 @@ void LocSelDlg::InitValues() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitValues %s", wLoc.getid( m_Props ) );
   // Init General
   if( wLoc.getimage( m_Props ) != NULL ) {
+    bool isSupported = true;
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
     if( StrOp.endsWithi( wLoc.getimage( m_Props ), ".gif" ) )
       bmptype = wxBITMAP_TYPE_GIF;
     else if( StrOp.endsWithi( wLoc.getimage( m_Props ), ".png" ) )
       bmptype = wxBITMAP_TYPE_PNG;
+    else {
+      TraceOp.trc( "locseldlg", TRCLEVEL_WARNING, __LINE__, 9999, "unsupported image format %s", wLoc.getimage( m_Props ) );
+      isSupported = false;
+    }
+
 
     const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
     const char* imagename = FileOp.ripPath( wLoc.getimage( m_Props ) );
     static char pixpath[256];
     StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), imagename );
 
-    if( imagename != NULL && StrOp.len(imagename) > 0 && FileOp.exist(pixpath)) {
-      TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
+    if( isSupported && imagename != NULL && StrOp.len(imagename) > 0 && FileOp.exist(pixpath)) {
+      TraceOp.trc( "locseldlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
       wxImage img(wxString(pixpath,wxConvUTF8), bmptype);
       if( img.GetHeight() > MAXHEIGHT ) {
         int h = img.GetHeight();
@@ -193,7 +199,7 @@ void LocSelDlg::InitValues() {
         m_LocImageIndex->SetBitmapLabel( *_img_noimg );
       else
         m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
-      if( StrOp.len(imagename) > 0 ) {
+      if( isSupported && StrOp.len(imagename) > 0 ) {
         TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s] not found; request it from server.", pixpath );
         // request the image from server:
         iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );

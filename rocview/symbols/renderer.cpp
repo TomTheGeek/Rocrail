@@ -2086,7 +2086,7 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
     static char pixpath[256];
     StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( m_LocoImage ) );
 
-    if( FileOp.exist(pixpath)) {
+    if( FileOp.exist(pixpath) && StrOp.endsWithi( pixpath, ".png" ) ) {
       wxBitmap* imageBitmap = NULL;
       wxImage img(wxString(pixpath,wxConvUTF8), wxBITMAP_TYPE_PNG);
       int maxheight = 20;

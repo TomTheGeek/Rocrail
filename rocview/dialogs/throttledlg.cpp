@@ -243,8 +243,12 @@ wxBitmap* ThrottleDlg::getIcon(const char* icon) {
     bmptype = wxBITMAP_TYPE_GIF;
   else if( StrOp.endsWithi( icon, ".png" ) )
     bmptype = wxBITMAP_TYPE_PNG;
+  else {
+    TraceOp.trc( "throttle", TRCLEVEL_WARNING, __LINE__, 9999, "unsupported image format %s", icon );
+    return bitmap;
+  }
 
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "get icon %s", icon );
+  TraceOp.trc( "throttle", TRCLEVEL_INFO, __LINE__, 9999, "get icon %s", icon );
 
   const char* imagepath = wGui.getimagepath(wxGetApp().m_Ini);
   static char pixpath[256];
@@ -367,17 +371,22 @@ void ThrottleDlg::updateImage() {
   TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "update image" );
   iONode lc = m_Props;
   if( lc != NULL && wLoc.getimage( lc ) != NULL && StrOp.len(wLoc.getimage( lc )) > 0 ) {
+    bool isSupported = true;
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
     if( StrOp.endsWithi( wLoc.getimage( lc ), ".gif" ) )
       bmptype = wxBITMAP_TYPE_GIF;
     else if( StrOp.endsWithi( wLoc.getimage( lc ), ".png" ) )
       bmptype = wxBITMAP_TYPE_PNG;
+    else {
+      TraceOp.trc( "throttle", TRCLEVEL_WARNING, __LINE__, 9999, "unsupported image format %s", wLoc.getimage( lc ) );
+      isSupported = false;
+    }
 
     const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
     static char pixpath[256];
     StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( lc ) ) );
 
-    if( FileOp.exist(pixpath)) {
+    if( isSupported && FileOp.exist(pixpath)) {
       TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
       wxImage img(wxString(pixpath,wxConvUTF8), bmptype);
       if( img.GetHeight() > MAXHEIGHT ) {
