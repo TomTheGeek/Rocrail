@@ -147,6 +147,12 @@ void LocoWidget::UpdateLocoImg(){
       bmptype = wxBITMAP_TYPE_GIF;
     else if( StrOp.endsWithi( wLoc.getimage( m_Props ), ".png" ) )
       bmptype = wxBITMAP_TYPE_PNG;
+    else {
+      m_LocoImage->SetBitmap( wxBitmap(nopict12030_xpm) );
+      m_LocoImage->Refresh();
+      TraceOp.trc( "locowidget", TRCLEVEL_WARNING, __LINE__, 9999, "unsupported image format %s", wLoc.getimage( m_Props ) );
+      return;
+    }
 
     TraceOp.trc( "locowidget", TRCLEVEL_INFO, __LINE__, 9999, "UpdateLocImage %s", wLoc.getimage( m_Props ) );
 

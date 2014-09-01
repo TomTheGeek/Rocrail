@@ -5012,11 +5012,16 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
   if( lc != NULL ) {
     if( wGui.isshowlocoimage(m_Ini) ) {
       if( wLoc.getimage( lc ) != NULL && StrOp.len(wLoc.getimage( lc )) > 0 ) {
+        bool isSupported = true;
         wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
         if( StrOp.endsWithi( wLoc.getimage( lc ), ".gif" ) )
           bmptype = wxBITMAP_TYPE_GIF;
         else if( StrOp.endsWithi( wLoc.getimage( lc ), ".png" ) )
           bmptype = wxBITMAP_TYPE_PNG;
+        else {
+          TraceOp.trc( "frame", TRCLEVEL_WARNING, __LINE__, 9999, "unsupported image format %s", wLoc.getimage(lc) );
+          isSupported = false;
+        }
 
         TraceOp.trc( "frame", TRCLEVEL_DEBUG, __LINE__, 9999, "UpdateLocImage %s", wLoc.getimage( lc ) );
 
@@ -5024,7 +5029,7 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
         static char pixpath[256];
         StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wLoc.getimage( lc ) ) );
 
-        if( FileOp.exist(pixpath)) {
+        if( isSupported && FileOp.exist(pixpath)) {
           if( m_LocImage != NULL ) {
             //m_LocImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
             wxImage img(wxString(pixpath,wxConvUTF8), bmptype);
@@ -5048,13 +5053,15 @@ void RocGuiFrame::UpdateLocImage( wxCommandEvent& event ){
             m_LocImage->SetBitmapLabel( *_img_noimg );
           else
             m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
-          // request the image from server:
-          iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
-          wDataReq.setid( node, wLoc.getid(lc) );
-          wDataReq.setcmd( node, wDataReq.get );
-          wDataReq.settype( node, wDataReq.image );
-          wDataReq.setfilename( node, wLoc.getimage(lc) );
-          wxGetApp().sendToRocrail( node );
+          if( isSupported ) {
+            // request the image from server:
+            iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
+            wDataReq.setid( node, wLoc.getid(lc) );
+            wDataReq.setcmd( node, wDataReq.get );
+            wDataReq.settype( node, wDataReq.image );
+            wDataReq.setfilename( node, wLoc.getimage(lc) );
+            wxGetApp().sendToRocrail( node );
+          }
         }
       }
       else {

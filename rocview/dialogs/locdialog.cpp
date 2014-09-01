@@ -601,18 +601,23 @@ void LocDialog::InitValues() {
   TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitValues %s", wLoc.getid( m_Props ) );
   // Init General
   if( wLoc.getimage( m_Props ) != NULL && StrOp.len(wLoc.getimage(m_Props)) > 0 ) {
+    bool isSupported = true;
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
     if( StrOp.endsWithi( wLoc.getimage( m_Props ), ".gif" ) )
       bmptype = wxBITMAP_TYPE_GIF;
     else if( StrOp.endsWithi( wLoc.getimage( m_Props ), ".png" ) )
       bmptype = wxBITMAP_TYPE_PNG;
+    else {
+      TraceOp.trc( "locdlg", TRCLEVEL_WARNING, __LINE__, 9999, "unsupported image format %s", wLoc.getimage( m_Props ) );
+      isSupported = false;
+    }
 
     const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
     const char* imagename = FileOp.ripPath( wLoc.getimage( m_Props ) );
     static char pixpath[256];
     StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), imagename );
 
-    if( imagename != NULL && StrOp.len(imagename) > 0 && FileOp.exist(pixpath)) {
+    if( isSupported && imagename != NULL && StrOp.len(imagename) > 0 && FileOp.exist(pixpath)) {
       TraceOp.trc( "locdlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
       m_LocImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
     }
@@ -2953,6 +2958,10 @@ void LocDialog::OnBitmapbuttonClick( wxCommandEvent& event )
       bmptype = wxBITMAP_TYPE_GIF;
     else if( StrOp.endsWithi( fdlg->GetPath().mb_str(wxConvUTF8), ".png" ) )
       bmptype = wxBITMAP_TYPE_PNG;
+    else {
+      TraceOp.trc( "locdlg", TRCLEVEL_WARNING, __LINE__, 9999, "unsupported image format %s", (const char*)fdlg->GetPath().mb_str(wxConvUTF8) );
+      return;
+    }
     m_LocImage->SetBitmapLabel( wxBitmap( fdlg->GetPath(), bmptype ) );
     m_LocImage->Refresh();
     wLoc.setimage( m_Props, FileOp.ripPath(fdlg->GetPath().mb_str(wxConvUTF8)) );

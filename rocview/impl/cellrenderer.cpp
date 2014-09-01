@@ -140,6 +140,10 @@ void CellRenderer::updateImage(const wxRect& rect) {
     bmptype = wxBITMAP_TYPE_GIF;
   else if( StrOp.endsWithi( imageName, ".png" ) )
     bmptype = wxBITMAP_TYPE_PNG;
+  else {
+    TraceOp.trc( "cellrenderer", TRCLEVEL_WARNING, __LINE__, 9999, "unsupported image format %s", imageName );
+    return;
+  }
 
   const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
   static char pixpath[256];
