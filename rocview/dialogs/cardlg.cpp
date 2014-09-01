@@ -518,17 +518,22 @@ void CarDlg::initValues() {
   TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues for car [%s]", wCar.getid( m_Props ) );
   // Init General
   if( wCar.getimage( m_Props ) != NULL && StrOp.len(wCar.getimage( m_Props )) > 0 ) {
+    bool isSupported = true;
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
     if( StrOp.endsWithi( wCar.getimage( m_Props ), ".gif" ) )
       bmptype = wxBITMAP_TYPE_GIF;
     else if( StrOp.endsWithi( wCar.getimage( m_Props ), ".png" ) )
       bmptype = wxBITMAP_TYPE_PNG;
+    else {
+      TraceOp.trc( "cardlg", TRCLEVEL_WARNING, __LINE__, 9999, "unsupported image format %s", wCar.getimage( m_Props ) );
+      isSupported = false;
+    }
 
     const char* imagepath = wGui.getimagepath(wxGetApp().getIni());
     static char pixpath[256];
     StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( wCar.getimage( m_Props ) ) );
 
-    if( FileOp.exist(pixpath) && StrOp.len(wCar.getimage( m_Props )) > 0 ) {
+    if( isSupported && FileOp.exist(pixpath) && StrOp.len(wCar.getimage( m_Props )) > 0 ) {
       TraceOp.trc( "cardlg", TRCLEVEL_INFO, __LINE__, 9999, "picture [%s]", pixpath );
       m_CarImage->SetBitmapLabel( wxBitmap(wxString(pixpath,wxConvUTF8), bmptype) );
     }
@@ -538,13 +543,15 @@ void CarDlg::initValues() {
         m_CarImage->SetBitmapLabel( *_img_noimg );
       else
         m_CarImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
-      // request the image from server:
-      iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
-      wDataReq.setid( node, wCar.getid(m_Props) );
-      wDataReq.setcmd( node, wDataReq.get );
-      wDataReq.settype( node, wDataReq.image );
-      wDataReq.setfilename( node, wCar.getimage(m_Props) );
-      wxGetApp().sendToRocrail( node );
+      if( isSupported ) {
+        // request the image from server:
+        iONode node = NodeOp.inst( wDataReq.name(), NULL, ELEMENT_NODE );
+        wDataReq.setid( node, wCar.getid(m_Props) );
+        wDataReq.setcmd( node, wDataReq.get );
+        wDataReq.settype( node, wDataReq.image );
+        wDataReq.setfilename( node, wCar.getimage(m_Props) );
+        wxGetApp().sendToRocrail( node );
+      }
     }
     m_CarImage->SetToolTip(wxString(wCar.getnumber( m_Props ),wxConvUTF8));
 
@@ -768,6 +775,9 @@ void CarDlg::onCarImage( wxCommandEvent& event ){
       bmptype = wxBITMAP_TYPE_GIF;
     else if( StrOp.endsWithi( fdlg->GetPath().mb_str(wxConvUTF8), ".png" ) )
       bmptype = wxBITMAP_TYPE_PNG;
+    else {
+      return;
+    }
     m_CarImage->SetBitmapLabel( wxBitmap( fdlg->GetPath(), bmptype ) );
     m_CarImage->Refresh();
     wCar.setimage( m_Props, FileOp.ripPath(fdlg->GetPath().mb_str(wxConvUTF8)) );
