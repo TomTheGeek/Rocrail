@@ -451,6 +451,8 @@ void CarDlg::initIndex(){
         int autosize = m_CarList2->GetColumnWidth(n);
         if(autoheadersize > autosize )
           m_CarList2->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+        else if( autosize > 120 )
+          m_CarList2->SetColumnWidth(n, autoheadersize > 120 ? autoheadersize:120);
       }
 
       /* clean up the temp. list */
