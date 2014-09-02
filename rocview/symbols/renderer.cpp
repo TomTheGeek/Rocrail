@@ -291,9 +291,11 @@ void SymbolRenderer::initSym() {
           }
         }
         else {
-          if( wSwitch.isrectcrossing(m_Props) && wSwitch.getaddr1( m_Props ) == 0 && wSwitch.getport1( m_Props ) == 0 ) {
+          if( wSwitch.isrectcrossing(m_Props) ) {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing );
+            m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing_t );
             m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing_occ );
+            m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing_t_occ );
             m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::crossing_route );
           }
           else if( wSwitch.getaddr1( m_Props ) == 0 && wSwitch.getport1( m_Props ) == 0 ) {
