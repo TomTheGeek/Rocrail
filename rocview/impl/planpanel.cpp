@@ -229,6 +229,8 @@ bool PlanPanelDrop::OnDropText(wxCoord x, wxCoord y, const wxString& data) {
       if( StrOp.len(symdir) > 0 ) {
         if( StrOp.equals(symdir, wSwitch.right) || StrOp.equals(symdir, wSwitch.left) )
           wSwitch.setrectcrossing( node, False );
+        if( StrOp.equals(symdir, "rect") )
+          wSwitch.setrectcrossing( node, True );
         if( StrOp.equals(symdir, wSwitch.right))
           wItem.setdir( node, True );
         if( StrOp.equals(symdir, wSignal.main ) || StrOp.equals(symdir, wSignal.distant ) || StrOp.equals(symdir, wSignal.shunting ) )

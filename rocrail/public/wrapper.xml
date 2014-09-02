@@ -1697,9 +1697,8 @@
         <const name="subright" vt="string" val="subright"/>
         <var name="subtype" vt="string" defval="default" range="default,subleft,subright"/>
         <var name="dir" vt="bool" defval="false" remark="false=left, true=right"/>
-        <var name="rectcrossing" vt="bool" defval="true" remark="Crossing without motor as rectangular crossing."/>
-        <var name="prot" vt="string" defval="D" range="M,N,D,mdd,om32,do,vo"
-             remark="Protocol to use for this output."/>
+        <var name="rectcrossing" vt="bool" defval="false" remark="Rectangular crossing."/>
+        <var name="prot" vt="string" defval="D" range="M,N,D,mdd,om32,do,vo" remark="Protocol to use for this output."/>
         <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
         <const name="prot_M" vt="string" val="M" remark="Motorola"/>
         <const name="prot_N" vt="string" val="N" remark="NMRA-DCC"/>
