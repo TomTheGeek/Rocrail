@@ -161,7 +161,7 @@ void LocSelDlg::SelectPrev() {
 void LocSelDlg::InitValues() {
   TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "InitValues %s", wLoc.getid( m_Props ) );
   // Init General
-  if( wLoc.getimage( m_Props ) != NULL ) {
+  if( wLoc.getimage( m_Props ) != NULL && StrOp.len(wLoc.getimage(m_Props)) > 0 ) {
     bool isSupported = true;
     wxBitmapType bmptype = wxBITMAP_TYPE_XPM;
     if( StrOp.endsWithi( wLoc.getimage( m_Props ), ".gif" ) )
