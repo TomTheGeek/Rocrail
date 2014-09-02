@@ -281,8 +281,8 @@ void SymbolRenderer::initSym() {
         if( wItem.isroad( m_Props ) ) {
           if( wSwitch.isrectcrossing(m_Props) ) {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_crossing90 );
-            m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_crossing90 );
-            m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_crossing90 );
+            m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_crossing90_t );
+            m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_crossing90_t );
           }
           else {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::road_crossing );
