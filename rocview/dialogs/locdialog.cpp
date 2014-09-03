@@ -63,6 +63,8 @@
 #include "rocs/public/strtok.h"
 #include "rocs/public/system.h"
 
+#include "rocview/res/icons.hpp"
+
 #include "rocview/xpm/nopict.xpm"
 
 ////@begin XPM images
@@ -623,7 +625,10 @@ void LocDialog::InitValues() {
     }
     else {
       TraceOp.trc( "locdlg", TRCLEVEL_WARNING, __LINE__, 9999, "picture [%s] not found", pixpath );
-      m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+      if( wGui.isgrayicons(wxGetApp().getIni()) )
+        m_LocImage->SetBitmapLabel( *_img_noimg );
+      else
+        m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
     }
     m_LocImage->SetToolTip(wxString(wLoc.getdesc( m_Props ),wxConvUTF8));
 
@@ -632,7 +637,10 @@ void LocDialog::InitValues() {
     //m_LocImageIndex->SetBitmapLabel( wxBitmap(wxString(wLoc.getimage( m_Props ),wxConvUTF8), bmptype) );
   }
   else {
-    m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
+    if( wGui.isgrayicons(wxGetApp().getIni()) )
+      m_LocImage->SetBitmapLabel( *_img_noimg );
+    else
+      m_LocImage->SetBitmapLabel( wxBitmap(nopict_xpm) );
     //m_LocImageIndex->SetBitmapLabel( wxBitmap(nopict_xpm) );
   }
   m_LocImage->Refresh();
