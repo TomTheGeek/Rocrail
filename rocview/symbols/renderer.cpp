@@ -1398,6 +1398,9 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute,
 
   TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "drawDCrossing %s state=%s", wSwitch.getid( m_Props ), state );
 
+  if( !wGui.isshowroute4switch(wxGetApp().getIni()) )
+    actroute = !occupied;
+
   // SVG Symbol:
   if( has2Units ) {
     if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.left ) ) {
@@ -1497,6 +1500,9 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute,
 void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean raster = StrOp.equals( wSwitch.getswtype( m_Props ), wSwitch.swtype_raster );
+
+  if( !wGui.isshowroute4switch(wxGetApp().getIni()) )
+    actroute = !occupied;
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.left ) ) {
@@ -1609,6 +1615,9 @@ void SymbolRenderer::drawAccessory( wxPaintDC& dc, bool occupied, bool actroute,
 void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean raster = StrOp.equals( wSwitch.getswtype( m_Props ), wSwitch.swtype_raster );
+
+  if( !wGui.isshowroute4switch(wxGetApp().getIni()) )
+    actroute = !occupied;
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {

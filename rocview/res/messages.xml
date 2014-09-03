@@ -29000,4 +29000,7 @@
     <fi txt="Muunnin"/>
     <en_GB txt="Modifier"/>
   </Msg>
+  <Msg id="showroute4switch">
+    <en txt="Show routes on switches"/>
+  </Msg>
 </Messages>

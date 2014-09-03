@@ -205,6 +205,7 @@ public:
     wxCheckBox* m_LocoImageColumn;
     wxCheckBox* m_ShowLocoImageInBlock;
     wxCheckBox* m_GrayIcons;
+    wxCheckBox* m_ShowRoute4Switch;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;

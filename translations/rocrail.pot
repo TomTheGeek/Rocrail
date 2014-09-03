@@ -7451,3 +7451,9 @@ msgstr ""
 msgid "Modifier"
 msgstr ""
 
+#. 
+# id="showroute4switch"
+#, c-format
+msgid "Show routes on switches"
+msgstr ""
+
