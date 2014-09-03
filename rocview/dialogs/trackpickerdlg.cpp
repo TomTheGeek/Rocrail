@@ -269,9 +269,9 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:rect:::,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossing, "crossing" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:left:::,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingright, "crossing_right" );
+  symname = StrOp.fmt("%s:%s:left:::,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingright0m, "crossing_right" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:right:::,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingleft, "crossing_left" );
+  symname = StrOp.fmt("%s:%s:right:::,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingleft0m, "crossing_left" );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:left:::,%s,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingright_route, "dcrossing_right" );
   ListOp.add( m_SymbolList, (obj) symname );
