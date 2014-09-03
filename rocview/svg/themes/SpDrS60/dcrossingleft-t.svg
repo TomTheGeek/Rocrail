@@ -9,9 +9,9 @@
     <!-- Diagonale links oben rechts unten -->  
     <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 12,0 L 43,31 L 51,31 L 20,0 z " />
     <!-- Ausleuchtung links oben gelb -->
-    <path stroke="rgb(0,255,0)" fill="rgb(0,255,0)" d="M 21,3 L 27,9 L 25,11 L 19,5 z " />
+    <path stroke="rgb(0,255,255)" fill="rgb(0,255,255)" d="M 21,3 L 27,9 L 25,11 L 19,5 z " />
     <!-- Ausleuchtung rechts unten gelb -->
-    <path stroke="rgb(0,255,0)" fill="rgb(0,255,0)" d="M 38,20 L 44,26 L 42,28 L 36,22 z " />
+    <path stroke="rgb(0,255,255)" fill="rgb(0,255,255)" d="M 38,20 L 44,26 L 42,28 L 36,22 z " />
     <!-- Winkel -->
     <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 31,6 L 32,5 L 35,8 L 39,8 L 39,9 L 34,9 L 31,6 z " />
     <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 24,21 L 28,21 L 31,24 L 30,25 L 27,22 L 24,22  z " />
