@@ -444,6 +444,8 @@ void SymbolRenderer::initSym() {
           m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tl );
           m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tr_occ );
           m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tl_occ );
+          m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tr_route );
+          m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::twoway_tl_route );
         }
       }
     }

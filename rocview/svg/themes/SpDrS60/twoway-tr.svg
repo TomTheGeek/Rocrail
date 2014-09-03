@@ -9,6 +9,6 @@
   <!-- Abzweig oben rechts -->
     <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 31,12 L 24,12 L 12,0 L 20,0 L 31,11  z " />
   <!-- Ausleuchtung Abzweig oben links grau -->
-    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 21,3 L 27,9 L 25,11 L 19,5 z " />
+    <path stroke="rgb(0,255,255)" fill="rgb(0,255,255)" d="M 21,3 L 27,9 L 25,11 L 19,5 z " />
   </g>
 </svg>

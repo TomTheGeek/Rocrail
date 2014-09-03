@@ -213,6 +213,8 @@ namespace switchtype {
   static const char* twoway_tl     = "twoway-tl.svg";
   static const char* twoway_tl_occ = "twoway-tl-occ.svg";
   static const char* twoway_tr_occ = "twoway-tr-occ.svg";
+  static const char* twoway_tl_route = "twoway-tl-route.svg";
+  static const char* twoway_tr_route = "twoway-tr-route.svg";
 
   static const char* twoway_r_tr     = "twoway-r-tr.svg";
   static const char* twoway_r_tl     = "twoway-r-tl.svg";

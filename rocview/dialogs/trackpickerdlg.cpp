@@ -263,7 +263,7 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.threeway, switchtype::threeway_route, "threeway" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.twoway, switchtype::twoway_tr, "twoway" );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.twoway, switchtype::twoway_tr_route, "twoway" );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.ccrossing, switchtype::ccrossing, "ccrossing" );
   ListOp.add( m_SymbolList, (obj) symname );
