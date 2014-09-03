@@ -67,6 +67,18 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   data->curBlock->red( data->curBlock, False, !data->next1RouteFromTo );
   */
 
+  /* Set the blockside before checking the block wait to get the right manual operated signal. (moved from line 392 on 03-09-2014) */
+  if( !re_enter ) {
+    if( data->next1Block != NULL ) {
+      if( StrOp.equals(data->next1Block->base.id(data->next1Block), data->next1Route->getToBlock(data->next1Route)) )
+        data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route), data->next1Route->getToBlock(data->next1Route));
+      else
+        data->loc->setBlockEnterSide(data->loc, data->next1Route->getFromBlockSide(data->next1Route), data->next1Route->getFromBlock(data->next1Route));
+    }
+    data->next1Block->enterBlock( data->next1Block, data->loc->getId( data->loc ) );
+  }
+
+
   if( !data->next1Block->wait( data->next1Block, data->loc, !data->next1RouteFromTo, &oppwait ) &&
       data->run &&
       !data->reqstop &&
@@ -377,15 +389,6 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     data->loc->cmd( data->loc, cmd );
   }
 
-  if( !re_enter ) {
-    if( data->next1Block != NULL ) {
-      if( StrOp.equals(data->next1Block->base.id(data->next1Block), data->next1Route->getToBlock(data->next1Route)) )
-        data->loc->setBlockEnterSide(data->loc, data->next1Route->getToBlockSide(data->next1Route), data->next1Route->getToBlock(data->next1Route));
-      else
-        data->loc->setBlockEnterSide(data->loc, data->next1Route->getFromBlockSide(data->next1Route), data->next1Route->getFromBlock(data->next1Route));
-    }
-    data->next1Block->enterBlock( data->next1Block, data->loc->getId( data->loc ) );
-  }
-
+  /* Previous place of the loco block enterside setting...  */
 
 }
