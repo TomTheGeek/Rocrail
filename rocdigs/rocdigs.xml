@@ -104,6 +104,7 @@
       <var name="bidi" vt="Boolean"/>
       <var name="ini" vt="iONode"/>
       <var name="force" vt="Boolean"/>
+      <var name="echoswcmds" vt="Boolean"/>
       </data>
   </object>
 

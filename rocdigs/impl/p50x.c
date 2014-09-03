@@ -325,6 +325,17 @@ static int __translate( iOP50xData o, iONode node, unsigned char* p50, int* insi
     p50[3] |= (wSwitch.isactivate( node )?0x40:0x00); /* Set active */
     *insize = 1; /* Return code from P50x. */
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %s", addr, cmdstr );
+
+    if( o->echoswcmds ){
+      iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+      wSwitch.setbus( nodeC, wSwitch.getbus( node ) );
+      wSwitch.setaddr1( nodeC, wSwitch.getaddr1( node ) );
+      wSwitch.setport1( nodeC, wSwitch.getport1( node ) );
+      if( wSwitch.getiid(node) != NULL )
+        wSwitch.setiid( nodeC, wSwitch.getiid(node) );
+      wSwitch.setstate( nodeC, wSwitch.getcmd( node ) );
+      o->listenerFun( o->listenerObj, nodeC, TRCLEVEL_INFO );
+    }
     return 4;
   }
 
@@ -721,10 +732,19 @@ static Boolean __getversion( iOP50x inst ) {
           /* OpenDCC V0.15 until V0.23.8beta, (2 bytes version+serno) */
           data->swversion = ( inVersion[0] & 0xFF ) << 8 ;
 
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OpenDCC version --- 0.%d.0 ---",
-                                                                  (unsigned int) (inVersion[0] & 0xFF) );
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OpenDCC serial# --- %d ---",
-                                                                  (unsigned int) (inVersion[1] & 0xFF) );
+          if( (inVersion[0] & 0xFF) == 86 ) {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MDRRC version --- 0.%d.0 ---",
+                                                                    (unsigned int) (inVersion[0] & 0xFF) );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MDRRC serial# --- %d ---",
+                                                                    (unsigned int) (inVersion[1] & 0xFF) );
+            data->echoswcmds = True;
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OpenDCC version --- 0.%d.0 ---",
+                                                                    (unsigned int) (inVersion[0] & 0xFF) );
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OpenDCC serial# --- %d ---",
+                                                                    (unsigned int) (inVersion[1] & 0xFF) );
+          }
         }
         else if( idx == 1 ) {
           /* OpenDCC since V0.23.8 (2 bytes version + 1 byte serno) */
