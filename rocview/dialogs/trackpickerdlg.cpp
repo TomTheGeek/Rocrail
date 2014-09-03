@@ -257,11 +257,11 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
 
   // Switch
-  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.left, switchtype::turnoutleft, "switch_left" );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.left, switchtype::turnoutleft_route, "switch_left" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.right, switchtype::turnoutright, "switch_right" );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.right, switchtype::turnoutright_route, "switch_right" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.threeway, switchtype::threeway, "threeway" );
+  symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.threeway, switchtype::threeway_route, "threeway" );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.twoway, switchtype::twoway_tr, "twoway" );
   ListOp.add( m_SymbolList, (obj) symname );
@@ -273,9 +273,9 @@ void TrackPickerDlg::initSymbols() {
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s:right:::,%s,%s", wSwitch.name(), wSwitch.crossing, switchtype::crossingleft, "crossing_left" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:left:::,%s,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingright, "dcrossing_right" );
+  symname = StrOp.fmt("%s:%s:left:::,%s,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingright_route, "dcrossing_right" );
   ListOp.add( m_SymbolList, (obj) symname );
-  symname = StrOp.fmt("%s:%s:right:::,%s,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingleft, "dcrossing_left" );
+  symname = StrOp.fmt("%s:%s:right:::,%s,%s", wSwitch.name(), wSwitch.dcrossing, switchtype::dcrossingleft_route, "dcrossing_left" );
   ListOp.add( m_SymbolList, (obj) symname );
   symname = StrOp.fmt("%s:%s::::,%s,%s", wSwitch.name(), wSwitch.decoupler, switchtype::decoupler, "decoupler" );
   ListOp.add( m_SymbolList, (obj) symname );
