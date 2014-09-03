@@ -367,6 +367,10 @@ void SymbolRenderer::initSym() {
           m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_t_occ:switchtype::dcrossingright_t_occ );
           m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_tl_occ:switchtype::dcrossingright_tl_occ );
           m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_tr_occ:switchtype::dcrossingright_tr_occ );
+          m_SvgSym9 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_route:switchtype::dcrossingright_route );
+          m_SvgSym10 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_t_route:switchtype::dcrossingright_t_route );
+          m_SvgSym11 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_tl_route:switchtype::dcrossingright_tl_route );
+          m_SvgSym12 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::dcrossingleft_tr_route:switchtype::dcrossingright_tr_route );
         }
       }
     }
@@ -413,6 +417,9 @@ void SymbolRenderer::initSym() {
           m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_occ );
           m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tl_occ );
           m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tr_occ );
+          m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_route );
+          m_SvgSym8 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tl_route );
+          m_SvgSym9 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::threeway_tr_route );
         }
       }
     }
@@ -1384,7 +1391,7 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, 
 /**
  * DoubleCrossing Switch object
  */
-void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* ori ) {
+void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean has2Units = ( wSwitch.getaddr2( m_Props ) > 0 || wSwitch.getport2( m_Props ) > 0 )  ? True:False;
   Boolean raster = StrOp.equals( wSwitch.getswtype( m_Props ), wSwitch.swtype_raster );
@@ -1394,41 +1401,53 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* or
   // SVG Symbol:
   if( has2Units ) {
     if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.left ) ) {
-      if( occupied && m_SvgSym7 != NULL )
+      if( occupied && !actroute && m_SvgSym7 != NULL )
         drawSvgSym(dc, m_SvgSym7, ori);
+      else if( actroute && m_SvgSym11 != NULL )
+        drawSvgSym(dc, m_SvgSym11, ori);
       else
         drawSvgSym(dc, m_SvgSym3, ori);
     }
     else if( m_SvgSym4!=NULL && StrOp.equals( state, wSwitch.right ) ) {
-      if( occupied && m_SvgSym8 != NULL )
+      if( occupied && !actroute && m_SvgSym8 != NULL )
         drawSvgSym(dc, m_SvgSym8, ori);
+      else if( actroute && m_SvgSym12 != NULL )
+        drawSvgSym(dc, m_SvgSym12, ori);
       else
         drawSvgSym(dc, m_SvgSym4, ori);
     }
     else if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
-      if( occupied && m_SvgSym6 != NULL )
+      if( occupied && !actroute && m_SvgSym6 != NULL )
         drawSvgSym(dc, m_SvgSym6, ori);
+      else if( actroute && m_SvgSym10 != NULL )
+        drawSvgSym(dc, m_SvgSym10, ori);
       else
         drawSvgSym(dc, m_SvgSym2, ori);
     }
     else if( m_SvgSym1!=NULL ) {
-      if( occupied && m_SvgSym5 != NULL )
+      if( occupied && !actroute && m_SvgSym5 != NULL )
         drawSvgSym(dc, m_SvgSym5, ori);
+      else if( actroute && m_SvgSym9 != NULL )
+        drawSvgSym(dc, m_SvgSym9, ori);
       else
         drawSvgSym(dc, m_SvgSym1, ori);
     }
   }
 
   else if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
-    if( occupied && m_SvgSym6 != NULL )
+    if( occupied && !actroute && m_SvgSym6 != NULL )
       drawSvgSym(dc, m_SvgSym6, ori);
+    else if( actroute && m_SvgSym10 != NULL )
+      drawSvgSym(dc, m_SvgSym10, ori);
     else
       drawSvgSym(dc, m_SvgSym2, ori);
   }
 
   else if( m_SvgSym1!=NULL ) {
-    if( occupied && m_SvgSym5 != NULL )
+    if( occupied && !actroute && m_SvgSym5 != NULL )
       drawSvgSym(dc, m_SvgSym5, ori);
+    else if( actroute && m_SvgSym9 != NULL )
+      drawSvgSym(dc, m_SvgSym9, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
   }
@@ -1475,26 +1494,32 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, const char* or
 /**
  * Threeway Switch object
  */
-void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, const char* ori ) {
+void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean raster = StrOp.equals( wSwitch.getswtype( m_Props ), wSwitch.swtype_raster );
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.left ) ) {
-    if( occupied && m_SvgSym5 != NULL )
+    if( occupied && !actroute && m_SvgSym5 != NULL )
       drawSvgSym(dc, m_SvgSym5, ori);
+    else if( actroute && m_SvgSym8 != NULL )
+      drawSvgSym(dc, m_SvgSym8, ori);
     else
       drawSvgSym(dc, m_SvgSym2, ori);
   }
   else if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.right ) ) {
-    if( occupied && m_SvgSym6 != NULL )
+    if( occupied && !actroute && m_SvgSym6 != NULL )
       drawSvgSym(dc, m_SvgSym6, ori);
+    else if( actroute && m_SvgSym9 != NULL )
+      drawSvgSym(dc, m_SvgSym9, ori);
     else
       drawSvgSym(dc, m_SvgSym3, ori);
   }
   else if( m_SvgSym1!=NULL ) {
-    if( occupied && m_SvgSym4 != NULL )
+    if( occupied && !actroute && m_SvgSym4 != NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
+    else if( actroute && m_SvgSym7 != NULL )
+      drawSvgSym(dc, m_SvgSym7, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
   }
@@ -1676,11 +1701,11 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, co
 
     case switchtype::i_dcrossingleft:
     case switchtype::i_dcrossingright:
-      drawDCrossing( dc, occupied, ori );
+      drawDCrossing( dc, occupied, actroute, ori );
       break;
 
     case switchtype::i_threeway:
-      drawThreeway( dc, occupied, ori );
+      drawThreeway( dc, occupied, actroute, ori );
       break;
 
     case switchtype::i_accessory:

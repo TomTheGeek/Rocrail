@@ -126,8 +126,8 @@ public:
   void drawTurnout( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawCCrossing( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
-  void drawDCrossing( wxPaintDC& dc, bool occupied, const char* ori );
-  void drawThreeway( wxPaintDC& dc, bool occupied, const char* ori );
+  void drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
+  void drawThreeway( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawSignal( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawOutput( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );
   void drawSensor( wxPaintDC& dc, bool occupied, bool actroute, const char* ori );

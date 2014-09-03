@@ -142,6 +142,10 @@ namespace switchtype {
   static const char* dcrossingleft_t_occ  = "dcrossingleft-t-occ.svg";
   static const char* dcrossingleft_tl_occ = "dcrossingleft-tl-occ.svg";
   static const char* dcrossingleft_tr_occ = "dcrossingleft-tr-occ.svg";
+  static const char* dcrossingleft_route    = "dcrossingleft-route.svg";
+  static const char* dcrossingleft_t_route  = "dcrossingleft-t-route.svg";
+  static const char* dcrossingleft_tl_route = "dcrossingleft-tl-route.svg";
+  static const char* dcrossingleft_tr_route = "dcrossingleft-tr-route.svg";
 
   static const char* dcrossingright    = "dcrossingright.svg";
   static const char* dcrossingright_t  = "dcrossingright-t.svg";
@@ -151,6 +155,10 @@ namespace switchtype {
   static const char* dcrossingright_t_occ  = "dcrossingright-t-occ.svg";
   static const char* dcrossingright_tl_occ = "dcrossingright-tl-occ.svg";
   static const char* dcrossingright_tr_occ = "dcrossingright-tr-occ.svg";
+  static const char* dcrossingright_route    = "dcrossingright-route.svg";
+  static const char* dcrossingright_t_route  = "dcrossingright-t-route.svg";
+  static const char* dcrossingright_tl_route = "dcrossingright-tl-route.svg";
+  static const char* dcrossingright_tr_route = "dcrossingright-tr-route.svg";
 
   static const char* road_dcrossingright    = "road-dcrossingright.svg";
   static const char* road_dcrossingright_t  = "road-dcrossingright-t.svg";
@@ -176,12 +184,15 @@ namespace switchtype {
   static const char* dcrossingright_r_tl_occ = "dcrossingright-r-tl-occ.svg";
   static const char* dcrossingright_r_tr_occ = "dcrossingright-r-tr-occ.svg";
 
-  static const char* threeway       = "threeway.svg";
-  static const char* threeway_tl    = "threeway-tl.svg";
-  static const char* threeway_tr    = "threeway-tr.svg";
-  static const char* threeway_occ    = "threeway-occ.svg";
-  static const char* threeway_tl_occ = "threeway-tl-occ.svg";
-  static const char* threeway_tr_occ = "threeway-tr-occ.svg";
+  static const char* threeway          = "threeway.svg";
+  static const char* threeway_tl       = "threeway-tl.svg";
+  static const char* threeway_tr       = "threeway-tr.svg";
+  static const char* threeway_occ      = "threeway-occ.svg";
+  static const char* threeway_tl_occ   = "threeway-tl-occ.svg";
+  static const char* threeway_tr_occ   = "threeway-tr-occ.svg";
+  static const char* threeway_route    = "threeway-route.svg";
+  static const char* threeway_tl_route = "threeway-tl-route.svg";
+  static const char* threeway_tr_route = "threeway-tr-route.svg";
 
   static const char* threeway_r       = "threeway-r.svg";
   static const char* threeway_r_tl    = "threeway-r-tl.svg";
