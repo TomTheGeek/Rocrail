@@ -7,6 +7,6 @@
   <!-- Abzweig unten links -->
     <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 31,19 L 24,19 L 12,31 L 20,31 L 31,20 z " />
   <!-- Ausleuchtung Abzweig unten links gelb -->
-    <path stroke="rgb(0,255,0)" fill="rgb(0,255,0)" d="M 19,26 L 25,20 L 27,22 L 21,28 z " />
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 19,26 L 25,20 L 27,22 L 21,28 z " />
   </g>
 </svg>

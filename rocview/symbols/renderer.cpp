@@ -497,6 +497,8 @@ void SymbolRenderer::initSym() {
               m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_t );
               m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_occ );
               m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_t_occ );
+              m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_route );
+              m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutleft_t_route );
             }
           }
         }
@@ -541,6 +543,8 @@ void SymbolRenderer::initSym() {
               m_SvgSym3 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_t );
               m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_occ );
               m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_t_occ );
+              m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_route );
+              m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, switchtype::turnoutright_t_route );
             }
           }
         }
@@ -1577,20 +1581,24 @@ void SymbolRenderer::drawAccessory( wxPaintDC& dc, bool occupied, bool actroute,
 /**
  * Turnout Switch object
  */
-void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, const char* ori ) {
+void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
   Boolean raster = StrOp.equals( wSwitch.getswtype( m_Props ), wSwitch.swtype_raster );
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
-    if( occupied && m_SvgSym5 != NULL )
+    if( occupied && !actroute && m_SvgSym5 != NULL )
       drawSvgSym(dc, m_SvgSym5, ori);
+    else if( actroute && m_SvgSym7 != NULL )
+      drawSvgSym(dc, m_SvgSym7, ori);
     else
       drawSvgSym(dc, m_SvgSym2, ori);
   }
   else if( m_SvgSym1!=NULL ) {
-    if( occupied && m_SvgSym4 != NULL )
+    if( occupied && !actroute && m_SvgSym4 != NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
+    else if( actroute && m_SvgSym6 != NULL )
+      drawSvgSym(dc, m_SvgSym6, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
   }
@@ -1648,8 +1656,8 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, const char* ori 
 void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, const char* ori ) {
   const char* state = wSwitch.getstate( m_Props );
 
-  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "Switch %s state=%s subtype=%d ori=%s",
-      wSwitch.getid( m_Props ), state, m_iSymSubType, ori );
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "Switch %s state=%s subtype=%d ori=%s occ=%d route=%d",
+      wSwitch.getid( m_Props ), state, m_iSymSubType, ori, occupied, actroute );
 
   switch( m_iSymSubType ) {
     case switchtype::i_decoupler:
@@ -1682,7 +1690,7 @@ void SymbolRenderer::drawSwitch( wxPaintDC& dc, bool occupied, bool actroute, co
     case switchtype::i_turnoutleft:
     case switchtype::i_turnoutright:
     case switchtype::i_twoway:
-      drawTurnout( dc, occupied, ori );
+      drawTurnout( dc, occupied, actroute, ori );
       break;
 
   }

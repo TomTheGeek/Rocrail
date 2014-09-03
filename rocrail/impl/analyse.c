@@ -7543,6 +7543,7 @@ static int __generateRoutes(iOAnalyse inst) {
           StrOp.equals( NodeOp.getName(item), wFeedback.name()) ||
           StrOp.equals( NodeOp.getName(item), wSignal.name()) ||
           StrOp.equals( NodeOp.getName(item), wOutput.name()) ||
+          StrOp.equals( NodeOp.getName(item), wSwitch.name()) ||
           isSingleTrackRRCrossing(item) ||
           isSimpleCrossing(item)
         ) {
@@ -7578,6 +7579,11 @@ static int __generateRoutes(iOAnalyse inst) {
         if( StrOp.equals( NodeOp.getName(item), wOutput.name()) ) {
           iOOutput track = ModelOp.getOutput( data->model, wItem.getid(item) );
           tracknode = OutputOp.base.properties(track);
+        }
+
+        if( StrOp.equals( NodeOp.getName(item), wSwitch.name()) ) {
+          iOSwitch track = ModelOp.getSwitch( data->model, wItem.getid(item) );
+          tracknode = SwitchOp.base.properties(track);
         }
 
         if( isSingleTrackRRCrossing(item) || isSimpleCrossing(item) ) {

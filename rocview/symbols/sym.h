@@ -223,15 +223,19 @@ namespace switchtype {
   static const char* vturnout    = "vturnout.svg";
   static const char* vturnout_t  = "vturnout-t.svg";
 
-  static const char* turnoutleft    = "turnoutleft.svg";
-  static const char* turnoutleft_t  = "turnoutleft-t.svg";
-  static const char* turnoutleft_occ    = "turnoutleft-occ.svg";
-  static const char* turnoutleft_t_occ  = "turnoutleft-t-occ.svg";
+  static const char* turnoutleft         = "turnoutleft.svg";
+  static const char* turnoutleft_t       = "turnoutleft-t.svg";
+  static const char* turnoutleft_occ     = "turnoutleft-occ.svg";
+  static const char* turnoutleft_t_occ   = "turnoutleft-t-occ.svg";
+  static const char* turnoutleft_route   = "turnoutleft-route.svg";
+  static const char* turnoutleft_t_route = "turnoutleft-t-route.svg";
 
-  static const char* turnoutright   = "turnoutright.svg";
-  static const char* turnoutright_t = "turnoutright-t.svg";
-  static const char* turnoutright_occ   = "turnoutright-occ.svg";
-  static const char* turnoutright_t_occ = "turnoutright-t-occ.svg";
+  static const char* turnoutright         = "turnoutright.svg";
+  static const char* turnoutright_t       = "turnoutright-t.svg";
+  static const char* turnoutright_occ     = "turnoutright-occ.svg";
+  static const char* turnoutright_t_occ   = "turnoutright-t-occ.svg";
+  static const char* turnoutright_route   = "turnoutright-route.svg";
+  static const char* turnoutright_t_route = "turnoutright-t-route.svg";
 
   static const char* road_turnoutleft    = "road-turnoutleft.svg";
   static const char* road_turnoutleft_t  = "road-turnoutleft-t.svg";
