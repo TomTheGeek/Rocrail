@@ -2658,11 +2658,13 @@ void Symbol::OnTTTrack(wxCommandEvent& event) {
 }
 
 void Symbol::showTooltip(bool show) {
-  if( wxGetApp().getFrame()->isTooltip() && m_Tip != NULL) {
-    SetToolTip( wxString(m_Tip,wxConvUTF8) );
-  }
-  else {
-    SetToolTip( wxString("",wxConvUTF8) );
+  if( !StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ) {
+    if( wxGetApp().getFrame()->isTooltip() && m_Tip != NULL) {
+      SetToolTip( wxString(m_Tip,wxConvUTF8) );
+    }
+    else {
+      SetToolTip( wxString("",wxConvUTF8) );
+    }
   }
 }
 
