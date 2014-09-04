@@ -661,6 +661,11 @@ static const char* _getschedule( iILcDriverInt inst ) {
   return data->schedule;
 }
 
+static const char* _gettour( iILcDriverInt inst ) {
+  iOLcDriverData data = Data(inst);
+  return data->tour;
+}
+
 /* VERSION: */
 static int vmajor = 2;
 static int vminor = 0;

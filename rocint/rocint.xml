@@ -125,6 +125,9 @@
     <fun name="getschedule" vt="const char*">
       <param name="inst" vt="this" remark="LcDriver instance"/>
     </fun>
+    <fun name="gettour" vt="const char*">
+      <param name="inst" vt="this" remark="LcDriver instance"/>
+    </fun>
     <fun name="version" vt="int" remark="vmajor*1000 + vminor*100 + patch">
       <param name="inst" vt="obj"/>
     </fun>

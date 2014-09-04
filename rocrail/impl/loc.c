@@ -664,6 +664,7 @@ static void __broadcastLocoProps( iOLoc inst, const char* cmd, iONode node, cons
   if( data->driver != NULL ) {
     wLoc.setscidx( node, data->driver->getScheduleIdx( data->driver ) );
     wLoc.setscheduleid(node, LocOp.getSchedule(inst, NULL));
+    wLoc.settourid(node, LocOp.getTour(inst));
   }
   wLoc.settrain( node, wLoc.gettrain(data->props) );
   wLoc.settrainlen( node, wLoc.gettrainlen(data->props) );
@@ -2515,6 +2516,18 @@ static const char* _getSchedule( iOLoc inst, int* scidx ) {
       if( scidx != NULL )
         *scidx = data->driver->getScheduleIdx(data->driver);
       return schedule;
+    }
+  }
+  return "";
+}
+
+
+static const char* _getTour( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  if( data->driver != NULL ) {
+    const char* tour = data->driver->gettour( data->driver );
+    if( tour != NULL ) {
+      return tour;
     }
   }
   return "";
