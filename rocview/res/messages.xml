@@ -29004,5 +29004,6 @@
     <en txt="Show routes on switches"/>
     <nl txt="Toon rijwegen over wissels"/>
     <sl txt="Prikaži smeri za kretnice"/>
+    <de txt="Zeige Fahrstraßen bei Weichen"/>
   </Msg>
 </Messages>
