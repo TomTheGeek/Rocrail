@@ -3097,17 +3097,20 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       }
     }
 
+    const char* fifoids = wBlock.getfifoids(node);
 
     if( updateEnterside ) {
       // reset update flag
       wBlock.setupdateenterside(node, False);
       // preserve flags
-      locoid = wBlock.getlocid( m_Props );
+      locoid  = wBlock.getlocid( m_Props );
+      fifoids = wBlock.getfifoids(m_Props);
       wBlock.setreserved( node, wBlock.isreserved( m_Props ) );
       wBlock.setentering( node, wBlock.isentering( m_Props ) );
     }
     else {
       wBlock.setlocid( m_Props, locoid );
+      wBlock.setfifoids( m_Props, fifoids );
     }
 
     iONode planpanelIni = wGui.getplanpanel(wxGetApp().getIni());
@@ -3130,7 +3133,6 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( StrOp.equals( wBlock.open, state ) ) {
       Boolean isReserved    = wBlock.isreserved( node );
       Boolean isEntering    = wBlock.isentering( node );
-      const char* fifoids   = wBlock.getfifoids(node);
 
       if( fifoids != NULL && StrOp.len(fifoids) == 0 )
         fifoids = NULL;
