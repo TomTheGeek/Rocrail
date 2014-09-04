@@ -2658,7 +2658,7 @@ void Symbol::OnTTTrack(wxCommandEvent& event) {
 }
 
 void Symbol::showTooltip(bool show) {
-  if( !StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) ) {
+  if( !StrOp.equals( wTrack.name(), NodeOp.getName( m_Props ) ) && !StrOp.equals( wText.name(), NodeOp.getName( m_Props ) ) ) {
     if( wxGetApp().getFrame()->isTooltip() && m_Tip != NULL) {
       SetToolTip( wxString(m_Tip,wxConvUTF8) );
     }
