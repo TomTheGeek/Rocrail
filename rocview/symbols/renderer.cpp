@@ -658,7 +658,7 @@ void SymbolRenderer::initSym() {
       if( StrOp.equals( wSignal.main, wSignal.getsignal( m_Props ) ) ) {
         m_iSymSubType = signaltype::i_signalmain;
         if( m_SymMap != NULL ) {
-          if( aspects == 2 ) {
+          if( aspects == 2 && !wItem.isroad( m_Props ) ) {
             m_SvgSym1 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signalmain_2_r );
             m_SvgSym2 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signalmain_2_g );
             m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, signaltype::signalmain_2_r_occ );
