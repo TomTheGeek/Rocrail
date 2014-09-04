@@ -338,13 +338,6 @@ PlanPanel::PlanPanel(wxWindow *parent, int itemsize, double scale, double bktext
   SetVirtualSize( (int)(m_ItemSize*m_Scale * wPlanPanel.getcx(ini)), (int)(m_ItemSize*m_Scale * wPlanPanel.getcy(ini)) );
   SetScrollRate( (int)(m_ItemSize*m_Scale), (int)(m_ItemSize*m_Scale) );
 
-  if( wxGetApp().getFrame()->isTooltip() ) {
-    SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
-  }
-  else {
-    SetToolTip( wxString("",wxConvUTF8) );
-  }
-
   TraceOp.trc( "plan", TRCLEVEL_INFO, __LINE__, 9999, "starting timer..." );
   m_Timer = new wxTimer(this, ME_TimerAlt);
   if( !m_Timer->Start(1000, false) ) {
@@ -364,12 +357,6 @@ const char* PlanPanel::getZLevelTitle() {
 }
 
 void PlanPanel::showTooltip(bool show) {
-  if( show ) {
-    SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
-  }
-  else {
-    SetToolTip( wxString("",wxConvUTF8) );
-  }
   // iterate the items in this panel
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
@@ -463,12 +450,6 @@ void PlanPanel::OnPanelProps(wxCommandEvent& event) {
   else if( m_zLevel != NULL ) {
     PlanPanelProps* dlg = new PlanPanelProps( this, m_zLevel );
     if( wxID_OK == dlg->ShowModal() ) {
-      if( wxGetApp().getFrame()->isTooltip() ) {
-        SetToolTip( wxString(wZLevel.getmodid(m_zLevel),wxConvUTF8) + _T(" ") + wxString(wZLevel.gettitle(m_zLevel),wxConvUTF8) );
-      }
-      else {
-        SetToolTip( wxString("",wxConvUTF8) );
-      }
     }
     dlg->Destroy();
   }
