@@ -3605,7 +3605,7 @@ static Boolean __prepare(iOAnalyse inst, iOList list, int modx, int mody) {
               wItem.getid(node), key, wSwitch.getswtype(node) );
         }
         if( (  StrOp.equals( type, wSwitch.crossing )
-            && ! ( wSwitch.getaddr1(node) == 0 && wSwitch.getport1(node) == 0 && wSwitch.isrectcrossing(node) )
+            && ! wSwitch.isrectcrossing(node)
             && ! isRasterSwitch(node)
             && ! ( wItem.isroad(node) && wSwitch.isrectcrossing(node) )
             ) 
