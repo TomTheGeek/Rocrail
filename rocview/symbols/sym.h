@@ -100,6 +100,7 @@ namespace switchtype {
   static const char* crossing_route = "crossing-route.svg";
   static const char* crossing_t     = "crossing-t.svg";
   static const char* crossing_t_occ = "crossing-t-occ.svg";
+  static const char* crossing_t_route = "crossing-t-route.svg";
   static const char* crossingleft0m = "crossingleft0m.svg";
   static const char* crossingleft0m_occ = "crossingleft0m-occ.svg";
   static const char* crossingleft0m_route = "crossingleft0m-route.svg";
