@@ -107,11 +107,15 @@ namespace switchtype {
   static const char* crossingleft   = "crossingleft.svg";
   static const char* crossingleft_t = "crossingleft-t.svg";
   static const char* crossingleft_occ   = "crossingleft-occ.svg";
+  static const char* crossingleft_t_route = "crossingleft-t-route.svg";
+  static const char* crossingleft_route   = "crossingleft-route.svg";
   static const char* crossingleft_t_occ = "crossingleft-t-occ.svg";
   static const char* crossingright  = "crossingright.svg";
   static const char* crossingright_t= "crossingright-t.svg";
   static const char* crossingright_occ  = "crossingright-occ.svg";
   static const char* crossingright_t_occ= "crossingright-t-occ.svg";
+  static const char* crossingright_route  = "crossingright-route.svg";
+  static const char* crossingright_t_route= "crossingright-t-route.svg";
 
   // raster crossings
   static const char* crossingleft_r_0m = "crossingleft-r-0m.svg";

@@ -322,6 +322,8 @@ void SymbolRenderer::initSym() {
             m_iSymSubType = wSwitch.isdir(m_Props) ? switchtype::i_crossingleft : switchtype::i_crossingright;
             m_SvgSym4 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_occ : switchtype::crossingright_occ );
             m_SvgSym5 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_t_occ : switchtype::crossingright_t_occ );
+            m_SvgSym6 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_route : switchtype::crossingright_route );
+            m_SvgSym7 = (svgSymbol*)MapOp.get( m_SymMap, wSwitch.isdir(m_Props) ? switchtype::crossingleft_t_route : switchtype::crossingright_t_route );
           }
         }
       }
@@ -1345,18 +1347,26 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, 
   TraceOp.trc( "render", TRCLEVEL_INFO, __LINE__, 9999, "Crossing %s occ=%d route=%d",
       wSwitch.getid( m_Props ), occupied, actroute );
 
+  if( !wGui.isshowroute4switch(wxGetApp().getIni()) )
+    actroute = !occupied;
+
+
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
-    if( occupied && m_SvgSym5 != NULL )
+    if( occupied && !actroute && m_SvgSym5 != NULL )
       drawSvgSym(dc, m_SvgSym5, ori);
+    else if( actroute && m_SvgSym7 != NULL )
+      drawSvgSym(dc, m_SvgSym7, ori);
     else
       drawSvgSym(dc, m_SvgSym2, ori);
   }
   else if( m_SvgSym1!=NULL ) {
-    if( occupied && m_SvgSym4 != NULL )
+    if( occupied && !actroute && m_SvgSym4 != NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
     else if( actroute && m_SvgSym8 != NULL )
       drawSvgSym(dc, m_SvgSym8, ori);
+    else if( actroute && m_SvgSym6 != NULL )
+      drawSvgSym(dc, m_SvgSym6, ori);
     else
       drawSvgSym(dc, m_SvgSym1, ori);
   }
