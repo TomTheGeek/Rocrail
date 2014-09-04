@@ -29002,5 +29002,7 @@
   </Msg>
   <Msg id="showroute4switch">
     <en txt="Show routes on switches"/>
+    <nl txt="Toon rijwegen over wissels"/>
+    <sl txt="Prikaži smeri za kretnice"/>
   </Msg>
 </Messages>
