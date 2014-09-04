@@ -103,7 +103,7 @@ void LC::setLocProps( iONode props ) {
 
   m_iFnGroup = 0;
 
-  if( wxGetApp().getFrame()->isTooltip()) {
+  if( wxGetApp().getFrame()->isTooltip(true)) {
     m_F1->SetToolTip( wxGetApp().getMsg( "unused" ) );
     m_F2->SetToolTip( wxGetApp().getMsg( "unused" ) );
     m_F3->SetToolTip( wxGetApp().getMsg( "unused" ) );
@@ -139,7 +139,7 @@ void LC::setLocProps( iONode props ) {
       m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );
     }
 
-    if( wxGetApp().getFrame()->isTooltip()) {
+    if( wxGetApp().getFrame()->isTooltip(true)) {
       m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
     }
 
@@ -345,7 +345,7 @@ bool LC::updateLoc( iONode node ) {
         if( StrOp.len( wGui.getdirimagefwd(wxGetApp().getIni()) ) > 0 && StrOp.len( wGui.getdirimagerev(wxGetApp().getIni()) )) {
           m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );
         }
-        if( wxGetApp().getFrame()->isTooltip()) {
+        if( wxGetApp().getFrame()->isTooltip(true)) {
           m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
         }
 
@@ -477,7 +477,7 @@ void LC::setFLabels() {
     m_bFx[2+m_iFnGroup * 4] = setButtonColor( m_F3, (fx & 0x04)?false:true );
     m_bFx[3+m_iFnGroup * 4] = setButtonColor( m_F4, (fx & 0x08)?false:true );
 
-    if( wxGetApp().getFrame()->isTooltip()) {
+    if( wxGetApp().getFrame()->isTooltip(true)) {
       m_F0->SetToolTip( wxString::Format(_T("F%d"), 0 ));
       m_F1->SetToolTip( wxString::Format(_T("F%d"), 1 + (m_iFnGroup * 4 ) ));
       m_F2->SetToolTip( wxString::Format(_T("F%d"), 2 + (m_iFnGroup * 4 ) ));
@@ -502,7 +502,7 @@ void LC::setFLabels() {
     while( fundef != NULL ) {
       wxString fntxt = wxString(wFunDef.gettext( fundef ),wxConvUTF8);
       if( wFunDef.getfn( fundef ) == 0 ) {
-        if( wxGetApp().getFrame()->isTooltip())
+        if( wxGetApp().getFrame()->isTooltip(true))
           m_F0->SetToolTip( fntxt );
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F0->SetIcon(getIcon(wFunDef.geticon(fundef)));
@@ -513,7 +513,7 @@ void LC::setFLabels() {
         }
       }
       else if( wFunDef.getfn( fundef ) == 1 + (m_iFnGroup * 4 )) {
-        if( wxGetApp().getFrame()->isTooltip())
+        if( wxGetApp().getFrame()->isTooltip(true))
           m_F1->SetToolTip( fntxt );
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F1->SetIcon(getIcon(wFunDef.geticon(fundef)));
@@ -524,7 +524,7 @@ void LC::setFLabels() {
         }
       }
       else if( wFunDef.getfn( fundef ) == 2 + (m_iFnGroup * 4 ) ) {
-        if( wxGetApp().getFrame()->isTooltip())
+        if( wxGetApp().getFrame()->isTooltip(true))
           m_F2->SetToolTip( fntxt );
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F2->SetIcon(getIcon(wFunDef.geticon(fundef)));
@@ -535,7 +535,7 @@ void LC::setFLabels() {
         }
       }
       else if( wFunDef.getfn( fundef ) == 3 + (m_iFnGroup * 4 ) ) {
-        if( wxGetApp().getFrame()->isTooltip())
+        if( wxGetApp().getFrame()->isTooltip(true))
           m_F3->SetToolTip( fntxt );
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F3->SetIcon(getIcon(wFunDef.geticon(fundef)));
@@ -546,7 +546,7 @@ void LC::setFLabels() {
         }
       }
       else if( wFunDef.getfn( fundef ) == 4 + (m_iFnGroup * 4 ) ) {
-        if( wxGetApp().getFrame()->isTooltip())
+        if( wxGetApp().getFrame()->isTooltip(true))
           m_F4->SetToolTip( fntxt );
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F4->SetIcon(getIcon(wFunDef.geticon(fundef)));
@@ -613,7 +613,7 @@ void LC::OnButton(wxCommandEvent& event)
       m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );
     }
 
-    if( wxGetApp().getFrame()->isTooltip())
+    if( wxGetApp().getFrame()->isTooltip(true))
       m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
 
     if( wGui.isresetspeeddir(wxGetApp().getIni()) ) {
@@ -861,20 +861,20 @@ bool LC::Create()
   m_F4->SetBackgroundColour( Base::getGreen() );
 
   //m_Stop->SetBackgroundColour( Base::getRed() );
-  if( wxGetApp().getFrame()->isTooltip())
+  if( wxGetApp().getFrame()->isTooltip(true))
     m_Stop->SetLabel( wxGetApp().getMsg( "stop" ) );
-  if( wxGetApp().getFrame()->isTooltip())
+  if( wxGetApp().getFrame()->isTooltip(true))
     m_F0->SetToolTip( wxGetApp().getMsg( "lights" ) );
-  if( wxGetApp().getFrame()->isTooltip())
+  if( wxGetApp().getFrame()->isTooltip(true))
     m_Dir->SetToolTip( wxGetApp().getMsg( "forwards" ) );
-  if( wxGetApp().getFrame()->isTooltip())
+  if( wxGetApp().getFrame()->isTooltip(true))
     m_Stop->SetToolTip( wxGetApp().getTip( "stop" ) );
-  if( wxGetApp().getFrame()->isTooltip())
+  if( wxGetApp().getFrame()->isTooltip(true))
     m_V->SetToolTip( wxGetApp().getMsg( "speed" ) );
-  if( wxGetApp().getFrame()->isTooltip())
+  if( wxGetApp().getFrame()->isTooltip(true))
     m_Vslider->SetToolTip( wxGetApp().getMsg( "speedcontroller" ) );
 
-  if( wxGetApp().getFrame()->isTooltip())
+  if( wxGetApp().getFrame()->isTooltip(true))
     m_FG->SetToolTip( wxGetApp().getMsg( "functiongroup" ) );
 
   return true;

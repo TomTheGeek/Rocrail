@@ -141,7 +141,7 @@ void ThrottleDlg::modelEvent( iONode evt ) {
       m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );
     }
 
-    if( wxGetApp().getFrame()->isTooltip())
+    if( wxGetApp().getFrame()->isTooltip(true))
       m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
 
     /* update function "n" */
@@ -331,7 +331,7 @@ void ThrottleDlg::setFLabels(iONode p_Props, bool merge, int fmap) {
     int idx = fn - m_iFnGroup*14;
 
     if( fn == 0 ) {
-      if( wxGetApp().getFrame()->isTooltip())
+      if( wxGetApp().getFrame()->isTooltip(true))
         m_F0->SetToolTip( fntxt );
       if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
         m_F0->SetIcon(getIcon(wFunDef.geticon(fundef)));
@@ -345,7 +345,7 @@ void ThrottleDlg::setFLabels(iONode p_Props, bool merge, int fmap) {
     else if( fn > 0 && (fmap & (1 << (fn-1)) )  ) {
       if( idx > 0 && idx < 15 ) {
         TraceOp.trc( "throttledlg", TRCLEVEL_INFO, __LINE__, 9999, "funtion[%d] index=%d group=%d", fn, idx, m_iFnGroup );
-        if( wxGetApp().getFrame()->isTooltip() )
+        if( wxGetApp().getFrame()->isTooltip(true) )
           m_F[idx]->SetToolTip( fntxt );
         if( wFunDef.geticon(fundef) != NULL && StrOp.len( wFunDef.geticon(fundef) ) > 0 ) {
           m_F[idx]->SetIcon(getIcon(wFunDef.geticon(fundef)));
@@ -519,7 +519,7 @@ void ThrottleDlg::onButton(wxCommandEvent& event) {
       m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );
     }
 
-    if( wxGetApp().getFrame()->isTooltip())
+    if( wxGetApp().getFrame()->isTooltip(true))
       m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
 
     if( wGui.isresetspeeddir(wxGetApp().getIni()) ) {

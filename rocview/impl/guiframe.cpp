@@ -622,6 +622,11 @@ iONode RocGuiFrame::findWaybill( const char* billid ) {
 }
 
 
+bool RocGuiFrame::isTooltip(bool forThrottle) {
+  return (forThrottle?false:m_bTooltip);
+}
+
+
 bool RocGuiFrame::isInStage( const char* locid, const char* blockid ) {
   iONode model = wxGetApp().getModel();
   iONode sblist = wPlan.getsblist( model );

@@ -343,7 +343,7 @@ public:
   bool isShowCounters() { return m_bShowCounters; }
   bool isShowLocked() { return m_bShowLocked; }
   bool isRaster() { return m_bRaster; }
-  bool isTooltip() { return m_bTooltip; }
+  bool isTooltip(bool forThrottle=false);
   bool isInitialized() { return m_bInitialized; }
   void setLocID( const char* locid );
   double getScale() { return m_Scale; }
