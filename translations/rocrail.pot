@@ -7457,3 +7457,15 @@ msgstr ""
 msgid "Show routes on switches"
 msgstr ""
 
+#. 
+# id="userandomrate"
+#, c-format
+msgid "Use random block rate"
+msgstr ""
+
+#. 
+# id="randomrate"
+#, c-format
+msgid "Random rate"
+msgstr ""
+
