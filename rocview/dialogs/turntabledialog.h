@@ -196,6 +196,8 @@ public:
     wxTextCtrl* m_ID;
     wxStaticText* m_LabelDesc;
     wxTextCtrl* m_Desc;
+    wxStaticText* m_labRandomRate;
+    wxSpinCtrl* m_RandomRate;
     wxStaticBoxSizer* m_OptionsBox;
     wxCheckBox* m_Manager;
     wxCheckBox* m_EmbeddedBlock;

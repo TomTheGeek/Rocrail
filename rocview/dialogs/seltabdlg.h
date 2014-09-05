@@ -169,6 +169,8 @@ public:
     wxSpinCtrl* m_MoveDelay;
     wxStaticText* m_labOffPos;
     wxSpinCtrl* m_OffPos;
+    wxStaticText* m_labRandomRate;
+    wxSpinCtrl* m_RandomRate;
     wxCheckBox* m_SharedFB;
     wxCheckBox* m_Manager;
     wxCheckBox* m_FiFo;

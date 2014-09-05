@@ -124,6 +124,7 @@ void StageDlg::initLabels() {
   m_labEnterSensor->SetLabel( wxGetApp().getMsg("entersensor") );
   m_labEnterSignal->SetLabel( wxGetApp().getMsg("entersignal") );
   m_labExitSignal->SetLabel( wxGetApp().getMsg("exitsignal") );
+  m_labRandomRate->SetLabel( wxGetApp().getMsg( "randomrate" ) );
 
   // Sections
   m_labSectionID->SetLabel( wxGetApp().getMsg( "id" ) );
@@ -269,6 +270,7 @@ bool StageDlg::evaluate() {
   wStage.setfbenterid( m_Props, m_EnterSensor->GetStringSelection().mb_str(wxConvUTF8) );
   wStage.setentersignal( m_Props, m_EnterSignal->GetStringSelection().mb_str(wxConvUTF8) );
   wStage.setexitsignal( m_Props, m_ExitSignal->GetStringSelection().mb_str(wxConvUTF8) );
+  wStage.setrandomrate( m_Props, m_RandomRate->GetValue() );
 
   // Details
   wStage.setdepartdelay( m_Props, m_DepartDelay->GetValue() );
@@ -373,6 +375,7 @@ void StageDlg::initValues() {
       _T(""):wxString(wStage.getentersignal( m_Props ),wxConvUTF8) );
   m_ExitSignal->SetStringSelection( wStage.getexitsignal( m_Props ) == NULL ?
       _T(""):wxString(wStage.getexitsignal( m_Props ),wxConvUTF8) );
+  m_RandomRate->SetValue( wStage.getrandomrate( m_Props ) );
 
   // Details
   m_DepartDelay->SetValue( wStage.getdepartdelay( m_Props ) );
