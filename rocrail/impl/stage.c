@@ -731,6 +731,11 @@ static int _getWheelCount( iIBlockBase inst ) {
   return 0;
 }
 
+static int _getRandomRate( iIBlockBase inst ) {
+  iOStageData data = Data(inst);
+  return wStage.getrandomrate(data->props);
+}
+
 /**  */
 static const char* _getState( iIBlockBase inst ) {
   iOStageData data = Data(inst);

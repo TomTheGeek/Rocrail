@@ -29006,4 +29006,10 @@
     <sl txt="Prikaži smeri za kretnice"/>
     <de txt="Zeige Fahrstraßen bei Weichen"/>
   </Msg>
+  <Msg id="userandomrate">
+    <en txt="Use random block rate"/>
+  </Msg>
+  <Msg id="randomrate">
+    <en txt="Random rate"/>
+  </Msg>
 </Messages>

@@ -4638,6 +4638,61 @@ static const char* _getManagedID(iOModel inst, const char* fromBlockId) {
   return fromBlockId;
 }
 
+
+static int __sortRandomRate(obj* _a, obj* _b)
+{
+  iIBlockBase a = (iIBlockBase)*_a;
+  iIBlockBase b = (iIBlockBase)*_b;
+  int A = a->getRandomRate(a);
+  int B = b->getRandomRate(b);
+  if( A > B )
+    return 1;
+  if( A < B )
+    return -1;
+  return 0;
+}
+
+static iIBlockBase __selectRandomBlock(iOLoc loc, int cnt, iOList fitBlocks, iOList fitRoutes, iORoute* routeref) {
+  iIBlockBase blockBest = NULL;
+  int randNumber = rand();
+  int randChoice = 0;
+  int total = 0;
+  Boolean userandomrate = wCtrl.isuserandomrate( wRocRail.getctrl( AppOp.getIni() ) );
+  if( userandomrate ) {
+    int nn = 0;
+    ListOp.sort( fitBlocks, &__sortRandomRate );
+    for( nn = 0; nn < cnt; nn++ ) {
+      iIBlockBase b = (iIBlockBase)ListOp.get( fitBlocks, nn );
+      total += b->getRandomRate(b);
+    }
+    randChoice = randNumber % total;
+    for( nn = 0; nn < cnt; nn++ ) {
+      iIBlockBase b = (iIBlockBase)ListOp.get( fitBlocks, nn );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "randChoice=%d block randomRate=%d", randChoice, b->getRandomRate(b) );
+      if( randChoice <= b->getRandomRate(b) ) {
+        blockBest = b;
+        *routeref = (iORoute)ListOp.get( fitRoutes, nn );
+        break;
+      }
+      else {
+        randChoice -= b->getRandomRate(b);
+      }
+    }
+  }
+  else {
+    randChoice = randNumber % cnt;
+    blockBest = (iIBlockBase)ListOp.get( fitBlocks, randChoice );
+    *routeref = (iORoute)ListOp.get( fitRoutes, randChoice );
+  }
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                 "Block [%s] is suited for [%s] and picked from [%d] choices; randChoice=%d, total RandomRate=%d userandomrate=%d",
+                 blockBest!=NULL?blockBest->base.id(blockBest):"NULL", LocOp.getId( loc ), cnt, randChoice, total, userandomrate );
+
+  return blockBest;
+}
+
+
 /* synchronized!!! */
 static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char* fromRouteId, iOLoc loc,
                           iORoute* routeref, const char* gotoBlockId,
@@ -5000,13 +5055,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
       *routeref = NULL;
     }
     else  {
-      int randNumber = rand();
-      int randChoice = randNumber % cnt;
-      blockBest = (iIBlockBase)ListOp.get( fitBlocks, randChoice );
-      *routeref = (iORoute)ListOp.get( fitRoutes, randChoice );
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block [%s] is well suited for [%s] and picked random[%d,%d] from [%d] choices",
-                     blockBest->base.id(blockBest), LocOp.getId( loc ), randChoice, randNumber, cnt );
+      blockBest = __selectRandomBlock(loc, cnt, fitBlocks, fitRoutes, routeref);
     }
     /* when using blocksides the best route can be, in case of commuter,
        a destination in the other direction. For a commuter to change direction
@@ -5046,13 +5095,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                      blockBest->base.id(blockBest), shortest, LocOp.getId( loc ) );
     }
     else {
-      int randNumber = rand();
-      int randChoice = randNumber % cnt;
-      blockBest = (iIBlockBase)ListOp.get( altBlocks, randChoice );
-      *routeref = (iORoute)ListOp.get( altRoutes, randChoice );
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block [%s] is suited for [%s] and picked random[%d,%d] from [%d] choices",
-                     blockBest->base.id(blockBest), LocOp.getId( loc ), randChoice, randNumber, cnt );
+      blockBest = __selectRandomBlock(loc, cnt, altBlocks, altRoutes, routeref);
     }
 
     /* when using blocksides the alternative route can be a mismatch between properties or, in case of commuter,

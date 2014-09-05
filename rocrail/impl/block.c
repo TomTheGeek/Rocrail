@@ -1908,6 +1908,12 @@ static int _getWheelCount( iIBlockBase inst ) {
 }
 
 
+static int _getRandomRate( iIBlockBase inst ) {
+  iOBlockData data = Data(inst);
+  return wBlock.getrandomrate(data->props);
+}
+
+
 static Boolean _unLink( iIBlockBase inst ) {
   if( inst != NULL ) {
     iOBlockData data = Data(inst);

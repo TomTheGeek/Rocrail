@@ -1389,6 +1389,11 @@ static int _getMaxKmh( iIBlockBase inst ) {
   return 0;
 }
 
+static int _getRandomRate( iIBlockBase inst ) {
+  iOSelTabData data = Data(inst);
+  return wSelTab.getrandomrate(data->props);
+}
+
 
 static int _getWait( iIBlockBase inst, iOLoc loc, Boolean reverse, int* oppwait ) {
   iOSelTabData data = Data(inst);

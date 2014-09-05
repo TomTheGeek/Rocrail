@@ -400,6 +400,9 @@
       <param name="key" vt="const char*"/>
       <param name="ident" vt="const char*"/>
     </fun>
+    <fun name="getRandomRate" vt="int">
+      <param name="inst" vt="this" remark="Block instance"/>
+    </fun>
   </interface>
 
 </Project>

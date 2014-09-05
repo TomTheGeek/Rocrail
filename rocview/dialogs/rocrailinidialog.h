@@ -392,6 +392,7 @@ public:
     wxRadioBox* m_DefAspect;
     wxCheckBox* m_ResetFxSp;
     wxCheckBox* m_ProcessSignalEvents;
+    wxCheckBox* m_UseRandomRate;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;
     wxButton* m_ControllerDelete;
