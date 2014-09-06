@@ -187,6 +187,7 @@ public:
   void OnEditTimedActions(wxCommandEvent& event);
   void OnEditBoosters(wxCommandEvent& event);
   void OnEditActions(wxCommandEvent& event);
+  void OnEditVariables(wxCommandEvent& event);
 
   void OnCtrlBoosters(wxCommandEvent& event);
   void OnDonKey(wxCommandEvent& event);
@@ -666,6 +667,7 @@ enum
     ME_EditBoosters,
     ME_CtrlBoosters,
     ME_EditActions,
+    ME_EditVariables,
     ME_DonKey,
     ME_DonKeyInfo,
     ME_SensorEvents,

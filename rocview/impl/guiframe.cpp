@@ -105,6 +105,7 @@
 #include "rocview/dialogs/stagedlg.h"
 #include "rocview/dialogs/trackpickerdlg.h"
 #include "rocview/dialogs/zoomdlg.h"
+#include "rocview/dialogs/variabledlg.h"
 
 
 
@@ -337,6 +338,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_EditBoosters   , RocGuiFrame::OnEditBoosters)
     EVT_MENU( ME_CtrlBoosters   , RocGuiFrame::OnCtrlBoosters)
     EVT_MENU( ME_EditActions    , RocGuiFrame::OnEditActions)
+    EVT_MENU( ME_EditVariables  , RocGuiFrame::OnEditVariables)
     EVT_MENU( ME_PanelProps     , RocGuiFrame::OnPanelProps)
     EVT_MENU( ME_AddItem        , RocGuiFrame::OnAddItem)
     EVT_MENU( ME_AddPanel       , RocGuiFrame::OnAddPanel)
@@ -2024,6 +2026,7 @@ void RocGuiFrame::initFrame() {
   menuTables->Append(ME_EditBoosters, wxGetApp().getMenu("boostertable"), wxGetApp().getTip("boostertable") );
   menuTables->Append(ME_EditActions, wxGetApp().getMenu("systemactions"), wxGetApp().getTip("systemactions") );
   menuTables->Append(ME_EditAccDecs, wxGetApp().getMenu("accdectable"), wxGetApp().getTip("accdectable") );
+  menuTables->Append(ME_EditVariables, wxGetApp().getMenu("variabletable"), wxGetApp().getTip("variabletable") );
 
   wxMenu *menuControl = new wxMenu();
   menuControl->AppendCheckItem(ME_Go, wxGetApp().getMenu("poweron"), wxGetApp().getTip("poweron") );
@@ -3913,6 +3916,17 @@ void RocGuiFrame::OnEditActions( wxCommandEvent& event ) {
     // TODO: inform
   }
 
+  dlg->Destroy();
+}
+
+
+void RocGuiFrame::OnEditVariables( wxCommandEvent& event ) {
+  if( wxGetApp().getModel() == NULL )
+    return;
+  VariableDlg*  dlg = new VariableDlg(this);
+  if( wxID_OK == dlg->ShowModal() ) {
+    // TODO: inform
+  }
   dlg->Destroy();
 }
 

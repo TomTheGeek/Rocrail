@@ -3031,50 +3031,20 @@
       </seltab>
     </seltablist>
 
-    <traverserlist cardinality="1" remark="traverser list" wrappername="TraverserList">
-      <traverser cardinality="n" wrappername="Traverser" remark="Traverser Table">
+    <vrlist cardinality="1" remark="variable list" wrappername="VariableList">
+      <vr cardinality="n" wrappername="Variable">
         <var name="id" vt="string" defval="NULL" range="*" remark="object id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
-        <var name="x" vt="int" defval="0" range="0-*"/>
-        <var name="y" vt="int" defval="0" range="0-*"/>
-        <var name="z" vt="int" defval="0" range="0-9"/>
-        <var name="ori" vt="string" defval="NULL" range="north,south,west,east"/>
-        <var name="iid" vt="string" defval="NULL" range="*" remark="interfaced id"/>
-        <var name="locid" vt="string" defval="NULL" range="*" remark="loc id"/>
-        <var name="bus" vt="int" defval="0" range="0-*" required="false" remark="Some systems support more than one bus: SLX"/>
-        <var name="addr0" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
-        <var name="port0" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="addr1" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
-        <var name="port1" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="addr2" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
-        <var name="port2" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="addr3" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
-        <var name="port3" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-        <var name="addr4" vt="int" defval="0" range="0-*" required="true" remark="decoder address"/>
-        <var name="port4" vt="int" defval="0" range="0-4" required="true" remark="port of decoder unit."/>
-
-        <var name="nrtracks" vt="int" defval="12" range="4-16" required="true"/>
-
-        <var name="prot" vt="string" defval="D" range="D,M,N" remark="protocol to use for this seltab"/>
-        <const name="prot_DEF" vt="string" val="D" remark="default protocol by command station"/>
-        <const name="prot_M" vt="string" val="M" remark="Motorola"/>
-        <const name="prot_N" vt="string" val="N" remark="NMRA-DCC"/>
-        <const name="prot_MP" vt="string" val="MP" remark="Multi Port"/>
-        <var name="inv" vt="bool" defval="false" remark="invert the switch commands 0 to 3"/>
-        <var name="invnew" vt="bool" defval="false" remark="invert the switch command 4"/>
-        <var name="psen" vt="string" defval="NULL" range="*" remark="ID of the position ready sensor"/>
-        <var name="b0sen" vt="string" defval="NULL" range="*" remark="ID bit 0 of position"/>
-        <var name="b1sen" vt="string" defval="NULL" range="*" remark="ID bit 1 of position"/>
-        <var name="b2sen" vt="string" defval="NULL" range="*" remark="ID bit 2 of position"/>
-        <var name="b3sen" vt="string" defval="NULL" range="*" remark="ID bit 3 of position"/>
-        <var name="pos" vt="int" defval="0" range="*" remark="position of table"/>
-        <const name="next" vt="string" val="next" remark="Go to next track."/>
-        <const name="prev" vt="string" val="prev" remark="Go to previous track."/>
-        <const name="gotopos" vt="string" val="gotopos" remark="Go to track."/>
-        <var name="cmd" vt="string" defval="NULL" range="*"/>
-        <var name="pending" vt="bool" defval="false" range="*"/>
-      </traverser>
-    </traverserlist>
+        <var name="text" vt="string" defval="" range="*"/>
+        <var name="value" vt="int" defval="0" range="*"/>
+        <const name="type_alfanum" vt="int" val="0"/>
+        <const name="type_timer" vt="int" val="1"/>
+        <const name="type_random" vt="int" val="2"/>
+        <var name="type" vt="int" defval="0" range="0-*"/>
+        <var name="min" vt="int" defval="0" range="0-*"/>
+        <var name="max" vt="int" defval="0" range="0-*"/>
+      </vr>
+    </vrlist>
 
 
   </plan>

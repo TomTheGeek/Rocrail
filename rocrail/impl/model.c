@@ -128,6 +128,8 @@
 #include "rocrail/wrapper/public/FeedbackEvent.h"
 #include "rocrail/wrapper/public/Dec.h"
 #include "rocrail/wrapper/public/DecList.h"
+#include "rocrail/wrapper/public/Variable.h"
+#include "rocrail/wrapper/public/VariableList.h"
 
 static int instCnt = 0;
 
@@ -691,6 +693,15 @@ static Boolean _addItem( iOModel inst, iONode item ) {
   else if( StrOp.equals( wDec.name(), itemName ) ) {
     iONode clone = (iONode)item->base.clone( item );
     if( __addItemInList( data, wDecList.name(), clone ) ) {
+      added = True;
+    }
+    else {
+      NodeOp.base.del(clone);
+    }
+  }
+  else if( StrOp.equals( wVariable.name(), itemName ) ) {
+    iONode clone = (iONode)item->base.clone( item );
+    if( __addItemInList( data, wVariableList.name(), clone ) ) {
       added = True;
     }
     else {
@@ -1274,6 +1285,25 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       _addItem( inst, item );
     }
   }
+  else if( StrOp.equals( wVariable.name(), name ) ) {
+    /* modify variable... */
+    iONode var = NULL;
+    iONode varlist = wPlan.getvrlist( data->model );
+    if( varlist != NULL ) {
+      iONode node = wVariableList.getvr( varlist );
+      while( node != NULL ) {
+        if( StrOp.equals( wVariable.getid( item ), wVariable.getid( node ) ) ) {
+          NodeOp.mergeNode( node, item, True, True, True );
+          var = node;
+          break;
+        }
+        node = wVariableList.nextvr( varlist, node );
+      }
+    }
+    if( var == NULL && wVariable.getid( item ) != NULL && StrOp.len( wVariable.getid( item ) ) > 0 ) {
+      _addItem( inst, item );
+    }
+  }
   else if( StrOp.equals( wBooster.name(), name ) ) {
     /* modify bosters... */
     iONode booster = NULL;
@@ -1768,6 +1798,21 @@ static Boolean _removeItem( iOModel inst, iONode item ) {
           break;
         }
         node = wDecList.nextdec( declist, node );
+      };
+    }
+  }
+  else if( StrOp.equals( wVariable.name(), name ) ) {
+    iONode varlist = wPlan.getvrlist( o->model );
+    if( varlist != NULL ) {
+      iONode node = wVariableList.getvr( varlist );
+      while( node != NULL ) {
+        if( StrOp.equals( wVariable.getid( item ), wVariable.getid( node ) ) ) {
+          NodeOp.removeChild( varlist, node );
+          node->base.del( node );
+          removed = True;
+          break;
+        }
+        node = wVariableList.nextvr( varlist, node );
       };
     }
   }

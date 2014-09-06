@@ -29012,4 +29012,7 @@
   <Msg id="randomrate">
     <en txt="Random rate"/>
   </Msg>
+  <Msg id="variabletable" dialog="true">
+    <en txt="Variable table" alttxt="Variables" tip="Variable table"/>
+  </Msg>
 </Messages>

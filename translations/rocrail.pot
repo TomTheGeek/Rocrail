@@ -7469,3 +7469,9 @@ msgstr ""
 msgid "Random rate"
 msgstr ""
 
+#. 
+# id="variabletable"
+#, c-format
+msgid "Variable table"
+msgstr ""
+
