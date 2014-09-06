@@ -49,6 +49,8 @@ void VariableDlg::initLabels() {
 
   m_VarList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
   m_VarList->InsertColumn(1, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_LEFT );
+  m_VarList->InsertColumn(2, wxGetApp().getMsg( "text" ), wxLIST_FORMAT_LEFT );
+  m_VarList->InsertColumn(3, wxGetApp().getMsg( "value" ), wxLIST_FORMAT_LEFT );
 
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
@@ -107,11 +109,13 @@ void VariableDlg::initIndex() {
         iONode var = (iONode)ListOp.get( list, i );
         m_VarList->InsertItem( i, wxString( wVariable.getid( var ), wxConvUTF8) );
         m_VarList->SetItem( i, 1, wxString::Format(wxT("%d"), wVariable.gettype( var )) );
+        m_VarList->SetItem( i, 2, wxString( wVariable.gettext( var ), wxConvUTF8) );
+        m_VarList->SetItem( i, 3, wxString::Format(wxT("%d"), wVariable.getvalue( var )) );
         m_VarList->SetItemPtrData(i, (wxUIntPtr)var);
       }
 
       // resize
-      for( int n = 0; n < 2; n++ ) {
+      for( int n = 0; n < 4; n++ ) {
         m_VarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
         int autoheadersize = m_VarList->GetColumnWidth(n);
         m_VarList->SetColumnWidth(n, wxLIST_AUTOSIZE);
