@@ -53,6 +53,7 @@
 #include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/AutoCmd.h"
+#include "rocrail/wrapper/public/Variable.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -171,6 +172,7 @@ void TimedActions::initLabels() {
     m_Type->Append( wxGetApp().getMsg( "sensor" ) );
     m_Type->Append( wxGetApp().getMsg( "stagingblock" ) );
     m_Type->Append( wxGetApp().getMsg( "sound" ) );
+    m_Type->Append( wxGetApp().getMsg( "variable" ) );
 
     // Interface
     m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
@@ -226,6 +228,8 @@ void TimedActions::initValues() {
     m_Type->SetSelection(13);
   else if( StrOp.equals( wAction.type_sound, type ) )
     m_Type->SetSelection(14);
+  else if( StrOp.equals( wVariable.name(), type ) )
+    m_Type->SetSelection(15);
 
   initOutputList();
   initCommands();
@@ -361,6 +365,7 @@ bool TimedActions::evaluate() {
     case 12: wAction.settype(m_Props, wFeedback.name()); break;
     case 13: wAction.settype(m_Props, wStage.name()); break;
     case 14: wAction.settype(m_Props, wAction.type_sound); break;
+    case 15: wAction.settype(m_Props, wVariable.name()); break;
   }
 
   // Interface
@@ -417,6 +422,7 @@ void TimedActions::initOutputList() {
       case 12: colist = wPlan.getfblist( model ); break;
       case 13: colist = wPlan.getsblist( model ); break;
       case 14: return;
+      case 15: colist = wPlan.getvrlist( model ); break;
     }
 
     m_ExecCmd->Enable(false);
@@ -1085,6 +1091,12 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wAction.sound_play, wxConvUTF8));
       m_Command->Append(wxString( wSwitch.straight, wxConvUTF8));
       m_Command->Append(wxString( wSwitch.turnout, wxConvUTF8));
+      break;
+    case 15: // variable
+      m_Command->Append(wxString( wVariable.op_text, wxConvUTF8));
+      m_Command->Append(wxString( wVariable.op_value, wxConvUTF8));
+      m_Command->Append(wxString( wVariable.op_add, wxConvUTF8));
+      m_Command->Append(wxString( wVariable.op_subtract, wxConvUTF8));
       break;
   }
 }

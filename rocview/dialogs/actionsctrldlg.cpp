@@ -47,6 +47,7 @@
 #include "rocrail/wrapper/public/ActionCond.h"
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/Variable.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -192,6 +193,7 @@ void ActionsCtrlDlg::initLabels() {
   m_CondType->Append(wxGetApp().getMsg( "system" ));
   m_CondType->Append(wxGetApp().getMsg( "route" ));
   m_CondType->Append(wxGetApp().getMsg( "train" ));
+  m_CondType->Append(wxGetApp().getMsg( "variable" ));
 
 
   // Std buttons
@@ -374,6 +376,8 @@ void ActionsCtrlDlg::initCondValues() {
       m_CondType->SetSelection(7);
     else if( StrOp.equals( wOperator.name(), type ) )
       m_CondType->SetSelection(8);
+    else if( StrOp.equals( wVariable.name(), type ) )
+      m_CondType->SetSelection(9);
     initCondIDs();
     m_CondID->SetStringSelection( m_Conditions->GetStringSelection() );
     m_CondState->SetValue( wxString(wActionCond.getstate(actioncond),wxConvUTF8) );
@@ -445,6 +449,7 @@ void ActionsCtrlDlg::initCondIDs() {
       case 6: colist = NULL; break;
       case 7: colist = wPlan.getstlist( model ); break;
       case 8: colist = wPlan.getoperatorlist(model); break;
+      case 9: colist = wPlan.getvrlist(model); break;
     }
 
 
