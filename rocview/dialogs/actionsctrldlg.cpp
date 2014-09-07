@@ -529,6 +529,7 @@ void ActionsCtrlDlg::evaluateCond() {
         case 6: type = wSysCmd.name(); break;
         case 7: type = wRoute.name(); break;
         case 8: type = wOperator.name(); break;
+        case 9: type = wVariable.name(); break;
       }
       wActionCond.settype(node, type);
 

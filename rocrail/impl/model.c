@@ -2665,6 +2665,21 @@ static iONode _getDec( iOModel inst, const char* id ) {
   return NULL;
 }
 
+static iONode _getVariable( iOModel inst, const char* id ) {
+  iOModelData data = Data(inst);
+  iONode varlist = wPlan.getvrlist( data->model );
+  if( varlist != NULL ) {
+    iONode node = wVariableList.getvr( varlist );
+    while( node != NULL ) {
+      if( StrOp.equals( id, wVariable.getid( node ) ) ) {
+        return node;
+      }
+      node = wVariableList.nextvr( varlist, node );
+    }
+  }
+  return NULL;
+}
+
 static iOCar _getCarByAddress( iOModel inst, int addr, const char* iid ) {
   iOModelData o = Data(inst);
 

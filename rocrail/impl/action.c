@@ -61,6 +61,7 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/BinStateCmd.h"
+#include "rocrail/wrapper/public/Variable.h"
 
 static int instCnt = 0;
 static int levelCnt = 0;
@@ -372,6 +373,26 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block not found [%s]", id );
         }
 
+        /* Variable */
+        else if( StrOp.equals( wVariable.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          iONode var = ModelOp.getVariable( model, id );
+          if( var != NULL ) {
+            const char* state = wActionCond.getstate(actionCond);
+            if( StrOp.len(state) > 0 ) {
+              if( state[0] == '=' )
+                rc = wVariable.getvalue(var) == atoi(state+1);
+              else if( state[0] == '>' )
+                rc = wVariable.getvalue(var) > atoi(state+1);
+              else if( state[0] == '<' )
+                rc = wVariable.getvalue(var) < atoi(state+1);
+            }
+          }
+          else
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "variable not found [%s]", id );
+        }
+
+
         /* System */
         else if( StrOp.equals( wSysCmd.name(), wActionCond.gettype(actionCond) ) ) {
           iONode state = ControlOp.getState(AppOp.getControl());
@@ -565,6 +586,41 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output [%s] to [%s] [%d]",
           id, cmdStr, atoi(wAction.getparam(data->action)) );
       OutputOp.cmd( co, cmd, True );
+    }
+  }
+
+  /* variable action */
+  if( StrOp.equals( wVariable.name(), wAction.gettype( data->action ) ) ) {
+    const char* id = wAction.getid(data->action);
+    const char* oid = wAction.getoid( data->action );
+    const char* cmdStr = wAction.getcmd( data->action );
+
+    iONode var = ModelOp.getVariable( model, oid );
+
+    if( var != NULL ) {
+      if( StrOp.equals( wVariable.op_value, wAction.getcmd( data->action ) ) ) {
+        wVariable.setvalue(var, atoi(wAction.getparam(data->action)));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
+            oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
+      }
+      else if( StrOp.equals( wVariable.op_add, wAction.getcmd( data->action ) ) ) {
+        wVariable.setvalue(var, wVariable.getvalue(var) + atoi(wAction.getparam(data->action)));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
+            oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
+      }
+      else if( StrOp.equals( wVariable.op_subtract, wAction.getcmd( data->action ) ) ) {
+        wVariable.setvalue(var, wVariable.getvalue(var) - atoi(wAction.getparam(data->action)));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
+            oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
+      }
+      else if( StrOp.equals( wVariable.op_text, wAction.getcmd( data->action ) ) ) {
+        wVariable.settext(var, wAction.getparam(data->action));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new text=%s",
+            oid, cmdStr, wAction.getparam(data->action), wVariable.gettext(var) );
+      }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "variable [%s] not found", oid );
     }
   }
 
