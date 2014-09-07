@@ -385,6 +385,7 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             char* key = StrOp.fmt( "%s-%s", id, subid );
             iOMap map = MapOp.inst();
             MapOp.put(map, "lcid", (obj)wActionCtrl.getlcid(actionctrl));
+            MapOp.put(map, "bkid", (obj)wActionCtrl.getbkid(actionctrl));
             char* resolvedKey = TextOp.replaceAllSubstitutions(key, map);
             StrOp.free(key);
             var = ModelOp.getVariable( model, resolvedKey );
@@ -625,6 +626,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       char* key = StrOp.fmt( "%s-%s", oid, suboid );
       iOMap map = MapOp.inst();
       MapOp.put(map, "lcid", (obj)wActionCtrl.getlcid(actionctrl));
+      MapOp.put(map, "bkid", (obj)wActionCtrl.getbkid(actionctrl));
       char* resolvedKey = TextOp.replaceAllSubstitutions(key, map);
       StrOp.free(key);
       var = ModelOp.getVariable( model, resolvedKey );
