@@ -3047,6 +3047,9 @@
         <const name="op_value" vt="string" val="value"/>
         <const name="op_add" vt="string" val="add"/>
         <const name="op_subtract" vt="string" val="subtract"/>
+        <const name="op_random" vt="string" val="random"/>
+        <const name="op_min" vt="string" val="min"/>
+        <const name="op_max" vt="string" val="max"/>
       </vr>
     </vrlist>
 

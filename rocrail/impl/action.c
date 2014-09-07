@@ -20,6 +20,9 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 #include "rocrail/impl/action_impl.h"
@@ -388,6 +391,10 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
                 rc = wVariable.getvalue(var) < atoi(state+1);
               else if( state[0] == '#' )
                 rc = StrOp.equals(wVariable.gettext(var), state+1);
+              else if( state[0] == '?' )
+                rc = !StrOp.equals(wVariable.gettext(var), state+1);
+              else if( state[0] == '!' )
+                rc = wVariable.getvalue(var) != atoi(state+1);
             }
           }
           else
@@ -619,6 +626,22 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         wVariable.settext(var, wAction.getparam(data->action));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new text=%s",
             oid, cmdStr, wAction.getparam(data->action), wVariable.gettext(var) );
+      }
+      else if( StrOp.equals( wVariable.op_min, wAction.getcmd( data->action ) ) ) {
+        wVariable.setmin(var, atoi(wAction.getparam(data->action)));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new min=%d",
+            oid, cmdStr, wAction.getparam(data->action), wVariable.getmin(var) );
+      }
+      else if( StrOp.equals( wVariable.op_max, wAction.getcmd( data->action ) ) ) {
+        wVariable.setmax(var, atoi(wAction.getparam(data->action)));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new max=%d",
+            oid, cmdStr, wAction.getparam(data->action), wVariable.getmax(var) );
+      }
+      else if( StrOp.equals( wVariable.op_random, wAction.getcmd( data->action ) ) ) {
+        int rval = wVariable.getmin(var) + rand()%(wVariable.getmax(var)-wVariable.getmin(var));
+        wVariable.setvalue(var, rval);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] new random value=%d",
+            oid, cmdStr, wVariable.getvalue(var) );
       }
     }
     else {

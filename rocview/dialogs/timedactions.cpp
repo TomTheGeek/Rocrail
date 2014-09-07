@@ -1097,6 +1097,9 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wVariable.op_value, wxConvUTF8));
       m_Command->Append(wxString( wVariable.op_add, wxConvUTF8));
       m_Command->Append(wxString( wVariable.op_subtract, wxConvUTF8));
+      m_Command->Append(wxString( wVariable.op_min, wxConvUTF8));
+      m_Command->Append(wxString( wVariable.op_max, wxConvUTF8));
+      m_Command->Append(wxString( wVariable.op_random, wxConvUTF8));
       break;
   }
 }
