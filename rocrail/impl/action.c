@@ -386,6 +386,8 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
                 rc = wVariable.getvalue(var) > atoi(state+1);
               else if( state[0] == '<' )
                 rc = wVariable.getvalue(var) < atoi(state+1);
+              else if( state[0] == '#' )
+                rc = StrOp.equals(wVariable.gettext(var), state+1);
             }
           }
           else
