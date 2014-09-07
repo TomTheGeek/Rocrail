@@ -2623,6 +2623,7 @@ static void __handleStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   if( bidibnode != NULL ) {
     iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
 
+    wItem.setuidname( nodeC, bidibnode->username );
     wSwitch.setbus( nodeC, bidibnode->uid );
     wSwitch.setaddr1( nodeC, pdata[1]+1 );
 
