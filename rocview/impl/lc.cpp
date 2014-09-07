@@ -613,8 +613,9 @@ void LC::OnButton(wxCommandEvent& event)
       m_Dir->SetIcon( m_bDir ? getIcon(wGui.getdirimagefwd(wxGetApp().getIni())):getIcon(wGui.getdirimagerev(wxGetApp().getIni())) );
     }
 
-    if( wxGetApp().getFrame()->isTooltip(true))
+    if( wxGetApp().getFrame()->isTooltip(true)) {
       m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
+    }
 
     if( wGui.isresetspeeddir(wxGetApp().getIni()) ) {
       m_iSpeed = 0;
@@ -866,7 +867,7 @@ bool LC::Create()
   if( wxGetApp().getFrame()->isTooltip(true))
     m_F0->SetToolTip( wxGetApp().getMsg( "lights" ) );
   if( wxGetApp().getFrame()->isTooltip(true))
-    m_Dir->SetToolTip( wxGetApp().getMsg( "forwards" ) );
+    m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
   if( wxGetApp().getFrame()->isTooltip(true))
     m_Stop->SetToolTip( wxGetApp().getTip( "stop" ) );
   if( wxGetApp().getFrame()->isTooltip(true))
@@ -1020,6 +1021,7 @@ void LC::CreateControls() {
 }
 
 void LC::showTooltip(bool p_bTooltip) {
+  p_bTooltip = wxGetApp().getFrame()->isTooltip(true);
   if( !p_bTooltip ) {
     m_F0->SetToolTip( wxString("",wxConvUTF8) );
     m_F1->SetToolTip( wxString("",wxConvUTF8) );
@@ -1035,7 +1037,7 @@ void LC::showTooltip(bool p_bTooltip) {
   else {
     setFLabels();
     m_Stop->SetLabel( wxGetApp().getMsg( "stop" ) );
-    m_Dir->SetToolTip( wxGetApp().getMsg( "forwards" ) );
+    m_Dir->SetToolTip( m_bDir?wxGetApp().getMsg( "forwards" ):wxGetApp().getMsg( "reverse" ) );
     m_Stop->SetToolTip( wxGetApp().getTip( "stop" ) );
     m_V->SetToolTip( wxGetApp().getMsg( "speed" ) );
     m_Vslider->SetToolTip( wxGetApp().getMsg( "speedcontroller" ) );
