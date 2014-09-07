@@ -643,6 +643,14 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] new random value=%d",
             oid, cmdStr, wVariable.getvalue(var) );
       }
+      else if( StrOp.equals( wVariable.op_start, wAction.getcmd( data->action ) ) ) {
+        wVariable.settimer(var, True);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer started", oid, cmdStr );
+      }
+      else if( StrOp.equals( wVariable.op_stop, wAction.getcmd( data->action ) ) ) {
+        wVariable.settimer(var, False);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer stopped", oid, cmdStr );
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "variable [%s] not found", oid );

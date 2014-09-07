@@ -1100,6 +1100,8 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wVariable.op_min, wxConvUTF8));
       m_Command->Append(wxString( wVariable.op_max, wxConvUTF8));
       m_Command->Append(wxString( wVariable.op_random, wxConvUTF8));
+      m_Command->Append(wxString( wVariable.op_start, wxConvUTF8));
+      m_Command->Append(wxString( wVariable.op_stop, wxConvUTF8));
       break;
   }
 }

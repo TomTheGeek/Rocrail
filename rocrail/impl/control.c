@@ -82,6 +82,8 @@
 #include "rocrail/wrapper/public/Issue.h"
 #include "rocrail/wrapper/public/Devices.h"
 #include "rocrail/wrapper/public/Operator.h"
+#include "rocrail/wrapper/public/Variable.h"
+#include "rocrail/wrapper/public/VariableList.h"
 
 #include "rocutils/public/devices.h"
 #include "rocutils/public/fileutils.h"
@@ -1409,6 +1411,7 @@ static void __checkActions( iOControl control, int seconds ) {
     iONode plan   = ModelOp.getModel( model );
     if( plan != NULL ) {
       iONode aclist = wPlan.getaclist(plan);
+      iONode varlist = wPlan.getvrlist(plan);
       if( aclist != NULL ) {
         iONode action = wActionList.getac( aclist );
         while( action != NULL ) {
@@ -1416,6 +1419,14 @@ static void __checkActions( iOControl control, int seconds ) {
           if( act != NULL )
             ActionOp.tick(act, seconds);
           action = wActionList.nextac( aclist, action );
+        };
+      }
+      if( varlist != NULL ) {
+        iONode var = wVariableList.getvr( varlist );
+        while( var != NULL ) {
+          if( wVariable.istimer(var) )
+            wVariable.setvalue(var, wVariable.getvalue(var) + 1);
+          var = wVariableList.nextvr( varlist, var );
         };
       }
 

@@ -48,16 +48,10 @@ void VariableDlg::initLabels() {
   m_VarBook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
 
   m_VarList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
-  m_VarList->InsertColumn(1, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_LEFT );
-  m_VarList->InsertColumn(2, wxGetApp().getMsg( "text" ), wxLIST_FORMAT_LEFT );
-  m_VarList->InsertColumn(3, wxGetApp().getMsg( "value" ), wxLIST_FORMAT_LEFT );
+  m_VarList->InsertColumn(1, wxGetApp().getMsg( "text" ), wxLIST_FORMAT_LEFT );
+  m_VarList->InsertColumn(2, wxGetApp().getMsg( "value" ), wxLIST_FORMAT_LEFT );
 
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
-  m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
-  m_Type->SetString( 0, wxGetApp().getMsg( "text" ) );
-  m_Type->SetString( 1, wxGetApp().getMsg( "number" ) );
-  m_Type->SetString( 2, wxGetApp().getMsg( "timer" ) );
-  m_Type->SetString( 3, wxGetApp().getMsg( "random" ) );
   m_labMin->SetLabel( wxGetApp().getMsg( "min" ) );
   m_labMax->SetLabel( wxGetApp().getMsg( "max" ) );
   m_labText->SetLabel( wxGetApp().getMsg( "text" ) );
@@ -108,14 +102,13 @@ void VariableDlg::initIndex() {
       for( int i = 0; i < cnt; i++ ) {
         iONode var = (iONode)ListOp.get( list, i );
         m_VarList->InsertItem( i, wxString( wVariable.getid( var ), wxConvUTF8) );
-        m_VarList->SetItem( i, 1, wxString::Format(wxT("%d"), wVariable.gettype( var )) );
-        m_VarList->SetItem( i, 2, wxString( wVariable.gettext( var ), wxConvUTF8) );
-        m_VarList->SetItem( i, 3, wxString::Format(wxT("%d"), wVariable.getvalue( var )) );
+        m_VarList->SetItem( i, 1, wxString( wVariable.gettext( var ), wxConvUTF8) );
+        m_VarList->SetItem( i, 2, wxString::Format(wxT("%d"), wVariable.getvalue( var )) );
         m_VarList->SetItemPtrData(i, (wxUIntPtr)var);
       }
 
       // resize
-      for( int n = 0; n < 4; n++ ) {
+      for( int n = 0; n < 3; n++ ) {
         m_VarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
         int autoheadersize = m_VarList->GetColumnWidth(n);
         m_VarList->SetColumnWidth(n, wxLIST_AUTOSIZE);
@@ -175,7 +168,6 @@ bool VariableDlg::evaluate() {
   }
   // evaluate General
   wVariable.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
-  wVariable.settype( m_Props, m_Type->GetSelection() );
   wVariable.setmin( m_Props, m_MinValue->GetValue() );
   wVariable.setmax( m_Props, m_MaxValue->GetValue() );
   wVariable.settext( m_Props, m_Text->GetValue().mb_str(wxConvUTF8) );
@@ -207,7 +199,6 @@ void VariableDlg::initValues() {
 
   TraceOp.trc( "vardlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues for car [%s]", wVariable.getid( m_Props ) );
   m_ID->SetValue( wxString(wVariable.getid( m_Props ),wxConvUTF8) );
-  m_Type->SetSelection(wVariable.gettype( m_Props ));
   m_MinValue->SetValue( wVariable.getmin( m_Props ) );
   m_MaxValue->SetValue( wVariable.getmax( m_Props ) );
   m_Text->SetValue( wxString(wVariable.gettext( m_Props ),wxConvUTF8) );

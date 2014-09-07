@@ -3037,10 +3037,10 @@
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="text" vt="string" defval="" range="*"/>
         <var name="value" vt="int" defval="0" range="*"/>
-        <const name="type_alfanum" vt="int" val="0"/>
+        <const name="type_default" vt="int" val="0"/>
         <const name="type_timer" vt="int" val="1"/>
-        <const name="type_random" vt="int" val="2"/>
         <var name="type" vt="int" defval="0" range="0-*"/>
+        <var name="timer" vt="bool" defval="false"/>
         <var name="min" vt="int" defval="0" range="0-*"/>
         <var name="max" vt="int" defval="0" range="0-*"/>
         <const name="op_text" vt="string" val="text"/>
@@ -3050,6 +3050,8 @@
         <const name="op_random" vt="string" val="random"/>
         <const name="op_min" vt="string" val="min"/>
         <const name="op_max" vt="string" val="max"/>
+        <const name="op_start" vt="string" val="start"/>
+        <const name="op_stop" vt="string" val="stop"/>
       </vr>
     </vrlist>
 
