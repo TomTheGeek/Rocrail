@@ -1356,7 +1356,7 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, 
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
-    if( occupied && !actroute && m_SvgSym5 != NULL )
+    if( occupied && m_SvgSym5 != NULL )
       drawSvgSym(dc, m_SvgSym5, ori);
     else if( actroute && m_SvgSym7 != NULL )
       drawSvgSym(dc, m_SvgSym7, ori);
@@ -1364,7 +1364,7 @@ void SymbolRenderer::drawCrossing( wxPaintDC& dc, bool occupied, bool actroute, 
       drawSvgSym(dc, m_SvgSym2, ori);
   }
   else if( m_SvgSym1!=NULL ) {
-    if( occupied && !actroute && m_SvgSym4 != NULL )
+    if( occupied && m_SvgSym4 != NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
     else if( actroute && m_SvgSym8 != NULL )
       drawSvgSym(dc, m_SvgSym8, ori);
@@ -1419,7 +1419,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute,
   // SVG Symbol:
   if( has2Units ) {
     if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.left ) ) {
-      if( occupied && !actroute && m_SvgSym7 != NULL )
+      if( occupied && m_SvgSym7 != NULL )
         drawSvgSym(dc, m_SvgSym7, ori);
       else if( actroute && m_SvgSym11 != NULL )
         drawSvgSym(dc, m_SvgSym11, ori);
@@ -1427,7 +1427,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute,
         drawSvgSym(dc, m_SvgSym3, ori);
     }
     else if( m_SvgSym4!=NULL && StrOp.equals( state, wSwitch.right ) ) {
-      if( occupied && !actroute && m_SvgSym8 != NULL )
+      if( occupied && m_SvgSym8 != NULL )
         drawSvgSym(dc, m_SvgSym8, ori);
       else if( actroute && m_SvgSym12 != NULL )
         drawSvgSym(dc, m_SvgSym12, ori);
@@ -1435,7 +1435,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute,
         drawSvgSym(dc, m_SvgSym4, ori);
     }
     else if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
-      if( occupied && !actroute && m_SvgSym6 != NULL )
+      if( occupied && m_SvgSym6 != NULL )
         drawSvgSym(dc, m_SvgSym6, ori);
       else if( actroute && m_SvgSym10 != NULL )
         drawSvgSym(dc, m_SvgSym10, ori);
@@ -1443,7 +1443,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute,
         drawSvgSym(dc, m_SvgSym2, ori);
     }
     else if( m_SvgSym1!=NULL ) {
-      if( occupied && !actroute && m_SvgSym5 != NULL )
+      if( occupied && m_SvgSym5 != NULL )
         drawSvgSym(dc, m_SvgSym5, ori);
       else if( actroute && m_SvgSym9 != NULL )
         drawSvgSym(dc, m_SvgSym9, ori);
@@ -1453,7 +1453,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute,
   }
 
   else if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
-    if( occupied && !actroute && m_SvgSym6 != NULL )
+    if( occupied && m_SvgSym6 != NULL )
       drawSvgSym(dc, m_SvgSym6, ori);
     else if( actroute && m_SvgSym10 != NULL )
       drawSvgSym(dc, m_SvgSym10, ori);
@@ -1462,7 +1462,7 @@ void SymbolRenderer::drawDCrossing( wxPaintDC& dc, bool occupied, bool actroute,
   }
 
   else if( m_SvgSym1!=NULL ) {
-    if( occupied && !actroute && m_SvgSym5 != NULL )
+    if( occupied && m_SvgSym5 != NULL )
       drawSvgSym(dc, m_SvgSym5, ori);
     else if( actroute && m_SvgSym9 != NULL )
       drawSvgSym(dc, m_SvgSym9, ori);
@@ -1521,7 +1521,7 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, bool actroute, 
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.left ) ) {
-    if( occupied && !actroute && m_SvgSym5 != NULL )
+    if( occupied && m_SvgSym5 != NULL )
       drawSvgSym(dc, m_SvgSym5, ori);
     else if( actroute && m_SvgSym8 != NULL )
       drawSvgSym(dc, m_SvgSym8, ori);
@@ -1529,7 +1529,7 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, bool actroute, 
       drawSvgSym(dc, m_SvgSym2, ori);
   }
   else if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.right ) ) {
-    if( occupied && !actroute && m_SvgSym6 != NULL )
+    if( occupied && m_SvgSym6 != NULL )
       drawSvgSym(dc, m_SvgSym6, ori);
     else if( actroute && m_SvgSym9 != NULL )
       drawSvgSym(dc, m_SvgSym9, ori);
@@ -1537,7 +1537,7 @@ void SymbolRenderer::drawThreeway( wxPaintDC& dc, bool occupied, bool actroute, 
       drawSvgSym(dc, m_SvgSym3, ori);
   }
   else if( m_SvgSym1!=NULL ) {
-    if( occupied && !actroute && m_SvgSym4 != NULL )
+    if( occupied && m_SvgSym4 != NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
     else if( actroute && m_SvgSym7 != NULL )
       drawSvgSym(dc, m_SvgSym7, ori);
@@ -1636,7 +1636,7 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, bool actroute, c
 
   // SVG Symbol:
   if( m_SvgSym2!=NULL && StrOp.equals( state, wSwitch.turnout ) ) {
-    if( occupied && !actroute && m_SvgSym5 != NULL )
+    if( occupied && m_SvgSym5 != NULL )
       drawSvgSym(dc, m_SvgSym5, ori);
     else if( actroute && m_SvgSym7 != NULL )
       drawSvgSym(dc, m_SvgSym7, ori);
@@ -1644,7 +1644,7 @@ void SymbolRenderer::drawTurnout( wxPaintDC& dc, bool occupied, bool actroute, c
       drawSvgSym(dc, m_SvgSym2, ori);
   }
   else if( m_SvgSym1!=NULL ) {
-    if( occupied && !actroute && m_SvgSym4 != NULL )
+    if( occupied && m_SvgSym4 != NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
     else if( actroute && m_SvgSym6 != NULL )
       drawSvgSym(dc, m_SvgSym6, ori);
@@ -1751,7 +1751,7 @@ void SymbolRenderer::drawDecoupler( wxPaintDC& dc, bool occupied, bool actroute,
 
   // SVG Symbol:
   if( m_SvgSym3!=NULL && StrOp.equals( state, wSwitch.straight ) ) {
-    if( occupied && !actroute && m_SvgSym4 != NULL )
+    if( occupied && m_SvgSym4 != NULL )
       drawSvgSym(dc, m_SvgSym4, ori);
     else if( occupied && actroute && m_SvgSym7 != NULL )
       drawSvgSym(dc, m_SvgSym7, ori);
@@ -1763,7 +1763,7 @@ void SymbolRenderer::drawDecoupler( wxPaintDC& dc, bool occupied, bool actroute,
       drawSvgSym(dc, m_SvgSym3, ori);
   }
   else if( m_SvgSym1!=NULL ) {
-    if( occupied && !actroute && m_SvgSym2 != NULL )
+    if( occupied && m_SvgSym2 != NULL )
       drawSvgSym(dc, m_SvgSym2, ori);
     else if( occupied && actroute && m_SvgSym8 != NULL )
       drawSvgSym(dc, m_SvgSym8, ori);
