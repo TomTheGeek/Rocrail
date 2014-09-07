@@ -3043,6 +3043,10 @@
         <var name="type" vt="int" defval="0" range="0-*"/>
         <var name="min" vt="int" defval="0" range="0-*"/>
         <var name="max" vt="int" defval="0" range="0-*"/>
+        <const name="op_text" vt="string" val="text"/>
+        <const name="op_value" vt="string" val="value"/>
+        <const name="op_add" vt="string" val="add"/>
+        <const name="op_subtract" vt="string" val="subtract"/>
       </vr>
     </vrlist>
 
