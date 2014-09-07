@@ -638,10 +638,16 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
             oid, cmdStr, wAction.getparam(data->action), wVariable.getmax(var) );
       }
       else if( StrOp.equals( wVariable.op_random, wAction.getcmd( data->action ) ) ) {
-        int rval = wVariable.getmin(var) + rand()%(wVariable.getmax(var)-wVariable.getmin(var));
-        wVariable.setvalue(var, rval);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] new random value=%d",
-            oid, cmdStr, wVariable.getvalue(var) );
+        if( wVariable.getmax(var) > wVariable.getmin(var) ) {
+          int rval = wVariable.getmin(var) + rand()%(wVariable.getmax(var)-wVariable.getmin(var));
+          wVariable.setvalue(var, rval);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] new random value=%d",
+              oid, cmdStr, wVariable.getvalue(var) );
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "variable [%s] cmd=[%s] not possible; max. must be greater then min.",
+              oid, cmdStr );
+        }
       }
       else if( StrOp.equals( wVariable.op_start, wAction.getcmd( data->action ) ) ) {
         wVariable.settimer(var, True);
