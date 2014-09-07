@@ -1071,6 +1071,10 @@
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="id" vt="const char*" remark="Variable ID to search for"/>
     </fun>
+    <fun name="addVariable" vt="iONode">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="id" vt="const char*" remark="Variable ID to search for"/>
+    </fun>
     <fun name="analyse" vt="void">
       <param name="inst" vt="this" remark="Model instance"/>
       <param name="mode" vt="int" remark="analyse/clean/health check/extended Check"/>
@@ -1775,7 +1779,7 @@
   </object>
 
 
-  <object name="Text" interface="HtmlInt" use="node" include="htmlint" remark="Text object">
+  <object name="Text" interface="HtmlInt" use="node,map" include="htmlint" remark="Text object">
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Output node"/>
     </fun>
@@ -1785,6 +1789,10 @@
     <fun name="modify" vt="void">
       <param name="inst" vt="this" remark="Output instance"/>
       <param name="mod" vt="iONode" remark="Modify node"/>
+    </fun>
+    <fun name="replaceAllSubstitutions" vt="char*">
+      <param name="s" vt="const char*" remark="Input string"/>
+      <param name="map" vt="iOMap" remark="Map with replacements"/>
     </fun>
     <data>
       <var name="props" vt="iONode"/>

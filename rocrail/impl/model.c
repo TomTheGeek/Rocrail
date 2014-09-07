@@ -2680,6 +2680,22 @@ static iONode _getVariable( iOModel inst, const char* id ) {
   return NULL;
 }
 
+static iONode _addVariable( iOModel inst, const char* id ) {
+  iOModelData data = Data(inst);
+  iONode varlist = wPlan.getvrlist( data->model );
+  if( varlist == NULL ) {
+    varlist = NodeOp.inst(wVariableList.name(), data->model, ELEMENT_NODE);
+    NodeOp.addChild(data->model, varlist);
+  }
+  if( varlist != NULL ) {
+    iONode var = NodeOp.inst(wVariable.name(), varlist, ELEMENT_NODE);
+    wVariable.setid( var, id );
+    NodeOp.addChild(varlist, var);
+    return var;
+  }
+  return NULL;
+}
+
 static iOCar _getCarByAddress( iOModel inst, int addr, const char* iid ) {
   iOModelData o = Data(inst);
 

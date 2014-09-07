@@ -175,6 +175,8 @@ public:
     wxChoice* m_Type;
     wxStaticText* m_labID;
     wxChoice* m_ID;
+    wxStaticText* m_labSubID;
+    wxTextCtrl* m_SubID;
     wxStaticText* m_labCommand;
     wxComboBox* m_Command;
     wxButton* m_ExecCmd;

@@ -1493,6 +1493,7 @@
     <var name="mvspeed" vt="float" defval="0.0" range="*"/>
     <actioncond cardinality="n" remark="Optional condition." wrappername="ActionCond">
       <var name="id" vt="string" defval="" range="*" required="true"/>
+      <var name="subid" vt="string" defval="" range="*"/>
       <var name="type" vt="string" defval="" range="co,sw,sg,fb,lc,bk" required="true"/>
       <var name="state" vt="string" defval="" range="*" remark="Activation state, empty is always."/>
     </actioncond>
@@ -2944,6 +2945,7 @@
         <var name="every" vt="bool" defval="false" remark="Activate every hour:min."/>
         <var name="timer" vt="int" defval="0" remark="Timer in ms before activation this action."/>
         <var name="oid" vt="string" defval="NULL" range="*" remark="output id"/>
+        <var name="suboid" vt="string" defval="NULL" range="*" remark="action id"/>
         <const name="test" vt="string" val="test" remark="Test this action unconditional."/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="on, off or an external program or script to be executed"/>
         <var name="param" vt="string" defval="" range="*" remark="command parameter like schedule id for lc"/>

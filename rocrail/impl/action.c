@@ -379,7 +379,22 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
         /* Variable */
         else if( StrOp.equals( wVariable.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );
-          iONode var = ModelOp.getVariable( model, id );
+          const char* subid = wActionCond.getsubid( actionCond );
+          iONode var = NULL;
+          if( subid != NULL && StrOp.len(subid) > 0 ) {
+            char* key = StrOp.fmt( "%s-%s", id, subid );
+            iOMap map = MapOp.inst();
+            MapOp.put(map, "lcid", (obj)wActionCtrl.getlcid(actionctrl));
+            char* resolvedKey = TextOp.replaceAllSubstitutions(key, map);
+            StrOp.free(key);
+            var = ModelOp.getVariable( model, resolvedKey );
+            StrOp.free(resolvedKey);
+            MapOp.base.del(map);
+          }
+          else {
+            var = ModelOp.getVariable( model, id );
+          }
+
           if( var != NULL ) {
             const char* state = wActionCond.getstate(actionCond);
             if( StrOp.len(state) > 0 ) {
@@ -602,9 +617,26 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   if( StrOp.equals( wVariable.name(), wAction.gettype( data->action ) ) ) {
     const char* id = wAction.getid(data->action);
     const char* oid = wAction.getoid( data->action );
+    const char* suboid = wAction.getsuboid( data->action );
     const char* cmdStr = wAction.getcmd( data->action );
+    iONode var = NULL;
 
-    iONode var = ModelOp.getVariable( model, oid );
+    if( suboid != NULL && StrOp.len(suboid) > 0 ) {
+      char* key = StrOp.fmt( "%s-%s", oid, suboid );
+      iOMap map = MapOp.inst();
+      MapOp.put(map, "lcid", (obj)wActionCtrl.getlcid(actionctrl));
+      char* resolvedKey = TextOp.replaceAllSubstitutions(key, map);
+      StrOp.free(key);
+      var = ModelOp.getVariable( model, resolvedKey );
+      if( var == NULL )
+        var = ModelOp.addVariable( model, resolvedKey );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] resolved=[%s]", id, resolvedKey );
+      StrOp.free(resolvedKey);
+      MapOp.base.del(map);
+    }
+    else {
+      var = ModelOp.getVariable( model, oid );
+    }
 
     if( var != NULL ) {
       if( StrOp.equals( wVariable.op_value, wAction.getcmd( data->action ) ) ) {
