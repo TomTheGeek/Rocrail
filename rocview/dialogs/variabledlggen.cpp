@@ -76,7 +76,7 @@ VariableDlgGen::VariableDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer2->Add( m_labMax, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_MaxValue = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 120,-1 ), wxSP_ARROW_KEYS, -100000, 100000, 0 );
-	fgSizer2->Add( m_MaxValue, 0, wxALL, 5 );
+	fgSizer2->Add( m_MaxValue, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_labText = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_labText->Wrap( -1 );
@@ -90,14 +90,14 @@ VariableDlgGen::VariableDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	fgSizer2->Add( m_labValue, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_Value = new wxSpinCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 120,-1 ), wxSP_ARROW_KEYS, -100000, 100000, 0 );
-	fgSizer2->Add( m_Value, 0, wxALL, 5 );
+	fgSizer2->Add( m_Value, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer4->Add( fgSizer2, 0, wxEXPAND, 5 );
 	
 	m_GeneralPanel->SetSizer( bSizer4 );
 	m_GeneralPanel->Layout();
 	bSizer4->Fit( m_GeneralPanel );
-	m_VarBook->AddPage( m_GeneralPanel, wxT("General"), false );
+	m_VarBook->AddPage( m_GeneralPanel, wxT("General"), true );
 	
 	bSizer1->Add( m_VarBook, 0, wxEXPAND | wxALL, 5 );
 	
