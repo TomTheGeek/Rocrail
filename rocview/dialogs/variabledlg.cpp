@@ -39,6 +39,9 @@ VariableDlg::VariableDlg( wxWindow* parent ):VariableDlgGen( parent )
 {
   m_Props = NULL;
   initLabels();
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
+  GetSizer()->Layout();
   initIndex();
 }
 
