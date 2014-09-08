@@ -83,19 +83,19 @@ static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
       tmpStr[endV-tmpStr] = '\0';
       resolvedStr = StrOp.cat( resolvedStr, tmpStr );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "try to resolve [%s]", startV+1);
-      if( map != NULL && MapOp.haskey(map, startV+1) )
-        resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
-      else if( SystemOp.getProperty(startV+1) != NULL )
-        resolvedStr = StrOp.cat( resolvedStr, SystemOp.getProperty(startV+1) );
-      else {
+      if((startV+1)[0] == '#' ) {
         iOModel model = AppOp.getModel();
-        iONode var = ModelOp.getResolveVariable(model, startV+1, map);
+        iONode var = ModelOp.getResolveVariable(model, startV+2, map);
         if(var != NULL) {
           char varValue[32];
           StrOp.fmtb(varValue, "%d", wVariable.getvalue(var));
           resolvedStr = StrOp.cat( resolvedStr, varValue );
         }
       }
+      else if( map != NULL && MapOp.haskey(map, startV+1) )
+        resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
+      else if( SystemOp.getProperty(startV+1) != NULL )
+        resolvedStr = StrOp.cat( resolvedStr, SystemOp.getProperty(startV+1) );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "try to resolve [%s] [%s]", startV+1, resolvedStr);
 
       tmpStr = endV + 1;
