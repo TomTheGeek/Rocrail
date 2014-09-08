@@ -7475,3 +7475,9 @@ msgstr ""
 msgid "Variable table"
 msgstr ""
 
+#. 
+# id="subid"
+#, c-format
+msgid "Sub-ID"
+msgstr ""
+

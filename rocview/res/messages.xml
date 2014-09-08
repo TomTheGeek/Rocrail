@@ -29015,4 +29015,7 @@
   <Msg id="variabletable" dialog="true">
     <en txt="Variable table" alttxt="Variables" tip="Variable table"/>
   </Msg>
+  <Msg id="subid">
+    <en txt="Sub-ID"/>
+  </Msg>
 </Messages>

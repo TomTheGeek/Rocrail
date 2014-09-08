@@ -135,6 +135,7 @@ void TimedActions::initLabels() {
     m_labCommand->SetLabel( wxGetApp().getMsg( "command" ) );
     m_Type->SetLabel( wxGetApp().getMsg( "type" ) );
     m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
+    m_labSubID->SetLabel( wxGetApp().getMsg( "subid" ) );
     m_labParam->SetLabel( wxGetApp().getMsg( "parameter" ) );
     m_labDuration->SetLabel( wxGetApp().getMsg( "duration" ) );
     m_labTimer->SetLabel( wxGetApp().getMsg( "timer" ) );

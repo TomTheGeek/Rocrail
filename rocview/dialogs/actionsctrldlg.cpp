@@ -157,6 +157,7 @@ void ActionsCtrlDlg::initLabels() {
   m_labState->SetLabel( wxGetApp().getMsg( "state" ) );
   m_labLocoID->SetLabel( wxGetApp().getMsg( "locomotive" ) );
   m_labDesc->SetLabel( wxGetApp().getMsg( "description" ) );
+  m_labSubID->SetLabel( wxGetApp().getMsg( "subid" ) );
 
   m_Reset->SetLabel( wxGetApp().getMsg( "reset" ) );
 
