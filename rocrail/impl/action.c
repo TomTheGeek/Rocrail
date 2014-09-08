@@ -691,6 +691,18 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         wVariable.settimer(var, False);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer stopped", oid, cmdStr );
       }
+
+      /* Broadcast to clients. */
+      {
+        iONode node = NodeOp.inst( wVariable.name(), NULL, ELEMENT_NODE );
+        wVariable.setid( node, wVariable.getid( var ) );
+        wVariable.settext( node, wVariable.gettext( var ) );
+        wVariable.setvalue( node, wVariable.getvalue( var ) );
+        wVariable.setmin( node, wVariable.getmin( var ) );
+        wVariable.setmax( node, wVariable.getmax( var ) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast variable [%d, %s]", wVariable.getvalue(var), wVariable.gettext(var));
+        AppOp.broadcastEvent( node );
+      }
     }
     else {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "variable [%s] not found", oid );

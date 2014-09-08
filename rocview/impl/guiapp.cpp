@@ -130,6 +130,8 @@
 #include "rocrail/wrapper/public/Booster.h"
 #include "rocrail/wrapper/public/Dec.h"
 #include "rocrail/wrapper/public/DecList.h"
+#include "rocrail/wrapper/public/Variable.h"
+#include "rocrail/wrapper/public/VariableList.h"
 #include "rocrail/wrapper/public/CVByte.h"
 
 #include "rocview/res/icons.hpp"
@@ -1387,6 +1389,27 @@ static void rocrailCallback( obj me, iONode node ) {
                 NodeOp.setBool(child, "replacechilds", False);
                 break;
               }
+            }
+          }
+        }
+        else if( StrOp.equals( wVariable.name(), NodeOp.getName(node) ) ) {
+          TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "Variable %s", wDec.getid(node) );
+          iONode db = NodeOp.findNode( guiApp->getModel(), wVariableList.name() );
+          if( db != NULL ) {
+            Boolean found = False;
+            int cnt = NodeOp.getChildCnt( db );
+            for( int i = 0; i < cnt; i++ ) {
+              iONode child = NodeOp.getChild( db, i );
+              if( StrOp.equals( wVariable.getid(node), wItem.getid(child) ) ) {
+                found = True;
+                NodeOp.setBool(child, "replacechilds", True);
+                NodeOp.mergeNode(child, node, True, True, True);
+                NodeOp.setBool(child, "replacechilds", False);
+                break;
+              }
+            }
+            if( !found ) {
+              NodeOp.addChild( db, (iONode)NodeOp.base.clone(node));
             }
           }
         }
