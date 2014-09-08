@@ -62,6 +62,9 @@ void VariableDlg::initLabels() {
   m_VarList->InsertColumn(1, wxGetApp().getMsg( "text" ), wxLIST_FORMAT_LEFT );
   m_VarList->InsertColumn(2, wxGetApp().getMsg( "value" ), wxLIST_FORMAT_LEFT );
 
+  m_New->SetLabel( wxGetApp().getMsg( "new" ) );
+  m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
+
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_labMin->SetLabel( wxGetApp().getMsg( "min" ) );
   m_labMax->SetLabel( wxGetApp().getMsg( "max" ) );
