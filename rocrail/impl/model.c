@@ -5626,6 +5626,41 @@ static Boolean _isSaveOnShutdown(iOModel inst) {
   return data->saveonshutdown;
 }
 
+static iONode _getResolveVariable(iOModel inst, const char* varID, iOMap map) {
+  iOModelData data = Data(inst);
+  char* varName = NULL;
+  char* varSuffix = StrOp.findc(varID, '#');
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to resolve [%s]", varID);
+
+  if( varSuffix != NULL && map != NULL) {
+    char* s = StrOp.dup(varID);
+    StrOp.replaceAll(s, '#', '\0');
+    varName = StrOp.fmt( "%s-%s", s, (const char*)MapOp.get(map, varSuffix+1 ));
+    StrOp.free(s);
+  }
+  else {
+    varName = StrOp.dup(varID);
+  }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "try to resolve [%s]", varName);
+
+  iONode var = NULL;
+  iONode varlist = wPlan.getvrlist( data->model );
+  if( varlist != NULL ) {
+    iONode var = wVariableList.getvr( varlist );
+    while( var != NULL ) {
+      if( StrOp.equals( varName, wVariable.getid( var ) ) ) {
+        StrOp.free(varName);
+        return var;
+      }
+      var = wVariableList.nextvr( varlist, var );
+    }
+  }
+  StrOp.free(varName);
+  return NULL;
+}
+
+
 static iOModel _inst( const char* fileName, const char* locoFileName ) {
   iOModel     model = allocMem( sizeof( struct OModel ) );
   iOModelData data  = allocMem( sizeof( struct OModelData ) );

@@ -1302,6 +1302,11 @@
     <fun name="isSaveOnShutdown" vt="Boolean">
       <param name="inst" vt="this" remark="Model instance"/>
     </fun>
+    <fun name="getResolveVariable" vt="iONode">
+      <param name="inst" vt="this" remark="Model instance"/>
+      <param name="varid" vt="const char*" remark="VarID to search for"/>
+      <param name="map" vt="iOMap" remark="Map with replacements"/>
+    </fun>
     <data include="mvtrack,modplan">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>

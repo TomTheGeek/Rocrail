@@ -39,6 +39,7 @@
 #include "rocrail/wrapper/public/Block.h"
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/ScheduleEntry.h"
+#include "rocrail/wrapper/public/Variable.h"
 
 static int instCnt = 0;
 
@@ -86,6 +87,15 @@ static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
         resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
       else if( SystemOp.getProperty(startV+1) != NULL )
         resolvedStr = StrOp.cat( resolvedStr, SystemOp.getProperty(startV+1) );
+      else {
+        iOModel model = AppOp.getModel();
+        iONode var = ModelOp.getResolveVariable(model, startV+1, map);
+        if(var != NULL) {
+          char varValue[32];
+          StrOp.fmtb(varValue, "%d", wVariable.getvalue(var));
+          resolvedStr = StrOp.cat( resolvedStr, varValue );
+        }
+      }
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "try to resolve [%s] [%s]", startV+1, resolvedStr);
 
       tmpStr = endV + 1;
