@@ -2453,7 +2453,7 @@ void PlanPanel::OnLeftDown(wxMouseEvent& event) {
 
   m_dragX = x;
   m_dragY = y;
-  if(event.CmdDown()) {
+  if(event.CmdDown() && wxGetApp().getFrame()->isEditMode() ) {
     //m_selX = event.GetX();
     //m_selY = event.GetY();
     m_selX = (x - sx) + (xoff*m_ItemSize*m_Scale);
