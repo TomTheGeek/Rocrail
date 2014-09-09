@@ -3185,7 +3185,7 @@
     <ja txt="ID"/>
     <zh_CN txt="编号"/>
     <sl txt="ID"/>
-    <pt_BR txt="ID (identificação)"/>
+    <pt_BR txt="Identificador"/>
     <fi txt="ID"/>
   </Msg>
   <Msg id="address">
@@ -28999,23 +28999,58 @@
     <sr_latin txt="Izmenjivač"/>
     <fi txt="Muunnin"/>
     <en_GB txt="Modifier"/>
+    <it txt="Modificatore"/>
   </Msg>
   <Msg id="showroute4switch">
     <en txt="Show routes on switches"/>
     <nl txt="Toon rijwegen over wissels"/>
     <sl txt="Prikaži smeri za kretnice"/>
     <de txt="Zeige Fahrstraßen bei Weichen"/>
+    <en_GB txt="Show routes on switches"/>
+    <fr txt="Afficher les routes sur les aiguillages"/>
+    <it txt="Mostrare itinerario su deviatoi"/>
+    <pt_BR txt="Exibir rotas nos desvios"/>
+    <sr_latin txt="Prikaži rute na skretnicama"/>
   </Msg>
   <Msg id="userandomrate">
     <en txt="Use random block rate"/>
+    <de txt="Verwende Block-Zufalls-Rate"/>
+    <en_GB txt="Use random block rate"/>
+    <fr txt="Utiliser le classement aléatoire de bloc"/>
+    <it txt="Usare indice di casualità del blocco"/>
+    <nl txt="Gebruik blok toeval quote"/>
+    <pt_BR txt="Use frequência randômica de blocos"/>
+    <sl txt="Uporabi naključno stopnjo odseka"/>
   </Msg>
   <Msg id="randomrate">
     <en txt="Random rate"/>
+    <de txt="Zufalls-Rate"/>
+    <en_GB txt="Random rate"/>
+    <fr txt="Classement aléatoire"/>
+    <it txt="Indice di casualità"/>
+    <nl txt="Toeval quote"/>
+    <pt_BR txt="Frequência randômica"/>
+    <sl txt="Naključna stopnja"/>
+    <sr_latin txt="Slučajna stopa"/>
   </Msg>
   <Msg id="variabletable" dialog="true">
     <en txt="Variable table" alttxt="Variables" tip="Variable table"/>
+    <de txt="Variablen-Tabelle"/>
+    <en_GB txt="Variable table"/>
+    <it txt="Variabili"/>
+    <nl txt="Variabelen"/>
+    <pt_BR txt="Tabela de variáveis"/>
+    <ru txt="Переменные"/>
+    <sl txt="Seznam spremenljivk"/>
+    <sr_latin txt="Izmenjiva tabela"/>
   </Msg>
   <Msg id="subid">
     <en txt="Sub-ID"/>
+    <de txt="Sub-Kennung"/>
+    <it txt="Sub-ID"/>
+    <nl txt="Sub-ID"/>
+    <pt_BR txt="Sub-identificador"/>
+    <sl txt="Sub-ID"/>
+    <sr_latin txt="Pod-ID"/>
   </Msg>
 </Messages>
