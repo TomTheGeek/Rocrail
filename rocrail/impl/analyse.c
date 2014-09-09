@@ -383,6 +383,21 @@ static Boolean isSingleTrackRRCrossing( iONode node ) {
   return( False );
 }
 
+static Boolean is1x1CrossingWithMotor( iONode node ) {
+  if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) &&
+      StrOp.equals( wItem.gettype(node), wSwitch.crossing ) &&
+      /* rectangular -> size 1x1 */
+      wSwitch.isrectcrossing(node) &&
+      /* address used -> motor crossing */
+      ( ( wSwitch.getaddr1(node) != 0 ) ||
+        ( wSwitch.getport1(node) != 0 )
+      )
+    )
+    return( True );
+  else
+    return( False );
+}
+
 static Boolean isDoubleTrackRRCrossing( iONode node ) {
   if( StrOp.equals( NodeOp.getName(node), wSwitch.name() ) &&
       StrOp.equals( wItem.gettype(node), wSwitch.accessory ) &&
@@ -4073,6 +4088,42 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       return travel;
     }
 
+    /* 1x1 crossing with 1 motor */
+    else if( is1x1CrossingWithMotor( item ) ) {
+      if(turnoutstate == 0) {
+        /* straight through -> no change in direction */
+        return travel+twoWayTurnout;
+      }
+
+      /* turnoutstate not 0 -> turnout */
+      if( StrOp.equals( itemori, wItem.west ) || StrOp.equals( itemori, wItem.east ) ) {
+        switch( travel ) {
+          case 0: /* to west */
+            return oriNorth+twoWayTurnout;
+          case 1: /* to north */
+            return oriWest+twoWayTurnout;
+          case 2: /* to east */
+            return oriSouth+twoWayTurnout;
+          case 3: /* to south */
+            return oriEast+twoWayTurnout;
+        }
+      } else { /* orientation north or south */
+        switch( travel ) {
+          case 0: /* to west */
+            return oriSouth+twoWayTurnout;
+          case 1: /* to north */
+            return oriEast+twoWayTurnout;
+          case 2: /* to east */
+            return oriNorth+twoWayTurnout;
+          case 3: /* to south */
+            return oriWest+twoWayTurnout;
+        }
+      }
+
+      /* this should never be reached */
+      return travel;
+    }
+
     /* accessory 40 (double track bridge (2x4) */
     /* accessory 41 (single track bridge (1x4) */
     else if( isDoubleTrackBridge( item ) || isSingleTrackBridge( item ) ) {
@@ -4101,7 +4152,7 @@ static int __travel( iOAnalyse inst, iONode item, int travel, int turnoutstate, 
       return travel;
     }
 
-    /* switch */
+    /* "normal" switch */
     else if( __getType(item) == typeSwitch) {
 
       /* coming from the points */
@@ -5708,6 +5759,9 @@ static Boolean __analyseItem(iOAnalyse inst, iONode item, iOList route, int trav
       if( turnoutstate == 1) state = wSwitch.turnout;
       if( turnoutstate == 2) state = wSwitch.left;
       if( turnoutstate == 3) state = wSwitch.right;
+    } else if ( is1x1CrossingWithMotor(item) ) {
+      if( turnoutstate == 0) state = wSwitch.straight;
+      if( turnoutstate == 1) state = wSwitch.turnout;
     } else if ( StrOp.equals(wItem.gettype(item), wSwitch.crossing ) && (wSwitch.getaddr1(item) != 0 || wSwitch.getport1(item) != 0 )  ) {
       if( turnoutstate == 0) state = wSwitch.straight;
       if( turnoutstate == 1) state = wSwitch.straight;
