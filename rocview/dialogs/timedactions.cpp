@@ -396,7 +396,6 @@ void TimedActions::initOutputList() {
   iOList list = ListOp.inst();
 
   m_ID->Clear();
-  m_ID->Append( _T(" ") );
 
   if( model != NULL ) {
     iONode colist = wPlan.getcolist( model );
