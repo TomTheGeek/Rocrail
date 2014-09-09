@@ -245,7 +245,7 @@ void TimedActions::initValues() {
   m_ActTime->SetValue( wAction.getactiontime( m_Props) );
   m_Command->SetValue( wxString( wAction.getcmd( m_Props), wxConvUTF8) );
   m_Parameter->SetValue( wxString( wAction.getparam( m_Props), wxConvUTF8) );
-  m_ID->SetStringSelection( wxString( wAction.getoid( m_Props), wxConvUTF8) );
+  m_ID->SetValue( wxString( wAction.getoid( m_Props), wxConvUTF8) );
   m_SubID->SetValue( wxString( wAction.getsuboid( m_Props), wxConvUTF8) );
   m_Timer->SetValue( wAction.gettimer( m_Props) );
   m_DoubleQuote->SetValue( wAction.isdoublequote( m_Props) ? true:false );
@@ -341,7 +341,7 @@ bool TimedActions::evaluate() {
   wAction.setmin( m_Props, m_Min->GetValue() );
   wAction.setsec( m_Props, m_Sec->GetValue() );
   wAction.setcmd( m_Props, m_Command->GetValue().mb_str(wxConvUTF8) );
-  wAction.setoid( m_Props, m_ID->GetStringSelection().mb_str(wxConvUTF8) );
+  wAction.setoid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
   wAction.setsuboid( m_Props, m_SubID->GetValue().mb_str(wxConvUTF8) );
   if( StrOp.equals( " ", wAction.getoid( m_Props ) ) )
     wAction.setoid( m_Props, "" );
@@ -626,8 +626,8 @@ void TimedActions::CreateControls()
     itemFlexGridSizer15->Add(m_labID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxArrayString m_IDStrings;
-    m_ID = new wxChoice( m_DefinitionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_IDStrings, 0 );
-    itemFlexGridSizer15->Add(m_ID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_ID = new wxComboBox( m_DefinitionPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_IDStrings, wxCB_DROPDOWN );
+    itemFlexGridSizer15->Add(m_ID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSubID = new wxStaticText( m_DefinitionPanel, wxID_ANY, _("Sub-ID"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer15->Add(m_labSubID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);

@@ -46,7 +46,6 @@ class wxNotebook;
 #define ID_ACTIONCTRL_MODIFY 10194
 #define ID_CONDITIONS 10329
 #define ID_ACTIONCTRL_COND_TYPE 10342
-#define ID_ACTIOINCTRL_COND_ID 10344
 #define ID_ACTIONCTRL_COND_ADD 10376
 #define ID_ACTIONCTRL_COND_DELETE 10377
 #define ID_ACTIONCTRL_COND_MODIFY 10378
@@ -134,9 +133,6 @@ public:
     /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_ACTIONCTRL_COND_TYPE
     void OnActionctrlCondTypeSelected( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_ACTIOINCTRL_COND_ID
-    void OnActioinctrlCondIdSelected( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_COND_ADD
     void OnActionctrlCondAddClick( wxCommandEvent& event );
 
@@ -198,7 +194,7 @@ public:
     wxStaticText* m_labCondType;
     wxChoice* m_CondType;
     wxStaticText* m_labCondID;
-    wxChoice* m_CondID;
+    wxComboBox* m_CondID;
     wxStaticText* m_labSubID;
     wxTextCtrl* m_SubID;
     wxStaticText* m_labCondState;

@@ -81,7 +81,6 @@ BEGIN_EVENT_TABLE( ActionsCtrlDlg, wxDialog )
     EVT_BUTTON( ID_ACTIONCTRL_MODIFY, ActionsCtrlDlg::OnActionctrlModifyClick )
     EVT_LISTBOX( ID_CONDITIONS, ActionsCtrlDlg::OnConditionsSelected )
     EVT_CHOICE( ID_ACTIONCTRL_COND_TYPE, ActionsCtrlDlg::OnActionctrlCondTypeSelected )
-    EVT_CHOICE( ID_ACTIOINCTRL_COND_ID, ActionsCtrlDlg::OnActioinctrlCondIdSelected )
     EVT_BUTTON( ID_ACTIONCTRL_COND_ADD, ActionsCtrlDlg::OnActionctrlCondAddClick )
     EVT_BUTTON( ID_ACTIONCTRL_COND_DELETE, ActionsCtrlDlg::OnActionctrlCondDeleteClick )
     EVT_BUTTON( ID_ACTIONCTRL_COND_MODIFY, ActionsCtrlDlg::OnActionctrlCondModifyClick )
@@ -872,7 +871,7 @@ void ActionsCtrlDlg::CreateControls()
     itemFlexGridSizer31->Add(m_labCondID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxArrayString m_CondIDStrings;
-    m_CondID = new wxChoice( m_ConditionsPanel, ID_ACTIOINCTRL_COND_ID, wxDefaultPosition, wxDefaultSize, m_CondIDStrings, 0 );
+    m_CondID = new wxComboBox( m_ConditionsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, m_CondIDStrings, wxCB_DROPDOWN );
     itemFlexGridSizer31->Add(m_CondID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSubID = new wxStaticText( m_ConditionsPanel, wxID_ANY, _("Sub-ID"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1073,19 +1072,6 @@ void ActionsCtrlDlg::OnActionctrlCondTypeSelected( wxCommandEvent& event )
   initCondIDs();
 }
 
-
-/*!
- * wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_ACTIOINCTRL_COND_ID
- */
-
-void ActionsCtrlDlg::OnActioinctrlCondIdSelected( wxCommandEvent& event )
-{
-}
-
-
-/*!
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_COND_ADD
- */
 
 void ActionsCtrlDlg::OnActionctrlCondAddClick( wxCommandEvent& event )
 {
