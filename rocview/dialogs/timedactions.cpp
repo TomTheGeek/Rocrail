@@ -260,40 +260,33 @@ void TimedActions::initValues() {
   m_Port->SetValue( wAction.getport( m_Props ) );
 }
 
+
+void TimedActions::FillUseList(iONode node) {
+  for( int i = 0; i < NodeOp.getChildCnt(node); i++ ) {
+    iONode child = NodeOp.getChild(node, i);
+
+    iONode ctrl = NodeOp.findNode( child, wActionCtrl.name() );
+    while( ctrl != NULL ) {
+      if( StrOp.equals( wActionCtrl.getid(ctrl), wAction.getid( m_Props ) ) ) {
+        if( wItem.getid(child) == NULL || StrOp.len(wItem.getid(child)) == 0 )
+          m_UseList->Append( wxString(wItem.getid(node),wxConvUTF8) + _T(" (") + wxString(NodeOp.getName(node),wxConvUTF8) + _T(")"), node );
+        else
+          m_UseList->Append( wxString(wItem.getid(child),wxConvUTF8) + _T(" (") + wxString(NodeOp.getName(child),wxConvUTF8) + _T(")"), child );
+        break;
+      }
+      ctrl = NodeOp.findNextNode( child, ctrl );
+    }
+
+    FillUseList(child);
+  }
+}
+
 void TimedActions::initUse() {
   TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "InitUse" );
   m_UseList->Clear();
-  // TODO: Update the use tab.
+  // Update the use tab.
   iONode model = wxGetApp().getModel();
-  TraceOp.trc( "scdlg", TRCLEVEL_INFO, __LINE__, 9999, "find objects..." );
-  for( int i = 0; i < NodeOp.getChildCnt(model); i++ ) {
-    iONode list = NodeOp.getChild(model, i);
-    for( int n = 0; n < NodeOp.getChildCnt(list); n++ ) {
-      iONode child = NodeOp.getChild(list, n);
-      iONode ctrl = NodeOp.findNode( child, wActionCtrl.name() );
-      while( ctrl != NULL ) {
-        if( StrOp.equals( wActionCtrl.getid(ctrl), wAction.getid( m_Props ) ) ) {
-          m_UseList->Append( wxString(wItem.getid(child),wxConvUTF8) + _T(" (") + wxString(NodeOp.getName(child),wxConvUTF8) + _T(")"), child );
-          break;
-        }
-        ctrl = NodeOp.findNextNode( child, ctrl );
-      }
-
-      if( StrOp.equals( wSchedule.name(), NodeOp.getName(child) ) ) {
-        for( int nn = 0; nn < NodeOp.getChildCnt(child); nn++ ) {
-          iONode child2 = NodeOp.getChild(child, nn);
-          iONode ctrl = NodeOp.findNode( child2, wActionCtrl.name() );
-          while( ctrl != NULL ) {
-            if( StrOp.equals( wActionCtrl.getid(ctrl), wAction.getid( m_Props ) ) ) {
-              m_UseList->Append( wxString(wItem.getid(child),wxConvUTF8) + _T(" (") + wxString(NodeOp.getName(child),wxConvUTF8) + _T(")"), child );
-              break;
-            }
-            ctrl = NodeOp.findNextNode( child2, ctrl );
-          }
-        }
-      }
-    }
-  }
+  FillUseList(model);
 }
 
 

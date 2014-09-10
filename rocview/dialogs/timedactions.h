@@ -81,6 +81,7 @@ class TimedActions: public wxDialog, public BaseDialog
   void initOutputList();
   void initCommands();
   void initUse();
+  void FillUseList(iONode node);
   iONode m_Props;
 
 public:
