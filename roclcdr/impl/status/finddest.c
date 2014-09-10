@@ -80,8 +80,7 @@ void statusFindDest( iILcDriverInt inst ) {
     if( !wait ) {
       /* find destination using schedule */
       if( data->prewaitScheduleIdx != -1 ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-            "reset schedule index from %d to %d (preWait)", data->scheduleIdx, data->prewaitScheduleIdx );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset schedule index from %d to %d (preWait)", data->scheduleIdx, data->prewaitScheduleIdx );
         data->scheduleIdx = data->prewaitScheduleIdx;
         data->prewaitScheduleIdx = -1;
       }
@@ -123,18 +122,14 @@ void statusFindDest( iILcDriverInt inst ) {
   }
 
   if( data->next1Block != NULL ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-        "Found destination for \"%s\": \"%s\".",
-        data->loc->getId( data->loc ), data->next1Block->base.id( data->next1Block ) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Found destination for [%s]: [%s] by route [%s]",
+        data->loc->getId( data->loc ), data->next1Block->base.id( data->next1Block ), data->next1Route->base.id(data->next1Route) );
 
-    data->loc->informBlock( data->loc, data->next1Block->base.id(data->next1Block),
-        data->curBlock->base.id(data->curBlock) );
+    data->loc->informBlock( data->loc, data->next1Block->base.id(data->next1Block), data->curBlock->base.id(data->curBlock) );
 
     data->state = LC_INITDEST;
     data->loc->setMode(data->loc, wLoc.mode_auto);
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for \"%s\" from LC_FINDDEST to LC_INITDEST.",
-                   data->loc->getId( data->loc ) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Setting state for \"%s\" from LC_FINDDEST to LC_INITDEST.", data->loc->getId( data->loc ) );
 
   }
   else {
@@ -143,13 +138,9 @@ void statusFindDest( iILcDriverInt inst ) {
     data->loc->setMode(data->loc, wLoc.mode_wait);
     if( !data->warningnodestfound ) {
       data->warningnodestfound = True;
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                   "No destination found for [%s]; waiting...",
-                   data->loc->getId( data->loc ) );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "No destination found for [%s]; waiting...", data->loc->getId( data->loc ) );
     }
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Setting state for [%s] from LC_FINDDEST to LC_WAITBLOCK.",
-                   data->loc->getId( data->loc ) );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Setting state for [%s] from LC_FINDDEST to LC_WAITBLOCK.", data->loc->getId( data->loc ) );
   }
 
 }

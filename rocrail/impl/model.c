@@ -5185,7 +5185,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
       LocOp.swapPlacing(loc, NULL, False, False);
     }
 
-  } else {
+  }
+  else {
+    if( routeBest != NULL )
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "???? using route [%s] to block [%s]",
+          RouteOp.getId(routeBest), blockBest!=NULL?blockBest->base.id(blockBest):"?" );
     *routeref = routeBest;
   }
 
