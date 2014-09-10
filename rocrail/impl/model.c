@@ -4770,8 +4770,7 @@ static iIBlockBase __selectRandomBlock(iOLoc loc, int cnt, iOList fitBlocks, iOL
 
 
 /* synchronized!!! */
-static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char* fromRouteId, iOLoc loc,
-                          iORoute* routeref, const char* gotoBlockId,
+static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char* fromRouteId, iOLoc loc, iORoute* routeref, const char* gotoBlockId,
                           Boolean swapPlacingInPrevRoute, Boolean forceOppDir, Boolean schedule, Boolean secondnextblock) {
   iOModelData o = Data(inst);
 
@@ -4842,13 +4841,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
     if( fromBlock != NULL ) {
       allowChgDir = wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) );
       if( !allowChgDir ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "block [%s] does NOT allow a direction change", fromBlockId );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block [%s] does NOT allow a direction change", fromBlockId );
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "from block [%s] is not known in the model!!!", fromBlockId );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "from block [%s] is not known in the model!!!", fromBlockId );
     }
 
 
@@ -4977,8 +4974,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "ignore gotoblock [%s] for schedule", gotoBlockId );
                 }
                 else {
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                 "found the GOTO block [%s] for [%s]", gotoBlockId, LocOp.getId( loc ) );
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found the GOTO block [%s] for [%s]", gotoBlockId, LocOp.getId( loc ) );
                   blockBest = block;
                   routeBest = route;
                   /* ignore all other found fitting blocks */
@@ -5029,9 +5025,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                 if( blockBest == NULL ) {
                   if( (dirOK && samedir) ) {
                     /* direction flags fits */
-                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                   "found an ALT block [%s] for [%s] in the wanted direction",
-                                   blockId, LocOp.getId( loc ) );
+                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found an ALT block [%s] for [%s] in the wanted direction", blockId, LocOp.getId( loc ) );
                     blockAlt = block;
                     routeAlt = route;
                     ListOp.add( altBlocks, (obj)block );
@@ -5040,9 +5034,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   }
                   else if( dirOK && !samedir ) {
                     /* wrong direction alternative */
-                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                   "found an ALT block [%s] for [%s] in a permitted direction",
-                                   blockId, LocOp.getId( loc ) );
+                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found an ALT block [%s] for [%s] in a permitted direction", blockId, LocOp.getId( loc ) );
                     blockAlt = block;
                     routeAlt = route;
                     ListOp.add( altBlocks, (obj)block );
@@ -5051,16 +5043,12 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                     MapOp.put( swapRoutes, route->base.id(route), (obj)route );
                   }
                   else {
-                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                   "block [%s] for [%s] does not fit",
-                                   blockId, LocOp.getId( loc ) );
+                    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block [%s] for [%s] does not fit", blockId, LocOp.getId( loc ) );
                   }
                 }
                 else if( ( dirOK && samedir ) ) {
                   /* normal case alternative */
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                 "found an ALT block [%s] for [%s]",
-                                 blockId, LocOp.getId( loc ) );
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "found an ALT block [%s] for [%s]", blockId, LocOp.getId( loc ) );
                   blockAlt = block;
                   routeAlt = route;
                   ListOp.add( altBlocks, (obj)block );
@@ -5068,46 +5056,34 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                   altRestLen[ListOp.size(altBlocks)-1] = restlen;
                 }
                 else {
-                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                                 "block [%s] for [%s] does not fit",
-                                 blockId, LocOp.getId( loc ) );
+                  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block [%s] for [%s] does not fit", blockId, LocOp.getId( loc ) );
                 }
               }
               else {
-                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                               "block [%s] for [%s] does not fit",
-                               blockId, LocOp.getId( loc ) );
+                TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block [%s] for [%s] does not fit", blockId, LocOp.getId( loc ) );
               }
-
             }
             else {
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                             "Block \"%s\" is not free for \"%s\"",
-                             blockId, LocOp.getId( loc ) );
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block \"%s\" is not free for \"%s\"", blockId, LocOp.getId( loc ) );
             }
           }
           else {
-            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                           "Block [%s] not found", stTo );
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Block [%s] not found", stTo );
           }
         }
         else {
-          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-                         "from block %s is not equal to route from %s", fromBlockId, stFrom );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "from block %s is not equal to route from %s", fromBlockId, stFrom );
         }
-
       }
     }
   }
 
 
-
+  /* Pick one from the best fitting blocks. */
   if( ListOp.size( fitBlocks ) > 0 ) {
     int cnt = ListOp.size( fitBlocks );
     if( cnt == 1 ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block [%s] is well suited for [%s]",
-                     blockBest->base.id(blockBest), LocOp.getId( loc ) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] is well suited for [%s]", blockBest->base.id(blockBest), LocOp.getId( loc ) );
       *routeref = routeBest;
     }
     else if( selectShortest ) {
@@ -5122,8 +5098,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
           *routeref = (iORoute)ListOp.get( fitRoutes, i );
         }
       }
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block [%s] is shortest, restlen=%d,  of the well suited for [%s]",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] is shortest, restlen=%d, of the fir blocks for [%s]",
                      blockBest->base.id(blockBest), shortest, LocOp.getId( loc ) );
     }
     else if(schedule) {
@@ -5138,21 +5113,19 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
        the block must allow change direction and the loc must be swapped. */
     if( *routeref != NULL && wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) && MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
     {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Loco [%s] must swap for this route.",
-                     LocOp.getId( loc ) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco [%s] must swap for this route.", LocOp.getId( loc ) );
       LocOp.swapPlacing(loc, NULL, False, False);
     }
   }
+
+  /* Pick one from the alternative blocks. */
   else if( ListOp.size( altBlocks ) > 0 ) {
     int cnt = ListOp.size( altBlocks );
 
     if( cnt == 1 ) {
       blockBest = blockAlt;
       *routeref = routeAlt;
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block [%s] is suited for [%s]",
-                     blockBest->base.id(blockBest), LocOp.getId( loc ) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] is suited for [%s]", blockBest->base.id(blockBest), LocOp.getId( loc ) );
     }
     else if( selectShortest ) {
       int i = 0;
@@ -5166,8 +5139,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
           *routeref = (iORoute)ListOp.get( altRoutes, i );
         }
       }
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block [%s] is shortest, restlen=%d, of the well suited for [%s]",
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] is shortest, restlen=%d, of the alt blocks for [%s]",
                      blockBest->base.id(blockBest), shortest, LocOp.getId( loc ) );
     }
     else {
@@ -5179,14 +5151,13 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
        the loc must be swapped. In case of a mismatch the loc must not be swapped */
     if( wBlock.isallowchgdir( fromBlock->base.properties(fromBlock) ) && MapOp.haskey( swapRoutes, (*routeref)->base.id(*routeref) ) )
     {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Loco [%s] must swap for this route.",
-                     LocOp.getId( loc ) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Loco [%s] must swap for this route.", LocOp.getId( loc ) );
       LocOp.swapPlacing(loc, NULL, False, False);
     }
 
   }
   else {
+    /* ToDo: Weird else... */
     if( routeBest != NULL )
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "???? using route [%s] to block [%s]",
           RouteOp.getId(routeBest), blockBest!=NULL?blockBest->base.id(blockBest):"?" );
@@ -5203,10 +5174,11 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
   /* Unlock the semaphore: */
   MutexOp.post( o->muxFindDest );
 
-  /* TODO: return the iIBlockBase interface; could be a FY */
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "blockBest=0x%X gotoinwrongdir=%d",blockBest , gotoinwrongdir );
-  return gotoinwrongdir?NULL:blockBest;
+
+  return gotoinwrongdir ? NULL:blockBest;
 }
+
 
 static void __printObjects2Stream( iOMap map, const char* title, FILE* f ) {
   iIHtmlInt o = (iIHtmlInt)MapOp.first( map );
