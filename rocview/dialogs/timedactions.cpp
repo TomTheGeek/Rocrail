@@ -54,6 +54,7 @@
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/Variable.h"
+#include "rocrail/wrapper/public/Schedule.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -276,6 +277,20 @@ void TimedActions::initUse() {
           break;
         }
         ctrl = NodeOp.findNextNode( child, ctrl );
+      }
+
+      if( StrOp.equals( wSchedule.name(), NodeOp.getName(child) ) ) {
+        for( int nn = 0; nn < NodeOp.getChildCnt(child); nn++ ) {
+          iONode child2 = NodeOp.getChild(child, nn);
+          iONode ctrl = NodeOp.findNode( child2, wActionCtrl.name() );
+          while( ctrl != NULL ) {
+            if( StrOp.equals( wActionCtrl.getid(ctrl), wAction.getid( m_Props ) ) ) {
+              m_UseList->Append( wxString(wItem.getid(child),wxConvUTF8) + _T(" (") + wxString(NodeOp.getName(child),wxConvUTF8) + _T(")"), child );
+              break;
+            }
+            ctrl = NodeOp.findNextNode( child2, ctrl );
+          }
+        }
       }
     }
   }
