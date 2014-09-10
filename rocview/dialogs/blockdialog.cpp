@@ -2385,6 +2385,7 @@ void BlockDialog::initSensorCombos() {
     end[i]->SetValue( false );
     t2[i]->SetValue( false );
 
+    acts[i]->Append( wxString(wFeedbackEvent.free_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.enter_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.enter2route_event,wxConvUTF8) );
     acts[i]->Append( wxString(wFeedbackEvent.enter2in_event,wxConvUTF8) );

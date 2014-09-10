@@ -94,12 +94,18 @@ void eventEnter( iOLcDriver inst, const char* blockId, iIBlockBase block, Boolea
     if (data->state == LC_ENTERBLOCK && wLoc.isfreeblockonenter(data->loc->base.properties(data->loc)) &&
         data->next1Block->isFreeBlockOnEnter(data->next1Block) )
     {
-      TraceOp.trc(name, TRCLEVEL_USER1, __LINE__, 9999,
-          "Free previous block on enter for [%s] in [%s] with state [%d]", data->loc->getId(data->loc), blockId, data->state);
-
       data->useCurBlock4Signals = True;
       data->curBlock4Signals = data->curBlock;
-      freePrevBlock(inst, block);
+      if( !data->didFree ) {
+        TraceOp.trc(name, TRCLEVEL_USER1, __LINE__, 9999,
+            "Free previous block on enter for [%s] in [%s] with state [%d]", data->loc->getId(data->loc), blockId, data->state);
+
+        freePrevBlock(inst, block);
+      }
+      else {
+        /* Reset trigger */
+        data->didFree = False;
+      }
     }
     else {
       data->useCurBlock4Signals = False;

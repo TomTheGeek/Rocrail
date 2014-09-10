@@ -911,7 +911,7 @@
       <var name="v0atpoweron" vt="bool" defval="false"/>
       <var name="useonlyfirstident" vt="bool" defval="true"/>
       <var name="userandomrate" vt="bool" defval="false"/>
-      </ctrl>
+    </ctrl>
     <anaopt remark="Analyser options." wrappername="AnaOpt">
       <!-- option -->
       <var name="maxRecursionDepth" vt="int" defval="100" remark="maximum recursion depth"/>
@@ -2142,6 +2142,7 @@
           <const name="section_event" vt="string" val="section"/>
           <const name="pre2in_event" vt="string" val="pre2in"/>
           <const name="occupied_event" vt="string" val="occupied"/>
+          <const name="free_event" vt="string" val="free"/>
           <const name="V_min_event" vt="string" val="V_min"/>
           <const name="V_mid_event" vt="string" val="V_mid"/>
           <const name="V_max_event" vt="string" val="V_max"/>

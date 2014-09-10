@@ -246,65 +246,44 @@ static Boolean __acceptGhost( obj inst ) {
 static int _getEventCode( iOBlock inst, const char* evtname ) {
   if( inst != NULL ) {
     iOBlockData data = Data(inst);
-
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event [%s] in block [%s]", evtname, data->id );
-
-    if( StrOp.equals( evtname, wFeedbackEvent.enter_event ) ) {
-      return enter_event;
-    }
-    else if( StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) ) {
-      return enter2in_event;
-    }
-    else if( StrOp.equals( evtname, wFeedbackEvent.enter2shortin_event ) ) {
-      return enter2shortin_event;
-    }
-    else if( StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) ) {
-      return enter2pre_event;
-    }
-    else if( StrOp.equals( evtname, wFeedbackEvent.in_event ) ) {
-      return in_event;
-    }
-    else if( StrOp.equals( evtname, wFeedbackEvent.exit_event ) ) {
-      return exit_event;
-    }
-    else if( StrOp.equals( evtname, wFeedbackEvent.pre2in_event ) ) {
-      return pre2in_event;
-    }
-    else if( StrOp.equals( evtname, wFeedbackEvent.occupied_event ) )
-      return occupied_event;
-    else if( StrOp.equals( evtname, wFeedbackEvent.ident_event ) )
-      return ident_event;
-    else if( StrOp.equals( evtname, wFeedbackEvent.shortin_event ) ) {
-      return shortin_event;
-    }
-    else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unknown event=%s", evtname );
-      return 0;
-    }
   }
 
-  if( StrOp.equals( evtname, wFeedbackEvent.enter_event ) )
+  if( StrOp.equals( evtname, wFeedbackEvent.free_event ) ) {
+    return free_event;
+  }
+  else if( StrOp.equals( evtname, wFeedbackEvent.enter_event ) ) {
     return enter_event;
-  else if( StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) )
+  }
+  else if( StrOp.equals( evtname, wFeedbackEvent.enter2in_event ) ) {
     return enter2in_event;
-  else if( StrOp.equals( evtname, wFeedbackEvent.enter2shortin_event ) )
+  }
+  else if( StrOp.equals( evtname, wFeedbackEvent.enter2shortin_event ) ) {
     return enter2shortin_event;
-  else if( StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) )
+  }
+  else if( StrOp.equals( evtname, wFeedbackEvent.enter2pre_event ) ) {
     return enter2pre_event;
-  else if( StrOp.equals( evtname, wFeedbackEvent.in_event ) )
+  }
+  else if( StrOp.equals( evtname, wFeedbackEvent.in_event ) ) {
     return in_event;
-  else if( StrOp.equals( evtname, wFeedbackEvent.exit_event ) )
+  }
+  else if( StrOp.equals( evtname, wFeedbackEvent.exit_event ) ) {
     return exit_event;
-  else if( StrOp.equals( evtname, wFeedbackEvent.pre2in_event ) )
+  }
+  else if( StrOp.equals( evtname, wFeedbackEvent.pre2in_event ) ) {
     return pre2in_event;
+  }
   else if( StrOp.equals( evtname, wFeedbackEvent.occupied_event ) )
     return occupied_event;
   else if( StrOp.equals( evtname, wFeedbackEvent.ident_event ) )
     return ident_event;
-  else if( StrOp.equals( evtname, wFeedbackEvent.shortin_event ) )
+  else if( StrOp.equals( evtname, wFeedbackEvent.shortin_event ) ) {
     return shortin_event;
-  else
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "unknown event=%s", evtname );
     return 0;
+  }
 
 }
 
