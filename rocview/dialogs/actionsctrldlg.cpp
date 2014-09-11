@@ -72,22 +72,39 @@ BEGIN_EVENT_TABLE( ActionsCtrlDlg, wxDialog )
 
 ////@begin ActionsCtrlDlg event table entries
     EVT_LISTBOX( ID_ACTIONCTRL_LIST, ActionsCtrlDlg::OnActionctrlListSelected )
+
     EVT_BUTTON( ID_ACTIONCTRL_UP, ActionsCtrlDlg::OnActionctrlUpClick )
+
     EVT_BUTTON( ID_ACTIONCTRL_DOWN, ActionsCtrlDlg::OnActionctrlDownClick )
+
     EVT_BUTTON( ID_ACTIONCTRL_COPY, ActionsCtrlDlg::OnActionctrlCopyClick )
+
     EVT_BUTTON( ID_ACTIONCTRL_PASTE, ActionsCtrlDlg::OnActionctrlPasteClick )
+
     EVT_BUTTON( ID_ACTIONCTRL_ADD, ActionsCtrlDlg::OnActionctrlAddClick )
+
     EVT_BUTTON( ID_ACTIONCTRL_DELETE, ActionsCtrlDlg::OnActionctrlDeleteClick )
+
     EVT_BUTTON( ID_ACTIONCTRL_MODIFY, ActionsCtrlDlg::OnActionctrlModifyClick )
-    EVT_LISTBOX( ID_CONDITIONS, ActionsCtrlDlg::OnConditionsSelected )
+
+    EVT_LIST_ITEM_SELECTED( ID_CONDITIONS, ActionsCtrlDlg::OnConditionsSelected )
+
     EVT_CHOICE( ID_ACTIONCTRL_COND_TYPE, ActionsCtrlDlg::OnActionctrlCondTypeSelected )
+
     EVT_BUTTON( ID_ACTIONCTRL_COND_ADD, ActionsCtrlDlg::OnActionctrlCondAddClick )
+
     EVT_BUTTON( ID_ACTIONCTRL_COND_DELETE, ActionsCtrlDlg::OnActionctrlCondDeleteClick )
+
     EVT_BUTTON( ID_ACTIONCTRL_COND_MODIFY, ActionsCtrlDlg::OnActionctrlCondModifyClick )
+
     EVT_BUTTON( wxID_OK, ActionsCtrlDlg::OnOkClick )
+
     EVT_BUTTON( wxID_CANCEL, ActionsCtrlDlg::OnCancelClick )
+
     EVT_BUTTON( wxID_APPLY, ActionsCtrlDlg::OnApplyClick )
+
     EVT_BUTTON( wxID_HELP, ActionsCtrlDlg::OnHelpClick )
+
 ////@end ActionsCtrlDlg event table entries
 
 END_EVENT_TABLE()
@@ -109,6 +126,7 @@ ActionsCtrlDlg::ActionsCtrlDlg( wxWindow* parent, iONode node, const char* state
 
   m_Props = node;
   m_iCursel = wxNOT_FOUND;
+  m_iCurCondsel = wxNOT_FOUND;
 
   initLabels();
 
@@ -176,6 +194,12 @@ void ActionsCtrlDlg::initLabels() {
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
 
   // Conditions
+
+  m_Conditions->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
+  m_Conditions->InsertColumn(1, wxGetApp().getMsg( "subid" ), wxLIST_FORMAT_LEFT );
+  m_Conditions->InsertColumn(2, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_LEFT );
+  m_Conditions->InsertColumn(3, wxGetApp().getMsg( "state" ), wxLIST_FORMAT_LEFT );
+
   m_labCondID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_labCondType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_labCondState->SetLabel( wxGetApp().getMsg( "state" ) );
@@ -296,6 +320,46 @@ void ActionsCtrlDlg::initIndex(int cursel) {
 }
 
 
+void ActionsCtrlDlg::initCondIndex(int cursel ) {
+  m_iCurCondsel = wxNOT_FOUND;
+  m_Conditions->DeleteAllItems();
+  if( m_iCursel != wxNOT_FOUND ) {
+    iONode actionctrl = (iONode)m_CtrlList->GetClientData(m_iCursel);
+    int idx = 0;
+    iONode actioncond = wActionCtrl.getactioncond(actionctrl);
+    while( actioncond != NULL ) {
+      m_Conditions->InsertItem( idx, wxString(wActionCond.getid(actioncond),wxConvUTF8) );
+      m_Conditions->SetItem( idx, 1, wxString(wActionCond.getsubid(actioncond), wxConvUTF8) );
+      m_Conditions->SetItem( idx, 2, wxString(wActionCond.gettype(actioncond), wxConvUTF8) );
+      m_Conditions->SetItem( idx, 3, wxString(wActionCond.getstate(actioncond), wxConvUTF8) );
+      m_Conditions->SetItemPtrData(idx, (wxUIntPtr)actioncond);
+      idx++;
+      actioncond = wActionCtrl.nextactioncond(actionctrl, actioncond);
+    };
+
+    // resize
+    for( int n = 0; n < 4; n++ ) {
+      m_Conditions->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+      int autoheadersize = m_Conditions->GetColumnWidth(n);
+      m_Conditions->SetColumnWidth(n, wxLIST_AUTOSIZE);
+      int autosize = m_Conditions->GetColumnWidth(n);
+      if(autoheadersize > autosize )
+        m_Conditions->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
+    }
+
+
+    if(m_Conditions->GetItemCount() > 0) {
+      m_Conditions->SetItemState(cursel, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      m_iCurCondsel = cursel;
+      initCondValues();
+    }
+    else {
+      m_CondID->SetStringSelection( _T("*") );
+      m_CondState->SetValue( _T("") );
+    }
+  }
+}
+
 void ActionsCtrlDlg::initValues() {
   if( m_Props == NULL )
     return;
@@ -325,22 +389,7 @@ void ActionsCtrlDlg::initValues() {
 
     m_ConditionsPanel->Enable(true);
 
-    m_Conditions->Clear();
-    iONode actioncond = wActionCtrl.getactioncond(actionctrl);
-    while( actioncond != NULL ) {
-      m_Conditions->Append( wxString(wActionCond.getid(actioncond),wxConvUTF8), actioncond );
-      actioncond = wActionCtrl.nextactioncond(actionctrl, actioncond);
-    };
-
-    if(m_Conditions->GetCount() > 0) {
-      m_Conditions->SetSelection(0);
-      initCondValues();
-    }
-    else {
-      m_CondID->SetStringSelection( _T("*") );
-      m_CondState->SetValue( _T("") );
-    }
-
+    initCondIndex();
   }
   else {
     m_ConditionsPanel->Enable(false);
@@ -353,10 +402,8 @@ void ActionsCtrlDlg::initCondValues() {
   if( m_Props == NULL )
     return;
 
-  int cursel = m_Conditions->GetSelection();
-
-  if( cursel != wxNOT_FOUND ) {
-    iONode actioncond = (iONode)m_Conditions->GetClientData(cursel);
+  if( m_iCurCondsel != wxNOT_FOUND ) {
+    iONode actioncond = (iONode)m_Conditions->GetItemData(m_iCurCondsel);
     const char* type = wActionCond.gettype(actioncond);
     if( StrOp.equals( wSwitch.name(), type ) )
       m_CondType->SetSelection(0);
@@ -379,7 +426,7 @@ void ActionsCtrlDlg::initCondValues() {
     else if( StrOp.equals( wVariable.name(), type ) )
       m_CondType->SetSelection(9);
     initCondIDs();
-    m_CondID->SetStringSelection( m_Conditions->GetStringSelection() );
+    m_CondID->SetStringSelection( wxString(wActionCond.getid(actioncond),wxConvUTF8) );
     m_SubID->SetValue( wxString(wActionCond.getsubid(actioncond),wxConvUTF8) );
     m_CondState->SetValue( wxString(wActionCond.getstate(actioncond),wxConvUTF8) );
   }
@@ -508,34 +555,35 @@ void ActionsCtrlDlg::evaluate() {
 }
 
 
+void ActionsCtrlDlg::evaluateCond(iONode node) {
+
+    wActionCond.setid(node, m_CondID->GetStringSelection().mb_str(wxConvUTF8) );
+    wActionCond.setsubid(node, m_SubID->GetValue().mb_str(wxConvUTF8) );
+    wActionCond.setstate(node, m_CondState->GetValue().mb_str(wxConvUTF8) );
+
+    int typenr = m_CondType->GetSelection();
+    const char* type = wSwitch.name();
+    switch( typenr ) {
+      case 0: type = wSwitch.name(); break;
+      case 1: type = wSignal.name(); break;
+      case 2: type = wOutput.name(); break;
+      case 3: type = wFeedback.name(); break;
+      case 4: type = wLoc.name(); break;
+      case 5: type = wBlock.name(); break;
+      case 6: type = wSysCmd.name(); break;
+      case 7: type = wRoute.name(); break;
+      case 8: type = wOperator.name(); break;
+      case 9: type = wVariable.name(); break;
+    }
+    wActionCond.settype(node, type);
+}
+
+
 void ActionsCtrlDlg::evaluateCond() {
-
   if( m_iCursel != wxNOT_FOUND ) {
-    int cursel = m_Conditions->GetSelection();
-
-    if( cursel != wxNOT_FOUND ) {
-      iONode node = (iONode)m_Conditions->GetClientData(cursel);
-      wActionCond.setid(node, m_CondID->GetStringSelection().mb_str(wxConvUTF8) );
-      wActionCond.setsubid(node, m_SubID->GetValue().mb_str(wxConvUTF8) );
-      wActionCond.setstate(node, m_CondState->GetValue().mb_str(wxConvUTF8) );
-
-      int typenr = m_CondType->GetSelection();
-      const char* type = wSwitch.name();
-      switch( typenr ) {
-        case 0: type = wSwitch.name(); break;
-        case 1: type = wSignal.name(); break;
-        case 2: type = wOutput.name(); break;
-        case 3: type = wFeedback.name(); break;
-        case 4: type = wLoc.name(); break;
-        case 5: type = wBlock.name(); break;
-        case 6: type = wSysCmd.name(); break;
-        case 7: type = wRoute.name(); break;
-        case 8: type = wOperator.name(); break;
-        case 9: type = wVariable.name(); break;
-      }
-      wActionCond.settype(node, type);
-
-      m_Conditions->SetString(cursel, m_CondID->GetStringSelection() );
+    if( m_iCurCondsel != wxNOT_FOUND ) {
+      iONode node = (iONode)m_Conditions->GetItemData(m_iCurCondsel);
+      evaluateCond(node);
     }
   }
 }
@@ -605,16 +653,11 @@ void ActionsCtrlDlg::deleteSelectedCond() {
 
   iONode actionctrl = (iONode)m_CtrlList->GetClientData(m_iCursel);
 
-  int condsel = m_Conditions->GetSelection();
-
-  if( condsel != wxNOT_FOUND ) {
-    iONode node = (iONode)m_Conditions->GetClientData(condsel);
+  if( m_iCurCondsel != wxNOT_FOUND ) {
+    iONode node = (iONode)m_Conditions->GetItemData(m_iCurCondsel);
     NodeOp.removeChild(actionctrl, node);
     NodeOp.base.del(node);
-    m_Conditions->Delete(condsel);
-    if(m_Conditions->GetCount() > 0) {
-      m_Conditions->SetSelection(0);
-    }
+    initValues();
     initCondValues();
   }
 }
@@ -639,6 +682,20 @@ void ActionsCtrlDlg::addActionCtrl() {
 }
 
 
+void ActionsCtrlDlg::setCondSelection(const char* ID) {
+  int size = m_Conditions->GetItemCount();
+  for( int index = 0; index < size; index++ ) {
+    iONode node = (iONode)m_Conditions->GetItemData(index);
+    if( StrOp.equals( ID, wActionCond.getid(node) ) ) {
+      m_iCurCondsel = index;
+      m_Conditions->SetItemState(index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      break;
+    }
+  }
+
+}
+
+
 void ActionsCtrlDlg::addActionCond() {
   if( m_CondID->GetStringSelection().Len() == 0 )
     return;
@@ -646,20 +703,15 @@ void ActionsCtrlDlg::addActionCond() {
   if( m_iCursel == wxNOT_FOUND )
     return;
 
-
   iONode actionctrl = (iONode)m_CtrlList->GetClientData(m_iCursel);
-
   iONode node = NodeOp.inst( wActionCond.name(), actionctrl, ELEMENT_NODE);
 
   wActionCond.setid(node, m_CondID->GetStringSelection().mb_str(wxConvUTF8) );
 
-  m_Conditions->Append( wxString( wActionCond.getid(node),wxConvUTF8 ), node );
-  m_Conditions->SetStringSelection( m_CondID->GetStringSelection() );
-  m_Conditions->SetFirstItem( m_CondID->GetStringSelection() );
-
   NodeOp.addChild( actionctrl, node );
-
-  evaluateCond();
+  evaluateCond(node);
+  initCondIndex();
+  setCondSelection(wActionCond.getid(node));
 
 }
 
@@ -854,8 +906,7 @@ void ActionsCtrlDlg::CreateControls()
     wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxVERTICAL);
     m_ConditionsPanel->SetSizer(itemBoxSizer29);
 
-    wxArrayString m_ConditionsStrings;
-    m_Conditions = new wxListBox( m_ConditionsPanel, ID_CONDITIONS, wxDefaultPosition, wxSize(-1, 100), m_ConditionsStrings, wxLB_SINGLE );
+    m_Conditions = new wxListCtrl( m_ConditionsPanel, ID_CONDITIONS, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES );
     itemBoxSizer29->Add(m_Conditions, 1, wxGROW|wxALL, 5);
 
     wxFlexGridSizer* itemFlexGridSizer31 = new wxFlexGridSizer(0, 2, 0, 0);
@@ -1057,8 +1108,9 @@ void ActionsCtrlDlg::OnActionctrlListSelected( wxCommandEvent& event )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_CONDITIONS
  */
 
-void ActionsCtrlDlg::OnConditionsSelected( wxCommandEvent& event )
+void ActionsCtrlDlg::OnConditionsSelected( wxListEvent& event )
 {
+  m_iCurCondsel = event.GetIndex();
   initCondValues();
 }
 
@@ -1096,6 +1148,7 @@ void ActionsCtrlDlg::OnActionctrlCondDeleteClick( wxCommandEvent& event )
 void ActionsCtrlDlg::OnActionctrlCondModifyClick( wxCommandEvent& event )
 {
   evaluateCond();
+  initValues();
 }
 
 

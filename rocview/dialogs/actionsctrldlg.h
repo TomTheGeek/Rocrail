@@ -17,6 +17,7 @@
 
 ////@begin includes
 #include "wx/notebook.h"
+#include "wx/listctrl.h"
 ////@end includes
 
 #include "rocs/public/node.h"
@@ -27,6 +28,7 @@
 
 ////@begin forward declarations
 class wxNotebook;
+class wxListCtrl;
 ////@end forward declarations
 
 /*!
@@ -67,6 +69,7 @@ class ActionsCtrlDlg: public wxDialog
     DECLARE_EVENT_TABLE()
 
     void initIndex(int cursel);
+    void initCondIndex(int cursel=0);
     void initLabels();
     void initValues();
     void initCondValues();
@@ -78,11 +81,15 @@ class ActionsCtrlDlg: public wxDialog
     void addActionCtrl();
     
     void evaluateCond();
+    void evaluateCond(iONode node);
     void deleteSelectedCond();
     void addActionCond();
     void clearIndexSelection();
+    void setCondSelection(const char* ID);
+
     iONode m_Props;
     int m_iCursel;
+    int m_iCurCondsel;
 
 public:
     /// Constructors
@@ -127,8 +134,8 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ACTIONCTRL_MODIFY
     void OnActionctrlModifyClick( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_CONDITIONS
-    void OnConditionsSelected( wxCommandEvent& event );
+    /// wxEVT_COMMAND_LIST_ITEM_SELECTED event handler for ID_CONDITIONS
+    void OnConditionsSelected( wxListEvent& event );
 
     /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_ACTIONCTRL_COND_TYPE
     void OnActionctrlCondTypeSelected( wxCommandEvent& event );
@@ -190,7 +197,7 @@ public:
     wxButton* m_Delete;
     wxButton* m_Modify;
     wxPanel* m_ConditionsPanel;
-    wxListBox* m_Conditions;
+    wxListCtrl* m_Conditions;
     wxStaticText* m_labCondType;
     wxChoice* m_CondType;
     wxStaticText* m_labCondID;
