@@ -94,6 +94,14 @@ VariableDlgGen::VariableDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	bSizer4->Add( fgSizer2, 0, wxEXPAND, 5 );
 	
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_Actions = new wxButton( m_GeneralPanel, wxID_ANY, wxT("Actions..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer5->Add( m_Actions, 0, wxALL, 5 );
+	
+	bSizer4->Add( bSizer5, 0, wxEXPAND, 5 );
+	
 	m_GeneralPanel->SetSizer( bSizer4 );
 	m_GeneralPanel->Layout();
 	bSizer4->Fit( m_GeneralPanel );
@@ -124,6 +132,7 @@ VariableDlgGen::VariableDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	m_VarList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( VariableDlgGen::onListSelected ), NULL, this );
 	m_New->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onNew ), NULL, this );
 	m_Delete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onDelete ), NULL, this );
+	m_Actions->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onActions ), NULL, this );
 	m_StandardButtonsApply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onApply ), NULL, this );
 	m_StandardButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onCancel ), NULL, this );
 	m_StandardButtonsHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onHelp ), NULL, this );
@@ -137,6 +146,7 @@ VariableDlgGen::~VariableDlgGen()
 	m_VarList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( VariableDlgGen::onListSelected ), NULL, this );
 	m_New->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onNew ), NULL, this );
 	m_Delete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onDelete ), NULL, this );
+	m_Actions->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onActions ), NULL, this );
 	m_StandardButtonsApply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onApply ), NULL, this );
 	m_StandardButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onCancel ), NULL, this );
 	m_StandardButtonsHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onHelp ), NULL, this );

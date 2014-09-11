@@ -53,6 +53,7 @@ class VariableDlgGen : public wxDialog
 		wxTextCtrl* m_Text;
 		wxStaticText* m_labValue;
 		wxSpinCtrl* m_Value;
+		wxButton* m_Actions;
 		wxStdDialogButtonSizer* m_StandardButtons;
 		wxButton* m_StandardButtonsOK;
 		wxButton* m_StandardButtonsApply;
@@ -64,6 +65,7 @@ class VariableDlgGen : public wxDialog
 		virtual void onListSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void onNew( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onActions( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onApply( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onCancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onHelp( wxCommandEvent& event ) { event.Skip(); }

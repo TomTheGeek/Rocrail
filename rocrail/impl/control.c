@@ -31,6 +31,7 @@
 #include "rocrail/public/block.h"
 #include "rocrail/public/r2rnet.h"
 #include "rocrail/public/dec.h"
+#include "rocrail/public/var.h"
 
 #include "rocint/public/digint.h"
 
@@ -1424,8 +1425,10 @@ static void __checkActions( iOControl control, int seconds ) {
       if( varlist != NULL ) {
         iONode var = wVariableList.getvr( varlist );
         while( var != NULL ) {
-          if( wVariable.istimer(var) )
+          if( wVariable.istimer(var) ) {
             wVariable.setvalue(var, wVariable.getvalue(var) + 1);
+            VarOp.checkActions(var);
+          }
           var = wVariableList.nextvr( varlist, var );
         };
       }

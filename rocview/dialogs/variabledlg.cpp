@@ -27,6 +27,8 @@
 #include "wx/defs.h"
 #endif
 
+#include "actionsctrldlg.h"
+
 #include "rocview/public/guiapp.h"
 #include "rocrail/wrapper/public/ModelCmd.h"
 #include "rocrail/wrapper/public/Plan.h"
@@ -70,6 +72,7 @@ void VariableDlg::initLabels() {
   m_labMax->SetLabel( wxGetApp().getMsg( "max" ) );
   m_labText->SetLabel( wxGetApp().getMsg( "text" ) );
   m_labValue->SetLabel( wxGetApp().getMsg( "value" ) );
+  m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
 }
 
 void VariableDlg::onListSelected( wxListEvent& event ) {
@@ -319,4 +322,18 @@ void VariableDlg::onOK( wxCommandEvent& event )
 {
   onApply(event);
   EndModal( wxID_OK );
+}
+
+
+void VariableDlg::onActions( wxCommandEvent& event )
+{
+  if( m_Props == NULL )
+    return;
+
+  ActionsCtrlDlg*  dlg = new ActionsCtrlDlg(this, m_Props );
+
+  if( wxID_OK == dlg->ShowModal() ) {
+  }
+
+  dlg->Destroy();
 }

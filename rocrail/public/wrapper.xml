@@ -2958,7 +2958,7 @@
         <var name="port" vt="int" defval="0" range="0-*"/>
         <var name="sndfile" vt="string" defval="" range="*" required="true"/>
         <var name="sndvolume" vt="int" defval="10" range="0-*"/>
-        </ac>
+      </ac>
     </aclist>
 
     <seltablist cardinality="1" remark="selection table list" wrappername="SelTabList">
@@ -3031,6 +3031,7 @@
           <var name="s2id" vt="string" defval="NULL" range="*" remark="sensor 2 id for optical feedback of the selected position"/>
         </seltabpos>
         <fbevent cardinality="n"/>
+        <actionctrl cardinality="n"/>
       </seltab>
     </seltablist>
 
@@ -3055,6 +3056,7 @@
         <const name="op_max" vt="string" val="max"/>
         <const name="op_start" vt="string" val="start"/>
         <const name="op_stop" vt="string" val="stop"/>
+        <actionctrl cardinality="n"/>
       </vr>
     </vrlist>
 

@@ -44,6 +44,7 @@ class VariableDlg : public VariableDlgGen
 		void onHelp( wxCommandEvent& event );
 		void onOK( wxCommandEvent& event );
 		void onListSelected( wxListEvent& event );
+		void onActions( wxCommandEvent& event );
 
 		void initIndex();
     void initLabels();

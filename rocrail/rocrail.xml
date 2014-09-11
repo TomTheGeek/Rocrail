@@ -2686,4 +2686,10 @@
       </data>
   </object>
   
+  <object name="Var" use="node,map" include="htmlint" remark="Decoder object">
+    <fun name="checkActions" vt="void">
+      <param name="var" vt="iONode" remark="Variable properties"/>
+    </fun>
+  </object>
+  
 </Project>
