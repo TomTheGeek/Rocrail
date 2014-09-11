@@ -35,6 +35,7 @@
 #include "rocrail/public/loc.h"
 #include "rocrail/public/fback.h"
 #include "rocrail/public/car.h"
+#include "rocrail/public/var.h"
 
 #include "rocs/public/system.h"
 #include "rocs/public/mem.h"
@@ -691,6 +692,8 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         wVariable.settimer(var, False);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer stopped", oid, cmdStr );
       }
+
+      VarOp.checkActions(var);
 
       /* Broadcast to clients. */
       {
