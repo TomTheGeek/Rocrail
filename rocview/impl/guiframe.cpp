@@ -2618,7 +2618,7 @@ void RocGuiFrame::create() {
   if(wGui.isgrayicons(m_Ini)) {
     m_MonitorPanel->SetBackgroundColour(Base::getGrey());
     wxFont font = m_MonitorPanel->GetFont();
-    font.SetPointSize( font.GetPointSize() -2 );
+    font.SetPointSize( font.GetPointSize() + wGui.getgridfontsizeadjust(m_Ini) );
     m_MonitorPanel->SetFont(font);
   }
   monitorSizer->Add(monitorTitle, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
