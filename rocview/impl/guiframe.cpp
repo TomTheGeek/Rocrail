@@ -2600,7 +2600,7 @@ void RocGuiFrame::create() {
   if(wGui.isgrayicons(m_Ini)) {
     m_WarningPanel->SetBackgroundColour(Base::getGrey());
     wxFont font = m_WarningPanel->GetFont();
-    font.SetPointSize( font.GetPointSize() -2 );
+    font.SetPointSize( font.GetPointSize() + wGui.getgridfontsizeadjust(m_Ini) );
     m_WarningPanel->SetFont(font);
   }
   warningSizer->Add(warningTitle, 0, wxGROW|wxALL|wxADJUST_MINSIZE, 0);
