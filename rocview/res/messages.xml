@@ -29053,4 +29053,7 @@
     <sl txt="Sub-ID"/>
     <sr_latin txt="Pod-ID"/>
   </Msg>
+  <Msg id="binary">
+    <en txt="binary"/>
+  </Msg>
 </Messages>

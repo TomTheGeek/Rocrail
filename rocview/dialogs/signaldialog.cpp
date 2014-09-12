@@ -239,6 +239,7 @@ void SignalDialog::initLabels() {
   m_SignalControl->SetString( 1, wxGetApp().getMsg( "patterns" ) );
   m_SignalControl->SetString( 2, wxGetApp().getMsg( "aspectnr" ) );
   m_SignalControl->SetString( 3, wxGetApp().getMsg( "linear" ) );
+  m_SignalControl->SetString( 4, wxGetApp().getMsg( "binary" ) );
 
   m_Invert->SetLabel( wxGetApp().getMsg( "invert" ) );
   m_PairGates->SetLabel( wxGetApp().getMsg( "pairgates" ) );
@@ -956,6 +957,7 @@ void SignalDialog::CreateControls()
     m_SignalControlStrings.Add(_("&patterns"));
     m_SignalControlStrings.Add(_("&aspect nr"));
     m_SignalControlStrings.Add(_("&linear"));
+    m_SignalControlStrings.Add(_("&binary"));
     m_SignalControl = new wxRadioBox( m_InterfacePanel, ID_SIGNALCONTROL, _("Signal control"), wxDefaultPosition, wxDefaultSize, m_SignalControlStrings, 1, wxRA_SPECIFY_COLS );
     m_SignalControl->SetSelection(0);
     itemBoxSizer73->Add(m_SignalControl, 0, wxALIGN_LEFT|wxLEFT, 5);
@@ -993,7 +995,7 @@ void SignalDialog::CreateControls()
     m_labCmdTime = new wxStaticText( m_InterfacePanel, wxID_ANY, _("Command time"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer77->Add(m_labCmdTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_CmdTime = new wxSpinCtrl( m_InterfacePanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
+    m_CmdTime = new wxSpinCtrl( m_InterfacePanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 1000, 0 );
     itemFlexGridSizer77->Add(m_CmdTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_Notebook->AddPage(m_InterfacePanel, _("Interface"));
@@ -1024,7 +1026,7 @@ void SignalDialog::CreateControls()
     m_labAspects = new wxStaticText( m_PropsPanel, wxID_ANY, _("Aspects"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer88->Add(m_labAspects, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Aspects = new wxSpinCtrl( m_PropsPanel, wxID_ANY, _T("2"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 2, 32, 2 );
+    m_Aspects = new wxSpinCtrl( m_PropsPanel, wxID_ANY, wxT("2"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 2, 32, 2 );
     itemFlexGridSizer88->Add(m_Aspects, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSymbolPrefix = new wxStaticText( m_PropsPanel, wxID_ANY, _("Symbol prefix"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1085,7 +1087,7 @@ void SignalDialog::CreateControls()
     m_Green2->SetSelection(0);
     itemFlexGridSizer98->Add(m_Green2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_GreenNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
+    m_GreenNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
     itemFlexGridSizer98->Add(m_GreenNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labRed = new wxStaticText( m_PropsPanel, ID_STATICTEXT_SG_RED, _("Red"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1107,7 +1109,7 @@ void SignalDialog::CreateControls()
     m_Red2->SetSelection(0);
     itemFlexGridSizer98->Add(m_Red2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_RedNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
+    m_RedNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
     itemFlexGridSizer98->Add(m_RedNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labYellow = new wxStaticText( m_PropsPanel, ID_STATICTEXT_SG_YELLOW, _("Yellow"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1129,7 +1131,7 @@ void SignalDialog::CreateControls()
     m_Yellow2->SetSelection(0);
     itemFlexGridSizer98->Add(m_Yellow2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_YellowNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
+    m_YellowNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
     itemFlexGridSizer98->Add(m_YellowNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labWhite = new wxStaticText( m_PropsPanel, ID_STATICTEXT_SG_WHITE, _("White"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1151,7 +1153,7 @@ void SignalDialog::CreateControls()
     m_White2->SetSelection(0);
     itemFlexGridSizer98->Add(m_White2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_WhiteNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
+    m_WhiteNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
     itemFlexGridSizer98->Add(m_WhiteNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labBlank = new wxStaticText( m_PropsPanel, wxID_ANY, _("Blank"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1173,7 +1175,7 @@ void SignalDialog::CreateControls()
     m_Blank2->SetSelection(0);
     itemFlexGridSizer98->Add(m_Blank2, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_BlankNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
+    m_BlankNr = new wxSpinCtrl( m_PropsPanel, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(60, -1), wxSP_ARROW_KEYS, 0, 31, 0 );
     itemFlexGridSizer98->Add(m_BlankNr, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Notebook->AddPage(m_PropsPanel, _("Properties"));
@@ -1406,6 +1408,11 @@ void SignalDialog::OnSignalcontrolSelected( wxCommandEvent& event )
   }
   else if( ctrl == 3 ) {
     /* Linear */
+    patterns = true;
+    aspectnrs = true;
+  }
+  else if( ctrl == 4 ) {
+    /* binary */
     patterns = true;
     aspectnrs = true;
   }

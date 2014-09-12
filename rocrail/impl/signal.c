@@ -969,18 +969,11 @@ static Boolean __process2AspectsCmd( iOSignal inst, const char* state ) {
 
 
 
-
-static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) {
+static Boolean __processBinaryCmd( iOSignal inst, const char* state, int nr ) {
   iOSignalData o = Data(inst);
   iOControl control = AppOp.getControl(  );
-  const char* iid = wSignal.getiid( o->props );
   int aspect = 0;
-  char saspect[32] = {'\0'};
-
-  iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-      "aspect number processing for signal [%s] state=%s aspect=%d", wSignal.getid( o->props ), state, nr );
+  const char* iid = wSignal.getiid( o->props );
 
   if( nr != -1 )
     aspect = nr;
@@ -994,6 +987,47 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) 
     aspect = wSignal.getwhitenr(o->props);
   else if( StrOp.equals( wSignal.blank, state ) )
     aspect = wSignal.getblanknr(o->props);
+
+  iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "binary processing for signal [%s][%s]...", wSignal.getid( o->props ), state );
+
+  /* reset all outputs */
+  if( iid != NULL )
+    wOutput.setiid( cmd, iid );
+
+  wOutput.setbus( cmd, wSignal.getbus( o->props ) );
+  wItem.setuidname(cmd, wItem.getuidname(o->props));
+  wOutput.setprot( cmd, wSignal.getprot( o->props ) );
+  wOutput.setaccessory( cmd, wSignal.isaccessory(o->props) );
+  wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
+
+  wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+  wOutput.setcmd( cmd, aspect&0x01?wOutput.on:wOutput.off );
+  ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+  wOutput.setaddr( cmd, wSignal.getaddr( o->props ) + 1);
+  wOutput.setcmd( cmd, aspect&0x02?wOutput.on:wOutput.off );
+  ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+  wOutput.setaddr( cmd, wSignal.getaddr( o->props ) + 2);
+  wOutput.setcmd( cmd, aspect&0x04?wOutput.on:wOutput.off );
+  ControlOp.cmd( control, cmd, NULL );
+
+  return True;
+}
+
+
+static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) {
+  iOSignalData o = Data(inst);
+  iOControl control = AppOp.getControl(  );
+  const char* iid = wSignal.getiid( o->props );
+  int aspect = 0;
+  char saspect[32] = {'\0'};
+
+  iONode cmd = NodeOp.inst( wSignal.name(), NULL, ELEMENT_NODE );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+      "aspect number processing for signal [%s] state=%s aspect=%d", wSignal.getid( o->props ), state, nr );
 
   /* reset all outputs */
   if( iid != NULL )
@@ -1227,6 +1261,13 @@ static Boolean __doCmd( iOSignal inst, iONode nodeA, Boolean update ) {
     }
     else if( hasAddr && wSignal.getusepatterns( o->props ) == wSignal.use_aspectnrs ) {
       if( !__processAspectNrCmd( inst, state, aspectnr ) ) {
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
+            "Signal [%s] could not be set!", wSignal.getid( o->props ) );
+        ok = False;
+      }
+    }
+    else if( hasAddr && wSignal.getusepatterns( o->props ) == wSignal.use_binary ) {
+      if( !__processBinaryCmd( inst, state, aspectnr ) ) {
         TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999,
             "Signal [%s] could not be set!", wSignal.getid( o->props ) );
         ok = False;
