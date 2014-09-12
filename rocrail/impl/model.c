@@ -4736,24 +4736,35 @@ static iIBlockBase __selectRandomBlock(iOLoc loc, int cnt, iOList fitBlocks, iOL
   Boolean userandomrate = wCtrl.isuserandomrate( wRocRail.getctrl( AppOp.getIni() ) );
   if( userandomrate ) {
     int nn = 0;
-    ListOp.sort( fitBlocks, &__sortRandomRate );
+    int i = 0;
+    iOList blockList = ListOp.inst();
+    for( i = 0; i < ListOp.size(fitBlocks); i++ ) {
+      ListOp.add(blockList, ListOp.get(fitBlocks, i) );
+    }
+    ListOp.sort( blockList, &__sortRandomRate );
     for( nn = 0; nn < cnt; nn++ ) {
-      iIBlockBase b = (iIBlockBase)ListOp.get( fitBlocks, nn );
+      iIBlockBase b = (iIBlockBase)ListOp.get( blockList, nn );
       total += b->getRandomRate(b);
     }
     randChoice = randNumber % total;
     for( nn = 0; nn < cnt; nn++ ) {
-      iIBlockBase b = (iIBlockBase)ListOp.get( fitBlocks, nn );
+      iIBlockBase b = (iIBlockBase)ListOp.get( blockList, nn );
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "randChoice=%d block randomRate=%d", randChoice, b->getRandomRate(b) );
       if( randChoice <= b->getRandomRate(b) ) {
         blockBest = b;
-        *routeref = (iORoute)ListOp.get( fitRoutes, nn );
+        for( i = 0; i < ListOp.size(fitBlocks); i++ ) {
+          if( ListOp.get(fitBlocks, i) == (obj)b ) {
+            *routeref = (iORoute)ListOp.get( fitRoutes, i );
+            break;
+          }
+        }
         break;
       }
       else {
         randChoice -= b->getRandomRate(b);
       }
     }
+    ListOp.base.del(blockList);
   }
   else {
     randChoice = randNumber % cnt;
@@ -4762,8 +4773,9 @@ static iIBlockBase __selectRandomBlock(iOLoc loc, int cnt, iOList fitBlocks, iOL
   }
 
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                 "Block [%s] is suited for [%s] and picked from [%d] choices; randChoice=%d, total RandomRate=%d userandomrate=%d",
-                 blockBest!=NULL?blockBest->base.id(blockBest):"NULL", LocOp.getId( loc ), cnt, randChoice, total, userandomrate );
+                 "Block [%s][%s] is suited for [%s] and picked from [%d] choices; randChoice=%d, total RandomRate=%d userandomrate=%d",
+                     blockBest!=NULL?blockBest->base.id(blockBest):"NULL", *routeref!=NULL?(*routeref)->base.id(*routeref):"NULL",
+                     LocOp.getId( loc ), cnt, randChoice, total, userandomrate );
 
   return blockBest;
 }
