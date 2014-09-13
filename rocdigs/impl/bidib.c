@@ -2179,10 +2179,14 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
             "MSG_FEATURE_NA, uid=%08X feature=(%d) %s is not available", bidibnode->uid, feature, bidibGetFeatureName(feature) );
 
         if( bidibnode->pendingfeature == feature ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "reject pending feature: uid=%08X feature=(%d) %s", bidibnode->uid, feature, bidibGetFeatureName(feature) );
           bidibnode->pendingfeature = -1;
           data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
         }
         else if( feature == FEATURE_BM_SECACK_AVAILABLE ) {
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+              "reject pending feature: uid=%08X feature=(%d) %s", bidibnode->uid, feature, bidibGetFeatureName(feature) );
           bidibnode->pendingfeature = -1;
           data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
         }
