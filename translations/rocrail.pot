@@ -7484,6 +7484,6 @@ msgstr ""
 #. 
 # id="binary"
 #, c-format
-msgid "binary"
+msgid "Binary"
 msgstr ""
 
