@@ -294,8 +294,8 @@ static void __checkAction( iORoute inst, const char* state ) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "action state does not match: [%s-%s]",
-          wActionCtrl.getstate( action ), state );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s action state does not match: [%s-%s]",
+          wRoute.getid(data->props), wActionCtrl.getstate( action ), state );
     }
 
     action = wRoute.nextactionctrl( data->props, action );

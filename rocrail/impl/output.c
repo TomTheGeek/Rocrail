@@ -158,8 +158,8 @@ static void __checkActions(iOOutput inst, const char* cmd) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-          wActionCtrl.getstate( coaction ), wOutput.getstate(data->props) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s action state does not match: [%s-%s]",
+          wOutput.getid(data->props), wActionCtrl.getstate( coaction ), wOutput.getstate(data->props) );
     }
 
 

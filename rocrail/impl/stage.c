@@ -207,8 +207,8 @@ static void __checkAction( iOStage inst, const char* state ) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-          wActionCtrl.getstate( action ), state );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s action state does not match: [%s-%s]",
+          wStage.getid(data->props), wActionCtrl.getstate( action ), state );
     }
 
     action = wStage.nextactionctrl( data->props, action );

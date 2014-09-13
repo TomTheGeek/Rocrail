@@ -99,8 +99,8 @@ static void __checkAction( iOLoc inst, const char* state ) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-            wActionCtrl.getstate( lcaction ), state );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s action state does not match: [%s-%s]",
+            wLoc.getid(data->props), wActionCtrl.getstate( lcaction ), state );
       }
     lcaction = wLoc.nextactionctrl( data->props, lcaction );
   }

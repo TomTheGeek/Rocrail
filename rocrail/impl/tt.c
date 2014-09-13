@@ -146,8 +146,8 @@ static void __checkAction( iOTT inst, const char* cmd ) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-          wActionCtrl.getstate( ttaction ), cmd );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s action state does not match: [%s-%s]",
+          wTurntable.getid(data->props), wActionCtrl.getstate( ttaction ), cmd );
     }
     ttaction = wTurntable.nextactionctrl( data->props, ttaction );
   } /* end loop */

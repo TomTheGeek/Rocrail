@@ -183,8 +183,8 @@ static void __checkAction( iOFBack inst ) {
           data->counter, data->carcount, data->countedcars, data->wheelcount );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s] statecounter=%d counter=%d",
-          wActionCtrl.getstate( fbaction ), data->state?"on/true":"off/false", counter, data->counter );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s action state does not match: [%s-%s] statecounter=%d counter=%d",
+          wFeedback.getid( data->props ), wActionCtrl.getstate( fbaction ), data->state?"on/true":"off/false", counter, data->counter );
     }
 
     fbaction = wFeedback.nextactionctrl( data->props, fbaction );

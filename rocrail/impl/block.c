@@ -174,8 +174,8 @@ static void __checkAction( iOBlock inst, const char* state ) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "action state does not match: [%s-%s]",
-          wActionCtrl.getstate( action ), state );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s action state does not match: [%s-%s]",
+          data->id, wActionCtrl.getstate( action ), state );
     }
 
     action = wBlock.nextactionctrl( data->props, action );

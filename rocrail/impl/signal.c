@@ -1145,8 +1145,8 @@ static void __checkAction( iOSignal inst ) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-            wActionCtrl.getstate( sgaction ), wSignal.getstate(data->props) );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s action state does not match: [%s-%s]",
+            wSignal.getid(data->props), wActionCtrl.getstate( sgaction ), wSignal.getstate(data->props) );
       }
     sgaction = wSignal.nextactionctrl( data->props, sgaction );
   }

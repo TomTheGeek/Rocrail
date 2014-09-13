@@ -319,8 +319,8 @@ static void __checkAction( iOSwitch inst ) {
       }
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action state does not match: [%s-%s]",
-          wActionCtrl.getstate( swaction ), wSwitch.getstate(data->props) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%s action state does not match: [%s-%s]",
+          wSwitch.getid(data->props), wActionCtrl.getstate( swaction ), wSwitch.getstate(data->props) );
     }
     swaction = wSwitch.nextactionctrl( data->props, swaction );
   } /* end loop */
