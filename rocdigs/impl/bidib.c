@@ -296,7 +296,6 @@ static void __SoD4Node( iOBiDiB inst, iOBiDiBNode node, Boolean force ) {
       data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node);
     }
     else {
-      node->pendingfeature = FEATURE_BM_SECACK_ON;
       msgdata[0] = FEATURE_BM_SECACK_ON;
       msgdata[1] = 0;
       data->subWrite((obj)inst, node->path, MSG_FEATURE_SET, msgdata, 2, node);
@@ -2178,6 +2177,15 @@ static void __handleNodeFeature(iOBiDiB bidib, iOBiDiBNode bidibnode, byte Type,
       if( feature != 255 ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
             "MSG_FEATURE_NA, uid=%08X feature=(%d) %s is not available", bidibnode->uid, feature, bidibGetFeatureName(feature) );
+
+        if( bidibnode->pendingfeature == feature ) {
+          bidibnode->pendingfeature = -1;
+          data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
+        }
+        else if( feature == FEATURE_BM_SECACK_AVAILABLE ) {
+          bidibnode->pendingfeature = -1;
+          data->subWrite((obj)bidib, bidibnode->path, MSG_FEATURE_GETNEXT, NULL, 0, bidibnode);
+        }
       }
     }
   }
