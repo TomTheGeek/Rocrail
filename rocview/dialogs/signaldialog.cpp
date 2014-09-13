@@ -1413,8 +1413,8 @@ void SignalDialog::OnSignalcontrolSelected( wxCommandEvent& event )
   }
   else if( ctrl == 4 ) {
     /* binary */
-    patterns = true;
-    aspectnrs = true;
+    patterns = false;
+    aspectnrs = false;
   }
 
   m_Gate1->Enable(!patterns);

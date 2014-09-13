@@ -1003,16 +1003,39 @@ static Boolean __processBinaryCmd( iOSignal inst, const char* state, int nr ) {
   wOutput.setaccessory( cmd, wSignal.isaccessory(o->props) );
   wOutput.setporttype( cmd, wSignal.getporttype( o->props ) );
 
-  wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
-  wOutput.setcmd( cmd, aspect&0x01?wOutput.on:wOutput.off );
-  ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
-  wOutput.setaddr( cmd, wSignal.getaddr( o->props ) + 1);
-  wOutput.setcmd( cmd, aspect&0x02?wOutput.on:wOutput.off );
-  ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
-  wOutput.setaddr( cmd, wSignal.getaddr( o->props ) + 2);
-  wOutput.setcmd( cmd, aspect&0x04?wOutput.on:wOutput.off );
-  ControlOp.cmd( control, cmd, NULL );
+  if( wSignal.getaddr( o->props ) > 0 || wSignal.getport1( o->props ) > 0 ) {
+    wOutput.setaddr( cmd, wSignal.getaddr( o->props ) );
+    wOutput.setport( cmd, wSignal.getport1( o->props ) );
+    wOutput.setgate( cmd, wSignal.getgate1( o->props ) );
+    wOutput.setcmd( cmd, aspect&0x01?wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+  }
 
+  if( wSignal.getaddr2( o->props ) > 0 || wSignal.getport2( o->props ) > 0 ) {
+    wOutput.setaddr( cmd, wSignal.getaddr2( o->props ) );
+    wOutput.setport( cmd, wSignal.getport2( o->props ) );
+    wOutput.setgate( cmd, wSignal.getgate2( o->props ) );
+    wOutput.setcmd( cmd, aspect&0x02?wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+  }
+
+  if( wSignal.getaddr3( o->props ) > 0 || wSignal.getport3( o->props ) > 0 ) {
+    wOutput.setaddr( cmd, wSignal.getaddr3( o->props ) );
+    wOutput.setport( cmd, wSignal.getport3( o->props ) );
+    wOutput.setgate( cmd, wSignal.getgate3( o->props ) );
+    wOutput.setcmd( cmd, aspect&0x04?wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+  }
+
+  if( wSignal.getaddr4( o->props ) > 0 || wSignal.getport4( o->props ) > 0 ) {
+    wOutput.setaddr( cmd, wSignal.getaddr4( o->props ) );
+    wOutput.setport( cmd, wSignal.getport4( o->props ) );
+    wOutput.setgate( cmd, wSignal.getgate4( o->props ) );
+    wOutput.setcmd( cmd, aspect&0x08?wOutput.on:wOutput.off );
+    ControlOp.cmd( control, (iONode)NodeOp.base.clone(cmd), NULL );
+  }
+
+  NodeOp.base.del(cmd);
   return True;
 }
 
