@@ -1050,10 +1050,9 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
 
     if( data->locId == NULL || StrOp.len( data->locId ) == 0 || StrOp.equals( "(null)", data->locId ) )
       return True;
-    else if( data->locId != NULL )
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                     "Block [%s] is reserved by [%s]",
-                     data->id, data->locId );
+    else if( data->locId != NULL ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] is reserved by [%s]", data->id, data->locId );
+    }
 
     return False;
   }
@@ -1527,6 +1526,11 @@ static void _enterBlock( iIBlockBase inst, const char* id ) {
     wBlock.setacceptident(nodeD, data->acceptident);
     AppOp.broadcastEvent( nodeD );
     __checkAction((iOBlock)inst, "enter");
+  }
+
+  if( wBlock.getfifosize(data->props) > 0 && wBlock.isfreeblockonenter(data->props) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reset arrivalPending in block [%s] for FiFo", data->id );
+    data->arrivalPending = False;
   }
 }
 
