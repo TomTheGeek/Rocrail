@@ -470,13 +470,26 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
 
   if( data->locId != NULL && StrOp.len( data->locId ) > 0 ) {
     iOModel model = AppOp.getModel(  );
+    int evt = 0;
     if( wBlock.getfifosize(data->props) > 0 && ListOp.size(data->fifoList) > 1 ) {
-      loc = ModelOp.getLoc( model, (const char*)ListOp.get(data->fifoList, ListOp.size(data->fifoList)-1), NULL, False );
-      __dumpFiFo(inst);
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event for fifo automobile %s in block %s", LocOp.getId(loc), data->id );
-      if( loc != NULL ) {
-        convertEnter2In = True;
-        LocOp.stop(loc, False);
+      if( fbevt != NULL ) {
+        evt = _getEventCode( (iOBlock)inst, wFeedbackEvent.getaction( fbevt ) );
+      }
+
+      if( evt == in_event ) {
+        loc = ModelOp.getLoc( model, (const char*)ListOp.get(data->fifoList, 0), NULL, False );
+        if( loc != NULL ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "in event for fifo automobile %s in block %s", LocOp.getId(loc), data->id );
+        }
+      }
+      else {
+        loc = ModelOp.getLoc( model, (const char*)ListOp.get(data->fifoList, ListOp.size(data->fifoList)-1), NULL, False );
+        __dumpFiFo(inst);
+        if( loc != NULL ) {
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event for fifo automobile %s in block %s", LocOp.getId(loc), data->id );
+          convertEnter2In = True;
+          LocOp.stop(loc, False);
+        }
       }
     }
     else
@@ -637,7 +650,8 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
         /* an in event delay can be set with lock for a schedule entry */
         LocOp.event( loc, manager, in_event, data->indelay, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
         data->indelay = 0;
-      } else {
+      }
+      else {
         LocOp.event( loc, manager, in_event, timing, data->forceblocktimer, wFeedbackEvent.getid(fbevt) );
       }
       /* reset wheel counter */
@@ -884,10 +898,18 @@ static Boolean _isFreeBlockOnEnter( iIBlockBase inst ) {
 }
 
 
-static Boolean _hasExtStop( iIBlockBase inst ) {
+static Boolean _hasExtStop( iIBlockBase inst, const char* locoid ) {
   iOBlockData data = Data(inst);
   if( wBlock.getfifosize(data->props) > 0 && ListOp.size(data->fifoList) > 1 ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fifo block [%s] fifo0departing=%s", data->id, data->fifo0departing ? "false":"true");
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fifo block [%s] fifo0departing=%s inPending=%s",
+        data->id, data->fifo0departing ? "false":"true", data->inPending ? "true":"false");
+    if( data->inPending && locoid != NULL ) {
+      const char* firstFifo = (const char*)ListOp.get(data->fifoList, 0);
+      if( StrOp.equals(locoid, firstFifo) ) {
+        data->inPending = False;
+        return False;
+      }
+    }
     return (data->fifo0departing ? False:True);
   }
   return wBlock.isextstop(data->props);
@@ -1688,6 +1710,7 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
         data->locId = id;
         wBlock.setlocid(data->props, id);
         ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, data->locId, False, 0, 0, NULL );
+        data->inPending = True;
       }
       else {
         LocOp.stop(lc, False);

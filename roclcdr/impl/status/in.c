@@ -48,7 +48,7 @@ void statusIn( iILcDriverInt inst ) {
   /* Signal of destination block. (_event) */
   if( data->next2Block == NULL ) {
     /* lp:786421 Also the gomanual trains must halt if no destination is available. */
-    if( data->next1Block->hasExtStop(data->next1Block) ) {
+    if( data->next1Block->hasExtStop(data->next1Block, data->loc->getId(data->loc)) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "block %s has a stop module; not sending velocity 0 to loco %s",
           data->next1Block->base.id(data->next1Block), data->loc->getId(data->loc));

@@ -295,7 +295,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
   /* Wait in block or no new destination found. */
   if( data->next2Block == NULL ) {
 
-    if( data->next1Block->hasExtStop(data->next1Block) ) {
+    if( data->next1Block->hasExtStop(data->next1Block, NULL) ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "block %s has a stop module; not sending velocity hint to loco %s",
           data->next1Block->base.id(data->next1Block), data->loc->getId(data->loc));

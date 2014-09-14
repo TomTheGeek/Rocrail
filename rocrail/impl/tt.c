@@ -3325,7 +3325,7 @@ static Boolean _isFreeBlockOnEnter( iIBlockBase inst ) {
 }
 
 
-static Boolean _hasExtStop( iIBlockBase inst ) {
+static Boolean _hasExtStop( iIBlockBase inst, const char* locoid ) {
   return False;
 }
 

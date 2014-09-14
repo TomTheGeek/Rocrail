@@ -452,7 +452,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "informing loco %s of ENTER event", data->locId );
             LocOp.event( loc, (obj)inst, enter_event, 0, True, NULL );
 
-            if( StageOp.hasExtStop(inst) ) {
+            if( StageOp.hasExtStop(inst, NULL) ) {
               iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
               wLoc.setcmd(cmd, wLoc.velocity);
               if( StrOp.equals( wBlock.percent, wStage.getstopspeed(data->props) ) ) {
@@ -545,7 +545,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
         else
           data->early2in = False;
 
-        if( StageOp.hasExtStop(inst) ) {
+        if( StageOp.hasExtStop(inst, NULL) ) {
           iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
           wLoc.setcmd(cmd, wLoc.velocity);
           if( StrOp.equals( wBlock.percent, wStage.getstopspeed(data->props) ) ) {
@@ -598,7 +598,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
 
         }
         else {
-          if( !LocOp.isAutomode(loc) || StageOp.hasExtStop(inst) ) {
+          if( !LocOp.isAutomode(loc) || StageOp.hasExtStop(inst, NULL) ) {
             iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
             TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero", LocOp.getId(loc) );
             /* former setcurblock */
@@ -639,7 +639,7 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
     }
     else if(puls && data->locId != NULL) {
       iOLoc loc = ModelOp.getLoc(AppOp.getModel(), data->locId, NULL, False);
-      if( loc != NULL && StageOp.hasExtStop(inst) && !data->early2in ) {
+      if( loc != NULL && StageOp.hasExtStop(inst, NULL) && !data->early2in ) {
         /* Check if train length does already fit inside for generating the **in** event:  */
         int sectionlen = __getLength2Section((iOStage)inst, wStageSection.getid(section));
         if( sectionlen >= LocOp.getLen(loc) ) {
@@ -883,7 +883,7 @@ static Boolean _hasEnter2Route( iIBlockBase inst ,const char* fromBlockId ) {
 
 
 /**  */
-static Boolean _hasExtStop( iIBlockBase inst ) {
+static Boolean _hasExtStop( iIBlockBase inst, const char* locoid ) {
   iOStageData data = Data(inst);
   return wStage.isinatlen(data->props);
 }

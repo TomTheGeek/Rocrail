@@ -2159,8 +2159,8 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
   }
 
   /* BBT timers */
-  data->bbtExternalStop = block->hasExtStop(block);
-  if( wLoc.isusebbt(data->props) && block != NULL && block->allowBBT(block) && !block->hasExtStop(block) ) {
+  data->bbtExternalStop = block->hasExtStop(block, NULL);
+  if( wLoc.isusebbt(data->props) && block != NULL && block->allowBBT(block) && !block->hasExtStop(block, NULL) ) {
     if( evt == enter_event && (data->bbtEnter == 0 || !StrOp.equals(blockid, data->bbtEnterBlock) ) ) {
       data->bbtEnterBlock = blockid;
       data->bbtInBlock    = NULL;
