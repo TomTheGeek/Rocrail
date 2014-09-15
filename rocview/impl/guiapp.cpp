@@ -1402,9 +1402,7 @@ static void rocrailCallback( obj me, iONode node ) {
               iONode child = NodeOp.getChild( db, i );
               if( StrOp.equals( wVariable.getid(node), wItem.getid(child) ) ) {
                 found = True;
-                NodeOp.setBool(child, "replacechilds", True);
                 NodeOp.mergeNode(child, node, True, True, True);
-                NodeOp.setBool(child, "replacechilds", False);
                 break;
               }
             }
