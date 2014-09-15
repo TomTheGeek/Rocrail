@@ -481,7 +481,8 @@ static iONode _mergeNode( iONode nodeA, iONode nodeB, Boolean overwrite, Boolean
   if( recursive && NodeOp.getBool(nodeA, "replacechilds", False) ) {
     iONode child = NodeOp.getChild( nodeA, 0 );
     while( child != NULL ) {
-      NodeOp.removeChild(nodeA, child);
+      iONode rm = NodeOp.removeChild(nodeA, child);
+      if( rm != NULL ) NodeOp.base.del(rm);
       child = NodeOp.getChild( nodeA, 0 );
     }
     cnt = NodeOp.getChildCnt(nodeB);

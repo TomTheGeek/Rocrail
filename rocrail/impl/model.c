@@ -1293,7 +1293,10 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       iONode node = wVariableList.getvr( varlist );
       while( node != NULL ) {
         if( StrOp.equals( wVariable.getid( item ), wVariable.getid( node ) ) ) {
+          int cnt = NodeOp.getChildCnt(item);
+          NodeOp.setBool(node, "replacechilds", True);
           NodeOp.mergeNode( node, item, True, True, True );
+          NodeOp.removeAttrByName(node, "replacechilds");
           var = node;
           break;
         }

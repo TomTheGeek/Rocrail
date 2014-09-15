@@ -82,6 +82,7 @@ static void* __event( void* inst, const void* evt ) {
 /**  */
 static void _checkActions( iONode var ) {
   iOModel model = AppOp.getModel();
+  int idx = 0;
   iONode actionctrl = wVariable.getactionctrl( var );
 
   /* loop over all actions */
@@ -91,9 +92,13 @@ static void _checkActions( iONode var ) {
       if( action != NULL )
         ActionOp.exec(action, actionctrl);
 
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action with value=%d", wVariable.getvalue(var) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action %d with value=%d", idx, wVariable.getvalue(var) );
     }
-
+    else {
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "action %d state is not true: %d != %d (var != state)",
+          idx, wVariable.getvalue(var), atoi(wActionCtrl.getstate(actionctrl)) );
+    }
+    idx++;
     actionctrl = wVariable.nextactionctrl( var, actionctrl );
   }
   return;

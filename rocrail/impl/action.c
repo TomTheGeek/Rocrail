@@ -643,9 +643,10 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
 
     if( var != NULL ) {
       if( StrOp.equals( wVariable.op_value, wAction.getcmd( data->action ) ) ) {
+        int oldval = wVariable.getvalue(var);
         wVariable.setvalue(var, atoi(wAction.getparam(data->action)));
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
-            oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d, old value=%d",
+            oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var), oldval );
       }
       else if( StrOp.equals( wVariable.op_add, wAction.getcmd( data->action ) ) ) {
         wVariable.setvalue(var, wVariable.getvalue(var) + atoi(wAction.getparam(data->action)));
@@ -685,12 +686,17 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         }
       }
       else if( StrOp.equals( wVariable.op_start, wAction.getcmd( data->action ) ) ) {
+        int startval = atoi(wAction.getparam(data->action));
         wVariable.settimer(var, True);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer started", oid, cmdStr );
+        if( startval != -1 )
+          wVariable.setvalue(var, startval);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer started with value %d",
+            oid, cmdStr, wVariable.getvalue(var) );
       }
       else if( StrOp.equals( wVariable.op_stop, wAction.getcmd( data->action ) ) ) {
         wVariable.settimer(var, False);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer stopped", oid, cmdStr );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer stopped with value %d",
+            oid, cmdStr, wVariable.getvalue(var) );
       }
 
       VarOp.checkActions(var);
@@ -703,7 +709,8 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         wVariable.setvalue( node, wVariable.getvalue( var ) );
         wVariable.setmin( node, wVariable.getmin( var ) );
         wVariable.setmax( node, wVariable.getmax( var ) );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast variable [%d, %s]", wVariable.getvalue(var), wVariable.gettext(var));
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "broadcast variable %s [%d, \"%s\"]",
+            wVariable.getid(var), wVariable.getvalue(var), wVariable.gettext(var));
         AppOp.broadcastEvent( node );
       }
     }
