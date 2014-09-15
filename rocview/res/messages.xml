@@ -10753,7 +10753,7 @@
     <en txt="Path"/>
     <nl txt="Pad"/>
     <sv txt="Sökväg"/>
-    <fr txt="Chemin"/>
+    <fr txt="Répertoire"/>
     <tr txt="Kütüphane"/>
     <es txt="Directorio"/>
     <it txt="Percorso"/>
@@ -12169,7 +12169,7 @@
     <en txt="Icon path"/>
     <nl txt="Iconen pad"/>
     <sv txt="Ikonsökväg"/>
-    <fr txt="Chemin vers les icônes"/>
+    <fr txt="Répertoire des icônes"/>
     <tr txt="Icon path"/>
     <es txt="Directorio de Iconos"/>
     <it txt="Percorso icone"/>
@@ -12199,7 +12199,7 @@
     <en txt="Image path"/>
     <nl txt="Afbeeldingen pad"/>
     <sv txt="Bildsökväg"/>
-    <fr txt="Chemin vers les images"/>
+    <fr txt="Répertoire des images"/>
     <tr txt="Image path"/>
     <es txt="Directorio de Imagenes"/>
     <it txt="Percorso immagini"/>
@@ -15698,7 +15698,7 @@
     <en txt="XSL path"/>
     <nl txt="XSL pad"/>
     <sv txt="XSL-sökväg"/>
-    <fr txt="Chemin des XSL"/>
+    <fr txt="Répertoire des XSL"/>
     <tr txt="XSL yol"/>
     <es txt="Ruta XSL"/>
     <it txt="Percorso XSL"/>
@@ -28091,6 +28091,7 @@
     <zh_CN txt="跟踪文件编号"/>
     <fr txt="Nombre de fichier Trace"/>
     <fi txt="Jäljitystiedostojen määrä"/>
+    <ru txt="Количество trace-файлов"/>
   </Msg>
   <Msg id="tracefilesize">
     <en txt="Trace file size in KB"/>
@@ -28104,6 +28105,7 @@
     <fr txt="Taille du ficher Trace en KB"/>
     <zh_CN txt="跟踪文件大小（KB）"/>
     <fi txt="Jäljitystiedoston koko kilotavuissa"/>
+    <ru txt="Размер tarce файла в кБ"/>
   </Msg>
   <Msg id="recording">
     <en txt="Recording"/>
@@ -29021,6 +29023,7 @@
     <nl txt="Gebruik blok toeval quote"/>
     <pt_BR txt="Use frequência randômica de blocos"/>
     <sl txt="Uporabi naključno stopnjo odseka"/>
+    <sr_latin txt="Koristi slučajni izbor bloka"/>
   </Msg>
   <Msg id="randomrate">
     <en txt="Random rate"/>
@@ -29031,7 +29034,7 @@
     <nl txt="Toeval quote"/>
     <pt_BR txt="Frequência randômica"/>
     <sl txt="Naključna stopnja"/>
-    <sr_latin txt="Slučajna stopa"/>
+    <sr_latin txt="Slučajni izbor"/>
   </Msg>
   <Msg id="variabletable" dialog="true">
     <en txt="Variable table" alttxt="Variables" tip="Variable table"/>
@@ -29043,6 +29046,7 @@
     <ru txt="Переменные"/>
     <sl txt="Seznam spremenljivk"/>
     <sr_latin txt="Izmenjiva tabela"/>
+    <fr txt="Table variable"/>
   </Msg>
   <Msg id="subid">
     <en txt="Sub-ID"/>
@@ -29052,8 +29056,15 @@
     <pt_BR txt="Sub-identificador"/>
     <sl txt="Sub-ID"/>
     <sr_latin txt="Pod-ID"/>
+    <en_GB txt="Sub-ID"/>
+    <fr txt="Sous-identifiant"/>
   </Msg>
   <Msg id="binary">
     <en txt="Binary"/>
+    <de txt="Binär"/>
+    <it txt="Binario"/>
+    <nl txt="Binair"/>
+    <sl txt="Binarno"/>
+    <sr_latin txt="Binarno"/>
   </Msg>
 </Messages>
