@@ -1496,21 +1496,7 @@ void PlanPanel::addItemAttr( iONode node ) {
 
   iONode l_clone = (iONode)NodeOp.base.clone(node);
 
-  if( StrOp.equals( wText.name(), NodeOp.getName( node ) ) &&
-      (wText.gettext(node) == NULL || StrOp.len( wText.gettext(node) ) == 0) ) {
-
-    wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent, wxGetApp().getMenu("entertext") );
-    if( wxID_OK == dlg->ShowModal() ) {
-      dlg->Destroy();
-      wText.settext( node, dlg->GetValue().mb_str(wxConvUTF8) );
-    }
-    else {
-      dlg->Destroy();
-      NodeOp.base.del(node);
-      return;
-    }
-  }
-  else if( !StrOp.equals( wTrack.name(), NodeOp.getName( node ) ) &&
+  if( !StrOp.equals( wTrack.name(), NodeOp.getName( node ) ) &&
       ( wItem.getid(node) == NULL || StrOp.len( wItem.getid(node) ) == 0 ) ) {
 
     wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent,
@@ -1537,6 +1523,15 @@ void PlanPanel::addItemAttr( iONode node ) {
         return;
       }
     } while( item != NULL );
+    dlg->Destroy();
+  }
+
+  if( StrOp.equals( wText.name(), NodeOp.getName( node ) ) && (wText.gettext(node) == NULL || StrOp.len( wText.gettext(node) ) == 0) ) {
+
+    wxTextEntryDialog* dlg = new wxTextEntryDialog(m_Parent, wxGetApp().getMenu("entertext"), wxString(wText.getid( node ),wxConvUTF8) );
+    if( wxID_OK == dlg->ShowModal() ) {
+      wText.settext( node, dlg->GetValue().mb_str(wxConvUTF8) );
+    }
     dlg->Destroy();
   }
 

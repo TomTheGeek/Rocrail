@@ -1191,7 +1191,8 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
       cmd->base.del(cmd);
     }
     else if( StrOp.equals( wText.name(), nodeName ) ) {
-      wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getMenu("entertext") );
+      wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getMenu("entertext"),
+          wxString(wText.getid( m_Props ),wxConvUTF8), wxString(wText.gettext( m_Props ),wxConvUTF8) );
       if( wxID_OK == dlg->ShowModal() ) {
         wText.settext( m_Props, dlg->GetValue().mb_str(wxConvUTF8) );
         /* Notify RocRail. */
