@@ -131,6 +131,8 @@ ActionsCtrlDlg::ActionsCtrlDlg( wxWindow* parent, iONode node, const char* state
 
   initLabels();
 
+  SetTitle(wxGetApp().getMsg("actionctrl") + wxT(": ") + wxString(wItem.getid(m_Props), wxConvUTF8));
+
   m_ConditionsPanel->Enable(false);
 
   initIndex(-1);
