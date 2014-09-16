@@ -1787,13 +1787,16 @@
 
   <object name="Text" interface="HtmlInt" use="node,map" include="htmlint" remark="Text object">
     <fun name="inst" vt="this">
-      <param name="ini" vt="iONode" remark="Output node"/>
+      <param name="ini" vt="iONode" remark="Text node"/>
     </fun>
     <fun name="getId" vt="const char*">
-      <param name="inst" vt="this" remark="Output instance"/>
+      <param name="inst" vt="this" remark="Text instance"/>
+    </fun>
+    <fun name="getText" vt="const char*">
+      <param name="inst" vt="this" remark="Text instance"/>
     </fun>
     <fun name="modify" vt="void">
-      <param name="inst" vt="this" remark="Output instance"/>
+      <param name="inst" vt="this" remark="Text instance"/>
       <param name="mod" vt="iONode" remark="Modify node"/>
     </fun>
     <fun name="replaceAllSubstitutions" vt="char*">

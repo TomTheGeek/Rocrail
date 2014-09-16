@@ -377,6 +377,17 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "block not found [%s]", id );
         }
 
+        /* Text */
+        else if( StrOp.equals( wText.name(), wActionCond.gettype(actionCond) ) ) {
+          const char* id = wActionCond.getid( actionCond );
+          iOText text = ModelOp.getText( model, id);
+          if( text != NULL ) {
+            rc = StrOp.equals(TextOp.getText(text), wActionCond.getstate(actionCond) );
+          }
+          else
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "text not found [%s]", id );
+        }
+
         /* Variable */
         else if( StrOp.equals( wVariable.name(), wActionCond.gettype(actionCond) ) ) {
           const char* id = wActionCond.getid( actionCond );

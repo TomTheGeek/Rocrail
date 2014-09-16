@@ -48,6 +48,7 @@
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/Variable.h"
+#include "rocrail/wrapper/public/Text.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -218,6 +219,7 @@ void ActionsCtrlDlg::initLabels() {
   m_CondType->Append(wxGetApp().getMsg( "route" ));
   m_CondType->Append(wxGetApp().getMsg( "train" ));
   m_CondType->Append(wxGetApp().getMsg( "variable" ));
+  m_CondType->Append(wxGetApp().getMsg( "text" ));
 
 
   // Std buttons
@@ -425,6 +427,8 @@ void ActionsCtrlDlg::initCondValues() {
       m_CondType->SetSelection(8);
     else if( StrOp.equals( wVariable.name(), type ) )
       m_CondType->SetSelection(9);
+    else if( StrOp.equals( wText.name(), type ) )
+      m_CondType->SetSelection(10);
     initCondIDs();
     m_CondID->SetStringSelection( wxString(wActionCond.getid(actioncond),wxConvUTF8) );
     m_SubID->SetValue( wxString(wActionCond.getsubid(actioncond),wxConvUTF8) );
@@ -498,6 +502,7 @@ void ActionsCtrlDlg::initCondIDs() {
       case 7: colist = wPlan.getstlist( model ); break;
       case 8: colist = wPlan.getoperatorlist(model); break;
       case 9: colist = wPlan.getvrlist(model); break;
+      case 10: colist = wPlan.gettxlist(model); break;
     }
 
 
@@ -574,6 +579,7 @@ void ActionsCtrlDlg::evaluateCond(iONode node) {
       case 7: type = wRoute.name(); break;
       case 8: type = wOperator.name(); break;
       case 9: type = wVariable.name(); break;
+      case 10: type = wText.name(); break;
     }
     wActionCond.settype(node, type);
 }

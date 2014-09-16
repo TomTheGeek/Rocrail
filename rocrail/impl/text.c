@@ -483,6 +483,11 @@ static const char* _getId( struct OText* inst ) {
 }
 
 
+static const char* _getText( struct OText* inst ) {
+  iOTextData data = Data(inst);
+  return wText.gettext(data->props);
+}
+
 /**  */
 static struct OText* _inst( iONode ini ) {
   iOText __Text = allocMem( sizeof( struct OText ) );

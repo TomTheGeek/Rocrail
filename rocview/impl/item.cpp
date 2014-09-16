@@ -1190,6 +1190,22 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
+    else if( StrOp.equals( wText.name(), nodeName ) ) {
+      wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getMenu("entertext") );
+      if( wxID_OK == dlg->ShowModal() ) {
+        wText.settext( m_Props, dlg->GetValue().mb_str(wxConvUTF8) );
+        /* Notify RocRail. */
+        if( !wxGetApp().isOffline() ) {
+          iONode cmd = NodeOp.inst( wModelCmd.name(), NULL, ELEMENT_NODE );
+          wModelCmd.setcmd( cmd, wModelCmd.modify );
+          iONode item = (iONode)NodeOp.base.clone( m_Props );
+          NodeOp.addChild( cmd, item );
+          wxGetApp().sendToRocrail( cmd );
+          cmd->base.del(cmd);
+        }
+      }
+      dlg->Destroy();
+    }
     else if( StrOp.equals( wRoute.name(), nodeName ) ) {
       iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
       wRoute.setcmd( cmd, wRoute.test );
