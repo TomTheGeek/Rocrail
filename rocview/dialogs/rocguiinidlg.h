@@ -205,7 +205,6 @@ public:
     wxCheckBox* m_LocoImageColumn;
     wxCheckBox* m_ShowLocoImageInBlock;
     wxCheckBox* m_GrayIcons;
-    wxCheckBox* m_ShowRoute4Switch;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;
@@ -269,6 +268,7 @@ public:
     wxSpinCtrl* m_TextPS;
     wxCheckBox* m_ProcessRouteEvents;
     wxCheckBox* m_ProcessBlockEvents;
+    wxCheckBox* m_ShowRoute4Switch;
     wxPanel* m_RICpanel;
     wxStaticBoxSizer* m_labVelocity;
     wxStaticText* m_labY;

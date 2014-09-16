@@ -2181,6 +2181,16 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
         imageBitmap = new wxBitmap(img);
       }
 
+      int symbolLength = 128;
+      if( m_bSmall ) symbolLength = 64;
+
+      if( ( m_rotate && (StrOp.equals( ori, wItem.west ))) || ( !m_rotate && (StrOp.equals( ori, wItem.east ))) ) {
+        x = symbolLength - imageBitmap->GetWidth() - 10;
+      }
+      if( ( m_rotate && (StrOp.equals( ori, wItem.south ))) || ( !m_rotate && (StrOp.equals( ori, wItem.north ))) ) {
+        y = symbolLength - imageBitmap->GetHeight() - 10;
+      }
+
       if( m_UseGC )
         m_GC->DrawBitmap(*imageBitmap, x, y, imageBitmap->GetWidth(), imageBitmap->GetHeight());
       else
