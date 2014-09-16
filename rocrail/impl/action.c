@@ -640,6 +640,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     const char* oid = wAction.getoid( data->action );
     const char* suboid = wAction.getsuboid( data->action );
     const char* cmdStr = wAction.getcmd( data->action );
+    Boolean checkActions = False;
     iONode var = NULL;
 
     if( suboid != NULL && StrOp.len(suboid) > 0 ) {
@@ -666,16 +667,19 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         wVariable.setvalue(var, atoi(wAction.getparam(data->action)));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d, old value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var), oldval );
+        checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_add, wAction.getcmd( data->action ) ) ) {
         wVariable.setvalue(var, wVariable.getvalue(var) + atoi(wAction.getparam(data->action)));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
+        checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_subtract, wAction.getcmd( data->action ) ) ) {
         wVariable.setvalue(var, wVariable.getvalue(var) - atoi(wAction.getparam(data->action)));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
+        checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_text, wAction.getcmd( data->action ) ) ) {
         wVariable.settext(var, wAction.getparam(data->action));
@@ -698,6 +702,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
           wVariable.setvalue(var, rval);
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] new random value=%d",
               oid, cmdStr, wVariable.getvalue(var) );
+          checkActions = True;
         }
         else {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "variable [%s] cmd=[%s] not possible; max. must be greater then min.",
@@ -718,7 +723,8 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
             oid, cmdStr, wVariable.getvalue(var) );
       }
 
-      VarOp.checkActions(var);
+      if( checkActions )
+        VarOp.checkActions(var);
 
       /* Broadcast to clients. */
       {

@@ -87,7 +87,21 @@ static void _checkActions( iONode var ) {
 
   /* loop over all actions */
   while( actionctrl != NULL ) {
-    if( wVariable.getvalue(var) == atoi(wActionCtrl.getstate(actionctrl)) ) {
+    const char* state = wActionCtrl.getstate(actionctrl);
+    int stateVal = atoi(state+1);
+    if( state[1] == '#') {
+      iONode stateVar = ModelOp.getVariable( model, state+2 );
+      if( stateVar != NULL ) {
+        stateVal = wVariable.getvalue(stateVar);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+            "using state variable [%s] with value=%d to compare with value=%d", state+2, stateVal, wVariable.getvalue(var) );
+      }
+      else {
+        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "state variable [%s] not found", state+2);
+      }
+    }
+
+    if( wVariable.getvalue(var) == stateVal ) {
       iOAction action = ModelOp.getAction(model, wActionCtrl.getid( actionctrl ));
       if( action != NULL )
         ActionOp.exec(action, actionctrl);
