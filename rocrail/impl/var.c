@@ -29,6 +29,7 @@
 #include "rocrail/wrapper/public/Variable.h"
 
 #include "rocs/public/mem.h"
+#include "rocs/public/strtok.h"
 
 static int instCnt = 0;
 
@@ -90,16 +91,31 @@ static void _checkActions( iONode var ) {
   while( actionctrl != NULL ) {
     const char* state = wActionCtrl.getstate(actionctrl);
     int stateVal = atoi(state+1);
+
     if( state[1] == '#') {
-      iONode stateVar = ModelOp.getVariable( model, state+2 );
-      if( stateVar != NULL ) {
-        stateVal = wVariable.getvalue(stateVar);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-            "using state variable [%s] with value=%d to compare with value=%d", state+2, stateVal, wVariable.getvalue(var) );
+      /* #varX#+123 */
+      const char* key = NULL;
+      int addVal = 0;
+      iOStrTok tok = StrTokOp.inst(state+2, '#');
+      if( StrTokOp.hasMoreTokens(tok) )
+        key = StrTokOp.nextToken(tok);
+      if( StrTokOp.hasMoreTokens(tok) )
+        addVal = atoi(StrTokOp.nextToken(tok));
+
+      if( key != NULL ) {
+        iONode stateVar = ModelOp.getVariable( model, key );
+        if( stateVar != NULL ) {
+          stateVal = wVariable.getvalue(stateVar);
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "using state variable [%s] with value=%d+%d to compare with value=%d", key, stateVal, addVal, wVariable.getvalue(var) );
+          stateVal += addVal;
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "state variable [%s] not found", key);
+        }
       }
-      else {
-        TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "state variable [%s] not found", state+2);
-      }
+      StrTokOp.base.del(tok);
+
     }
 
     if( state[0] == '=' )
@@ -125,8 +141,8 @@ static void _checkActions( iONode var ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action %d with value=%d", idx, wVariable.getvalue(var) );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "action %d state is not true: %d != %d (var != state)",
-          idx, wVariable.getvalue(var), atoi(wActionCtrl.getstate(actionctrl)) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "action %d state is not true: %d != %d (var != state)",
+          idx, wVariable.getvalue(var), stateVal );
     }
     idx++;
     actionctrl = wVariable.nextactionctrl( var, actionctrl );
