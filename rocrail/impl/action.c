@@ -402,12 +402,21 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
             if( StrOp.len(state) > 0 ) {
               int stateVal = atoi(state+1);
               if( state[1] == '#') {
-                iONode stateVar = ModelOp.getVariable( model, state+2 );
+                iOMap map = MapOp.inst();
+                MapOp.put(map, "lcid", (obj)wActionCtrl.getlcid(actionctrl));
+                MapOp.put(map, "bkid", (obj)wActionCtrl.getbkid(actionctrl));
+                char* resolvedKey = TextOp.replaceAllSubstitutions(state+2, map);
+                iONode stateVar = ModelOp.getVariable( model, resolvedKey );
                 if( stateVar != NULL ) {
                   stateVal = wVariable.getvalue(stateVar);
                   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                      "using state variable [%s] with value=%d to compare with value=%d", state+2, stateVal, wVariable.getvalue(var) );
+                      "using state variable [%s] with value=%d to compare with value=%d", resolvedKey, stateVal, wVariable.getvalue(var) );
                 }
+                else {
+                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "state variable [%s] not found", resolvedKey);
+                }
+                StrOp.free(resolvedKey);
+                MapOp.base.del(map);
               }
               if( state[0] == '=' )
                 rc = wVariable.getvalue(var) == stateVal;
