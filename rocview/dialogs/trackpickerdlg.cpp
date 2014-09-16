@@ -181,12 +181,10 @@ void TrackPickerDlg::initGrid() {
       }
     }
     else if( StrOp.startsWith( symname, wText.name() ) ) {
-      if( m_Renderer->hasSVG(svg ) ) {
-        m_GridAccessory->AppendRows();
-        TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
-        m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
-        m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
-      }
+      m_GridAccessory->AppendRows();
+      TraceOp.trc( "trackpicker", TRCLEVEL_DEBUG, __LINE__, 9999, "row: %d %s %s", m_GridAccessory->GetNumberRows(), symname, svg );
+      m_GridAccessory->SetCellValue(m_GridAccessory->GetNumberRows()-1, 0, wxString(symname,wxConvUTF8) );
+      m_GridAccessory->SetCellRenderer(m_GridAccessory->GetNumberRows()-1, 0, new CellRenderer(svg, m_Renderer, wxGetApp().getFrame()->getScale(), tip) );
     }
     else if( StrOp.startsWith( symname, wBlock.name() ) || StrOp.startsWith( symname, wStage.name() ) ||
         StrOp.startsWith( symname, wSelTab.name() ) || StrOp.startsWith( symname, wTurntable.name() ) )
