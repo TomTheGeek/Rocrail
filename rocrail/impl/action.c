@@ -400,18 +400,28 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           if( var != NULL ) {
             const char* state = wActionCond.getstate(actionCond);
             if( StrOp.len(state) > 0 ) {
+              int stateVal = atoi(state+1);
+              if( state[1] == '#') {
+                iONode stateVar = ModelOp.getVariable( model, state+2 );
+                if( stateVar != NULL ) {
+                  stateVal = wVariable.getvalue(stateVar);
+                  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                      "using state variable [%s] with value=%d to compare with value=%d", state+2, stateVal, wVariable.getvalue(var) );
+                }
+              }
               if( state[0] == '=' )
-                rc = wVariable.getvalue(var) == atoi(state+1);
+                rc = wVariable.getvalue(var) == stateVal;
               else if( state[0] == '>' )
-                rc = wVariable.getvalue(var) > atoi(state+1);
+                rc = wVariable.getvalue(var) > stateVal;
               else if( state[0] == '<' )
-                rc = wVariable.getvalue(var) < atoi(state+1);
+                rc = wVariable.getvalue(var) < stateVal;
+              else if( state[0] == '!' )
+                rc = wVariable.getvalue(var) != stateVal;
+              /* Text compare */
               else if( state[0] == '#' )
                 rc = StrOp.equals(wVariable.gettext(var), state+1);
               else if( state[0] == '?' )
                 rc = !StrOp.equals(wVariable.gettext(var), state+1);
-              else if( state[0] == '!' )
-                rc = wVariable.getvalue(var) != atoi(state+1);
             }
           }
           else
