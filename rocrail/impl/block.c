@@ -161,8 +161,7 @@ static void __checkAction( iOBlock inst, const char* state ) {
   while( action != NULL ) {
     int counter = atoi(wActionCtrl.getstate( action ));
 
-    if( StrOp.len(wActionCtrl.getstate( action )) == 0 ||
-        StrOp.equals(state, wActionCtrl.getstate( action )) )
+    if( StrOp.len(wActionCtrl.getstate( action )) == 0 || StrOp.equals(state, wActionCtrl.getstate( action )) )
     {
 
       iOAction Action = ModelOp.getAction(model, wActionCtrl.getid( action ));
@@ -2393,6 +2392,9 @@ static Boolean _cmd( iIBlockBase inst, iONode nodeA ) {
   if( occUpdate )
     wBlock.setcmd(nodeA, wBlock.loc);
   AppOp.broadcastEvent( nodeA );
+
+  if( occUpdate )
+    __checkAction((iOBlock)inst, "occupied");
 
   return True;
 }
