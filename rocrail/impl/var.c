@@ -83,6 +83,7 @@ static void* __event( void* inst, const void* evt ) {
 static void _checkActions( iONode var ) {
   iOModel model = AppOp.getModel();
   int idx = 0;
+  Boolean rc = False;
   iONode actionctrl = wVariable.getactionctrl( var );
 
   /* loop over all actions */
@@ -101,7 +102,22 @@ static void _checkActions( iONode var ) {
       }
     }
 
-    if( wVariable.getvalue(var) == stateVal ) {
+    if( state[0] == '=' )
+      rc = wVariable.getvalue(var) == stateVal;
+    else if( state[0] == '>' )
+      rc = wVariable.getvalue(var) > stateVal;
+    else if( state[0] == '<' )
+      rc = wVariable.getvalue(var) < stateVal;
+    else if( state[0] == '!' )
+      rc = wVariable.getvalue(var) != stateVal;
+    /* Text compare */
+    else if( state[0] == '#' )
+      rc = StrOp.equals(wVariable.gettext(var), state+1);
+    else if( state[0] == '?' )
+      rc = !StrOp.equals(wVariable.gettext(var), state+1);
+
+
+    if( rc ) {
       iOAction action = ModelOp.getAction(model, wActionCtrl.getid( actionctrl ));
       if( action != NULL )
         ActionOp.exec(action, actionctrl);
