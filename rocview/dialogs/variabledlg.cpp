@@ -36,10 +36,13 @@
 #include "rocrail/wrapper/public/Variable.h"
 #include "rocrail/wrapper/public/VariableList.h"
 
+static bool ms_SortOrder = true;
 
 VariableDlg::VariableDlg( wxWindow* parent ):VariableDlgGen( parent )
 {
   m_Props = NULL;
+  m_SortCol  = 0;
+
   initLabels();
 
   m_IndexPanel->GetSizer()->Layout();
@@ -61,13 +64,16 @@ void VariableDlg::initLabels() {
   m_VarBook->SetPageText( 1, wxGetApp().getMsg( "general" ) );
 
   m_VarList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
-  m_VarList->InsertColumn(1, wxGetApp().getMsg( "text" ), wxLIST_FORMAT_LEFT );
+  m_VarList->InsertColumn(1, wxGetApp().getMsg( "group" ), wxLIST_FORMAT_LEFT );
   m_VarList->InsertColumn(2, wxGetApp().getMsg( "value" ), wxLIST_FORMAT_LEFT );
+  m_VarList->InsertColumn(3, wxGetApp().getMsg( "text" ), wxLIST_FORMAT_LEFT );
 
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
 
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
+  m_labGroup->SetLabel( wxGetApp().getMsg( "group" ) );
+  m_labDesc->SetLabel( wxGetApp().getMsg( "description" ) );
   m_labMin->SetLabel( wxGetApp().getMsg( "min" ) );
   m_labMax->SetLabel( wxGetApp().getMsg( "max" ) );
   m_labText->SetLabel( wxGetApp().getMsg( "text" ) );
@@ -91,7 +97,36 @@ static int __sortID(obj* _a, obj* _b)
     iONode b = (iONode)*_b;
     const char* idA = wItem.getid( a );
     const char* idB = wItem.getid( b );
-    return strcmp( idA, idB );
+    return ms_SortOrder?strcmp( idA, idB ):strcmp( idB, idA );
+}
+
+static int __sortGroup(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wVariable.getgroup( a );
+    const char* idB = wVariable.getgroup( b );
+    return ms_SortOrder?strcmp( idA, idB ):strcmp( idB, idA );
+}
+
+static int __sortValue(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    if( wVariable.getvalue(a) > wVariable.getvalue(b) )
+      return ms_SortOrder?1:-1;
+    if( wVariable.getvalue(a) < wVariable.getvalue(b) )
+      return ms_SortOrder?-1:1;
+    return 0;
+}
+
+static int __sortText(obj* _a, obj* _b)
+{
+    iONode a = (iONode)*_a;
+    iONode b = (iONode)*_b;
+    const char* idA = wVariable.gettext( a );
+    const char* idB = wVariable.gettext( b );
+    return ms_SortOrder?strcmp( idA, idB ):strcmp( idB, idA );
 }
 
 void VariableDlg::initIndex() {
@@ -113,19 +148,27 @@ void VariableDlg::initIndex() {
         }
       }
 
-      ListOp.sort(list, &__sortID);
+      if( m_SortCol == 1 )
+        ListOp.sort(list, &__sortGroup);
+      else if( m_SortCol == 2 )
+        ListOp.sort(list, &__sortValue);
+      else if( m_SortCol == 3 )
+        ListOp.sort(list, &__sortText);
+      else
+        ListOp.sort(list, &__sortID);
 
       cnt = ListOp.size( list );
       for( int i = 0; i < cnt; i++ ) {
         iONode var = (iONode)ListOp.get( list, i );
         m_VarList->InsertItem( i, wxString( wVariable.getid( var ), wxConvUTF8) );
-        m_VarList->SetItem( i, 1, wxString( wVariable.gettext( var ), wxConvUTF8) );
+        m_VarList->SetItem( i, 1, wxString( wVariable.getgroup( var ), wxConvUTF8) );
         m_VarList->SetItem( i, 2, wxString::Format(wxT("%d"), wVariable.getvalue( var )) );
+        m_VarList->SetItem( i, 3, wxString( wVariable.gettext( var ), wxConvUTF8) );
         m_VarList->SetItemPtrData(i, (wxUIntPtr)var);
       }
 
       // resize
-      for( int n = 0; n < 3; n++ ) {
+      for( int n = 0; n < 4; n++ ) {
         m_VarList->SetColumnWidth(n, wxLIST_AUTOSIZE_USEHEADER);
         int autoheadersize = m_VarList->GetColumnWidth(n);
         m_VarList->SetColumnWidth(n, wxLIST_AUTOSIZE);
@@ -185,6 +228,8 @@ bool VariableDlg::evaluate() {
   }
   // evaluate General
   wVariable.setid( m_Props, m_ID->GetValue().mb_str(wxConvUTF8) );
+  wVariable.setgroup( m_Props, m_Group->GetValue().mb_str(wxConvUTF8) );
+  wVariable.setdesc( m_Props, m_Desc->GetValue().mb_str(wxConvUTF8) );
   wVariable.setmin( m_Props, m_MinValue->GetValue() );
   wVariable.setmax( m_Props, m_MaxValue->GetValue() );
   wVariable.settext( m_Props, m_Text->GetValue().mb_str(wxConvUTF8) );
@@ -216,6 +261,8 @@ void VariableDlg::initValues() {
 
   TraceOp.trc( "vardlg", TRCLEVEL_INFO, __LINE__, 9999, "initValues for car [%s]", wVariable.getid( m_Props ) );
   m_ID->SetValue( wxString(wVariable.getid( m_Props ),wxConvUTF8) );
+  m_Group->SetValue( wxString(wVariable.getgroup( m_Props ),wxConvUTF8) );
+  m_Desc->SetValue( wxString(wVariable.getdesc( m_Props ),wxConvUTF8) );
   m_MinValue->SetValue( wVariable.getmin( m_Props ) );
   m_MaxValue->SetValue( wVariable.getmax( m_Props ) );
   m_Text->SetValue( wxString(wVariable.gettext( m_Props ),wxConvUTF8) );
@@ -336,4 +383,14 @@ void VariableDlg::onActions( wxCommandEvent& event )
   }
 
   dlg->Destroy();
+}
+
+
+void VariableDlg::onListCol( wxListEvent& event ) {
+  if( m_SortCol == event.GetColumn() )
+    ms_SortOrder = !ms_SortOrder;
+  else
+    ms_SortOrder = true;
+  m_SortCol = event.GetColumn();
+  initIndex();
 }

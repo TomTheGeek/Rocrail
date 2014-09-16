@@ -2934,6 +2934,7 @@
         <const name="loco_binstate_off" vt="string" val="binstate_off"/>
         <var name="id" vt="string" defval="NULL" range="*" remark="action id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="group" vt="string" defval="" range="*"/>
         <var name="remark" vt="string" defval="" range="*" remark="optional remark"/>
         <const name="type_sound" vt="string" val="sound"/>
         <var name="type" vt="string" defval="co" range="co,sw,st,sys,ext,sg,bk,lc,fn,tt,seltab,tx,sound" required="true" remark="type [ext] is an external program or script to be executed"/>
@@ -3040,6 +3041,7 @@
       <vr cardinality="n" wrappername="Variable">
         <var name="id" vt="string" defval="NULL" range="*" remark="object id"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
+        <var name="group" vt="string" defval="" range="*"/>
         <var name="text" vt="string" defval="" range="*"/>
         <var name="value" vt="int" defval="0" range="*"/>
         <const name="type_default" vt="int" val="0"/>

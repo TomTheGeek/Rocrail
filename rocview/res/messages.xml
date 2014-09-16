@@ -29067,4 +29067,7 @@
     <sl txt="Binarno"/>
     <sr_latin txt="Binarno"/>
   </Msg>
+  <Msg id="group">
+    <en txt="Group"/>
+  </Msg>
 </Messages>

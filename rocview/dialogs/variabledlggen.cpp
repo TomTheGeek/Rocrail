@@ -38,7 +38,7 @@ VariableDlgGen::VariableDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	m_IndexPanel->SetSizer( bSizer2 );
 	m_IndexPanel->Layout();
 	bSizer2->Fit( m_IndexPanel );
-	m_VarBook->AddPage( m_IndexPanel, wxT("Index"), false );
+	m_VarBook->AddPage( m_IndexPanel, wxT("Index"), true );
 	m_GeneralPanel = new wxPanel( m_VarBook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
@@ -55,6 +55,20 @@ VariableDlgGen::VariableDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	m_ID = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer1->Add( m_ID, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_labGroup = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Group"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labGroup->Wrap( -1 );
+	fgSizer1->Add( m_labGroup, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_Group = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_Group, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
+	m_labDesc = new wxStaticText( m_GeneralPanel, wxID_ANY, wxT("Description"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_labDesc->Wrap( -1 );
+	fgSizer1->Add( m_labDesc, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_Desc = new wxTextCtrl( m_GeneralPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_Desc, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	bSizer4->Add( fgSizer1, 0, wxEXPAND, 5 );
 	
@@ -105,7 +119,7 @@ VariableDlgGen::VariableDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	m_GeneralPanel->SetSizer( bSizer4 );
 	m_GeneralPanel->Layout();
 	bSizer4->Fit( m_GeneralPanel );
-	m_VarBook->AddPage( m_GeneralPanel, wxT("General"), true );
+	m_VarBook->AddPage( m_GeneralPanel, wxT("General"), false );
 	
 	bSizer1->Add( m_VarBook, 0, wxEXPAND | wxALL, 5 );
 	
@@ -129,6 +143,7 @@ VariableDlgGen::VariableDlgGen( wxWindow* parent, wxWindowID id, const wxString&
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( VariableDlgGen::onClose ) );
+	m_VarList->Connect( wxEVT_COMMAND_LIST_COL_CLICK, wxListEventHandler( VariableDlgGen::onListCol ), NULL, this );
 	m_VarList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( VariableDlgGen::onListSelected ), NULL, this );
 	m_New->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onNew ), NULL, this );
 	m_Delete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onDelete ), NULL, this );
@@ -143,6 +158,7 @@ VariableDlgGen::~VariableDlgGen()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( VariableDlgGen::onClose ) );
+	m_VarList->Disconnect( wxEVT_COMMAND_LIST_COL_CLICK, wxListEventHandler( VariableDlgGen::onListCol ), NULL, this );
 	m_VarList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( VariableDlgGen::onListSelected ), NULL, this );
 	m_New->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onNew ), NULL, this );
 	m_Delete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableDlgGen::onDelete ), NULL, this );

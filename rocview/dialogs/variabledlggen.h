@@ -45,6 +45,10 @@ class VariableDlgGen : public wxDialog
 		wxPanel* m_GeneralPanel;
 		wxStaticText* m_labID;
 		wxTextCtrl* m_ID;
+		wxStaticText* m_labGroup;
+		wxTextCtrl* m_Group;
+		wxStaticText* m_labDesc;
+		wxTextCtrl* m_Desc;
 		wxStaticText* m_labMin;
 		wxSpinCtrl* m_MinValue;
 		wxStaticText* m_labMax;
@@ -62,6 +66,7 @@ class VariableDlgGen : public wxDialog
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void onListCol( wxListEvent& event ) { event.Skip(); }
 		virtual void onListSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void onNew( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onDelete( wxCommandEvent& event ) { event.Skip(); }

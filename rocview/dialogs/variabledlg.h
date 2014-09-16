@@ -45,6 +45,7 @@ class VariableDlg : public VariableDlgGen
 		void onOK( wxCommandEvent& event );
 		void onListSelected( wxListEvent& event );
 		void onActions( wxCommandEvent& event );
+		void onListCol( wxListEvent& event );
 
 		void initIndex();
     void initLabels();
@@ -54,6 +55,7 @@ class VariableDlg : public VariableDlgGen
     int findID( const char* ID );
 
     iONode m_Props;
+    int m_SortCol;
 	public:
 		/** Constructor */
 		VariableDlg( wxWindow* parent );
