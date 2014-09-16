@@ -141,7 +141,7 @@ static void _checkActions( iONode var ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "action %d with value=%d", idx, wVariable.getvalue(var) );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "action %d state is not true: %d != %d (var != state)",
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "action %d state is not true: %d != %d (var != state)",
           idx, wVariable.getvalue(var), stateVal );
     }
     idx++;
