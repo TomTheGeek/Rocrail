@@ -606,9 +606,8 @@ static Boolean _readFile( iOFile inst, char* buffer, long size ) {
   else {
     data->readed = fread( buffer, 1, size, data->fh );
     data->rc = errno;
-    if( data->readed != size && data->rc!= 0 ) {
-      TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 501, data->rc, "Error read file [%s]",
-                     data->path );
+    if( data->readed != size ) {
+      TraceOp.terrno( name, TRCLEVEL_EXCEPTION, __LINE__, 501, data->rc, "Error read file [%s]", data->path );
     }
     return data->readed == size ? True:False;
   }
