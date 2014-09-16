@@ -1190,7 +1190,7 @@ void Symbol::OnLeftUp(wxMouseEvent& event) {
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
-    else if( StrOp.equals( wText.name(), nodeName ) ) {
+    else if( StrOp.equals( wText.name(), nodeName ) && wText.ismanualinput(m_Props) ) {
       wxTextEntryDialog* dlg = new wxTextEntryDialog(this, wxGetApp().getMenu("entertext"),
           wxString(wText.getid( m_Props ),wxConvUTF8), wxString(wText.gettext( m_Props ),wxConvUTF8) );
       if( wxID_OK == dlg->ShowModal() ) {

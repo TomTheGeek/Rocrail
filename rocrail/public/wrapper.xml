@@ -2858,6 +2858,7 @@
         <var name="bold" vt="bool" defval="False"/>
         <var name="underlined" vt="bool" defval="False"/>
         <var name="italic" vt="bool" defval="False"/>
+        <var name="manualinput" vt="bool" defval="True"/>
         <var name="transparent" vt="bool" defval="True"/>
         <var name="reset" vt="bool" defval="False"/>
         <var name="x" vt="int" defval="0" range="0-*"/>
