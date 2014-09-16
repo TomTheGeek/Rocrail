@@ -166,7 +166,10 @@ public:
     wxNotebook* m_ActionBook;
     wxPanel* m_IndexPanel;
     wxListCtrl* m_TimedActions;
+    wxStaticText* m_labActionID;
     wxTextCtrl* m_ActionID;
+    wxStaticText* m_labDescription;
+    wxTextCtrl* m_Description;
     wxButton* m_Add;
     wxButton* m_Copy;
     wxButton* m_Del;
@@ -188,8 +191,6 @@ public:
     wxSpinCtrl* m_ActTime;
     wxStaticText* m_labTimer;
     wxSpinCtrl* m_Timer;
-    wxStaticText* m_labDescription;
-    wxTextCtrl* m_Description;
     wxStaticBox* m_ActivationTimeBox;
     wxCheckBox* m_Timed;
     wxCheckBox* m_Every;
