@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep 12 2010)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -80,7 +80,7 @@ bidibdlggen::bidibdlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	m_General->SetSizer( bSizer6 );
 	m_General->Layout();
 	bSizer6->Fit( m_General );
-	m_Notebook->AddPage( m_General, wxT("General"), true );
+	m_Notebook->AddPage( m_General, wxT("General"), false );
 	m_Options = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
@@ -111,10 +111,17 @@ bidibdlggen::bidibdlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	
 	bSizer7->Add( m_SecAckBox, 0, wxEXPAND, 5 );
 	
+	m_ManualOptions = new wxStaticBoxSizer( new wxStaticBox( m_Options, wxID_ANY, wxT("Manual") ), wxVERTICAL );
+	
+	m_Manual2BiDiB = new wxCheckBox( m_Options, wxID_ANY, wxT("Map to BiDiB"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_ManualOptions->Add( m_Manual2BiDiB, 0, wxALL, 5 );
+	
+	bSizer7->Add( m_ManualOptions, 0, wxEXPAND, 5 );
+	
 	m_Options->SetSizer( bSizer7 );
 	m_Options->Layout();
 	bSizer7->Fit( m_Options );
-	m_Notebook->AddPage( m_Options, wxT("Options"), false );
+	m_Notebook->AddPage( m_Options, wxT("Options"), true );
 	m_Nodes = new wxPanel( m_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxVERTICAL );

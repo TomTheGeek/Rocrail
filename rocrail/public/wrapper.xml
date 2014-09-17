@@ -582,6 +582,7 @@
         <var name="secAckInt" vt="int" defval="20" remark="Secure acknowledge interval in 10ms units."/>
         <var name="watchdog" vt="bool" defval="false" remark="Enable watchdog."/>
         <var name="watchdogInt" vt="int" defval="20" remark="Watchdog interval in 100ms units."/>
+        <var name="manual2bidib" vt="bool" defval="false" remark="Map MSG_CS_ACCESSORY_MANUAL messages to BiDiB commands."/>
         <bidibnode cardinality="n" remark="BiDiB options" wrappername="BiDiBnode">
           <const name="class_bridge" vt="string" val="bridge"/>
           <const name="class_sensor" vt="string" val="sensor"/>

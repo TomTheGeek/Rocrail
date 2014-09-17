@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Sep 12 2010)
+// C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -59,6 +59,8 @@ class bidibdlggen : public wxDialog
 		wxStaticText* m_labSecAckInt;
 		wxSpinCtrl* m_SecAckInt;
 		wxStaticText* m_labMs10;
+		wxStaticBoxSizer* m_ManualOptions;
+		wxCheckBox* m_Manual2BiDiB;
 		wxPanel* m_Nodes;
 		wxListBox* m_NodeList;
 		wxButton* m_ConfigureNodes;
