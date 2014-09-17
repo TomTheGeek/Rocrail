@@ -24,6 +24,7 @@
 #include "rocrail/public/action.h"
 #include "rocrail/public/app.h"
 #include "rocrail/public/model.h"
+#include "rocrail/public/text.h"
 
 #include "rocrail/wrapper/public/ActionCtrl.h"
 #include "rocrail/wrapper/public/Variable.h"
@@ -93,22 +94,53 @@ static void _checkActions( iONode var ) {
     int stateVal = atoi(state+1);
 
     if( state[1] == '#') {
-      /* #varX#+123 */
+      /* #varX#+123
+       * #varX#+#varY
+       */
       const char* key = NULL;
       int addVal = 0;
+      int addType = 0; /* 0=+, 1=-*/
       iOStrTok tok = StrTokOp.inst(state+2, '#');
       if( StrTokOp.hasMoreTokens(tok) )
         key = StrTokOp.nextToken(tok);
-      if( StrTokOp.hasMoreTokens(tok) )
-        addVal = atoi(StrTokOp.nextToken(tok));
+      if( StrTokOp.hasMoreTokens(tok) ) {
+        const char* tmp = StrTokOp.nextToken(tok);
+        if( tmp[0] == '+' ) addType = 0;
+        if( tmp[0] == '-' ) addType = 1;
+        if( StrOp.len(tmp) > 2 && tmp[1] == '#' ) {
+          iOText text = ModelOp.getText(model, tmp+2);
+          if( text != NULL )
+            addVal = atoi(TextOp.getText(text));
+          else {
+            iONode valVar = ModelOp.getVariable(model, tmp+2);
+            if( valVar != NULL )
+              addVal = wVariable.getvalue(valVar);
+          }
+        }
+        else
+          addVal = atoi(tmp);
+      }
 
       if( key != NULL ) {
         iONode stateVar = ModelOp.getVariable( model, key );
+        iOText stateTxt = ModelOp.getText( model, key );
         if( stateVar != NULL ) {
           stateVal = wVariable.getvalue(stateVar);
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
               "using state variable [%s] with value=%d+%d to compare with value=%d", key, stateVal, addVal, wVariable.getvalue(var) );
-          stateVal += addVal;
+          if( addType == 1 )
+            stateVal -= addVal;
+          else
+            stateVal += addVal;
+        }
+        else if( stateTxt != NULL ) {
+          stateVal = atoi(TextOp.getText(stateTxt));
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+              "using state text [%s] with value=%d+%d to compare with value=%d", key, stateVal, addVal, wVariable.getvalue(var) );
+          if( addType == 1 )
+            stateVal -= addVal;
+          else
+            stateVal += addVal;
         }
         else {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "state variable [%s] not found", key);
