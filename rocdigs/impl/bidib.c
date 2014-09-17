@@ -1764,6 +1764,7 @@ static void __handleAccessory(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata)
   if( report ) {
     iONode nodeC = NodeOp.inst( wAccessory.name(), NULL, ELEMENT_NODE );
     wAccessory.setnodenr( nodeC, bidibnode->uid );
+    wItem.setuidname( nodeC, bidibnode->username );
     wAccessory.setdevid( nodeC, pdata[0]+1 );
     wAccessory.setval1( nodeC, pdata[1] );
     wAccessory.setval2( nodeC, pdata[2] );
