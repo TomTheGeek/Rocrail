@@ -84,8 +84,6 @@ void BidibDlg::initLabels() {
   // Options
   m_SecAck->SetLabel(wxGetApp().getMsg( "enable" ));
   m_labSecAckInt->SetLabel(wxGetApp().getMsg( "interval" ));
-  m_ManualOptions->GetStaticBox()->SetLabel(wxGetApp().getMsg( "manualoperated" ));
-  m_Manual2BiDiB->SetLabel(wxT("BiDiB"));
 
   // Nodes
   m_ConfigureNodes->SetLabel(wxGetApp().getMsg( "setup" ) + wxT("..."));
@@ -140,7 +138,6 @@ void BidibDlg::initValues() {
   }
   m_SecAck->SetValue( wBiDiB.issecAck( bidib ) ? true:false );
   m_SecAckInt->SetValue( wBiDiB.getsecAckInt( bidib ) );
-  m_Manual2BiDiB->SetValue( wBiDiB.ismanual2bidib( bidib ) ? true:false );
 
   // Nodes
   initNodes();
@@ -196,7 +193,6 @@ void BidibDlg::evaluate() {
   iONode bidib = wDigInt.getbidib(m_Props);
   wBiDiB.setsecAck( bidib, m_SecAck->IsChecked() ? True:False );
   wBiDiB.setsecAckInt( bidib, m_SecAckInt->GetValue() );
-  wBiDiB.setmanual2bidib( bidib, m_Manual2BiDiB->IsChecked() ? True:False );
 }
 
 

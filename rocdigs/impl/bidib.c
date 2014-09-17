@@ -2796,14 +2796,6 @@ static void __handleUpdateStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata
 
 static void __handleManual(iOBiDiB bidib, int uid, byte* pdata) {
   iOBiDiBData data = Data(bidib);
-  if( wBiDiB.ismanual2bidib(data->bidibini) && data->defaultmain != NULL) {
-    byte msgdata[127];
-    msgdata[0] = pdata[0];
-    msgdata[1] = pdata[1];
-    msgdata[2] = pdata[2];
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Mapped DCC accessory %d %02X", pdata[0] + pdata[1]*256, pdata[2]);
-    data->subWrite((obj)bidib, data->defaultmain->path, MSG_CS_ACCESSORY, msgdata, 3, data->defaultmain);
-  }
 }
 
 

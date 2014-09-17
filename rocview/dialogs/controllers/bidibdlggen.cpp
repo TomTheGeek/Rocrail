@@ -111,13 +111,6 @@ bidibdlggen::bidibdlggen( wxWindow* parent, wxWindowID id, const wxString& title
 	
 	bSizer7->Add( m_SecAckBox, 0, wxEXPAND, 5 );
 	
-	m_ManualOptions = new wxStaticBoxSizer( new wxStaticBox( m_Options, wxID_ANY, wxT("Manual") ), wxVERTICAL );
-	
-	m_Manual2BiDiB = new wxCheckBox( m_Options, wxID_ANY, wxT("Map to BiDiB"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_ManualOptions->Add( m_Manual2BiDiB, 0, wxALL, 5 );
-	
-	bSizer7->Add( m_ManualOptions, 0, wxEXPAND, 5 );
-	
 	m_Options->SetSizer( bSizer7 );
 	m_Options->Layout();
 	bSizer7->Fit( m_Options );
