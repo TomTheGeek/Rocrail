@@ -81,6 +81,93 @@ static void* __event( void* inst, const void* evt ) {
 /** ----- OVar ----- */
 
 
+/*
+ * Separator: blank
+ * #: variable prefix
+ * $: text prefix
+ */
+#define OP_NONE 0
+#define OP_PLUS 1
+#define OP_MIN  2
+#define OP_MULT 3
+#define OP_DIVI 4
+
+static int _getValue( const char* valStr ) {
+  iOModel model = AppOp.getModel();
+  int retVal = 0;
+  int operator = OP_NONE;
+  iOStrTok tok = StrTokOp.inst(valStr, ' ');
+
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* v = StrTokOp.nextToken(tok);
+    if( StrOp.len(v) > 0 ) {
+
+      if( v[0] == '+' ) {
+        operator = OP_PLUS;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operation=PLUS" );
+        continue;
+      }
+
+      if( v[0] == '-' ) {
+        operator = OP_MIN;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operation=MIN" );
+        continue;
+      }
+
+      if( v[0] == '*' ) {
+        operator = OP_MULT;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operation=MULT" );
+        continue;
+      }
+
+      if( v[0] == '/' ) {
+        operator = OP_DIVI;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operation=DIVI" );
+        continue;
+      }
+
+      if( v[0] == '#' ) { // variable
+        iONode valVar = ModelOp.getVariable(model, v+1);
+        if( valVar != NULL ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable %s is %d", v+1, wVariable.getvalue(valVar) );
+          if( operator == OP_NONE ) retVal  = wVariable.getvalue(valVar);
+          if( operator == OP_PLUS ) retVal += wVariable.getvalue(valVar);
+          if( operator == OP_MIN  ) retVal -= wVariable.getvalue(valVar);
+          if( operator == OP_MULT ) retVal *= wVariable.getvalue(valVar);
+          if( operator == OP_DIVI ) retVal /= wVariable.getvalue(valVar);
+        }
+        continue;
+      }
+
+      if( v[0] == '$' ) { // text
+        iOText text = ModelOp.getText(model, v+1);
+        if( text != NULL ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text %s is %d (%s)", v+1, atoi(TextOp.getText(text)), TextOp.getText(text) );
+          if( operator == OP_NONE ) retVal  = atoi(TextOp.getText(text));
+          if( operator == OP_PLUS ) retVal += atoi(TextOp.getText(text));
+          if( operator == OP_MIN  ) retVal -= atoi(TextOp.getText(text));
+          if( operator == OP_MULT ) retVal *= atoi(TextOp.getText(text));
+          if( operator == OP_DIVI ) retVal /= atoi(TextOp.getText(text));
+        }
+        continue;
+      }
+
+      // number
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "number is %d", atoi(v) );
+      if( operator == OP_NONE ) retVal  = atoi(v);
+      if( operator == OP_PLUS ) retVal += atoi(v);
+      if( operator == OP_MIN  ) retVal -= atoi(v);
+      if( operator == OP_MULT ) retVal *= atoi(v);
+      if( operator == OP_DIVI ) retVal /= atoi(v);
+
+    }
+  }
+
+  StrTokOp.base.del(tok);
+
+  return retVal;
+}
+
 /**  */
 static void _checkActions( iONode var ) {
   iOModel model = AppOp.getModel();
@@ -91,64 +178,7 @@ static void _checkActions( iONode var ) {
   /* loop over all actions */
   while( actionctrl != NULL ) {
     const char* state = wActionCtrl.getstate(actionctrl);
-    int stateVal = atoi(state+1);
-
-    if( state[1] == '#') {
-      /* #varX#+123
-       * #varX#+#varY
-       */
-      const char* key = NULL;
-      int addVal = 0;
-      int addType = 0; /* 0=+, 1=-*/
-      iOStrTok tok = StrTokOp.inst(state+2, '#');
-      if( StrTokOp.hasMoreTokens(tok) )
-        key = StrTokOp.nextToken(tok);
-      if( StrTokOp.hasMoreTokens(tok) ) {
-        const char* tmp = StrTokOp.nextToken(tok);
-        if( tmp[0] == '+' ) addType = 0;
-        if( tmp[0] == '-' ) addType = 1;
-        if( StrOp.len(tmp) > 2 && tmp[1] == '#' ) {
-          iOText text = ModelOp.getText(model, tmp+2);
-          if( text != NULL )
-            addVal = atoi(TextOp.getText(text));
-          else {
-            iONode valVar = ModelOp.getVariable(model, tmp+2);
-            if( valVar != NULL )
-              addVal = wVariable.getvalue(valVar);
-          }
-        }
-        else
-          addVal = atoi(tmp);
-      }
-
-      if( key != NULL ) {
-        iONode stateVar = ModelOp.getVariable( model, key );
-        iOText stateTxt = ModelOp.getText( model, key );
-        if( stateVar != NULL ) {
-          stateVal = wVariable.getvalue(stateVar);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "using state variable [%s] with value=%d+%d to compare with value=%d", key, stateVal, addVal, wVariable.getvalue(var) );
-          if( addType == 1 )
-            stateVal -= addVal;
-          else
-            stateVal += addVal;
-        }
-        else if( stateTxt != NULL ) {
-          stateVal = atoi(TextOp.getText(stateTxt));
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-              "using state text [%s] with value=%d+%d to compare with value=%d", key, stateVal, addVal, wVariable.getvalue(var) );
-          if( addType == 1 )
-            stateVal -= addVal;
-          else
-            stateVal += addVal;
-        }
-        else {
-          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "state variable [%s] not found", key);
-        }
-      }
-      StrTokOp.base.del(tok);
-
-    }
+    int stateVal = VarOp.getValue(state+1);
 
     if( state[0] == '=' )
       rc = wVariable.getvalue(var) == stateVal;

@@ -411,24 +411,8 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           if( var != NULL ) {
             const char* state = wActionCond.getstate(actionCond);
             if( StrOp.len(state) > 0 ) {
-              int stateVal = atoi(state+1);
-              if( state[1] == '#') {
-                iOMap map = MapOp.inst();
-                MapOp.put(map, "lcid", (obj)wActionCtrl.getlcid(actionctrl));
-                MapOp.put(map, "bkid", (obj)wActionCtrl.getbkid(actionctrl));
-                char* resolvedKey = TextOp.replaceAllSubstitutions(state+2, map);
-                iONode stateVar = ModelOp.getVariable( model, resolvedKey );
-                if( stateVar != NULL ) {
-                  stateVal = wVariable.getvalue(stateVar);
-                  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
-                      "using state variable [%s] with value=%d to compare with value=%d", resolvedKey, stateVal, wVariable.getvalue(var) );
-                }
-                else {
-                  TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "state variable [%s] not found", resolvedKey);
-                }
-                StrOp.free(resolvedKey);
-                MapOp.base.del(map);
-              }
+              int stateVal = VarOp.getValue(state+1);
+
               if( state[0] == '=' )
                 rc = wVariable.getvalue(var) == stateVal;
               else if( state[0] == '>' )
@@ -673,48 +657,37 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     }
 
     if( var != NULL ) {
+      int oldval = wVariable.getvalue(var);
+      int newval = VarOp.getValue(wAction.getparam(data->action));
       if( StrOp.equals( wVariable.op_value, wAction.getcmd( data->action ) ) ) {
-        int oldval = wVariable.getvalue(var);
-        const char* newVal = wAction.getparam(data->action);
-        if( StrOp.len(newVal) > 1 && newVal[0] == '#' ) {
-          iOText text = ModelOp.getText( model, newVal+1 );
-          if( text != NULL )
-            wVariable.setvalue(var, atoi(TextOp.getText(text)) );
-          else {
-            iONode Var = ModelOp.getVariable( model, newVal+1 );
-            if( Var != NULL )
-              wVariable.setvalue(var, wVariable.getvalue(Var) );
-          }
-        }
-        else
-          wVariable.setvalue(var, atoi(wAction.getparam(data->action)));
+        wVariable.setvalue(var, newval);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d, old value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var), oldval );
         checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_add, wAction.getcmd( data->action ) ) ) {
-        wVariable.setvalue(var, wVariable.getvalue(var) + atoi(wAction.getparam(data->action)));
+        wVariable.setvalue(var, wVariable.getvalue(var) + newval );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
         checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_subtract, wAction.getcmd( data->action ) ) ) {
-        wVariable.setvalue(var, wVariable.getvalue(var) - atoi(wAction.getparam(data->action)));
+        wVariable.setvalue(var, wVariable.getvalue(var) - newval );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
         checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_text, wAction.getcmd( data->action ) ) ) {
         const char* newText = wAction.getparam(data->action);
-        if( StrOp.len(newText) > 1 && newText[0] == '#' ) {
+        if( StrOp.len(newText) > 1 && newText[0] == '$' ) {
           iOText text = ModelOp.getText( model, newText+1 );
           if( text != NULL )
             wVariable.settext(var, TextOp.getText(text) );
-          else {
-            iONode Var = ModelOp.getVariable( model, newText+1 );
-            if( Var != NULL )
-              wVariable.settext(var, wVariable.gettext(Var) );
-          }
+        }
+        else if( StrOp.len(newText) > 1 && newText[0] == '#' ) {
+          iONode Var = ModelOp.getVariable( model, newText+1 );
+          if( Var != NULL )
+            wVariable.settext(var, wVariable.gettext(Var) );
         }
         else
           wVariable.settext(var, wAction.getparam(data->action));
@@ -722,12 +695,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
             oid, cmdStr, wAction.getparam(data->action), wVariable.gettext(var) );
       }
       else if( StrOp.equals( wVariable.op_min, wAction.getcmd( data->action ) ) ) {
-        wVariable.setmin(var, atoi(wAction.getparam(data->action)));
+        wVariable.setmin(var, newval );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new min=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getmin(var) );
       }
       else if( StrOp.equals( wVariable.op_max, wAction.getcmd( data->action ) ) ) {
-        wVariable.setmax(var, atoi(wAction.getparam(data->action)));
+        wVariable.setmax(var, newval );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new max=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getmax(var) );
       }

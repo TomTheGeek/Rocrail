@@ -2694,6 +2694,9 @@
     <fun name="checkActions" vt="void">
       <param name="var" vt="iONode" remark="Variable properties"/>
     </fun>
+    <fun name="getValue" vt="int">
+      <param name="valStr" vt="const char*" remark="Value string."/>
+    </fun>
   </object>
   
 </Project>
