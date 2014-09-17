@@ -675,7 +675,14 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     if( var != NULL ) {
       if( StrOp.equals( wVariable.op_value, wAction.getcmd( data->action ) ) ) {
         int oldval = wVariable.getvalue(var);
-        wVariable.setvalue(var, atoi(wAction.getparam(data->action)));
+        const char* newVal = wAction.getparam(data->action);
+        if( StrOp.len(newVal) > 1 && newVal[0] == '#' ) {
+          iOText text = ModelOp.getText( model, newVal+1 );
+          if( text != NULL )
+            wVariable.setvalue(var, atoi(TextOp.getText(text)) );
+        }
+        else
+          wVariable.setvalue(var, atoi(wAction.getparam(data->action)));
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d, old value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var), oldval );
         checkActions = True;
