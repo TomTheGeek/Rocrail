@@ -2160,8 +2160,14 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
         imageBitmap = new wxBitmap(img);
       }
 
-      int x = 10;
+      int symbolLength = 128;
+      if( m_bSmall )
+        symbolLength = 64;
+
+      int x = (symbolLength - imageBitmap->GetWidth()) / 2;
       int y = (32-maxheight)/2;
+      if( x < 10 )
+        x = 10;
 
       if( (m_rotate && !(StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ))) ||
           (!m_rotate && (StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ))) )
@@ -2176,19 +2182,11 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
         wxImage img = imageBitmap->ConvertToImage();
         delete imageBitmap;
         img = img.Rotate90( StrOp.equals( ori, wItem.north ) ? true:false );
-        y = 10;
-        x = (32-maxheight)/2;
         imageBitmap = new wxBitmap(img);
-      }
-
-      int symbolLength = 128;
-      if( m_bSmall ) symbolLength = 64;
-
-      if( ( m_rotate && (StrOp.equals( ori, wItem.west ))) || ( !m_rotate && (StrOp.equals( ori, wItem.east ))) ) {
-        x = symbolLength - imageBitmap->GetWidth() - 10;
-      }
-      if( ( m_rotate && (StrOp.equals( ori, wItem.south ))) || ( !m_rotate && (StrOp.equals( ori, wItem.north ))) ) {
-        y = symbolLength - imageBitmap->GetHeight() - 10;
+        x = (32-maxheight)/2;
+        y = (symbolLength - imageBitmap->GetHeight()) / 2;
+        if( y < 10 )
+          y = 10;
       }
 
       if( m_UseGC )
