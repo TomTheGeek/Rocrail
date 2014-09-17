@@ -28,6 +28,7 @@
 #include "rocrail/public/app.h"
 #include "rocrail/public/loc.h"
 #include "rocrail/public/block.h"
+#include "rocrail/public/var.h"
 
 #include "rocs/public/mem.h"
 #include "rocs/public/system.h"
@@ -278,7 +279,16 @@ static void* __event( void* inst, const void* evt ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text event [%s-%s][%s]",
         wText.getreflcid(node), wText.getrefbkid(node), wText.getformat(node) );
 
-    if( lc != NULL && bk == NULL ) {
+    /* set value processing */
+    if( StrOp.equals( wText.getcmd(node), wAction.text_value) ) {
+      int val = VarOp.getValue(wText.getformat(node), NULL);
+      char* msg = StrOp.fmt("%d", val);
+      wText.settext(data->props, msg );
+      StrOp.free(msg);
+    }
+
+    /* default update processing */
+    else if( lc != NULL && bk == NULL ) {
       char* msg = NULL;
       char* scidxStr = NULL;
       char* mvspeedStr = NULL;

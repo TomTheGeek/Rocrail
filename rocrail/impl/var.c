@@ -92,10 +92,17 @@ static void* __event( void* inst, const void* evt ) {
 #define OP_MULT 3
 #define OP_DIVI 4
 
-static int _getValue( const char* valStr ) {
+static int _getValue( const char* p_ValStr, iOMap map ) {
   iOModel model = AppOp.getModel();
   int retVal = 0;
   int operator = OP_NONE;
+  char* valStr = NULL;
+
+  if( map != NULL )
+    valStr = TextOp.replaceAllSubstitutions(p_ValStr, map);
+  else
+    valStr = StrOp.dup(p_ValStr);
+
   iOStrTok tok = StrTokOp.inst(valStr, ' ');
 
   while( StrTokOp.hasMoreTokens(tok) ) {
@@ -164,6 +171,7 @@ static int _getValue( const char* valStr ) {
   }
 
   StrTokOp.base.del(tok);
+  StrOp.free(valStr);
 
   return retVal;
 }
@@ -178,7 +186,7 @@ static void _checkActions( iONode var ) {
   /* loop over all actions */
   while( actionctrl != NULL ) {
     const char* state = wActionCtrl.getstate(actionctrl);
-    int stateVal = VarOp.getValue(state+1);
+    int stateVal = VarOp.getValue(state+1, NULL);
 
     if( state[0] == '=' )
       rc = wVariable.getvalue(var) == stateVal;

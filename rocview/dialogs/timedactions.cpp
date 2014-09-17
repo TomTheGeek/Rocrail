@@ -1110,6 +1110,7 @@ void TimedActions::initCommands()
       break;
     case 11: // text
       m_Command->Append(wxString( wAction.text_update, wxConvUTF8));
+      m_Command->Append(wxString( wAction.text_value, wxConvUTF8));
       break;
     case 12: // sensor
       m_Command->Append(wxString( wAction.output_on, wxConvUTF8));

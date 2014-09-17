@@ -2931,6 +2931,7 @@
         <const name="route_lockset" vt="string" val="lockset"/>
         <const name="route_unlock" vt="string" val="unlock"/>
         <const name="text_update" vt="string" val="update"/>
+        <const name="text_value" vt="string" val="value"/>
         <const name="sound_play" vt="string" val="play"/>
         <const name="loco_binstate_on" vt="string" val="binstate_on"/>
         <const name="loco_binstate_off" vt="string" val="binstate_off"/>

@@ -411,7 +411,11 @@ static Boolean __checkConditions(struct OAction* inst, iONode actionctrl) {
           if( var != NULL ) {
             const char* state = wActionCond.getstate(actionCond);
             if( StrOp.len(state) > 0 ) {
-              int stateVal = VarOp.getValue(state+1);
+              iOMap map = MapOp.inst();
+              MapOp.put(map, "lcid", (obj)wActionCtrl.getlcid(actionctrl));
+              MapOp.put(map, "bkid", (obj)wActionCtrl.getbkid(actionctrl));
+              int stateVal = VarOp.getValue(state+1, map);
+              MapOp.base.del(map);
 
               if( state[0] == '=' )
                 rc = wVariable.getvalue(var) == stateVal;
@@ -658,7 +662,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
 
     if( var != NULL ) {
       int oldval = wVariable.getvalue(var);
-      int newval = VarOp.getValue(wAction.getparam(data->action));
+      int newval = VarOp.getValue(wAction.getparam(data->action), NULL);
       if( StrOp.equals( wVariable.op_value, wAction.getcmd( data->action ) ) ) {
         wVariable.setvalue(var, newval);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d, old value=%d",
