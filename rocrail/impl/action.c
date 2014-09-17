@@ -680,6 +680,11 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
           iOText text = ModelOp.getText( model, newVal+1 );
           if( text != NULL )
             wVariable.setvalue(var, atoi(TextOp.getText(text)) );
+          else {
+            iONode Var = ModelOp.getVariable( model, newVal+1 );
+            if( Var != NULL )
+              wVariable.setvalue(var, wVariable.getvalue(Var) );
+          }
         }
         else
           wVariable.setvalue(var, atoi(wAction.getparam(data->action)));
@@ -705,6 +710,11 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
           iOText text = ModelOp.getText( model, newText+1 );
           if( text != NULL )
             wVariable.settext(var, TextOp.getText(text) );
+          else {
+            iONode Var = ModelOp.getVariable( model, newText+1 );
+            if( Var != NULL )
+              wVariable.settext(var, wVariable.gettext(Var) );
+          }
         }
         else
           wVariable.settext(var, wAction.getparam(data->action));
