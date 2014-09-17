@@ -133,7 +133,7 @@ static int _getValue( const char* p_ValStr, iOMap map ) {
         continue;
       }
 
-      if( v[0] == '#' ) { // variable
+      if( v[0] == '#' ) { /* variable */
         iONode valVar = ModelOp.getVariable(model, v+1);
         if( valVar != NULL ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable %s is %d", v+1, wVariable.getvalue(valVar) );
@@ -146,7 +146,7 @@ static int _getValue( const char* p_ValStr, iOMap map ) {
         continue;
       }
 
-      if( v[0] == '$' ) { // text
+      if( v[0] == '$' ) { /* text */
         iOText text = ModelOp.getText(model, v+1);
         if( text != NULL ) {
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text %s is %d (%s)", v+1, atoi(TextOp.getText(text)), TextOp.getText(text) );
@@ -159,7 +159,7 @@ static int _getValue( const char* p_ValStr, iOMap map ) {
         continue;
       }
 
-      // number
+      /* number */
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "number is %d", atoi(v) );
       if( operator == OP_NONE ) retVal  = atoi(v);
       if( operator == OP_PLUS ) retVal += atoi(v);
