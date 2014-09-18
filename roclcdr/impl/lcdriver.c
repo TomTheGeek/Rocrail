@@ -304,10 +304,12 @@ static void _drive( iILcDriverInt inst, obj emitter, int event ) {
       statusOut( inst );
       break;
 
+    case LC_FREE:
+      break;
+
     case LC_ENTERBLOCK:
       statusEnter( inst, False );
       break;
-
 
     case LC_RE_ENTERBLOCK:
       if( data->reentertimer < 1 )
