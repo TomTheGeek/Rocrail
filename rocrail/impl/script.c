@@ -42,6 +42,7 @@
 #include "rocrail/wrapper/public/Stage.h"
 #include "rocrail/wrapper/public/Clock.h"
 #include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/BinStateCmd.h"
 
 static int instCnt = 0;
 
@@ -168,6 +169,18 @@ static char* _convertNode(iONode node, Boolean addstamp) {
       scriptline = StrOp.cat( scriptline, ",");
       scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "dir", "true"));
     }
+    if( NodeOp.getStr(node, "nr", NULL) != NULL ) {
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "nr", NULL));
+    }
+    if( NodeOp.getStr(node, "data", NULL) != NULL ) {
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "data", NULL));
+    }
+    if( NodeOp.getStr(node, "addr", NULL) != NULL ) {
+      scriptline = StrOp.cat( scriptline, ",");
+      scriptline = StrOp.cat( scriptline, NodeOp.getStr(node, "addr", NULL));
+    }
 
     if( addstamp ) {
       char* stamp = StrOp.createStamp();
@@ -241,6 +254,15 @@ static iONode _parseLine(const char* scriptline, Boolean playpause) {
         wFeedback.setstate( node, StrOp.equalsi("true", parm2) );
         if( parm3 != NULL )
           wFeedback.setidentifier(node, parm3);
+      }
+
+      else if( StrOp.equalsi( wBinStateCmd.name(), nodename ) && parm1 != NULL && parm2 != NULL && parm3 != NULL && parm4 != NULL ) {
+        /* binstate,<id>,<nr>,<data> */
+        node = NodeOp.inst( wBinStateCmd.name(), NULL, ELEMENT_NODE );
+        wBinStateCmd.setid( node, parm1 );
+        wBinStateCmd.setnr( node, atoi(parm2) );
+        wBinStateCmd.setdata( node, atoi(parm3) );
+        wBinStateCmd.setaddr( node, atoi(parm4) );
       }
 
       else if( StrOp.equalsi( "pause", nodename ) && parm1 != NULL ) {
