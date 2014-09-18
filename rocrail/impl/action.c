@@ -665,19 +665,19 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       int newval = VarOp.getValue(wAction.getparam(data->action), NULL);
       if( StrOp.equals( wVariable.op_value, wAction.getcmd( data->action ) ) ) {
         wVariable.setvalue(var, newval);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d, old value=%d",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d, old value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var), oldval );
         checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_add, wAction.getcmd( data->action ) ) ) {
         wVariable.setvalue(var, wVariable.getvalue(var) + newval );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
         checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_subtract, wAction.getcmd( data->action ) ) ) {
         wVariable.setvalue(var, wVariable.getvalue(var) - newval );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new value=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getvalue(var) );
         checkActions = True;
       }
@@ -695,24 +695,24 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         }
         else
           wVariable.settext(var, wAction.getparam(data->action));
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new text=%s",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new text=%s",
             oid, cmdStr, wAction.getparam(data->action), wVariable.gettext(var) );
       }
       else if( StrOp.equals( wVariable.op_min, wAction.getcmd( data->action ) ) ) {
         wVariable.setmin(var, newval );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new min=%d",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new min=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getmin(var) );
       }
       else if( StrOp.equals( wVariable.op_max, wAction.getcmd( data->action ) ) ) {
         wVariable.setmax(var, newval );
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new max=%d",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new max=%d",
             oid, cmdStr, wAction.getparam(data->action), wVariable.getmax(var) );
       }
       else if( StrOp.equals( wVariable.op_random, wAction.getcmd( data->action ) ) ) {
         if( wVariable.getmax(var) > wVariable.getmin(var) ) {
           int rval = wVariable.getmin(var) + rand()%(wVariable.getmax(var)-wVariable.getmin(var));
           wVariable.setvalue(var, rval);
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] new random value=%d",
+          TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] new random value=%d",
               oid, cmdStr, wVariable.getvalue(var) );
           checkActions = True;
         }
@@ -726,12 +726,12 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         wVariable.settimer(var, True);
         if( startval != -1 )
           wVariable.setvalue(var, startval);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer started with value %d",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] timer started with value %d",
             oid, cmdStr, wVariable.getvalue(var) );
       }
       else if( StrOp.equals( wVariable.op_stop, wAction.getcmd( data->action ) ) ) {
         wVariable.settimer(var, False);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable [%s] cmd=[%s] timer stopped with value %d",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] timer stopped with value %d",
             oid, cmdStr, wVariable.getvalue(var) );
       }
 

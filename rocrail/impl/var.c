@@ -111,32 +111,32 @@ static int _getValue( const char* p_ValStr, iOMap map ) {
 
       if( v[0] == '+' ) {
         operator = OP_PLUS;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operation=PLUS" );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "operation=PLUS" );
         continue;
       }
 
       if( v[0] == '-' ) {
         operator = OP_MIN;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operation=MIN" );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "operation=MIN" );
         continue;
       }
 
       if( v[0] == '*' ) {
         operator = OP_MULT;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operation=MULT" );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "operation=MULT" );
         continue;
       }
 
       if( v[0] == '/' ) {
         operator = OP_DIVI;
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operation=DIVI" );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "operation=DIVI" );
         continue;
       }
 
       if( v[0] == '#' ) { /* variable */
         iONode valVar = ModelOp.getVariable(model, v+1);
         if( valVar != NULL ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "variable %s is %d", v+1, wVariable.getvalue(valVar) );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "variable %s is %d", v+1, wVariable.getvalue(valVar) );
           if( operator == OP_NONE ) retVal  = wVariable.getvalue(valVar);
           if( operator == OP_PLUS ) retVal += wVariable.getvalue(valVar);
           if( operator == OP_MIN  ) retVal -= wVariable.getvalue(valVar);
@@ -149,7 +149,7 @@ static int _getValue( const char* p_ValStr, iOMap map ) {
       if( v[0] == '$' ) { /* text */
         iOText text = ModelOp.getText(model, v+1);
         if( text != NULL ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "text %s is %d (%s)", v+1, atoi(TextOp.getText(text)), TextOp.getText(text) );
+          TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "text %s is %d (%s)", v+1, atoi(TextOp.getText(text)), TextOp.getText(text) );
           if( operator == OP_NONE ) retVal  = atoi(TextOp.getText(text));
           if( operator == OP_PLUS ) retVal += atoi(TextOp.getText(text));
           if( operator == OP_MIN  ) retVal -= atoi(TextOp.getText(text));
@@ -160,7 +160,7 @@ static int _getValue( const char* p_ValStr, iOMap map ) {
       }
 
       /* number */
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "number is %d", atoi(v) );
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "number is %d", atoi(v) );
       if( operator == OP_NONE ) retVal  = atoi(v);
       if( operator == OP_PLUS ) retVal += atoi(v);
       if( operator == OP_MIN  ) retVal -= atoi(v);
