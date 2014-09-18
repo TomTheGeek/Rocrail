@@ -70,6 +70,7 @@ void VariableDlg::initLabels() {
 
   m_New->SetLabel( wxGetApp().getMsg( "new" ) );
   m_Delete->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_Doc->SetLabel( wxGetApp().getMsg( "doc_report" ) );
 
   m_labID->SetLabel( wxGetApp().getMsg( "id" ) );
   m_labGroup->SetLabel( wxGetApp().getMsg( "group" ) );
@@ -394,3 +395,9 @@ void VariableDlg::onListCol( wxListEvent& event ) {
   m_SortCol = event.GetColumn();
   initIndex();
 }
+
+void VariableDlg::onDoc( wxCommandEvent& event )
+{
+  doDoc( event, "variables");
+}
+
