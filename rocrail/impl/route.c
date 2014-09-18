@@ -1599,8 +1599,6 @@ static iORoute _inst( iONode props ) {
   data->props = props;
   data->routeLockId = StrOp.fmt( "%s%s", wRoute.routelock, wRoute.getid(props) );
 
-  wRoute.setstatus(data->props, wRoute.status_free );
-
   __initCTC(route, False);
 
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "inst for %s", _getId(route) );
