@@ -84,16 +84,7 @@ static char* _replaceAllSubstitutions( const char* str, iOMap map ) {
       tmpStr[endV-tmpStr] = '\0';
       resolvedStr = StrOp.cat( resolvedStr, tmpStr );
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "try to resolve [%s]", startV+1);
-      if((startV+1)[0] == '#' ) {
-        iOModel model = AppOp.getModel();
-        iONode var = ModelOp.getResolveVariable(model, startV+2, map);
-        if(var != NULL) {
-          char varValue[32];
-          StrOp.fmtb(varValue, "%d", wVariable.getvalue(var));
-          resolvedStr = StrOp.cat( resolvedStr, varValue );
-        }
-      }
-      else if( map != NULL && MapOp.haskey(map, startV+1) )
+      if( map != NULL && MapOp.haskey(map, startV+1) )
         resolvedStr = StrOp.cat( resolvedStr, (const char*)MapOp.get(map, startV+1) );
       else if( SystemOp.getProperty(startV+1) != NULL )
         resolvedStr = StrOp.cat( resolvedStr, SystemOp.getProperty(startV+1) );
@@ -298,8 +289,16 @@ static void* __event( void* inst, const void* evt ) {
 
       scidxStr = __addLocoProperties(map, lc, hour, min);
 
-      msg = _replaceAllSubstitutions(wText.getformat(node), map);
-      wText.settext(data->props, msg );
+      /*msg = _replaceAllSubstitutions(wText.getformat(node), map);*/
+      msg = VarOp.getText(wText.getformat(node), map);
+
+      if( msg != NULL && StrOp.len(msg) > 0 && msg[0] == '|' ) {
+        char* newStr = StrOp.fmt("%s %s", wText.gettext(data->props), msg );
+        wText.settext(data->props, newStr );
+        StrOp.free(newStr);
+      }
+      else
+        wText.settext(data->props, msg );
 
       MapOp.base.del(map);
 
@@ -323,8 +322,17 @@ static void* __event( void* inst, const void* evt ) {
       scidxStr = __addLocoProperties(map, lc, hour, min);
       speedStr = __addBlockProperties(map, bk);
 
-      msg = _replaceAllSubstitutions(wText.getformat(node), map);
-      wText.settext(data->props, msg );
+      /*msg = _replaceAllSubstitutions(wText.getformat(node), map);*/
+      msg = VarOp.getText(wText.getformat(node), map);
+
+      if( msg != NULL && StrOp.len(msg) > 0 && msg[0] == '|' ) {
+        char* newStr = StrOp.fmt("%s %s", wText.gettext(data->props), msg );
+        wText.settext(data->props, newStr );
+        StrOp.free(newStr);
+      }
+      else
+        wText.settext(data->props, msg );
+
       wText.setblock(data->props, bk->base.id(bk) );
       if( MapOp.haskey(map, "frombkloc") ) {
         const char* location = (const char*)MapOp.get(map, "frombkloc");
@@ -352,13 +360,23 @@ static void* __event( void* inst, const void* evt ) {
       mvspeedStr = __addActionProperties(map, node);
       speedStr = __addBlockProperties(map, bk);
 
-      msg = _replaceAllSubstitutions(wText.getformat(node), map);
+      /*msg = _replaceAllSubstitutions(wText.getformat(node), map);*/
+      msg = VarOp.getText(wText.getformat(node), map);
+
       wText.setblock(data->props, bk->base.id(bk) );
       if( MapOp.haskey(map, "frombkloc") )
         wText.setlocation(data->props, (const char*)MapOp.get(map, "frombkloc") );
       else
         wText.setlocation(data->props, "" );
-      wText.settext(data->props, msg);
+
+      if( msg != NULL && StrOp.len(msg) > 0 && msg[0] == '|' ) {
+        char* newStr = StrOp.fmt("%s %s", wText.gettext(data->props), msg );
+        wText.settext(data->props, newStr );
+        StrOp.free(newStr);
+      }
+      else
+        wText.settext(data->props, msg);
+
       MapOp.base.del(map);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
@@ -373,9 +391,19 @@ static void* __event( void* inst, const void* evt ) {
 
       mvspeedStr = __addActionProperties(map, node);
 
-      msg = _replaceAllSubstitutions(wText.getformat(node), map);
+      /*msg = _replaceAllSubstitutions(wText.getformat(node), map);*/
+      msg = VarOp.getText(wText.getformat(node), map);
+
       MapOp.base.del(map);
-      wText.settext(data->props, msg);
+
+      if( msg != NULL && StrOp.len(msg) > 0 && msg[0] == '|' ) {
+        char* newStr = StrOp.fmt("%s %s", wText.gettext(data->props), msg );
+        wText.settext(data->props, newStr );
+        StrOp.free(newStr);
+      }
+      else
+        wText.settext(data->props, msg);
+
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
       __checkAction(inst, msg);
       StrOp.free(msg);

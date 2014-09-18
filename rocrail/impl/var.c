@@ -92,6 +92,49 @@ static void* __event( void* inst, const void* evt ) {
 #define OP_MULT 3
 #define OP_DIVI 4
 
+
+static char* _getText( const char* p_ValStr, iOMap map ) {
+  iOModel model = AppOp.getModel();
+  char* valStr = NULL;
+  char* retVal = NULL;
+
+  if( map != NULL )
+    valStr = TextOp.replaceAllSubstitutions(p_ValStr, map);
+  else
+    valStr = StrOp.dup(p_ValStr);
+
+  iOStrTok tok = StrTokOp.inst(valStr, ' ');
+
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* v = StrTokOp.nextToken(tok);
+    if( v[0] == '#' ) { /* variable */
+      iONode valVar = ModelOp.getVariable(model, v+1);
+      if( valVar != NULL ) {
+        char* sV = StrOp.fmt( "%d ", wVariable.getvalue(valVar) );
+        retVal = StrOp.cat( retVal, sV );
+        StrOp.free(sV);
+      }
+    }
+    else if( v[0] == '$' ) { /* text */
+      iOText text = ModelOp.getText(model, v+1);
+      if( text != NULL ) {
+        retVal = StrOp.cat( retVal, TextOp.getText(text) );
+        retVal = StrOp.cat( retVal, " " );
+      }
+    }
+    else {
+      retVal = StrOp.cat( retVal, v );
+      retVal = StrOp.cat( retVal, " " );
+    }
+  }
+
+  StrTokOp.base.del(tok);
+  StrOp.free(valStr);
+
+  return retVal;
+}
+
+
 static int _getValue( const char* p_ValStr, iOMap map ) {
   iOModel model = AppOp.getModel();
   int retVal = 0;

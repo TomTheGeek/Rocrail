@@ -682,19 +682,9 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_text, wAction.getcmd( data->action ) ) ) {
-        const char* newText = wAction.getparam(data->action);
-        if( StrOp.len(newText) > 1 && newText[0] == '$' ) {
-          iOText text = ModelOp.getText( model, newText+1 );
-          if( text != NULL )
-            wVariable.settext(var, TextOp.getText(text) );
-        }
-        else if( StrOp.len(newText) > 1 && newText[0] == '#' ) {
-          iONode Var = ModelOp.getVariable( model, newText+1 );
-          if( Var != NULL )
-            wVariable.settext(var, wVariable.gettext(Var) );
-        }
-        else
-          wVariable.settext(var, wAction.getparam(data->action));
+        char* newText = VarOp.getText( wAction.getparam(data->action), NULL);
+        wVariable.settext(var, newText);
+        StrOp.free(newText);
         TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new text=[%s]",
             oid, cmdStr, wAction.getparam(data->action), wVariable.gettext(var) );
       }
