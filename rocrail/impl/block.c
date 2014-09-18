@@ -1485,12 +1485,33 @@ static int _isSuited( iIBlockBase inst, iOLoc loc, int* restlen, Boolean checkPr
     return suits_not;
   }
 
-  /* TODO: check all other loc properties if it realy suits. */
+  /* Check all other loc properties if it realy suits. */
   if( StrOp.equals( wLoc.engine_electric, wLoc.getengine( loc->base.properties( loc ) ) ) && !wBlock.iselectrified( data->props ) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                    "Block [%s] is not electrified; E-Loco [%s] can not use it.",
                    data->id, LocOp.getId( loc ) );
     return suits_not;
+  }
+
+
+  /* Check if the locos class fits. */
+  if( wBlock.getclass(data->props) != NULL && StrOp.len(wBlock.getclass(data->props)) > 0 ) {
+    Boolean classFits = False;
+    const char* locoClass = LocOp.getClass(loc);
+    iOStrTok tok = StrTokOp.inst(wBlock.getclass(data->props), ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      if( StrOp.equals( StrTokOp.nextToken(tok), locoClass) ) {
+        classFits = True;
+        break;
+      }
+    }
+    StrTokOp.base.del(tok);
+    if( !classFits ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                     "Block [%s] does not allow class [%s] from loco [%s]",
+                     data->id, locoClass, LocOp.getId( loc ) );
+      return suits_not;
+    }
   }
 
 
@@ -2699,6 +2720,12 @@ static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
 
     wBlock.setacceptident(data->props, data->acceptident);
   }
+}
+
+
+static void _setClass( iIBlockBase inst, const char* p_Class ) {
+  iOBlockData data = Data(inst);
+  wBlock.setclass(data->props, p_Class);
 }
 
 

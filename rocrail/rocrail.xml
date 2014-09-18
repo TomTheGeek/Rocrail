@@ -721,6 +721,9 @@
     <fun name="getCargo" vt="const char*">
       <param name="inst" vt="this" remark="Loco instance"/>
     </fun>
+    <fun name="getClass" vt="const char*">
+      <param name="inst" vt="this" remark="Loco instance"/>
+    </fun>
     <fun name="isGoManual" vt="Boolean">
       <param name="inst" vt="this" remark="Loc instance"/>
     </fun>

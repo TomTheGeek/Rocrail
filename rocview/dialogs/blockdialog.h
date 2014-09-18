@@ -451,6 +451,8 @@ public:
     wxCheckBox* m_PermTypePost;
     wxCheckBox* m_PermTypeLight;
     wxRadioBox* m_Commuter;
+    wxStaticText* m_labClass;
+    wxTextCtrl* m_Class;
     wxButton* m_Cancel;
     wxButton* m_Apply;
     wxButton* m_OK;

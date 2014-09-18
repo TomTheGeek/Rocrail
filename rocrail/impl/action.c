@@ -931,7 +931,10 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   else if( StrOp.equals( wBlock.name(), wAction.gettype( data->action ) ) ) {
     iIBlockBase bl = ModelOp.getBlock( model, wAction.getoid( data->action ) );
     if( bl != NULL ) {
-      if( StrOp.equals( wAction.block_unlock, wAction.getcmd( data->action ) ) ) {
+      if( StrOp.equals( wAction.block_class, wAction.getcmd( data->action ) ) ) {
+        bl->setClass(bl, wAction.getparam( data->action ));
+      }
+      else if( StrOp.equals( wAction.block_unlock, wAction.getcmd( data->action ) ) ) {
         bl->unLock(bl, wAction.getparam( data->action ), NULL);
       }
       else if( StrOp.equals( wAction.block_event, wAction.getcmd( data->action ) ) ) {

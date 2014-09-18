@@ -531,6 +531,8 @@ public:
     wxCheckBox* m_FreeBlockOnEnter;
     wxRadioBox* m_EngineBox;
     wxRadioBox* m_Era;
+    wxStaticText* m_labClass;
+    wxTextCtrl* m_Class;
     wxPanel* m_FunctionPanel;
     wxStaticText* m_labF0Nr;
     wxStaticText* m_labF0Desc;

@@ -2003,6 +2003,9 @@ static void _setGhostDetected(iIBlockBase inst, const char* key, const char* ide
   iOStageData data = Data(inst);
 }
 
+static void _setClass( iIBlockBase inst, const char* p_Class ) {
+}
+
 
 /**  */
 static struct OStage* _inst( iONode props ) {

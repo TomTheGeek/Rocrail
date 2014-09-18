@@ -2354,6 +2354,12 @@ static const char* _getCargo( iOLoc inst ) {
 }
 
 
+static const char* _getClass( iOLoc inst ) {
+  iOLocData data = Data(inst);
+  return wLoc.getclass(data->props);
+}
+
+
 static void* _getProperties( void* inst ) {
   iOLocData data = Data((iOLoc)inst);
   return data->props;

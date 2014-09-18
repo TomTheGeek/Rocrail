@@ -1548,6 +1548,12 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id, Boolean fo
 static void _setTempWait(iIBlockBase inst, Boolean wait) {
 }
 
+static void _setClass( iIBlockBase inst, const char* p_Class ) {
+}
+
+
+
+
 static void _init( iIBlockBase inst ) {
   iOSelTabData data = Data(inst);
   /* init all track blocks */

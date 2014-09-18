@@ -460,6 +460,8 @@ void BlockDialog::initLabels() {
   m_PermTypeLight->SetLabel( wxGetApp().getMsg( "light" ) );
   m_PermTypeLightGoods->SetLabel( wxGetApp().getMsg( "lightgoods" ) );
 
+  m_labClass->SetLabel( wxGetApp().getMsg( "class" ) );
+
   // Buttons
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
@@ -818,6 +820,8 @@ void BlockDialog::initValues() {
   }
   StrTokOp.base.del(tok);
 
+  m_Class->SetValue(wxString(wBlock.getclass(m_Props),wxConvUTF8));
+
 }
 
 bool BlockDialog::evaluate() {
@@ -1099,6 +1103,9 @@ bool BlockDialog::evaluate() {
     wBlock.settypeperm( m_Props, "" );
   }
 
+  wBlock.setclass(m_Props, m_Class->GetValue().mb_str(wxConvUTF8) );
+
+
   // remove un used events
   iONode fb = wBlock.getfbevent( m_Props );
   iOList delList = ListOp.inst();
@@ -1321,6 +1328,8 @@ bool BlockDialog::Create( wxWindow* parent, wxWindowID id, const wxString& capti
     m_PermTypePost = NULL;
     m_PermTypeLight = NULL;
     m_Commuter = NULL;
+    m_labClass = NULL;
+    m_Class = NULL;
     m_Cancel = NULL;
     m_Apply = NULL;
     m_OK = NULL;
@@ -2019,35 +2028,47 @@ void BlockDialog::CreateControls()
     m_PermTypeLight->SetValue(false);
     itemFlexGridSizer184->Add(m_PermTypeLight, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
+    wxBoxSizer* itemBoxSizer195 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer178->Add(itemBoxSizer195, 0, wxGROW, 5);
     wxArrayString m_CommuterStrings;
     m_CommuterStrings.Add(_("&no"));
     m_CommuterStrings.Add(_("&yes"));
     m_CommuterStrings.Add(_("&only"));
     m_Commuter = new wxRadioBox( m_PermissionsPanel, ID_RADIOBOX_BK_COMMUTER, _("Commuter train"), wxDefaultPosition, wxDefaultSize, m_CommuterStrings, 1, wxRA_SPECIFY_ROWS );
     m_Commuter->SetSelection(0);
-    itemBoxSizer178->Add(m_Commuter, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemBoxSizer195->Add(m_Commuter, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+
+    wxFlexGridSizer* itemFlexGridSizer197 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemBoxSizer195->Add(itemFlexGridSizer197, 1, wxALIGN_CENTER_VERTICAL, 5);
+    m_labClass = new wxStaticText( m_PermissionsPanel, wxID_ANY, _("Class"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer197->Add(m_labClass, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_Class = new wxTextCtrl( m_PermissionsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer197->Add(m_Class, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemFlexGridSizer197->AddGrowableCol(1);
 
     m_Notebook->AddPage(m_PermissionsPanel, _("Persmissions"));
 
     itemBoxSizer2->Add(m_Notebook, 1, wxGROW|wxALL, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer196 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer200 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer196, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer200, 0, wxGROW|wxALL, 5);
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer196->AddButton(m_Cancel);
+    itemStdDialogButtonSizer200->AddButton(m_Cancel);
 
     m_Apply = new wxButton( itemDialog1, wxID_APPLY, _("&Apply"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer196->AddButton(m_Apply);
+    itemStdDialogButtonSizer200->AddButton(m_Apply);
 
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer196->AddButton(m_OK);
+    itemStdDialogButtonSizer200->AddButton(m_OK);
 
-    wxButton* itemButton200 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer196->AddButton(itemButton200);
+    wxButton* itemButton204 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer200->AddButton(itemButton204);
 
-    itemStdDialogButtonSizer196->Realize();
+    itemStdDialogButtonSizer200->Realize();
 
 ////@end BlockDialog content construction
 }

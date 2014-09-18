@@ -3429,6 +3429,8 @@ static void _setGhostDetected(iIBlockBase inst, const char* key, const char* ide
   iOTTData data = Data(inst);
 }
 
+static void _setClass( iIBlockBase inst, const char* p_Class ) {
+}
 
 
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

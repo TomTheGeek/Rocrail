@@ -2122,8 +2122,10 @@
         <const name="bsm" vt="string" val="bsm" remark="Block site min."/>
         <var name="cmd" vt="string" defval="NULL" range="*"/>
         <var name="ttid" vt="string" defval="NULL" range="*" remark="Turntable ID."/>
+        <var name="class" vt="string" defval="" range="*" remark="Comma separated list of permitted classes."/>
         <incl cardinality="n" wrappername="PermInclude">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Loc ID."/>
+          <var name="randomrate" vt="int" defval="10" range="0-*" remark="Rate of randomness. 0=Not used"/>
         </incl>
         <excl cardinality="n" wrappername="PermExclude">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Loc ID."/>
@@ -2634,6 +2636,7 @@
         <const name="cargo_shunting" vt="string" val="shunting"/>
         <const name="cargo_cleaning" vt="string" val="cleaning" remark="should not wait in blocks"/>
         <var name="cargo" vt="string" defval="none" range="*"/>
+        <var name="class" vt="string" defval="" range="*"/>
         <var name="commuter" vt="bool" defval="false" remark="Commuter train?"/>
         <const name="engine_diesel" vt="string" val="diesel"/>
         <const name="engine_electric" vt="string" val="electric"/>
@@ -2915,6 +2918,7 @@
         <const name="block_schedule_manual" vt="string" val="schedule_manual"/>
         <const name="block_event" vt="string" val="event"/>
         <const name="block_acceptident" vt="string" val="acceptident"/>
+        <const name="block_class" vt="string" val="class"/>
         <const name="loco_go" vt="string" val="go"/>
         <const name="loco_stop" vt="string" val="stop"/>
         <const name="loco_velocity" vt="string" val="velocity"/>
