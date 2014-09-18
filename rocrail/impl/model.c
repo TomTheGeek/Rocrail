@@ -2032,8 +2032,13 @@ static void __startAllLocosRunner( void* threadinst ) {
     if( lcgo && data->pendingstartallvirtual && LocOp.govirtual( loc ) ) {
       ThreadOp.sleep( 10 + gap * 1000 );
     }
-    else if( lcgo && LocOp.go( loc ) ) {
+    else if( lcgo && data->startallera == 0 && LocOp.go( loc ) ) {
       ThreadOp.sleep( 10 + gap * 1000 );
+    }
+    else if( lcgo && data->startallera > 0 ) {
+      iONode lcprops = LocOp.base.properties(loc);
+      if( wLoc.getera(lcprops) == (data->startallera-1) && LocOp.go( loc ) )
+        ThreadOp.sleep( 10 + gap * 1000 );
     }
     else
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Loco %s could not be started; skipping start gap.", LocOp.getId(loc) );
@@ -2056,7 +2061,7 @@ static void __startAllLocosRunner( void* threadinst ) {
   ThreadOp.base.del(threadinst);
 }
 
-static void __startAllLocs( iOModel inst, Boolean virtual ) {
+static void __startAllLocs( iOModel inst, Boolean virtual, int era ) {
   /* Start a thread for starting all loco's with bigger intervals then 10ms. */
   /* The auto section of the rocrail.ini must be extended with a start delay parameter in seconds. */
 
@@ -2066,6 +2071,7 @@ static void __startAllLocs( iOModel inst, Boolean virtual ) {
   }
   else {
     iOThread t = ThreadOp.inst( "startall", &__startAllLocosRunner, inst );
+    data->startallera = era;
     data->pendingstartall = True;
     data->pendingstartallvirtual = virtual;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "startAllLocs%s...", data->pendingstartallvirtual?" virtual":"" );
@@ -2080,6 +2086,7 @@ static void __resumeAllLocs( iOModel inst ) {
   }
   else {
     iOThread t = ThreadOp.inst( "resumeall", &__startAllLocosRunner, inst );
+    data->startallera = 0;
     data->pendingstartall = True;
     data->pendingstartallvirtual = False;
     ThreadOp.start( t );
@@ -2168,10 +2175,10 @@ static Boolean _cmd( iOModel inst, iONode cmd ) {
       __reset( inst, True );
     }
     else if( StrOp.equals( wAutoCmd.start, cmdVal ) ) {
-      __startAllLocs( inst, False );
+      __startAllLocs( inst, False, wAutoCmd.getera(cmd) );
     }
     else if( StrOp.equals( wAutoCmd.startvirtual, cmdVal ) ) {
-      __startAllLocs( inst, True );
+      __startAllLocs( inst, True, 0 );
     }
     else if( StrOp.equals( wAutoCmd.resume, cmdVal ) ) {
       __resumeAllLocs( inst );

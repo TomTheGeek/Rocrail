@@ -138,6 +138,12 @@ public:
   void OnAutoMode(wxCommandEvent& event);
   void OnSimulateSensors(wxCommandEvent& event);
   void OnAutoGo(wxCommandEvent& event);
+  void OnAutoGoEra1(wxCommandEvent& event);
+  void OnAutoGoEra2(wxCommandEvent& event);
+  void OnAutoGoEra3(wxCommandEvent& event);
+  void OnAutoGoEra4(wxCommandEvent& event);
+  void OnAutoGoEra5(wxCommandEvent& event);
+  void OnAutoGoEra6(wxCommandEvent& event);
   void OnAutoGoVirtual(wxCommandEvent& event);
   void OnAutoResume(wxCommandEvent& event);
   void OnAutoStop(wxCommandEvent& event);
@@ -509,6 +515,13 @@ enum
     ME_EmergencyBreak,
     ME_AutoMode,
     ME_AutoGo,
+    ME_AutoGoAll,
+    ME_AutoGoEra1,
+    ME_AutoGoEra2,
+    ME_AutoGoEra3,
+    ME_AutoGoEra4,
+    ME_AutoGoEra5,
+    ME_AutoGoEra6,
     ME_AutoGoVirtual,
     ME_AutoResume,
     ME_AutoStop,

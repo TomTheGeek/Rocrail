@@ -1357,6 +1357,7 @@
       <var name="enableswfb" vt="Boolean"/>
       <var name="moduleplan" vt="iOModPlan"/>
       <var name="sysEventListeners" vt="iOList"/>
+      <var name="startallera" vt="int"/>
       <var name="pendinginitfield" vt="Boolean"/>
       <var name="pendingstartall" vt="Boolean"/>
       <var name="pendingstartallvirtual" vt="Boolean"/>

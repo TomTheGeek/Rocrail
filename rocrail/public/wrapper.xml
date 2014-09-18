@@ -1286,6 +1286,7 @@
     <const name="v0locos" vt="string" val="v0locos"/>
     <const name="vrestorelocos" vt="string" val="vrestorelocos"/>
     <var name="cmd" vt="string" defval="" range="on,off,start,stop,reset"/>
+    <var name="era" vt="int" defval="0" range="0-6"/>
   </auto>
 
   <binstate remark="Binary state command" wrappername="BinStateCmd">

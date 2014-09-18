@@ -302,7 +302,13 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_EmergencyBreak , RocGuiFrame::OnEmergencyBreak)
     EVT_MENU( ME_AutoMode       , RocGuiFrame::OnAutoMode)
     EVT_MENU( ME_SimulateSensors, RocGuiFrame::OnSimulateSensors)
-    EVT_MENU( ME_AutoGo         , RocGuiFrame::OnAutoGo)
+    EVT_MENU( ME_AutoGoAll      , RocGuiFrame::OnAutoGo)
+    EVT_MENU( ME_AutoGoEra1     , RocGuiFrame::OnAutoGoEra1)
+    EVT_MENU( ME_AutoGoEra2     , RocGuiFrame::OnAutoGoEra2)
+    EVT_MENU( ME_AutoGoEra3     , RocGuiFrame::OnAutoGoEra3)
+    EVT_MENU( ME_AutoGoEra4     , RocGuiFrame::OnAutoGoEra4)
+    EVT_MENU( ME_AutoGoEra5     , RocGuiFrame::OnAutoGoEra5)
+    EVT_MENU( ME_AutoGoEra6     , RocGuiFrame::OnAutoGoEra6)
     EVT_MENU( ME_AutoGoVirtual  , RocGuiFrame::OnAutoGoVirtual)
     EVT_MENU( ME_AutoResume     , RocGuiFrame::OnAutoResume)
     EVT_MENU( ME_AutoStop       , RocGuiFrame::OnAutoStop)
@@ -2076,7 +2082,16 @@ void RocGuiFrame::initFrame() {
   wxMenu *menuAuto = new wxMenu();
   menuAuto->AppendCheckItem(ME_AutoMode, wxGetApp().getMenu("automode"), wxGetApp().getTip("automode") );
   menuAuto->AppendSeparator();
-  menuAuto->Append(ME_AutoGo  , wxGetApp().getMenu("startall"), wxGetApp().getTip("startall") );
+  wxMenu *menuStartAll = new wxMenu();
+  menuStartAll->Append(ME_AutoGoAll  , wxGetApp().getMenu("startall"), wxGetApp().getTip("startall") );
+  menuStartAll->Append(ME_AutoGoEra1, wxGetApp().getMenu("era") + wxT(" I"), wxGetApp().getTip("startall") );
+  menuStartAll->Append(ME_AutoGoEra2, wxGetApp().getMenu("era") + wxT(" II"), wxGetApp().getTip("startall") );
+  menuStartAll->Append(ME_AutoGoEra3, wxGetApp().getMenu("era") + wxT(" III"), wxGetApp().getTip("startall") );
+  menuStartAll->Append(ME_AutoGoEra4, wxGetApp().getMenu("era") + wxT(" IV"), wxGetApp().getTip("startall") );
+  menuStartAll->Append(ME_AutoGoEra5, wxGetApp().getMenu("era") + wxT(" V"), wxGetApp().getTip("startall") );
+  menuStartAll->Append(ME_AutoGoEra6, wxGetApp().getMenu("era") + wxT(" VI"), wxGetApp().getTip("startall") );
+  menuAuto->Append( ME_AutoGo, wxGetApp().getMenu("startall"), menuStartAll );
+
   menuAuto->Append(ME_AutoGoVirtual  , wxGetApp().getMenu("startallvirtual"), wxGetApp().getTip("startallvirtual") );
   menuAuto->Append(ME_AutoResume, wxGetApp().getMenu("resumeall"), wxGetApp().getTip("resumeall") );
   menuAuto->AppendCheckItem(ME_SimulateSensors, wxGetApp().getMenu("simulatesensors"), wxGetApp().getTip("simulatesensors") );
@@ -4453,6 +4468,66 @@ void RocGuiFrame::OnAutoGo( wxCommandEvent& event ) {
   }
   iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
   wAutoCmd.setcmd( cmd, wAutoCmd.start );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnAutoGoEra1( wxCommandEvent& event ) {
+  int action = wxMessageDialog( this, wxGetApp().getMsg("startallwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO ) return;
+  iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+  wAutoCmd.setcmd( cmd, wAutoCmd.start );
+  wAutoCmd.setera( cmd, 1 );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnAutoGoEra2( wxCommandEvent& event ) {
+  int action = wxMessageDialog( this, wxGetApp().getMsg("startallwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO ) return;
+  iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+  wAutoCmd.setcmd( cmd, wAutoCmd.start );
+  wAutoCmd.setera( cmd, 2 );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnAutoGoEra3( wxCommandEvent& event ) {
+  int action = wxMessageDialog( this, wxGetApp().getMsg("startallwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO ) return;
+  iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+  wAutoCmd.setcmd( cmd, wAutoCmd.start );
+  wAutoCmd.setera( cmd, 3 );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnAutoGoEra4( wxCommandEvent& event ) {
+  int action = wxMessageDialog( this, wxGetApp().getMsg("startallwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO ) return;
+  iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+  wAutoCmd.setcmd( cmd, wAutoCmd.start );
+  wAutoCmd.setera( cmd, 4 );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnAutoGoEra5( wxCommandEvent& event ) {
+  int action = wxMessageDialog( this, wxGetApp().getMsg("startallwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO ) return;
+  iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+  wAutoCmd.setcmd( cmd, wAutoCmd.start );
+  wAutoCmd.setera( cmd, 5 );
+  wxGetApp().sendToRocrail( cmd );
+  cmd->base.del(cmd);
+}
+
+void RocGuiFrame::OnAutoGoEra6( wxCommandEvent& event ) {
+  int action = wxMessageDialog( this, wxGetApp().getMsg("startallwarning"), _T("Rocrail"), wxYES_NO | wxICON_EXCLAMATION ).ShowModal();
+  if( action == wxID_NO ) return;
+  iONode cmd = NodeOp.inst( wAutoCmd.name(), NULL, ELEMENT_NODE );
+  wAutoCmd.setcmd( cmd, wAutoCmd.start );
+  wAutoCmd.setera( cmd, 6 );
   wxGetApp().sendToRocrail( cmd );
   cmd->base.del(cmd);
 }
