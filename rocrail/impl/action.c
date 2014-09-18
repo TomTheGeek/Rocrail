@@ -695,7 +695,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         }
         else
           wVariable.settext(var, wAction.getparam(data->action));
-        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new text=%s",
+        TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new text=[%s]",
             oid, cmdStr, wAction.getparam(data->action), wVariable.gettext(var) );
       }
       else if( StrOp.equals( wVariable.op_min, wAction.getcmd( data->action ) ) ) {
