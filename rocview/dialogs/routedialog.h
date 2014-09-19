@@ -90,6 +90,10 @@ class wxGrid;
 #define ID_COMBOBOX_ROUTES_SENSORS 10335
 #define ID_BUTTON_ROUTES_ADD_SENSOR 10355
 #define ID_BUTTON_ROUTES_DEL_SENSOR 10356
+#define ID_ADD_INCLUDE 10344
+#define ID_ADD_EXCLUDE 10394
+#define ID_REMOVE_INCLUDE 10447
+#define ID_REMOVE_EXCLUDE 10446
 #define ID_COND_GRID 10388
 #define ID_ROUTE_CONDITION_ADD 10389
 #define ID_ROUTE_CONDITION_MODIFY 10390
@@ -204,6 +208,18 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ROUTES_DEL_SENSOR
     void OnButtonRoutesDelSensorClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ADD_INCLUDE
+    void OnAddIncludeClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ADD_EXCLUDE
+    void OnAddExcludeClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_REMOVE_INCLUDE
+    void OnRemoveIncludeClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_REMOVE_EXCLUDE
+    void OnRemoveExcludeClick( wxCommandEvent& event );
+
     /// wxEVT_GRID_CELL_LEFT_CLICK event handler for ID_COND_GRID
     void OnCondCellLeftClick( wxGridEvent& event );
 
@@ -301,10 +317,16 @@ public:
     wxButton* m_AddSensor;
     wxButton* m_DelSensor;
     wxPanel* m_PermissionsPanel;
+    wxStaticText* m_labLocoListPerm;
+    wxListBox* m_LocoListPerm;
+    wxButton* m_AddInclude;
+    wxButton* m_AddExclude;
     wxStaticText* m_labInclude;
-    wxCheckListBox* m_IncludeList;
+    wxListBox* m_IncludeList;
+    wxButton* m_RemoveInclude;
     wxStaticText* m_labExclude;
-    wxCheckListBox* m_ExcludeList;
+    wxListBox* m_ExcludeList;
+    wxButton* m_RemoveExclude;
     wxStaticBox* m_PermType;
     wxCheckBox* m_PermTypeGoods;
     wxCheckBox* m_PermTypeMixed;
