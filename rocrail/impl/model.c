@@ -4759,7 +4759,7 @@ static iIBlockBase __selectRandomBlock(iOLoc loc, int cnt, iOList fitBlocks, iOL
     randChoice = randNumber % total;
     for( nn = 0; nn < cnt; nn++ ) {
       iIBlockBase b = (iIBlockBase)ListOp.get( blockList, nn );
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "randChoice=%d block randomRate=%d", randChoice, b->getRandomRate(b, LocOp.getId(loc)) );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "randChoice=%d block %s randomRate=%d", randChoice, b->base.id(b), b->getRandomRate(b, LocOp.getId(loc)) );
       if( randChoice <= b->getRandomRate(b, LocOp.getId(loc)) ) {
         blockBest = b;
         for( i = 0; i < ListOp.size(fitBlocks); i++ ) {

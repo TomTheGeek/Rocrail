@@ -1226,24 +1226,24 @@ static Boolean _isFree( iORoute inst, const char* id ) {
   if( data->lockedId == NULL || StrOp.len( data->lockedId ) == 0 ) {
     /* Check all switches: */
     if( !__checkSensors( inst ) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route sensors check failed" );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route %s sensors check failed", RouteOp.getId(inst) );
       return False;
     }
 
     if( !__checkSwitches( inst, id ) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route switches check failed" );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route %s switches check failed", RouteOp.getId(inst) );
       return False;
     }
 
     if( !__checkCrossingBlocks( inst, id ) ) {
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route crossing blocks check failed" );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route %s crossing blocks check failed", RouteOp.getId(inst) );
       return False;
     }
 
     return True;
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Street already locked by %s", data->lockedId );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route %s already locked by %s", RouteOp.getId(inst), data->lockedId );
     return False;
   }
 }

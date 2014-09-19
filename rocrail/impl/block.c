@@ -1260,42 +1260,6 @@ static block_suits __crossCheckType(iOBlock block, iOLoc loc, Boolean* wait, Boo
     else
       return suits_well;
   }
-  /* all (hidden cleaning) should go through all blocks and wait */
-  if( StrOp.equals( wLoc.cargo_all, traintype ) ) {
-    if( wait != NULL )
-      *wait = blockwait;
-    if( checkPrev && data->prevLocId != NULL ) {
-      const char* locid = LocOp.getId( loc );
-      if( StrOp.equals( data->prevLocId, locid ) ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                       "Block \"%s\" is last visited by \"%s\"",
-                       data->id, locid );
-        return suits_ok;
-      }
-      else
-        return suits_well;
-    }
-    else
-      return suits_well;
-  }
-
-
-  /* undefined block type */
-  if( StrOp.equals( wBlock.type_none, blocktype ) || ( ttId != NULL && StrOp.len( ttId ) > 0 ) ) {
-    if( data->prevLocId != NULL ) {
-      const char* locid = LocOp.getId( loc );
-      if( checkPrev && StrOp.equals( data->prevLocId, locid ) ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-                       "Block \"%s\" is last visited by \"%s\"",
-                       data->id, locid );
-        return suits_ok;
-      }
-      else
-        return suits_well;
-    }
-    else
-      return suits_well;
-  }
 
   /* first check for best destinations */
   if( StrOp.equals( wBlock.type_local, blocktype ) && (
@@ -1610,18 +1574,7 @@ static void _inBlock( iIBlockBase inst, const char* id ) {
 
 static int _getVisitCnt( iIBlockBase inst, const char* id ) {
   iOBlockData data = Data(inst);
-  if( data->prevLocId != NULL && StrOp.equals( id, data->prevLocId ) ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Block \"%s\" is %d visited by \"%s\"",
-                   data->id, data->prevLocIdCnt, id );
-    return data->prevLocIdCnt;
-  }
-  else {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                   "Block \"%s\" is not visited by \"%s\"",
-                   data->id, id );
-    return 0;
-  }
+  return 0;
 }
 
 
