@@ -152,6 +152,12 @@ class wxSpinCtrl;
 #define wxID_STATIC_BK_PORT 10041
 #define ID_TEXTCTRL_BK_PORT 10042
 #define ID__PANEL_BK_PERMISSIONS 10242
+#define ID_ADD_INCLUDE 10344
+#define ID_ADD_EXCLUDE 10394
+#define ID_INCLUDE_LIST 10448
+#define ID_REMOVE_INCLUDE 10447
+#define ID_INCLUDE_RANDOMRATE 10449
+#define ID_REMOVE_EXCLUDE 10446
 #define ID_RADIOBOX_BK_COMMUTER 10067
 #define SYMBOL_BLOCKDIALOG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_BLOCKDIALOG_TITLE _("Blocks")
@@ -262,6 +268,24 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2
     void OnButtonBkRouteTestClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ADD_INCLUDE
+    void OnAddIncludeClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ADD_EXCLUDE
+    void OnAddExcludeClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_INCLUDE_LIST
+    void OnIncludeListSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_REMOVE_INCLUDE
+    void OnRemoveIncludeClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_INCLUDE_RANDOMRATE
+    void OnIncludeRandomrateUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_REMOVE_EXCLUDE
+    void OnRemoveExcludeClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
     void OnCancelClick( wxCommandEvent& event );
@@ -435,10 +459,17 @@ public:
     wxStaticText* m_LabelPort;
     wxTextCtrl* m_Port;
     wxPanel* m_PermissionsPanel;
+    wxStaticText* m_labLocoListPerm;
+    wxListBox* m_LocoListPerm;
+    wxButton* m_AddInclude;
+    wxButton* m_AddExclude;
     wxStaticText* m_labInclude;
-    wxCheckListBox* m_IncludeList;
+    wxListBox* m_IncludeList;
+    wxButton* m_RemoveInclude;
+    wxSpinCtrl* m_IncludeRandomRate;
     wxStaticText* m_labExclude;
-    wxCheckListBox* m_ExcludeList;
+    wxListBox* m_ExcludeList;
+    wxButton* m_RemoveExclude;
     wxStaticBox* m_PermType;
     wxCheckBox* m_PermTypeGoods;
     wxCheckBox* m_PermTypeMixed;

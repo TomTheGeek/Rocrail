@@ -2125,7 +2125,7 @@
         <var name="class" vt="string" defval="" range="*" remark="Comma separated list of permitted classes."/>
         <incl cardinality="n" wrappername="PermInclude">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Loc ID."/>
-          <var name="randomrate" vt="int" defval="10" range="0-*" remark="Rate of randomness. 0=Not used"/>
+          <var name="randomrate" vt="int" defval="0" range="0-*" remark="Rate of randomness. 0=Not used"/>
         </incl>
         <excl cardinality="n" wrappername="PermExclude">
           <var name="id" vt="string" defval="" range="*" required="true" remark="Loc ID."/>
