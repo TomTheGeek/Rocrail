@@ -3781,6 +3781,14 @@ static Boolean _isCheck2In( iOLoc inst ) {
   return data->check2in;
 }
 
+static void _setClass( iOLoc inst, const char* p_Class ) {
+  iOLocData data = Data(inst);
+  wLoc.setclass(data->props, p_Class);
+  /* Broadcast to clients. */
+  AppOp.broadcastEvent( (iONode)NodeOp.base.clone( data->props ) );
+}
+
+
 
 static iOLoc _inst( iONode props ) {
   iOLoc     loc  = allocMem( sizeof( struct OLoc ) );

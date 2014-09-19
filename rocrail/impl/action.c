@@ -1197,7 +1197,10 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL, False );
     }
     if( lc != NULL ) {
-      if( StrOp.equals(wLoc.consist, wAction.getcmd(data->action) ) ) {
+      if( StrOp.equals( wAction.loco_class, wAction.getcmd( data->action ) ) ) {
+        LocOp.setClass(lc, wAction.getparam( data->action ));
+      }
+      else if( StrOp.equals(wLoc.consist, wAction.getcmd(data->action) ) ) {
         iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
         wLoc.setconsist(cmd, wAction.getparam(data->action));
         LocOp.modify(lc, cmd);

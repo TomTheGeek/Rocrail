@@ -2927,6 +2927,7 @@
         <const name="loco_swap" vt="string" val="swap"/>
         <const name="loco_carcount" vt="string" val="carcount"/>
         <const name="loco_percent" vt="string" val="percent"/>
+        <const name="loco_class" vt="string" val="class"/>
         <const name="fun_on" vt="string" val="on"/>
         <const name="fun_off" vt="string" val="off"/>
         <const name="tt_goto" vt="string" val="goto"/>
