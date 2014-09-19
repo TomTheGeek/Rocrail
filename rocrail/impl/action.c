@@ -296,6 +296,23 @@ static Boolean __checkLocoState(const char* locoid, const char* id, const char* 
                 LocOp.getV_hint(lc), wActionCond.getstate(actionCond) );
           }
         }
+
+        else if( StrOp.startsWith( wActionCond.getstate(actionCond), "class" ) && StrOp.len(wActionCond.getstate(actionCond)) > 6) {
+          const char* statusStr = wActionCond.getstate(actionCond);
+          const char* statusClass = statusStr + 6;
+          if( !StrOp.equals(statusClass, LocOp.getClass(lc)) ) {
+            rc = False;
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "loco %s class %s does not matches [%s]", LocOp.getId(lc),
+                LocOp.getClass(lc), statusClass );
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                "loco %s class %s matches [%s]", LocOp.getId(lc),
+                LocOp.getClass(lc), statusClass );
+          }
+        }
+
         else if( StrOp.startsWith( wActionCond.getstate(actionCond), "fon" ) || StrOp.startsWith( wActionCond.getstate(actionCond), "foff" ) ) {
           iOStrTok tok = StrTokOp.inst(wActionCond.getstate(actionCond), ',');
           const char* fonoff = NULL;
