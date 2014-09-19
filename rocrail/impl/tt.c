@@ -3407,7 +3407,7 @@ static int _getWheelCount( iIBlockBase inst ) {
   return 0;
 }
 
-static int _getRandomRate( iIBlockBase inst ) {
+static int _getRandomRate( iIBlockBase inst, const char* lcid ) {
   iOTTData data = Data(inst);
   return wTurntable.getrandomrate(data->props);
 }

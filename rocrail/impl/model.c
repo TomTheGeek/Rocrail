@@ -4729,8 +4729,8 @@ static int __sortRandomRate(obj* _a, obj* _b)
 {
   iIBlockBase a = (iIBlockBase)*_a;
   iIBlockBase b = (iIBlockBase)*_b;
-  int A = a->getRandomRate(a);
-  int B = b->getRandomRate(b);
+  int A = a->getRandomRate(a, NULL);
+  int B = b->getRandomRate(b, NULL);
   if( A > B )
     return 1;
   if( A < B )
@@ -4754,13 +4754,13 @@ static iIBlockBase __selectRandomBlock(iOLoc loc, int cnt, iOList fitBlocks, iOL
     ListOp.sort( blockList, &__sortRandomRate );
     for( nn = 0; nn < cnt; nn++ ) {
       iIBlockBase b = (iIBlockBase)ListOp.get( blockList, nn );
-      total += b->getRandomRate(b);
+      total += b->getRandomRate(b, LocOp.getId(loc) );
     }
     randChoice = randNumber % total;
     for( nn = 0; nn < cnt; nn++ ) {
       iIBlockBase b = (iIBlockBase)ListOp.get( blockList, nn );
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "randChoice=%d block randomRate=%d", randChoice, b->getRandomRate(b) );
-      if( randChoice <= b->getRandomRate(b) ) {
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "randChoice=%d block randomRate=%d", randChoice, b->getRandomRate(b, LocOp.getId(loc)) );
+      if( randChoice <= b->getRandomRate(b, LocOp.getId(loc)) ) {
         blockBest = b;
         for( i = 0; i < ListOp.size(fitBlocks); i++ ) {
           if( ListOp.get(fitBlocks, i) == (obj)b ) {
@@ -4771,7 +4771,7 @@ static iIBlockBase __selectRandomBlock(iOLoc loc, int cnt, iOList fitBlocks, iOL
         break;
       }
       else {
-        randChoice -= b->getRandomRate(b);
+        randChoice -= b->getRandomRate(b, LocOp.getId(loc));
       }
     }
     ListOp.base.del(blockList);

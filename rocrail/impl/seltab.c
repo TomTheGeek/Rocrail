@@ -1389,7 +1389,7 @@ static int _getMaxKmh( iIBlockBase inst ) {
   return 0;
 }
 
-static int _getRandomRate( iIBlockBase inst ) {
+static int _getRandomRate( iIBlockBase inst, const char* lcid ) {
   iOSelTabData data = Data(inst);
   return wSelTab.getrandomrate(data->props);
 }

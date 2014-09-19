@@ -403,6 +403,7 @@
     </fun>
     <fun name="getRandomRate" vt="int">
       <param name="inst" vt="this" remark="Block instance"/>
+      <param name="lcid" vt="const char*"/>
     </fun>
     <fun name="setClass" vt="void">
       <param name="inst" vt="this" remark="Block instance"/>

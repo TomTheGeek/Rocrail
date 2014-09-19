@@ -1934,8 +1934,19 @@ static int _getWheelCount( iIBlockBase inst ) {
 }
 
 
-static int _getRandomRate( iIBlockBase inst ) {
+static int _getRandomRate( iIBlockBase inst, const char* lcid ) {
   iOBlockData data = Data(inst);
+  if( lcid != NULL ) {
+    iONode incl = wBlock.getincl( data->props );
+    /* test if the id is included: */
+    while( incl != NULL ) {
+      if( StrOp.equals( lcid, wPermInclude.getid(incl) ) ) {
+        if( wPermInclude.getrandomrate(incl) > 0 )
+          return wPermInclude.getrandomrate(incl);
+      }
+      incl = wBlock.nextincl( data->props, incl );
+    };
+  }
   return wBlock.getrandomrate(data->props);
 }
 

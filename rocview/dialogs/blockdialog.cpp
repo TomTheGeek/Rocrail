@@ -452,6 +452,11 @@ void BlockDialog::initLabels() {
   // Permissions
   m_labInclude->SetLabel( wxGetApp().getMsg( "include" ) );
   m_labExclude->SetLabel( wxGetApp().getMsg( "exclude" ) );
+  m_IncludeRandomRate->SetToolTip( wxGetApp().getMsg( "randomrate" ) );
+  m_AddInclude->SetLabel( wxGetApp().getMsg( "include" ) );
+  m_AddExclude->SetLabel( wxGetApp().getMsg( "exclude" ) );
+  m_RemoveInclude->SetLabel( wxGetApp().getMsg( "delete" ) );
+  m_RemoveExclude->SetLabel( wxGetApp().getMsg( "delete" ) );
 
   m_PermType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_PermTypeNone->SetLabel( wxGetApp().getMsg( "others" ) );
@@ -761,6 +766,7 @@ void BlockDialog::initValues() {
   // remove selections:
   m_ExcludeList->Clear();
   m_IncludeList->Clear();
+  m_IncludeRandomRate->SetValue(0);
 
   // set selections:
   iONode excl = wBlock.getexcl( m_Props );
@@ -2823,6 +2829,7 @@ void BlockDialog::OnRemoveIncludeClick( wxCommandEvent& event )
     NodeOp.removeChild( m_Props, incl );
     NodeOp.base.del(incl);
     m_IncludeList->Delete(m_IncludeList->GetSelection());
+    OnIncludeListSelected(event);
   }
 }
 
