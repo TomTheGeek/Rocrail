@@ -2701,6 +2701,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       wItem.setz( m_Props, z );
     }
 
+    // ToDo: Merge Node!?
+    NodeOp.mergeNode( m_Props, node, True, False, True);
+
     if( x != -1 && y != -1 ) {
       wItem.setx( m_Props, x );
       wItem.sety( m_Props, y );
