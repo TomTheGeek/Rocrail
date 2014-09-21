@@ -1246,16 +1246,10 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
           wLoc.setaddr( cmdFn==NULL?cmd:cmdFn, decaddr > 0 ? decaddr:wLoc.getaddr(data->props) );
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
               "function %d address=%d:%d", wFunCmd.getfnchanged(cmd), decaddr, mappedfn );
-
-          if( wLoc.getaddr(data->props) != decaddr ) {
-            /* reset */
-            for( ifn = 0; ifn < 29; ifn++ )
-              __FnOnOff(inst, ifn, False, cmdFn==NULL?cmd:cmdFn, False);
-            __cpFn2Node(inst, cmdFn==NULL?cmd:cmdFn, -1, decaddr);
-          }
-          else
-            __cpFn2Node(inst, cmd, -1, 0);
-
+          /* reset */
+          for( ifn = 0; ifn < 29; ifn++ )
+            __FnOnOff(inst, ifn, False, cmdFn==NULL?cmd:cmdFn, False);
+          __cpFn2Node(inst, cmdFn==NULL?cmd:cmdFn, -1, decaddr);
           wFunCmd.setfnchanged(cmdFn==NULL?cmd:cmdFn, mappedfn);
         }
         else {
