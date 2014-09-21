@@ -2713,6 +2713,7 @@ static void _acceptIdent( iIBlockBase inst, Boolean accept ) {
 static void _setClass( iIBlockBase inst, const char* p_Class ) {
   iOBlockData data = Data(inst);
   wBlock.setclass(data->props, p_Class);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set class to [%s] in block [%s]", wBlock.getclass(data->props),  data->id );
   /* Broadcast to clients. */
   AppOp.broadcastEvent( (iONode)NodeOp.base.clone( data->props ) );
 }
