@@ -1036,7 +1036,7 @@ static int __getFnAddr( iOLoc inst, int function, int* mappedfn) {
     *mappedfn = function;
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "function %d not defined", *mappedfn );
   }
-  return 0;
+  return wLoc.getaddr( data->props );
 }
 
 static const char* __getFnSound( iOLoc inst, int function, int* addr) {
