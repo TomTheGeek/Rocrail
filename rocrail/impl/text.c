@@ -275,6 +275,8 @@ static void* __event( void* inst, const void* evt ) {
       int val = VarOp.getValue(wText.getformat(node), NULL);
       char* msg = StrOp.fmt("%d", val);
       wText.settext(data->props, msg );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "new text [%s]", msg);
+      __checkAction(inst, msg);
       StrOp.free(msg);
     }
 
