@@ -2183,6 +2183,7 @@ void LocDialog::CreateControls()
     itemFlexGridSizer190->Add(m_labClass, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_Class = new wxTextCtrl( m_DetailsPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    m_Class->SetMaxLength(8);
     itemFlexGridSizer190->Add(m_Class, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     itemFlexGridSizer190->AddGrowableCol(1);
