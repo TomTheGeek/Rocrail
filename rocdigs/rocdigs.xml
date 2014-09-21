@@ -1746,7 +1746,8 @@
       <var name="swmap" vt="iOMap"/>
       <var name="locolist" vt="iONode"/>
       <var name="switchlist" vt="iONode"/>
-      </data>
+      <var name="zerobased" vt="Boolean"/>
+    </data>
   </object>
 
   <object name="XNMM" interface="$../rocint/rocint.xml:DigInt" use="node,serial,trace,thread,event" include="$rocint/public/digint">

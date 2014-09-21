@@ -457,6 +457,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
     if( !point->timerpending ) {
       byte* packet = allocMem(32);
 
+      if( !data->zerobased )
+        addr--;
+
       __checkDecMode( inst, node );
 
       if( wSwitch.getbus(node) == 1 ) {
@@ -532,6 +535,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
     int gate = wOutput.getgate( node );
     Boolean active = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
     byte* packet = allocMem(32);
+
+    if( !data->zerobased )
+      addr--;
 
     __checkDecMode( inst, node );
 
@@ -1078,6 +1084,9 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
         ZZ=01 P=0, see LAN_X_SET_TURNOUT
         ZZ=10 P=1, see LAN_X_SET_TURNOUT
          */
+        if( !data->zerobased )
+          addr++;
+
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_TURNOUT_INFO: addr=%d zz=%02X", addr, zz );
         if( zz == 0x01 || zz == 0x02 ) {
           iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
@@ -1436,7 +1445,7 @@ static void __timedqueue( void* threadinst ) {
         if( (cmd->out[0] == 0x09 && cmd->out[2] == 0x40 && cmd->out[4] == 0x53) ||
             (cmd->out[0] == 0x08 && cmd->out[2] == LAN_LOCONET_FROM_LAN && cmd->out[4] == OPC_SW_REQ) )
         {
-          iOPoint point = __getPointByAddr(z21, addr);
+          iOPoint point = __getPointByAddr(z21, data->zerobased?addr:addr+1);
           if( point != NULL ) {
             point->timerpending = False;
           }
@@ -1519,6 +1528,8 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
   data->swmap  = MapOp.inst();
   data->swmux  = MutexOp.inst( NULL, True );
 
+  data->zerobased = (wDigInt.getprotver( ini ) == 0);
+
   if( wDigInt.getport( data->ini ) == 0 ) {
     wDigInt.setport( data->ini, 21105 );
   }
@@ -1531,6 +1542,7 @@ static struct OZ21* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "%d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 IP address [%s]", wDigInt.gethost( data->ini )  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Z21 UDP port [%d]", wDigInt.getport( data->ini )  );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Addressing is %szero based", data->zerobased?"":"none "  );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->rwUDP = SocketOp.inst( wDigInt.gethost(data->ini), wDigInt.getport(data->ini), False, True, False );
