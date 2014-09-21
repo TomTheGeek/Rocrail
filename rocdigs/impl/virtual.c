@@ -378,21 +378,7 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
     int   addr = wFunCmd.getaddr( node );
     int fc = wFunCmd.getfnchanged(node);
     int group = wFunCmd.getgroup(node);
-    Boolean f0  = wFunCmd.isf0( node );
-    Boolean f1  = wFunCmd.isf1( node );
-    Boolean f2  = wFunCmd.isf2( node );
-    Boolean f3  = wFunCmd.isf3( node );
-    Boolean f4  = wFunCmd.isf4( node );
-    Boolean f5  = wFunCmd.isf5( node );
-    Boolean f6  = wFunCmd.isf6( node );
-    Boolean f7  = wFunCmd.isf7( node );
-    Boolean f8  = wFunCmd.isf8( node );
-    Boolean f9  = wFunCmd.isf9( node );
-    Boolean f10 = wFunCmd.isf10( node );
-    Boolean f11 = wFunCmd.isf11( node );
-    Boolean f12 = wFunCmd.isf12( node );
-    Boolean f13 = wFunCmd.isf13( node );
-    Boolean f14 = wFunCmd.isf14( node );
+    int fnchanged = wFunCmd.getfnchanged(node);
 
     if( fc > 100 ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
@@ -402,25 +388,24 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
               "id=%s decoder %d f%d(%d)=%s", id, addr, fc, group , __getFnState(node,fc)?"on":"off" );
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
-              "decoder %d f0=%s f1=%s f2=%s f3=%s f4=%s f5=%s f6=%s f7=%s f8=%s f9=%s f10=%s f11=%s f12=%s f13=%s f14=%s",
-              addr, f0?"on":"off", f1?"on":"off", f2?"on":"off", f3?"on":"off", f4?"on":"off",
-              f5?"on":"off", f6?"on":"off", f7?"on":"off", f8?"on":"off",
-              f9?"on":"off", f10?"on":"off", f11?"on":"off", f12?"on":"off", f13?"on":"off", f14?"on":"off" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "lc=%s [addr=%d] [fn=%d] lights=%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s",
+          id, addr, fnchanged,
+              wFunCmd.isf0(node)  ? "on":"off",
+              wFunCmd.isf1(node)  ? "01":"--", wFunCmd.isf2(node)  ? "02":"--", wFunCmd.isf3(node)  ? "03":"--", wFunCmd.isf4(node)  ? "04":"--",
+              wFunCmd.isf5(node)  ? "05":"--", wFunCmd.isf6(node)  ? "06":"--", wFunCmd.isf7(node)  ? "07":"--", wFunCmd.isf8(node)  ? "08":"--",
+              wFunCmd.isf9(node)  ? "09":"--", wFunCmd.isf10(node) ? "10":"--", wFunCmd.isf11(node) ? "11":"--", wFunCmd.isf12(node) ? "12":"--",
+              wFunCmd.isf13(node) ? "13":"--", wFunCmd.isf14(node) ? "14":"--", wFunCmd.isf15(node) ? "15":"--", wFunCmd.isf16(node) ? "16":"--",
+              wFunCmd.isf17(node) ? "17":"--", wFunCmd.isf18(node) ? "18":"--", wFunCmd.isf19(node) ? "19":"--", wFunCmd.isf20(node) ? "20":"--",
+              wFunCmd.isf21(node) ? "21":"--", wFunCmd.isf22(node) ? "22":"--", wFunCmd.isf23(node) ? "23":"--", wFunCmd.isf24(node) ? "24":"--",
+              wFunCmd.isf25(node) ? "25":"--", wFunCmd.isf26(node) ? "26":"--", wFunCmd.isf27(node) ? "27":"--", wFunCmd.isf28(node) ? "28":"--"
+      );
     }
 
     if( wDigInt.isoverrule(data->ini) ) {
-      rsp = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+      rsp = (iONode)NodeOp.base.clone( node );
       if( data->iid != NULL )
         wLoc.setiid( rsp, data->iid );
-      wFunCmd.setaddr( rsp, addr );
-      wLoc.setfn( rsp, f0 );
-      wFunCmd.setf0( rsp, f0 );
-      wFunCmd.setf1( rsp, f1 );
-      wFunCmd.setf2( rsp, f2 );
-      wFunCmd.setf3( rsp, f3 );
-      wFunCmd.setf4( rsp, f4 );
-      wFunCmd.setgroup( rsp, 1 );
+      wLoc.setfn( rsp, wFunCmd.isf0(node) );
     }
   }
 
