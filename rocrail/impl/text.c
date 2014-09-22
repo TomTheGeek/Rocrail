@@ -550,8 +550,14 @@ static struct OText* _inst( iONode ini ) {
 /**  */
 static void _modify( struct OText* inst ,iONode props ) {
   iOTextData o = Data(inst);
+  Boolean checkActions = False;
   int cnt = NodeOp.getAttrCnt( props );
   int i = 0;
+
+  if( !StrOp.equals(wText.gettext(o->props), wText.gettext(props)) ) {
+    checkActions = True;
+  }
+
   for( i = 0; i < cnt; i++ ) {
     iOAttr attr = NodeOp.getAttr( props, i );
     const char* name  = AttrOp.getName( attr );
@@ -579,6 +585,9 @@ static void _modify( struct OText* inst ,iONode props ) {
       NodeOp.addChild( o->props, (iONode)NodeOp.base.clone(child) );
     }
   }
+
+  if(checkActions)
+    __checkAction(inst, wText.gettext(o->props));
 
   /* Broadcast to clients. */
   {
