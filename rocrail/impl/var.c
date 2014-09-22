@@ -124,7 +124,8 @@ static char* _getText( const char* p_ValStr, iOMap map ) {
     }
     else {
       retVal = StrOp.cat( retVal, v );
-      retVal = StrOp.cat( retVal, " " );
+      if( StrTokOp.hasMoreTokens(tok) )
+        retVal = StrOp.cat( retVal, " " );
     }
   }
 
