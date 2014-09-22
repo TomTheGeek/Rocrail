@@ -1252,6 +1252,7 @@ static Boolean __engine( iOLoc inst, iONode cmd ) {
             __FnOnOff(inst, ifn, False, cmdFn==NULL?cmd:cmdFn, False);
           __cpFn2Node(inst, cmdFn==NULL?cmd:cmdFn, -1, decaddr);
           wFunCmd.setfnchanged(cmdFn==NULL?cmd:cmdFn, mappedfn);
+          wFunCmd.setgroup(cmdFn==NULL?cmd:cmdFn, mappedfn/4 + ((mappedfn%4 > 0) ? 1:0) );
         }
         else {
           /* some controllers use this information because they make no diff between loc or fun cmd: */
