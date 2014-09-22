@@ -292,7 +292,7 @@ static void* __event( void* inst, const void* evt ) {
       scidxStr = __addLocoProperties(map, lc, hour, min);
 
       /*msg = _replaceAllSubstitutions(wText.getformat(node), map);*/
-      msg = VarOp.getText(wText.getformat(node), map);
+      msg = VarOp.getText(wText.getformat(node), map, ' ');
 
       if( msg != NULL && StrOp.len(msg) > 0 && msg[0] == '|' ) {
         char* newStr = StrOp.fmt("%s %s", wText.gettext(data->props), msg );
@@ -325,7 +325,7 @@ static void* __event( void* inst, const void* evt ) {
       speedStr = __addBlockProperties(map, bk);
 
       /*msg = _replaceAllSubstitutions(wText.getformat(node), map);*/
-      msg = VarOp.getText(wText.getformat(node), map);
+      msg = VarOp.getText(wText.getformat(node), map, ' ');
 
       if( msg != NULL && StrOp.len(msg) > 0 && msg[0] == '|' ) {
         char* newStr = StrOp.fmt("%s %s", wText.gettext(data->props), msg );
@@ -363,7 +363,7 @@ static void* __event( void* inst, const void* evt ) {
       speedStr = __addBlockProperties(map, bk);
 
       /*msg = _replaceAllSubstitutions(wText.getformat(node), map);*/
-      msg = VarOp.getText(wText.getformat(node), map);
+      msg = VarOp.getText(wText.getformat(node), map, ' ');
 
       wText.setblock(data->props, bk->base.id(bk) );
       if( MapOp.haskey(map, "frombkloc") )
@@ -394,7 +394,7 @@ static void* __event( void* inst, const void* evt ) {
       mvspeedStr = __addActionProperties(map, node);
 
       /*msg = _replaceAllSubstitutions(wText.getformat(node), map);*/
-      msg = VarOp.getText(wText.getformat(node), map);
+      msg = VarOp.getText(wText.getformat(node), map, ' ');
 
       MapOp.base.del(map);
 

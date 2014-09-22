@@ -699,7 +699,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
         checkActions = True;
       }
       else if( StrOp.equals( wVariable.op_text, wAction.getcmd( data->action ) ) ) {
-        char* newText = VarOp.getText( wAction.getparam(data->action), NULL);
+        char* newText = VarOp.getText( wAction.getparam(data->action), NULL, ' ');
         wVariable.settext(var, newText);
         StrOp.free(newText);
         TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999, "variable [%s] cmd=[%s] param=[%s] new text=[%s]",
@@ -1210,8 +1210,8 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
   /* check for a locomotive action */
   else if( StrOp.equals( wLoc.name(), wAction.gettype( data->action ) ) ) {
     if( StrOp.equals( wAction.loco_x_go, wAction.getcmd( data->action ) ) ) {
-      char* locos = VarOp.getText(wAction.getparam(data->action), NULL);
-      iOStrTok tok = StrTokOp.inst(locos, ' ');
+      char* locos = VarOp.getText(wAction.getparam(data->action), NULL, ',');
+      iOStrTok tok = StrTokOp.inst(locos, ',');
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "x-go: [%s]->[%s]", wAction.getparam(data->action), locos );
 
       while( StrTokOp.hasMoreTokens(tok) ) {

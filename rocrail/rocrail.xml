@@ -2705,6 +2705,7 @@
     <fun name="getText" vt="char*">
       <param name="valStr" vt="const char*" remark="Value string."/>
       <param name="map" vt="iOMap" remark="Map with replacements. (optional)"/>
+      <param name="separator" vt="char" remark="List separator"/>
     </fun>
     <fun name="getValue" vt="int">
       <param name="valStr" vt="const char*" remark="Value string."/>
