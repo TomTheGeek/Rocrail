@@ -44,6 +44,8 @@ GuestLoco::GuestLoco( wxWindow* parent )
   m_Speedsteps->SetLabel( wxGetApp().getMsg( "speedsteps" ) );
   m_Protocol->SetLabel( wxGetApp().getMsg( "protocol" ) );
   m_Protocol->SetString( 0, wxGetApp().getMsg( "default" ) );
+  GetSizer()->Fit(this);
+  GetSizer()->SetSizeHints(this);
 }
 
 void GuestLoco::onCancel( wxCommandEvent& event ) {
