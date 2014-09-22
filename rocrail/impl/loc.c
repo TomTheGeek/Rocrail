@@ -73,6 +73,7 @@ static int __getFnAddr( iOLoc inst, int function, int* mappedfn);
 static void __doSound(iOLoc inst, iONode cmd);
 static void __initBBTmap( iOLoc loc );
 static void __initCVmap( iOLoc loc );
+static Boolean __loadDriver( iOLoc inst );
 
 /*
  ***** OBase functions.
@@ -3287,6 +3288,14 @@ static void _modify( iOLoc inst, iONode props ) {
   __initBBTmap(inst);
 
   __initCVmap(inst);
+
+  if( wLoc.isshow(data->props) && data->runner == NULL && __loadDriver( inst ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] enterside=[%c]", wLoc.getid(data->props), wLoc.isblockenterside(data->props)?'+':'-');
+    data->runner = ThreadOp.inst( LocOp.getId(inst), &__runner, inst );
+    data->run = True;
+    ThreadOp.start( data->runner );
+  }
+
 
   /* Broadcast to clients. */
   {
