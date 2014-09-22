@@ -2920,6 +2920,7 @@
         <const name="block_acceptident" vt="string" val="acceptident"/>
         <const name="block_class" vt="string" val="class"/>
         <const name="loco_go" vt="string" val="go"/>
+        <const name="loco_x_go" vt="string" val="x-go"/>
         <const name="loco_stop" vt="string" val="stop"/>
         <const name="loco_velocity" vt="string" val="velocity"/>
         <const name="loco_velocity2" vt="string" val="velocity2"/>

@@ -1209,121 +1209,143 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
 
   /* check for a locomotive action */
   else if( StrOp.equals( wLoc.name(), wAction.gettype( data->action ) ) ) {
-    int addr = VarOp.getValue(wAction.getparam(data->action), NULL);
-    iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL, False);
+    if( StrOp.equals( wAction.loco_x_go, wAction.getcmd( data->action ) ) ) {
+      char* locos = VarOp.getText(wAction.getparam(data->action), NULL);
+      iOStrTok tok = StrTokOp.inst(locos, ' ');
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "x-go: [%s]->[%s]", wAction.getparam(data->action), locos );
 
-    if( lc == NULL && addr > 0 ) {
-      lc = ModelOp.getLocByAddress( model, addr, NULL);
-      if( lc != NULL )
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found loco [%s] by variable address %d", LocOp.getId(lc), addr );
+      while( StrTokOp.hasMoreTokens(tok) ) {
+        const char* id = StrTokOp.nextToken(tok);
+        iOLoc lc = ModelOp.getLoc( model, id, NULL, False);
+        if( lc == NULL && atoi(id) > 0 )
+          lc = ModelOp.getLocByAddress( model, atoi(id), NULL);
+        if( lc != NULL ) {
+          LocOp.go(lc);
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "x-go: no loco found by id/address [%s]", id );
+        }
+      }
+      StrTokOp.base.del(tok);
+      StrOp.free(locos);
     }
+    else {
+      int addr = VarOp.getValue(wAction.getparam(data->action), NULL);
+      iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL, False);
 
-    if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
-      lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL, False );
-    }
-    if( lc != NULL ) {
-      if( StrOp.equals( wAction.loco_class, wAction.getcmd( data->action ) ) ) {
-        LocOp.setClass(lc, wAction.getparam( data->action ));
+      if( lc == NULL && addr > 0 ) {
+        lc = ModelOp.getLocByAddress( model, addr, NULL);
+        if( lc != NULL )
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found loco [%s] by variable address %d", LocOp.getId(lc), addr );
       }
-      else if( StrOp.equals(wLoc.consist, wAction.getcmd(data->action) ) ) {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        wLoc.setconsist(cmd, wAction.getparam(data->action));
-        LocOp.modify(lc, cmd);
-      }
-      else if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
-        if( wAction.getparam(data->action) != NULL && StrOp.len( wAction.getparam(data->action) ) > 0 ) {
-          iONode schedule = ModelOp.getSchedule(model, wAction.getparam(data->action));
-          iIBlockBase block = ModelOp.getBlock(model, wAction.getparam(data->action));
-          iOLocation location = ModelOp.getLocation(model, wAction.getparam(data->action));
-          if( schedule != NULL ) {
-            LocOp.useSchedule( lc, wAction.getparam(data->action));
-          }
-          else if( block != NULL ) {
-            LocOp.gotoBlock(lc, wAction.getparam(data->action));
-          }
-          else if( location != NULL ) {
-            LocOp.gotoBlock(lc, wAction.getparam(data->action));
-          }
 
+      if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
+        lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL, False );
+      }
+      if( lc != NULL ) {
+        if( StrOp.equals( wAction.loco_class, wAction.getcmd( data->action ) ) ) {
+          LocOp.setClass(lc, wAction.getparam( data->action ));
         }
-        LocOp.go(lc);
-      }
-      else if( StrOp.equals(wAction.loco_carcount, wAction.getcmd(data->action) ) ) {
-        LocOp.setCarCount(lc, atoi(wAction.getparam(data->action)));
-      }
-      else if( StrOp.equals(wLoc.assigntrain, wAction.getcmd(data->action) ) ) {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        wLoc.setcmd( cmd, wLoc.assigntrain );
-        wLoc.settrain( cmd, wAction.getparam(data->action) );
-        LocOp.cmd(lc, cmd);
-      }
-      else if( StrOp.equals(wLoc.releasetrain, wAction.getcmd(data->action) ) ) {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        wLoc.setcmd( cmd, wLoc.releasetrain );
-        LocOp.cmd(lc, cmd);
-      }
-      else if( StrOp.equals(wLoc.stop, wAction.getcmd(data->action) ) ) {
-        LocOp.stop(lc, False);
-      }
-      else if( StrOp.equals(wAction.loco_velocity, wAction.getcmd(data->action) ) ) {
-        int v = atoi(wAction.getparam(data->action));
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        if( v<0 ) {
-            wLoc.setdir( cmd, !LocOp.getDir( lc ) );
-            v = abs( v );
+        else if( StrOp.equals(wLoc.consist, wAction.getcmd(data->action) ) ) {
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          wLoc.setconsist(cmd, wAction.getparam(data->action));
+          LocOp.modify(lc, cmd);
         }
-        wLoc.setV( cmd, v );
-        LocOp.cmd(lc, cmd);
-      }
-      else if( StrOp.equals(wAction.loco_velocity2, wAction.getcmd(data->action) ) ) {
-        int v = atoi(wAction.getparam(data->action));
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        if( v<0 ) {
-            wLoc.setdir( cmd, !LocOp.getDir( lc ) );
-            v = abs( v );
+        else if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
+          if( wAction.getparam(data->action) != NULL && StrOp.len( wAction.getparam(data->action) ) > 0 ) {
+            iONode schedule = ModelOp.getSchedule(model, wAction.getparam(data->action));
+            iIBlockBase block = ModelOp.getBlock(model, wAction.getparam(data->action));
+            iOLocation location = ModelOp.getLocation(model, wAction.getparam(data->action));
+            if( schedule != NULL ) {
+              LocOp.useSchedule( lc, wAction.getparam(data->action));
+            }
+            else if( block != NULL ) {
+              LocOp.gotoBlock(lc, wAction.getparam(data->action));
+            }
+            else if( location != NULL ) {
+              LocOp.gotoBlock(lc, wAction.getparam(data->action));
+            }
+
+          }
+          LocOp.go(lc);
         }
-        wLoc.setusesecaddr( cmd, True );
-        wLoc.setV( cmd, v );
-        LocOp.cmd(lc, cmd);
-      }
-      else if( StrOp.equals(wAction.loco_binstate_on, wAction.getcmd(data->action) ) || StrOp.equals(wAction.loco_binstate_off, wAction.getcmd(data->action) ) ) {
-        int nr = atoi(wAction.getparam(data->action));
-        iONode cmd = NodeOp.inst( wBinStateCmd.name(), NULL, ELEMENT_NODE);
-        wBinStateCmd.setnr( cmd, nr );
-        wBinStateCmd.setdata( cmd, StrOp.equals(wAction.loco_binstate_on, wAction.getcmd(data->action) )?1:0 );
-        wBinStateCmd.settimer( cmd, wAction.getactiontime(data->action) );
-        LocOp.cmd(lc, cmd);
-      }
-      else if( StrOp.equals(wAction.loco_percent, wAction.getcmd(data->action) ) ) {
-        int v = atoi(wAction.getparam(data->action));
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        if( v<0 ) {
-            wLoc.setdir( cmd, !LocOp.getDir( lc ) );
-            v = abs( v );
+        else if( StrOp.equals(wAction.loco_carcount, wAction.getcmd(data->action) ) ) {
+          LocOp.setCarCount(lc, atoi(wAction.getparam(data->action)));
         }
-        v = v * LocOp.getV( lc ) /100;
-        wLoc.setV( cmd, v );
-        LocOp.cmd(lc, cmd);
-      }
-      else if( StrOp.equals(wLoc.min, wAction.getcmd(data->action) )    || StrOp.equals(wLoc.mid, wAction.getcmd(data->action) ) ||
-               StrOp.equals(wLoc.cruise, wAction.getcmd(data->action) ) || StrOp.equals(wLoc.max, wAction.getcmd(data->action) )) {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        wLoc.setV_hint( cmd, wAction.getcmd(data->action) );
-        wLoc.setdir( cmd, LocOp.getDir(lc) );
-        LocOp.cmd(lc, cmd);
-      }
-      else if( StrOp.equals(wLoc.dispatch, wAction.getcmd(data->action) ) ) {
-        LocOp.dispatch(lc);
-      }
-      else if( StrOp.equals(wLoc.swap, wAction.getcmd(data->action) ) ) {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        wLoc.setcmd( cmd, wLoc.swap );
-        LocOp.cmd(lc, cmd);
-      }
-      else if( StrOp.equals(wLoc.blockside, wAction.getcmd(data->action) ) ) {
-        iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
-        wLoc.setcmd( cmd, wLoc.blockside );
-        LocOp.cmd(lc, cmd);
+        else if( StrOp.equals(wLoc.assigntrain, wAction.getcmd(data->action) ) ) {
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          wLoc.setcmd( cmd, wLoc.assigntrain );
+          wLoc.settrain( cmd, wAction.getparam(data->action) );
+          LocOp.cmd(lc, cmd);
+        }
+        else if( StrOp.equals(wLoc.releasetrain, wAction.getcmd(data->action) ) ) {
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          wLoc.setcmd( cmd, wLoc.releasetrain );
+          LocOp.cmd(lc, cmd);
+        }
+        else if( StrOp.equals(wLoc.stop, wAction.getcmd(data->action) ) ) {
+          LocOp.stop(lc, False);
+        }
+        else if( StrOp.equals(wAction.loco_velocity, wAction.getcmd(data->action) ) ) {
+          int v = atoi(wAction.getparam(data->action));
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          if( v<0 ) {
+              wLoc.setdir( cmd, !LocOp.getDir( lc ) );
+              v = abs( v );
+          }
+          wLoc.setV( cmd, v );
+          LocOp.cmd(lc, cmd);
+        }
+        else if( StrOp.equals(wAction.loco_velocity2, wAction.getcmd(data->action) ) ) {
+          int v = atoi(wAction.getparam(data->action));
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          if( v<0 ) {
+              wLoc.setdir( cmd, !LocOp.getDir( lc ) );
+              v = abs( v );
+          }
+          wLoc.setusesecaddr( cmd, True );
+          wLoc.setV( cmd, v );
+          LocOp.cmd(lc, cmd);
+        }
+        else if( StrOp.equals(wAction.loco_binstate_on, wAction.getcmd(data->action) ) || StrOp.equals(wAction.loco_binstate_off, wAction.getcmd(data->action) ) ) {
+          int nr = atoi(wAction.getparam(data->action));
+          iONode cmd = NodeOp.inst( wBinStateCmd.name(), NULL, ELEMENT_NODE);
+          wBinStateCmd.setnr( cmd, nr );
+          wBinStateCmd.setdata( cmd, StrOp.equals(wAction.loco_binstate_on, wAction.getcmd(data->action) )?1:0 );
+          wBinStateCmd.settimer( cmd, wAction.getactiontime(data->action) );
+          LocOp.cmd(lc, cmd);
+        }
+        else if( StrOp.equals(wAction.loco_percent, wAction.getcmd(data->action) ) ) {
+          int v = atoi(wAction.getparam(data->action));
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          if( v<0 ) {
+              wLoc.setdir( cmd, !LocOp.getDir( lc ) );
+              v = abs( v );
+          }
+          v = v * LocOp.getV( lc ) /100;
+          wLoc.setV( cmd, v );
+          LocOp.cmd(lc, cmd);
+        }
+        else if( StrOp.equals(wLoc.min, wAction.getcmd(data->action) )    || StrOp.equals(wLoc.mid, wAction.getcmd(data->action) ) ||
+                 StrOp.equals(wLoc.cruise, wAction.getcmd(data->action) ) || StrOp.equals(wLoc.max, wAction.getcmd(data->action) )) {
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          wLoc.setV_hint( cmd, wAction.getcmd(data->action) );
+          wLoc.setdir( cmd, LocOp.getDir(lc) );
+          LocOp.cmd(lc, cmd);
+        }
+        else if( StrOp.equals(wLoc.dispatch, wAction.getcmd(data->action) ) ) {
+          LocOp.dispatch(lc);
+        }
+        else if( StrOp.equals(wLoc.swap, wAction.getcmd(data->action) ) ) {
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          wLoc.setcmd( cmd, wLoc.swap );
+          LocOp.cmd(lc, cmd);
+        }
+        else if( StrOp.equals(wLoc.blockside, wAction.getcmd(data->action) ) ) {
+          iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
+          wLoc.setcmd( cmd, wLoc.blockside );
+          LocOp.cmd(lc, cmd);
+        }
       }
     }
   }
