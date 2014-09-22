@@ -29070,4 +29070,7 @@
   <Msg id="group">
     <en txt="Group"/>
   </Msg>
+  <Msg id="inputfield">
+    <en txt="Input field" accel="0"/>
+  </Msg>
 </Messages>

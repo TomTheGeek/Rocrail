@@ -127,9 +127,9 @@ void TextDialog::initLabels() {
   m_Italic->SetLabel(wxGetApp().getMsg( "italic" ) );
   m_Underlined->SetLabel(wxGetApp().getMsg( "underlined" ) );
   m_Transparent->SetLabel(wxGetApp().getMsg( "transparent" ) );
-  m_Input->SetLabel(wxGetApp().getMsg( "input" ) );
   m_Actions->SetLabel( wxGetApp().getMsg( "actions" )+_T("...") );
   m_Reset->SetLabel(wxGetApp().getMsg( "reset" ) );
+  m_Input->SetLabel(wxGetApp().getMsg( "inputfield" ) );
 
   m_Ori->SetLabel(wxGetApp().getMsg( "orientation" ) );
   m_Ori->SetString( 0, wxGetApp().getMsg( "default" ) );

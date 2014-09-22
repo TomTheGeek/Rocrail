@@ -7493,3 +7493,9 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
+#. 
+# id="inputfield"
+#, c-format
+msgid "Input field"
+msgstr ""
+
