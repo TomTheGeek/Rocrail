@@ -179,9 +179,9 @@ public:
     wxCheckBox* m_Underlined;
     wxCheckBox* m_Italic;
     wxCheckBox* m_Transparent;
-    wxCheckBox* m_Input;
     wxRadioBox* m_Ori;
     wxCheckBox* m_Reset;
+    wxCheckBox* m_Input;
     wxButton* m_Actions;
     wxPanel* m_Interface;
     wxStaticText* m_labIID;
