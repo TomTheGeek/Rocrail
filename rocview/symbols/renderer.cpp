@@ -2723,9 +2723,23 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
     path.AddLineToPoint(p[3].x, p[3].y);
     path.AddLineToPoint(p[4].x, p[4].y);
     m_GC->FillPath(path);
+
+    p = rotateBridgePlus(*bridgepos, delta);
+    path = m_GC->CreatePath();
+    path.MoveToPoint(p[0].x, p[0].y);
+    path.AddLineToPoint(p[1].x, p[1].y);
+    path.AddLineToPoint(p[2].x, p[2].y);
+    path.AddLineToPoint(p[3].x, p[3].y);
+    path.AddLineToPoint(p[4].x, p[4].y);
+    pen->SetWidth(1);
+    setPen( *pen );
+    m_GC->StrokePath(path);
   }
   else {
     dc.DrawPolygon( 5, rotateBridgeSensors( *bridgepos, delta ) );
+    pen->SetWidth(1);
+    setPen( *pen );
+    dc.DrawPolygon( 5, rotateBridgePlus( *bridgepos, delta ) );
     dc.SetBrush( b );
   }
 
@@ -2851,7 +2865,7 @@ wxPoint* SymbolRenderer::rotateBridge( double ori, double delta ) {
     double angle = ori+bp[i];
     if( angle > 360.0 )
       angle = angle -360.0;
-    double a = (angle*2*PI25DT)/360;
+    double a = (angle*2*PI25DT)/360.0;
     double xa = cos(a) * delta*0.4;
     double ya = sin(a) * delta*0.4;
     p[i].x = delta + (int)xa;
@@ -2875,7 +2889,7 @@ wxPoint* SymbolRenderer::rotateBridgeSensors( double ori, double delta ) {
     double angle = ori+bp[i];
     if( angle > 360.0 )
       angle = angle -360.0;
-    double a = (angle*2*PI25DT)/360;
+    double a = (angle*2*PI25DT)/360.0;
     double xa = cos(a) * delta*0.25;//20.0;
     double ya = sin(a) * delta*0.25;
     p[i].x = delta + (int)xa;
@@ -2890,8 +2904,8 @@ wxPoint* SymbolRenderer::rotateBridgeSensors( double ori, double delta ) {
 }
 
 
-wxPoint* SymbolRenderer::rotateBridgeNose( double hoek ) {
-  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "rotate bridge nose ori=%f", hoek );
+wxPoint* SymbolRenderer::rotateBridgePlus( double ori, double delta ) {
+  TraceOp.trc( "render", TRCLEVEL_DEBUG, __LINE__, 9999, "rotate bridge plus ori=%f", ori );
   static wxPoint p[5];
 
   double xa;
@@ -2906,27 +2920,25 @@ wxPoint* SymbolRenderer::rotateBridgeNose( double hoek ) {
   double ye;
   double xf;
   double yf;
-  double rad;
-  double pi= 3.14159265358979;;
   double alfa;
   double sinalfa;
   double cosalfa;
 
-  hoek = 360 - hoek;
+  ori = 360.0 - ori;
 
-  double center = (32 * 5) / 2.0;
-  double straal1 = 22 ;  //binnencirkel van vierkantje
-  double straal2 = straal1 + 6;  //buitencirkel van vierkantje
-  double rib = (straal2 - straal1) / 2.0;
+  double center = delta;
+  double radius1 = 25.0;  //binnencirkel van vierkantje
+  double radius2 = radius1 + 4.0;  //buitencirkel van vierkantje
+  double rib = (radius2 - radius1) / 2.0;
 
-  alfa = hoek * pi / 180.0;
+  alfa = (ori * PI25DT) / 180.0;
   sinalfa = sin(alfa);
   cosalfa = cos(alfa);
 
-  xa = straal1 * cosalfa;
-  ya = straal1 * sinalfa;
-  xb = straal2 * cosalfa;
-  yb = straal2 * sinalfa;
+  xa = radius1 * cosalfa;
+  ya = radius1 * sinalfa;
+  xb = radius2 * cosalfa;
+  yb = radius2 * sinalfa;
 
   xd = xa - rib * sinalfa;
   yd = ya + rib * cosalfa;

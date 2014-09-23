@@ -50,7 +50,7 @@ class SymbolRenderer {
   wxPoint* rotateShape( wxPoint* poly, int cnt, const char* oriStr );
   wxPoint* rotateBridge( double ori, double delta );
   wxPoint* rotateBridgeSensors( double ori, double delta );
-  wxPoint* rotateBridgeNose( double ori );
+  wxPoint* rotateBridgePlus( double ori, double delta );
   int m_cx;
   int m_cy;
   bool m_bShowID;
