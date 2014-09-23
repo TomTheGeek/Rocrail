@@ -5125,7 +5125,7 @@
     <fi txt="Z"/>
   </Msg>
   <Msg id="orientation">
-    <de txt="Lage"/>
+    <de txt="Ausrichtung"/>
     <en txt="Orientation"/>
     <nl txt="Richting"/>
     <sv txt="Orientering"/>
@@ -17666,7 +17666,7 @@
   </Msg>
   <Msg id="useshortinevent">
     <en txt="Use shortin event"/>
-    <de txt="Verwende ShortIn Event"/>
+    <de txt="Shortin verwenden"/>
     <bg txt="Използвайте shortin събитие"/>
     <el txt="Χρησιμοποίησε shortin περίπτωση"/>
     <fr txt="Utiliser l'événement \&quot;shortin\&quot;"/>
@@ -19970,7 +19970,7 @@
     <de txt="Modusspalte zur Abfertigung benutzen"/>
     <pt txt="Usar modo coluna para entregar"/>
     <da txt="Brug kolonne til afsendelse"/>
-    <fr txt="Utiliser l'affichage en colonnes"/>
+    <fr txt="Utiliser la colonne Mode pour dispatcher"/>
     <it txt="Utilizzare modalità colonna per trasmettere"/>
     <ru txt="Use mode column to dispatch"/>
     <en_AU txt="Use mode column to dispatch"/>
@@ -24818,7 +24818,7 @@
     <cs txt="Cesta k decodérům"/>
     <es txt="Ruta del decodificador"/>
     <de txt="Dekoder-Pfad"/>
-    <sl txt="Pot za dekoder"/>
+    <sl txt="Pot za dekoderje"/>
     <zh_CN txt="解码器文件路径"/>
     <ru txt="Decoder path"/>
     <pt_BR txt="Caminho do decodificador"/>
@@ -29066,11 +29066,26 @@
     <nl txt="Binair"/>
     <sl txt="Binarno"/>
     <sr_latin txt="Binarno"/>
+    <en_GB txt="Binary"/>
+    <fr txt="Binaire"/>
+    <pt_BR txt="Binário"/>
   </Msg>
   <Msg id="group">
     <en txt="Group"/>
+    <de txt="Gruppe"/>
+    <en_GB txt="Group"/>
+    <fr txt="Groupe"/>
+    <nl txt="Groep"/>
+    <pt_BR txt="Grupo"/>
+    <sl txt="Skupina"/>
+    <sr_latin txt="Grupa"/>
   </Msg>
   <Msg id="inputfield">
     <en txt="Input field" accel="0"/>
+    <de txt="Eingabefeld"/>
+    <fr txt="Champ de saisie"/>
+    <nl txt="Invulveld"/>
+    <pt_BR txt="Entrada de dados"/>
+    <sl txt="Vnosno polje"/>
   </Msg>
 </Messages>
