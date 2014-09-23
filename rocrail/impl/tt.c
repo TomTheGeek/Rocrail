@@ -65,7 +65,7 @@ static void __polarize(obj inst, int pos, Boolean polarization);
 static void __sortTracks(iOTT tt);
 static void __cpFn2Node( iOTT inst, iONode fcmd );
 static Boolean __isElectricallyFree( iOTT inst );
-
+static int __getOppositeTrackNr(int pos);
 
 /*
  ***** OBase functions.
@@ -692,6 +692,7 @@ static Boolean __cmd_ttdec( iOTT inst, iONode nodeA ) {
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     port = TTDEC_TURN;
     cmdstr = inv?wSwitch.turnout:wSwitch.straight;
+    data->gotopos = __getOppositeTrackNr(data->tablepos);
     data->pending = True;
   }
   else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
@@ -904,10 +905,7 @@ static Boolean __cmd_multiport( iOTT inst, iONode nodeA ) {
     tracknr = __getOppositeTrack( inst, data->tablepos );
 
     if( tracknr == -1 ) {
-      if( data->tablepos <= 24 )
-        data->gotopos = data->tablepos + 24;
-      else
-        data->gotopos = data->tablepos - 24;
+      data->gotopos = __getOppositeTrackNr(data->tablepos);
       tracknr = data->gotopos;
     }
     else {
@@ -1129,10 +1127,7 @@ static Boolean __cmd_f6915( iOTT inst, iONode nodeA ) {
     tracknr = __getOppositeTrack( inst, data->tablepos );
 
     if( tracknr == -1 ) {
-      if( data->tablepos <= 24 )
-        data->gotopos = data->tablepos + 24;
-      else
-        data->gotopos = data->tablepos - 24;
+      data->gotopos = __getOppositeTrackNr(data->tablepos);
       tracknr = data->gotopos;
     }
     else {
@@ -1270,10 +1265,7 @@ static Boolean __cmd_muet( iOTT inst, iONode nodeA ) {
     tracknr = __getOppositeTrack( inst, data->tablepos );
 
     if( tracknr == -1 ) {
-      if( data->tablepos <= 24 )
-        data->gotopos = data->tablepos + 24;
-      else
-        data->gotopos = data->tablepos - 24;
+      data->gotopos = __getOppositeTrackNr(data->tablepos);
       tracknr = data->gotopos;
     }
     else {
@@ -1391,10 +1383,7 @@ static Boolean __cmd_slx815( iOTT inst, iONode nodeA ) {
     tracknr = __getOppositeTrack( inst, data->tablepos );
 
     if( tracknr == -1 ) {
-      if( data->tablepos <= 24 )
-        data->gotopos = data->tablepos + 24;
-      else
-        data->gotopos = data->tablepos - 24;
+      data->gotopos = __getOppositeTrackNr(data->tablepos);
       tracknr = data->gotopos;
     }
     else {
@@ -1492,7 +1481,7 @@ static Boolean __cmd_accdec( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     swcmd = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
-    data->gotopos = data->tablepos;
+    data->gotopos = __getOppositeTrackNr(data->tablepos);
     data->skippos = data->tablepos;
   }
   else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
@@ -1597,6 +1586,7 @@ static Boolean __cmd_d15( iOTT inst, iONode nodeA ) {
     wSwitch.setcmd  ( cmd, data->dir ? wSwitch.straight:wSwitch.turnout );
     wSwitch.setprot( cmd, wTurntable.getprot( data->props ) );
     ControlOp.cmd( control, cmd, NULL );
+    data->gotopos = __getOppositeTrackNr(data->tablepos);
     data->pending = True;
     cmd = NULL;
   }
@@ -1743,7 +1733,7 @@ static Boolean __cmd_locdec( iOTT inst, iONode nodeA ) {
   }
   else if( StrOp.equals( wTurntable.turn180, cmdStr ) ) {
     vcmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-    data->gotopos = data->tablepos;
+    data->gotopos = __getOppositeTrackNr(data->tablepos);
     data->skippos = data->tablepos;
   }
   else if( StrOp.equals( wTurntable.calibrate, cmdStr ) ) {
@@ -2022,6 +2012,14 @@ static int __getMappedTrack( iOTT inst, int tracknr ) {
   }
 
   return tracknr;
+}
+
+
+static int __getOppositeTrackNr(int pos) {
+  int opp = pos + 24;
+  if( opp >= 48 )
+    opp -= 48;
+  return opp;
 }
 
 

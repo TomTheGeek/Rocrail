@@ -2642,6 +2642,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
   pen->SetStyle(wxSOLID);
 
+  bool matchingTrack = false;
   iONode track = wTurntable.gettrack( m_Props );
   while( track != NULL ) {
     double degr = 7.5 * wTTTrack.getnr( track );
@@ -2656,6 +2657,7 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
       pen->SetWidth(5);
       setPen( *pen );
       *bridgepos = degr;
+      matchingTrack = true;
     }
     else {
       if( (wTurntable.getbridgepos(m_Props) +24) % 48 == wTTTrack.getnr(track) )  /* reb added, condition is true for track opposite of current track */
@@ -2672,6 +2674,10 @@ void SymbolRenderer::drawTurntable( wxPaintDC& dc, bool occupied, double* bridge
 
 
     track = wTurntable.nexttrack( m_Props, track );
+  }
+
+  if( !matchingTrack ) {
+    *bridgepos = 7.5 * (double)wTurntable.getbridgepos(m_Props);
   }
 
   pen = (wxPen*)wxBLACK_PEN;
