@@ -4921,6 +4921,7 @@ static iIBlockBase _findDest( iOModel inst, const char* fromBlockId, const char*
                 TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                   "allow route [%s] from a turntable: the exit side is equal to the enter side [%s]. Swap needed.",
                   RouteOp.getId(route), stEnterSide?"+":"-" );
+                wBlock.setallowchgdir( fromBlock->base.properties(fromBlock), True ); /* force true to ensure a swap */
               }
               else {
                 /* commuter: allow, set swap4BlockSide flag so that well suited routes are put in the alt list and not in the best list. (REB)*/
