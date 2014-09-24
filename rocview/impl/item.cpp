@@ -424,11 +424,11 @@ void Symbol::setPanel(PlanPanel* panel){
 void Symbol::checkSpeakAction(iONode node) {
   const char* bklist = wGui.getspeak4block(wxGetApp().getIni());
 
-  TraceOp.trc( "item", TRCLEVEL_INFO, __LINE__, 9999, "check speak action: is [%s] in [%s]", wText.getblock(node), bklist );
-
   if( wText.getblock(node) == NULL || StrOp.len(wText.getblock(node)) == 0 ) {
     return;
   }
+
+  TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "check speak action: is [%s] in [%s]", wText.getblock(node), bklist );
 
   iOStrTok tok = StrTokOp.inst( bklist, ',' );
   int idx = 0;
