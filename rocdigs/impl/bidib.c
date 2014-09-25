@@ -3341,7 +3341,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
         bidibnode->conf_signal = pdata[2];
 
         data->power = (bidibnode->conf_signal == 0) ? True:False;
-        __reportState(bidib, bidibnode, False, False);
+        __reportState(bidib, bidibnode, bidibnode->shortcut, False);
       }
     }
     break;
