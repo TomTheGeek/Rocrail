@@ -2302,7 +2302,7 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
     bidibnode->stat &= ~BIDIB_BST_STATE_ON;
     bidibnode->stat |= data->power?BIDIB_BST_STATE_ON:0;
   }
-  __reportState(bidib, bidibnode, False, data->power);
+  __reportState(bidib, bidibnode, bidibnode->shortcut, data->power);
 }
 
 
@@ -2456,7 +2456,7 @@ static void __handleBoosterDiagnostic(iOBiDiB bidib, iOBiDiBNode bidibnode, byte
     data->volt = volt;
     data->temp = temp;
     TraceOp.trc( name, temp > 100 ? TRCLEVEL_CALC:TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%dmA %dmV %d°C", bidibnode->uid, current, volt, temp );
-    __reportState(bidib, bidibnode, False, False);
+    __reportState(bidib, bidibnode, bidibnode->shortcut, False);
   }
   else if( data->load != current ) {
     data->load = current;
@@ -2483,7 +2483,7 @@ static void __handleBoosterCurrent(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* p
         bidibnode->loadmax = current;
       data->load = current;
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "booster %08X load=%d mA", bidibnode->uid, data->load );
-      __reportState(bidib, bidibnode, False, False);
+      __reportState(bidib, bidibnode, bidibnode->shortcut, False);
     }
   }
   else if( data->load != current ) {
