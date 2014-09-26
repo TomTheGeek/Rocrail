@@ -255,6 +255,12 @@ static const char* _getCargo( struct OOperator* inst ) {
 }
 
 
+static const char* _getClass( struct OOperator* inst ) {
+  iOOperatorData data = Data(inst);
+  return wOperator.getclass(data->props);
+}
+
+
 static int _getVMax( struct OOperator* inst ) {
   iOOperatorData data = Data(inst);
   int vmax = wOperator.getV_max(data->props);

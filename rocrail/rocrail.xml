@@ -2305,6 +2305,9 @@
     <fun name="getCargo" vt="const char*">
       <param name="inst" vt="this" remark="Operator instance"/>
     </fun>
+    <fun name="getClass" vt="const char*">
+      <param name="inst" vt="this" remark="Operator instance"/>
+    </fun>
     <fun name="getVMax" vt="int">
       <param name="inst" vt="this" remark="Operator instance"/>
     </fun>

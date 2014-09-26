@@ -2358,7 +2358,14 @@ static const char* _getCargo( iOLoc inst ) {
 
 static const char* _getClass( iOLoc inst ) {
   iOLocData data = Data(inst);
-  return wLoc.getclass(data->props);
+  const char* l_class = wLoc.getclass(data->props);
+  if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
+    iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
+    if( train != NULL ) {
+      l_class = OperatorOp.getClass(train);
+    }
+  }
+  return l_class;
 }
 
 

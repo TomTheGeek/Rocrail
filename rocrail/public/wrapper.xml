@@ -2755,6 +2755,7 @@
         <var name="carids" vt="string" defval="" range="*" remark="Comma separated car IDs"/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Operator command."/>
         <var name="cargo" vt="string" defval="none"/>
+        <var name="class" vt="string" defval="" range="*"/>
         <var name="V_max" vt="int" defval="0" range="*" remark="Maximal train speed."/>
         <var name="location" vt="string" defval="" range="*"/>
       </operator>

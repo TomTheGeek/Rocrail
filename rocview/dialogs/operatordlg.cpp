@@ -289,6 +289,7 @@ void OperatorDlg::initLabels() {
   m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_lightgoods ) );
   m_Cargo->Append( wxGetApp().getMsg( wLoc.cargo_regional ) );
 
+  m_labClass->SetLabel( wxGetApp().getMsg( "class" ) );
   m_labVMax->SetLabel( wxGetApp().getMsg( "maxkmh" ) );
 
   m_OperatorList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
@@ -376,6 +377,7 @@ void OperatorDlg::evaluate() {
   else if( cargo == 9 )
     wOperator.setcargo( m_Props, wLoc.cargo_regional );
 
+  wOperator.setclass( m_Props, m_Class->GetValue().mb_str(wxConvUTF8) );
   wOperator.setV_max( m_Props, m_VMax->GetValue() );
 
 }
@@ -498,6 +500,7 @@ void OperatorDlg::initValues() {
   else if( StrOp.equals( wLoc.cargo_regional, wOperator.getcargo( m_Props ) ) )
     cargo = 9;
   m_Cargo->SetSelection( cargo );
+  m_Class->SetValue( wxString(wOperator.getclass( m_Props ),wxConvUTF8) );
   m_VMax->SetValue( wOperator.getV_max( m_Props ) );
 
 }
