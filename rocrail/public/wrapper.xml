@@ -470,6 +470,7 @@
       <const name="got" vt="string" val="got"/>
       <const name="esunavi" vt="string" val="esunavi"/>
       <const name="spl" vt="string" val="spl"/>
+      <const name="inter10" vt="string" val="inter10"/>
       <var name="lib" vt="string" defval="virtual"/>
 
       <var name="libpath" vt="string" defval="."/>
