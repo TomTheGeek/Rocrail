@@ -1528,6 +1528,12 @@ static Boolean _isManualOperated( iOSignal inst ) {
 }
 
 
+static Boolean _isResetManualOperated( iOSignal inst ) {
+  iOSignalData data = Data(inst);
+  return wSignal.ismanualreset(data->props);
+}
+
+
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/
 #include "rocrail/impl/signal.fm"
 /* ----- DO NOT REMOVE OR EDIT THIS INCLUDE LINE! -----*/

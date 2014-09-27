@@ -1759,6 +1759,7 @@
         <var name="blockid" vt="string" defval="NULL" range="*"/>
         <var name="desc" vt="string" defval="" range="*" remark="description"/>
         <var name="manual" vt="bool" defval="false" remark="operator controlled signal to influence auto mode"/>
+        <var name="manualreset" vt="bool" defval="true" remark="operator controlled signal reset automatically to red"/>
         <var name="accessory" vt="bool" defval="true"/>
         <var name="porttype" vt="int" defval="0" range="0-*" required="false" remark=""/>
 

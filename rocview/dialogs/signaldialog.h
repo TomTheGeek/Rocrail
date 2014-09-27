@@ -227,6 +227,7 @@ public:
     wxStaticText* m_LabelState;
     wxTextCtrl* m_State;
     wxCheckBox* m_Manual;
+    wxCheckBox* m_ResetManual;
     wxCheckBox* m_Road;
     wxButton* m_Actions;
     wxPanel* m_LocationPanel;

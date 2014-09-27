@@ -2492,7 +2492,8 @@ static Boolean _red( iIBlockBase inst, Boolean distant, Boolean reverse ) {
     iOModel model = AppOp.getModel(  );
     iOSignal sg = ModelOp.getSignal( model, sgId );
     if( sg != NULL ) {
-      SignalOp.red( sg );
+      if( !SignalOp.isManualOperated(sg) || (SignalOp.isManualOperated(sg) && SignalOp.isResetManualOperated(sg)) )
+        SignalOp.red( sg );
       semaphore = StrOp.equals( wSignal.semaphore, wSignal.gettype(sg->base.properties(sg)) );
     }
   }
