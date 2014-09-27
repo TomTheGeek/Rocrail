@@ -417,15 +417,16 @@ static iONode __translate(iOZ21 inst, iONode node) {
       packet[10] = addr & 0xFF;  // IM2 = (lange) Lokadresse 1234 LOW BYTE
       packet[11] = 0xDD; // IM2 = Binary state Control - short form
       packet[12] = nr + (val?0x80:0x00); // IM3 = (nr | val)
+      packet[13] = nr >> 7; // IM5 = nr 8 high bits
     }
     else {
       packet[9]  = addr; // IM1 = (kurze) Lokadresse 3
       packet[10] = 0xDD; // IM2 = Binary state Control - short form
       packet[11] = nr | (val?0x80:0x00); // IM3 = (nr | val)
-      packet[12] = 0; // IM4
+      packet[12] = nr >> 7; // IM5 = nr 8 high bits
+      packet[13] = 0; // IM5
     }
-    packet[13] = 0; // IM5
-    packet[14] =0;
+    packet[14] = 0;
 
     // in DHI gehören die MSBs von IM1 bis IM5 gepackt
     if (packet[9]  & 0x80) packet[8] |= 0x01;  // DHI.0 = IM1.7
