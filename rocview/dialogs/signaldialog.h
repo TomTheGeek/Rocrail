@@ -73,6 +73,7 @@ class wxSpinCtrl;
 #define ID_COMBOBOX_SG_BLOCKID 10171
 #define wxID_STATIC_SG_STATE 10014
 #define ID_TEXTCTRL_SG_STATE 10015
+#define ID_SIGNAL_MANUAL 10450
 #define ID_SIGNAL_ACTIONS 10198
 #define ID_PANEL_SG_LOCATION 10018
 #define wxID_STATIC_SG_X 10019
@@ -166,6 +167,9 @@ public:
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_SG_DOC
     void OnButtonSgDocClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_SIGNAL_MANUAL
+    void OnSignalManualClick( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_SIGNAL_ACTIONS
     void OnSignalActionsClick( wxCommandEvent& event );

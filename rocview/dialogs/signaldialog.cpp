@@ -75,6 +75,7 @@ BEGIN_EVENT_TABLE( SignalDialog, wxDialog )
     EVT_BUTTON( ID_BUTTON_SG_NEW, SignalDialog::OnButtonSgNewClick )
     EVT_BUTTON( ID_BUTTON_SG_DELETE, SignalDialog::OnButtonSgDeleteClick )
     EVT_BUTTON( ID_BUTTON_SG_DOC, SignalDialog::OnButtonSgDocClick )
+    EVT_CHECKBOX( ID_SIGNAL_MANUAL, SignalDialog::OnSignalManualClick )
     EVT_BUTTON( ID_SIGNAL_ACTIONS, SignalDialog::OnSignalActionsClick )
     EVT_RADIOBOX( ID_SIGNALCONTROL, SignalDialog::OnSignalcontrolSelected )
     EVT_CHECKBOX( wxID_ANY, SignalDialog::onAccessory )
@@ -349,6 +350,8 @@ void SignalDialog::initValues() {
   m_RouteIDs->SetValue( wxString(wItem.getrouteids( m_Props ),wxConvUTF8) );
   m_Manual->SetValue( wSignal.ismanual( m_Props )?true:false );
   m_ResetManual->SetValue( wSignal.ismanualreset( m_Props )?true:false );
+  wxCommandEvent eventManual;
+  OnSignalManualClick( eventManual );
 
   // Location
   char* str = StrOp.fmt( "%d", wSignal.getx( m_Props ) );
@@ -782,7 +785,7 @@ void SignalDialog::CreateControls()
 
     wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 2, 0, 0);
     itemBoxSizer12->Add(itemFlexGridSizer24, 0, wxGROW, 5);
-    m_Manual = new wxCheckBox( m_GeneralPanel, wxID_ANY, _("Manual"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_Manual = new wxCheckBox( m_GeneralPanel, ID_SIGNAL_MANUAL, _("Manual"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Manual->SetValue(false);
     itemFlexGridSizer24->Add(m_Manual, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -1489,5 +1492,15 @@ void SignalDialog::OnHelpClick( wxCommandEvent& event )
   case 4: wxGetApp().openLink( "signal-props" ); break;
   default: wxGetApp().openLink( "signal" ); break;
   }
+}
+
+
+/*!
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_SIGNAL_MANUAL
+ */
+
+void SignalDialog::OnSignalManualClick( wxCommandEvent& event )
+{
+  m_ResetManual->Enable(m_Manual->IsChecked());
 }
 
