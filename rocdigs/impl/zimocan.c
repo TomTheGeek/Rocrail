@@ -766,7 +766,7 @@ static void __writer( void* threadinst ) {
   iOZimoCAN     zimocan = (iOZimoCAN)ThreadOp.getParm( th );
   iOZimoCANData data    = Data(zimocan);
   int connAckTimer = 0;
-  byte eyeCatcher[] = {'Z','1','1','Z',0};
+  byte eyeCatcher[] = {'Z','2','2','Z',0};
   byte msg[256];
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ZimoCAN writer started." );
