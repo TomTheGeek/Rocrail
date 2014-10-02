@@ -521,7 +521,7 @@ static void __transactor( void* threadinst ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Initialize the CS..." );
 
     {
-      byte cmd[64] = {0x06,USB_SETAUTOINFORMFLAGS,0x00,0x00,0x01,0x07};
+      byte cmd[64] = {0x06,USB_SETAUTOINFORMFLAGS,0x07,0x01,0x00,0x00};
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Set auto inform flags" );
       USBOp.write(data->usb, cmd, 64, data->timeout);
       if( USBOp.read(data->usb, cmd, 64, data->timeout) == 0 )
