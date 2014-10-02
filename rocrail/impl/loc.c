@@ -2618,6 +2618,7 @@ static Boolean _go( iOLoc inst ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Loco [%s] is deactivated.", LocOp.getId(inst) );
     return False;
   }
+  LocOp.resetBBT(inst);
   return True;
 }
 
@@ -2630,6 +2631,8 @@ static void _stop( iOLoc inst, Boolean resume ) {
 
   data->go = False;
   data->released = False;
+
+  LocOp.resetBBT(inst);
 
   if( data->driver != NULL )
     data->driver->stop( data->driver );
@@ -2684,12 +2687,7 @@ static void _reset( iOLoc inst, Boolean saveCurBlock ) {
   data->exit  = False;
   data->out   = False;
 
-  data->bbtEnterBlock = NULL;
-  data->bbtInBlock    = NULL;
-  data->bbtCycleSpeed = 0;
-  data->bbtEnter      = 0;
-  data->bbtIn         = 0;
-  data->bbtAtMinSpeed = False;
+  LocOp.resetBBT(inst);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "reset [%s] in current block [%s]%s",

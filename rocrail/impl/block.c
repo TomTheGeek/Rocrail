@@ -485,7 +485,7 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
         loc = ModelOp.getLoc( model, (const char*)ListOp.get(data->fifoList, ListOp.size(data->fifoList)-1), NULL, False );
         __dumpFiFo(inst);
         if( loc != NULL ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event for fifo automobile %s in block %s", LocOp.getId(loc), data->id );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event for fifo automobile %s in block %s (Vmid)", LocOp.getId(loc), data->id );
           convertEnter2In = True;
           LocOp.stop(loc, False);
 
@@ -1520,7 +1520,7 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* opp
   }
 
   if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a red manual signal", inst->base.id(inst) );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block %s has a red manual signal", inst->base.id(inst) );
     return True; /* wait until it is set to green */
   }
   else if( signal != NULL ) {
