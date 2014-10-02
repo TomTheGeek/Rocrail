@@ -177,6 +177,7 @@ static Boolean __doCmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   const char* state = wOutput.getcmd( nodeA );
   const char* iid = wOutput.getiid( o->props );
   int value = wOutput.getvalue( nodeA );
+  Boolean inv = wOutput.isinv(o->props);
 
   if( StrOp.equals( wOutput.flip, state ) ) {
     if( wOutput.istristate(o->props) ) {
@@ -222,10 +223,12 @@ static Boolean __doCmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
   wOutput.setprot( nodeA, wOutput.getprot( o->props ) );
   wOutput.setblink( nodeA, wOutput.isblink( o->props ) );
   wOutput.setparam( nodeA, wOutput.getparam( o->props ) );
-  wOutput.setvalue( nodeA, StrOp.equals(wOutput.off, state ) ? 0:wOutput.getvalue( o->props ) );
+  if( inv )
+    wOutput.setvalue( nodeA, StrOp.equals(wOutput.off, state ) ? wOutput.getvalue( o->props ):0 );
+  else
+    wOutput.setvalue( nodeA, StrOp.equals(wOutput.off, state ) ? 0:wOutput.getvalue( o->props ) );
 
   if( wOutput.getaddr( o->props ) > 0 || wOutput.getport( o->props ) > 0 ){
-    Boolean inv = wOutput.isinv(o->props);
     if( wOutput.isasswitch(o->props) ) {
       NodeOp.setName( nodeA, wSwitch.name() );
 
