@@ -1052,6 +1052,9 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "aspect number processing for signal [%s] state=%s aspect=%d", wSignal.getid( o->props ), state, nr );
 
+  if( nr != -1 )
+    aspect = nr;
+
   /* reset all outputs */
   if( iid != NULL )
     wSignal.setiid( cmd, iid );
