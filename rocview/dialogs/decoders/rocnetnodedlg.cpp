@@ -362,7 +362,7 @@ void RocnetNodeDlg::onClose( wxCloseEvent& event ) {
 
 void RocnetNodeDlg::initListLabels() {
   m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
-  m_NodeList->InsertColumn(1, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_RIGHT );
+  m_NodeList->InsertColumn(1, wxGetApp().getMsg( "place" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(2, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(3, wxGetApp().getMsg( "class" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(4, wxGetApp().getMsg( "revision" ), wxLIST_FORMAT_RIGHT );
@@ -405,7 +405,7 @@ void RocnetNodeDlg::initLabels() {
   m_labNodemap->SetLabel(wxGetApp().getMsg( "nodemap" ));
   m_labIID->SetLabel(wxGetApp().getMsg( "iid" ));
   m_labID->SetLabel(wxGetApp().getMsg( "id" ));
-  m_labLocation->SetLabel(wxGetApp().getMsg( "location" ));
+  m_labLocation->SetLabel(wxGetApp().getMsg( "place" ));
   m_labVendor->SetLabel(wxGetApp().getMsg( "vendor" ));
   m_labProduct->SetLabel(wxGetApp().getMsg( "class" ));
   m_labVersion->SetLabel(wxGetApp().getMsg( "revision" ));

@@ -266,7 +266,7 @@ void OperatorDlg::initLabels() {
 
   m_labOperator->SetLabel( wxGetApp().getMsg( "name" ) );
   m_labLocoID->SetLabel( wxGetApp().getMsg( "locomotive" ) );
-  m_labLocation->GetStaticBox()->SetLabel( wxGetApp().getMsg( "location" ) );
+  m_labLocation->GetStaticBox()->SetLabel( wxGetApp().getMsg( "place" ) );
   m_Reserve->SetLabel( wxGetApp().getMsg( "reserve" ) );
   m_SetLocation->SetLabel( wxGetApp().getMsg( "set" ) );
   m_labGoto->GetStaticBox()->SetLabel( wxGetApp().getMsg( "goto" ) );
@@ -293,12 +293,12 @@ void OperatorDlg::initLabels() {
   m_labVMax->SetLabel( wxGetApp().getMsg( "maxkmh" ) );
 
   m_OperatorList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
-  m_OperatorList->InsertColumn(1, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_LEFT );
+  m_OperatorList->InsertColumn(1, wxGetApp().getMsg( "place" ), wxLIST_FORMAT_LEFT );
   m_OperatorList->InsertColumn(2, wxGetApp().getMsg( "locomotive" ), wxLIST_FORMAT_LEFT );
 
   m_CarList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_LEFT );
   m_CarList->InsertColumn(1, wxGetApp().getMsg( "waybill" ), wxLIST_FORMAT_LEFT );
-  m_CarList->InsertColumn(2, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_LEFT );
+  m_CarList->InsertColumn(2, wxGetApp().getMsg( "place" ), wxLIST_FORMAT_LEFT );
   m_CarList->InsertColumn(3, wxGetApp().getMsg( "destination" ), wxLIST_FORMAT_LEFT );
 
   // Buttons

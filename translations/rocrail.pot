@@ -7499,3 +7499,9 @@ msgstr ""
 msgid "Input field"
 msgstr ""
 
+#. 
+# id="place"
+#, c-format
+msgid "Location"
+msgstr ""
+

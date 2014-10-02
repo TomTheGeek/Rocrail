@@ -179,7 +179,7 @@ void CarDlg::initLabels() {
   m_CarList2->InsertColumn(3, wxGetApp().getMsg( "type" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(4, wxGetApp().getMsg( "subtype" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(5, wxGetApp().getMsg( "length" ), wxLIST_FORMAT_LEFT );
-  m_CarList2->InsertColumn(6, wxGetApp().getMsg( "location" ), wxLIST_FORMAT_LEFT );
+  m_CarList2->InsertColumn(6, wxGetApp().getMsg( "place" ), wxLIST_FORMAT_LEFT );
   m_CarList2->InsertColumn(7, wxGetApp().getMsg( "train" ), wxLIST_FORMAT_LEFT );
 
   // General
@@ -189,7 +189,7 @@ void CarDlg::initLabels() {
   m_labRoadname->SetLabel( wxGetApp().getMsg( "roadname" ) );
   m_labColor->SetLabel( wxGetApp().getMsg( "color" ) );
   m_Era->SetLabel( wxGetApp().getMsg( "era" ) );
-  m_labLocation->SetLabel( wxGetApp().getMsg( "location" ) );
+  m_labLocation->SetLabel( wxGetApp().getMsg( "place" ) );
   m_labImageName->SetLabel( wxGetApp().getMsg( "image" ) );
   m_labOwner->SetLabel( wxGetApp().getMsg( "owner" ) );
 

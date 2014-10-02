@@ -29088,4 +29088,7 @@
     <pt_BR txt="Entrada de dados"/>
     <sl txt="Vnosno polje"/>
   </Msg>
+  <Msg id="place">
+    <en txt="Location"/>
+  </Msg>
 </Messages>
