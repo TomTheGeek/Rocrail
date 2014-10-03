@@ -945,6 +945,7 @@
       <param name="bus" vt="int" remark="Bus number to search for"/>
       <param name="addr" vt="int" remark="Decoder address to search for"/>
       <param name="port" vt="int" remark="Decoder port to search for"/>
+      <param name="gate" vt="int" remark="Decoder gate to search for"/>
       <param name="type" vt="int" remark="Port type to search for"/>
       <param name="uidname" vt="const char*" remark="Alternative name for the bus number."/>
       <param name="offset" vt="obj" remark="Optional switch object offset to be able to find another switch with the same address."/>

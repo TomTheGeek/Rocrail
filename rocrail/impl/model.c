@@ -2775,13 +2775,17 @@ static iOOperator _getOperator4Car( iOModel inst, const char* id ) {
 }
 
 
-static Boolean __isAddres(int addr, int port, int sgaddr, int sgport) {
+static Boolean __isAddres(int addr, int port, int gate, int sgaddr, int sgport, int sggate, Boolean singelgate) {
   if( addr > 0 && port == 0 && sgaddr > 0 && sgport == 0 ) {
-    if( addr == sgaddr )
+    if( addr == sgaddr && !singelgate )
+      return True;
+    if( addr == sgaddr && singelgate && gate == sggate )
       return True;
   }
   if( addr == 0 && port > 0 && sgaddr == 0 && sgport > 0 ) {
-    if( port == sgport )
+    if( port == sgport && !singelgate )
+      return True;
+    if( port == sgport && singelgate && gate == sggate )
       return True;
   }
 
@@ -2795,8 +2799,10 @@ static Boolean __isAddres(int addr, int port, int sgaddr, int sgport) {
     sgaddr = (pada - 1) / 4 + 1;
     sgport = (pada - 1) % 4 + 1;
   }
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "is address: field=[%d,%d] object=[%d,%d]", addr, port, sgaddr, sgport );
-  if( sgaddr == addr && sgport == port )
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "is address: field=[%d,%d,%d] object=[%d,%d,%d]", addr, port, gate, sgaddr, sgport, sggate );
+  if( sgaddr == addr && sgport == port && !singelgate )
+    return True;
+  if( sgaddr == addr && sgport == port && singelgate && gate == sggate )
     return True;
   return False;
 }
@@ -2833,7 +2839,7 @@ static iOList _getSensorsByAddress( iOModel inst, const char* iid, int bus, int 
 }
 
 
-static obj _getSwByAddress( iOModel inst, const char* iid, int bus, int addr, int port, int type, const char* uidname, obj offset ) {
+static obj _getSwByAddress( iOModel inst, const char* iid, int bus, int addr, int port, int gate, int type, const char* uidname, obj offset ) {
   iOModelData o = Data(inst);
   Boolean gotOffset = False;
   obj sw = ListOp.first(o->switchList);
@@ -2856,9 +2862,9 @@ static obj _getSwByAddress( iOModel inst, const char* iid, int bus, int addr, in
 
     if( wSwitch.getbus(props) == bus || (StrOp.len(uidname) > 0 && StrOp.equals(wItem.getuidname(props),uidname) ) ) {
       if( wSwitch.getporttype( props ) == type ) {
-        if( __isAddres( addr, port, wSwitch.getaddr1(props), wSwitch.getport1(props) ) )
+        if( __isAddres( addr, port, gate, wSwitch.getaddr1(props), wSwitch.getport1(props), wSwitch.getgate1(props), wSwitch.issinglegate(props) ) )
           return sw;
-        if( __isAddres( addr, port, wSwitch.getaddr2(props), wSwitch.getport2(props) ) )
+        if( __isAddres( addr, port, gate, wSwitch.getaddr2(props), wSwitch.getport2(props), wSwitch.getgate2(props), wSwitch.issinglegate(props) ) )
           return sw;
       }
     }
@@ -2886,22 +2892,22 @@ static iOSignal _getSgByAddress( iOModel inst, const char* iid, int bus, int add
       int sgaddr = wSignal.getaddr( props );
       int sgport = wSignal.getport1( props );
       int sgtype = wSignal.getporttype( props );
-      if( sgtype == type && __isAddres( addr, port, sgaddr, sgport ) )
+      if( sgtype == type && __isAddres( addr, port, 0, sgaddr, sgport, 0, False ) )
         return sg;
 
       sgaddr = wSignal.getaddr2( props );
       sgport = wSignal.getport2( props );
-      if( sgtype == type && __isAddres( addr, port, sgaddr, sgport ) )
+      if( sgtype == type && __isAddres( addr, port, 0, sgaddr, sgport, 0, False ) )
         return sg;
 
       sgaddr = wSignal.getaddr3( props );
       sgport = wSignal.getport3( props );
-      if( sgtype == type && __isAddres( addr, port, sgaddr, sgport ) )
+      if( sgtype == type && __isAddres( addr, port, 0, sgaddr, sgport, 0, False ) )
         return sg;
 
       sgaddr = wSignal.getaddr4( props );
       sgport = wSignal.getport4( props );
-      if( sgtype == type && __isAddres( addr, port, sgaddr, sgport ) )
+      if( sgtype == type && __isAddres( addr, port, 0, sgaddr, sgport, 0, False ) )
         return sg;
     }
 
@@ -3888,14 +3894,16 @@ static void _event( iOModel inst, iONode nodeC ) {
     int bus = wSwitch.getbus( nodeC );
     int addr = wSwitch.getaddr1( nodeC );
     int port = wSwitch.getport1( nodeC );
+    int gate = wSwitch.getgate1( nodeC );
     int type = wSwitch.getporttype( nodeC );
     Boolean foundSw = False;
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "trying to match switch event: %d:%d:%d type=%d uidname=[%s]", bus, addr, port, type, uidname );
-    obj sw = ModelOp.getSwByAddress(inst, iid, bus, addr, port, type, uidname, NULL);
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+        "trying to match switch event: %d:%d:%d:%d type=%d uidname=[%s]", bus, addr, port, gate, type, uidname );
+    obj sw = ModelOp.getSwByAddress(inst, iid, bus, addr, port, gate, type, uidname, NULL);
     while( sw != NULL ) {
       foundSw = True;
       sw->event( sw, (iONode)NodeOp.base.clone(nodeC) );
-      sw = ModelOp.getSwByAddress(inst, iid, bus, addr, port, type, uidname, sw);
+      sw = ModelOp.getSwByAddress(inst, iid, bus, addr, port, gate, type, uidname, sw);
     }
     if( foundSw ) {
       NodeOp.base.del(nodeC);

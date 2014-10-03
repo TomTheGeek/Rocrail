@@ -1684,8 +1684,8 @@ static void _event( iOSwitch inst, iONode nodeC ) {
 
     wSwitch.setfieldstate( data->props, wSwitch.getstate(data->props) );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] field state=%s gatevalue=%d",
-        SwitchOp.getId(inst), wSwitch.getstate( data->props), wSwitch.getgatevalue(nodeC) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] field state=%s(%s) gatevalue=%d",
+        SwitchOp.getId(inst), wSwitch.getstate( data->props), wSwitch.getstate(nodeC), wSwitch.getgatevalue(nodeC) );
 
     __checkAction( inst );
 
