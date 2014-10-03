@@ -308,16 +308,17 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
       byte* msg = allocMem(32);
       int Div = 1; /* Speed divider */
       int V = 0;
+      Boolean dir = wLoc.isdir(node);
 
       if( wLoc.getV( node ) != -1 ) {
         if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-          V = (wLoc.getV( node ) * slot->steps) / 100;
+          V = (wLoc.getV( node ) * 1023) / 100;
         else if( wLoc.getV_max( node ) > 0 )
-          V = (wLoc.getV( node ) * slot->steps) / wLoc.getV_max( node );
+          V = (wLoc.getV( node ) * 1023) / wLoc.getV_max( node );
       }
 
-      msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_SPEED, MODE_CMD, 6, data->NID, slot->nid, (V&0xFF), (V>>8), Div, 0, 0, 0);
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Set loco speed to %d for %s", V, slot->id );
+      msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_SPEED, MODE_CMD, 6, data->NID, slot->nid, (V&0xFF), (V>>8) | (dir?0x00:0x04), Div, 0, 0, 0);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Set loco speed to %d, dir=%s for %s", V, dir?"fwd":"rev", slot->id );
       ThreadOp.post(data->writer, (obj)msg);
     }
   }
@@ -668,23 +669,26 @@ static void __evauluateMobileControlGroup( iOZimoCAN zimocan, byte* msg ) {
   case MOBILE_SPEED:
     {
       int nid = __getObjectNID(msg);
-      int V = (msg[9] + (msg[10] * 256)) & 0x01FF;
-      Boolean Dir = (msg[10] & 0x04) ? True:False;
+      int V = (msg[9] + (msg[10] * 256)) & 0x03FF;
+      Boolean Dir = (msg[10] & 0x04) ? False:True;
       iOSlot slot = __getSlotByNID(zimocan, nid);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE SPEED: [%s] NID=%d speed=%d dir=%s", slot==NULL?"-":slot->id, nid, V, Dir?"fwd":"rev" );
+      iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+      if( data->iid != NULL )
+        wLoc.setiid( nodeC, data->iid );
       if( slot != NULL ) {
-        iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
-        if( data->iid != NULL )
-          wLoc.setiid( nodeC, data->iid );
         wLoc.setid( nodeC, slot->id );
         wLoc.setaddr( nodeC, slot->addr );
-        wLoc.setdir( nodeC, Dir );
-        wLoc.setV_raw( nodeC, V );
-        wLoc.setV_rawMax( nodeC, slot->steps );
-        wLoc.setthrottleid( nodeC, "zimo" );
-        wLoc.setcmd( nodeC, wLoc.velocity );
-        data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
       }
+      else {
+        wLoc.setaddr( nodeC, nid );
+      }
+      wLoc.setdir( nodeC, Dir );
+      wLoc.setV_raw( nodeC, V );
+      wLoc.setV_rawMax( nodeC, 1023 );
+      wLoc.setthrottleid( nodeC, "zimo" );
+      wLoc.setcmd( nodeC, wLoc.velocity );
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
     }
     break;
   }
