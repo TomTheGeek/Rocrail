@@ -2702,7 +2702,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     }
 
     // ToDo: Merge Node!?
-    NodeOp.mergeNode( m_Props, node, True, False, True);
+    if( !wBlock.isupdateenterside(node) ) {
+      NodeOp.mergeNode( m_Props, node, True, False, True);
+    }
 
     if( x != -1 && y != -1 ) {
       wItem.setx( m_Props, x );
