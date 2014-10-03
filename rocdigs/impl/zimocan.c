@@ -468,6 +468,7 @@ Header Size  Group Cmd+Mode NId    Data0...7 CRC16 Tail
  */
 static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int nid, int nidTarget, int d2, int d3, int d4, int d5, int d6, int d7 ) {
   int crc = 0;
+  int idx = 0;
 
   msg[0]  = 0x5A;
   msg[1]  = 0x32;
@@ -477,23 +478,48 @@ static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int n
   msg[4] |= (mode & 0x03);
   msg[5]  = (nid & 0xFF);
   msg[6]  = ((nid >> 8) & 0xFF);
-  msg[7]  = (nidTarget & 0xFF);
-  msg[8]  = ((nidTarget >> 8) & 0xFF);
-  msg[9]  = d2;
-  msg[10] = d3;
-  msg[11] = d4;
-  msg[12] = d5;
-  msg[13] = d6;
-  msg[14] = d7;
 
-  crc = CRCOp.checkSum16(msg+2, 13);
-  msg[15] = (crc & 0xFF);
-  msg[16] = ((crc >> 8) & 0xFF);
+  if( dlc >= 2 ) { /* d0 + d1 */
+    idx = 7; /* offset */
+    msg[idx]  = (nidTarget & 0xFF);
+    idx++;
+    msg[idx]  = ((nidTarget >> 8) & 0xFF);
+    idx++;
+  }
 
-  msg[17] = 0x32;
-  msg[18] = 0x5A;
+  if( dlc >= 3 ) {
+    msg[idx] = d2;
+    idx++;
+  }
+  if( dlc >= 4 ) {
+    msg[idx] = d3;
+    idx++;
+  }
+  if( dlc >= 5 ) {
+    msg[idx] = d4;
+    idx++;
+  }
+  if( dlc >= 6 ) {
+    msg[idx] = d5;
+    idx++;
+  }
+  if( dlc >= 7 ) {
+    msg[idx] = d6;
+    idx++;
+  }
+  if( dlc >= 8 ) {
+    msg[idx] = d7;
+    idx++;
+  }
 
-  return 19;
+  crc = CRCOp.checkSum16(msg+2, 5+dlc);
+  msg[7+dlc] = (crc & 0xFF);
+  msg[8+dlc] = ((crc >> 8) & 0xFF);
+
+  msg[ 9+dlc] = 0x32;
+  msg[10+dlc] = 0x5A;
+
+  return (11 + dlc);
 }
 
 static int __getNID(byte* msg) {

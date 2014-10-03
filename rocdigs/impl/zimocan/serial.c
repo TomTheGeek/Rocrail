@@ -59,12 +59,14 @@ void SerialDisconnect( obj inst ) {
 int SerialRead ( obj inst, unsigned char *msg ) {
   iOZimoCANData data = Data(inst);
   int len = 0;
+  int packetLen = 11;
+  int dlc = 0;
   Boolean headerZ = False;
   Boolean header2 = False;
 
   if( data->serial != NULL ) {
     do {
-      char in = 0;;
+      char in = 0;
       if( SerialOp.read(data->serial, &in, 1) ) {
         if( !headerZ && in == 'Z' ) {
           headerZ = True;
@@ -79,12 +81,14 @@ int SerialRead ( obj inst, unsigned char *msg ) {
           continue;
         }
 
-        if( headerZ && header2 && len < 19 ) {
+        if( headerZ && header2 && len < (packetLen+dlc) ) {
+          if( len == 2 )
+            dlc = in;
           msg[len] = in;
           len++;
         }
 
-        if( len == 19 ) {
+        if( len == (packetLen+dlc) ) {
           TraceOp.dump ( "zcanserial", TRCLEVEL_BYTE, (char*)msg, len );
           break;
         }
