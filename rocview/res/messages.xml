@@ -29079,6 +29079,7 @@
     <pt_BR txt="Grupo"/>
     <sl txt="Skupina"/>
     <sr_latin txt="Grupa"/>
+    <ru txt="Группа"/>
   </Msg>
   <Msg id="inputfield">
     <en txt="Input field" accel="0"/>
@@ -29087,8 +29088,14 @@
     <nl txt="Invulveld"/>
     <pt_BR txt="Entrada de dados"/>
     <sl txt="Vnosno polje"/>
+    <sr_latin txt="Polje za unos"/>
   </Msg>
   <Msg id="place">
     <en txt="Location"/>
+    <de txt="Standort"/>
+    <nl txt="Locatie"/>
+    <ru txt="Расположение"/>
+    <sl txt="Lokacija"/>
+    <sr_latin txt="Položaj"/>
   </Msg>
 </Messages>
