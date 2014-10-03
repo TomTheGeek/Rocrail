@@ -2171,6 +2171,8 @@ static void _event( iOLoc inst, obj emitter, int evt, int timer, Boolean forcewa
       data->bbtCycleSpeed = 0;
       data->bbtInTimer    = 0;
       data->bbtStepCount  = 0;
+      data->bbtAtMinSpeed = False;
+      data->bbtAtMin      = 0;
       data->bbtEnter      = SystemOp.getTick();
       TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "BBT enter=%ld block=%s", data->bbtEnter, data->bbtEnterBlock );
     }
