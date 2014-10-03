@@ -1054,6 +1054,16 @@ static Boolean __processAspectNrCmd( iOSignal inst, const char* state, int nr ) 
 
   if( nr != -1 )
     aspect = nr;
+  else if( StrOp.equals( wSignal.green, state ) )
+    aspect = wSignal.getgreennr(o->props);
+  else if( StrOp.equals( wSignal.red, state ) )
+    aspect = wSignal.getrednr(o->props);
+  else if( StrOp.equals( wSignal.yellow, state ) )
+    aspect = wSignal.getyellownr(o->props);
+  else if( StrOp.equals( wSignal.white, state ) )
+    aspect = wSignal.getwhitenr(o->props);
+  else if( StrOp.equals( wSignal.blank, state ) )
+    aspect = wSignal.getblanknr(o->props);
 
   /* reset all outputs */
   if( iid != NULL )
