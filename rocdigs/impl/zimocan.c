@@ -680,14 +680,15 @@ static void __evauluateMobileControlGroup( iOZimoCAN zimocan, byte* msg ) {
   int cmd  = (msg[4] >> 2);
   int mode = (msg[4] &0x03);
 
+  int nid = __getObjectNID(msg);
+  int addr = __getLocoAddr(nid);
+  iOSlot slot = __getSlotByNID(zimocan, nid);
+
   switch( cmd ) {
   case MOBILE_SPEED:
     {
-      int nid = __getObjectNID(msg);
-      int addr = __getLocoAddr(nid);
       int V = (msg[9] + (msg[10] * 256)) & 0x03FF;
       Boolean Dir = (msg[10] & 0x04) ? False:True;
-      iOSlot slot = __getSlotByNID(zimocan, nid);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE SPEED: [%s] NID=%d addr=%d speed=%d dir=%s", slot==NULL?"-":slot->id, nid, addr, V, Dir?"fwd":"rev" );
       iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       if( data->iid != NULL )
@@ -704,6 +705,30 @@ static void __evauluateMobileControlGroup( iOZimoCAN zimocan, byte* msg ) {
       wLoc.setV_rawMax( nodeC, 1023 );
       wLoc.setthrottleid( nodeC, "zimo" );
       wLoc.setcmd( nodeC, wLoc.velocity );
+      data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+    }
+    break;
+
+  case MOBILE_FUNCTION:
+    {
+      int fx   = msg[9] + (msg[10] * 256);
+      int fval = msg[11] + (msg[12] * 256);
+      char fxStr[32];
+      iONode nodeC = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+
+      wFunCmd.setfnchanged(nodeC, fx);
+      if( data->iid != NULL )
+        wLoc.setiid( nodeC, data->iid );
+      if( slot != NULL ) {
+        wFunCmd.setid( nodeC, slot->id );
+        wFunCmd.setaddr( nodeC, slot->addr );
+      }
+      else {
+        wFunCmd.setaddr( nodeC, addr );
+      }
+      StrOp.fmtb(fxStr, "f%d", fx);
+      NodeOp.setBool(nodeC, fxStr, fval?True:False);
+      wLoc.setthrottleid( nodeC, "zimo" );
       data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
     }
     break;
