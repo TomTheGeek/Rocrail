@@ -660,6 +660,21 @@ static void __evauluateNetworkGroup( iOZimoCAN zimocan, byte* msg ) {
 }
 
 
+static int __getLocoAddr(int nid) {
+  /* DCC */
+  if( nid < 0x2800 )
+    return nid;
+  /* MM */
+  if( nid < 0x2900 )
+    return nid - 0x2800;
+  /* MFX */
+  if( nid >= 0x8000 && nid <= 0xBFFF )
+    return nid - 0x8000;
+
+  return nid;
+}
+
+
 static void __evauluateMobileControlGroup( iOZimoCAN zimocan, byte* msg ) {
   iOZimoCANData data    = Data(zimocan);
   int cmd  = (msg[4] >> 2);
@@ -669,10 +684,11 @@ static void __evauluateMobileControlGroup( iOZimoCAN zimocan, byte* msg ) {
   case MOBILE_SPEED:
     {
       int nid = __getObjectNID(msg);
+      int addr = __getLocoAddr(nid);
       int V = (msg[9] + (msg[10] * 256)) & 0x03FF;
       Boolean Dir = (msg[10] & 0x04) ? False:True;
       iOSlot slot = __getSlotByNID(zimocan, nid);
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE SPEED: [%s] NID=%d speed=%d dir=%s", slot==NULL?"-":slot->id, nid, V, Dir?"fwd":"rev" );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MOBILE SPEED: [%s] NID=%d addr=%d speed=%d dir=%s", slot==NULL?"-":slot->id, nid, addr, V, Dir?"fwd":"rev" );
       iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
       if( data->iid != NULL )
         wLoc.setiid( nodeC, data->iid );
@@ -681,7 +697,7 @@ static void __evauluateMobileControlGroup( iOZimoCAN zimocan, byte* msg ) {
         wLoc.setaddr( nodeC, slot->addr );
       }
       else {
-        wLoc.setaddr( nodeC, nid );
+        wLoc.setaddr( nodeC, addr );
       }
       wLoc.setdir( nodeC, Dir );
       wLoc.setV_raw( nodeC, V );
