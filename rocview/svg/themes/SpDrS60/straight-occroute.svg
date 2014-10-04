@@ -1,0 +1,9 @@
+<svg width="32" height="32">
+  <g>
+  <!-- track -->
+    <path stroke="rgb(0,0,0)" fill="rgb(0,0,0)" d="M 0,12 L 31,12 L 31,19 L 0,19 z" />
+  <!-- inner yellow with red -->
+    <path stroke="rgb(255,255,0)" fill="rgb(255,255,0)" d="M 8,14 L 23,14 L 23,17 L 8,17 z" />
+    <path stroke="rgb(255,0,0)" fill="rgb(255,0,0)" d="M 13,14 L 18,14 L 18,17 L 13,17 z" />
+  </g>
+</svg>
