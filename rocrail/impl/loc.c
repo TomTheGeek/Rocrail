@@ -158,7 +158,7 @@ static void __cpFn2Node(iOLoc inst, iONode cmd, int fn, int addr) {
   int mappedfn = fn;
   wFunCmd.setfncnt( cmd, wLoc.getfncnt( data->props ) );
 
-  if( addr == 0 )
+  if( addr == 0 || __getFnAddr(inst, 1, &mappedfn) == addr )
     if( fn == -1 || fn != 0 ) __FnOnOff(inst, 0, data->fn0, cmd, False);
 
   if( addr == 0 || __getFnAddr(inst, 1, &mappedfn) == addr )
