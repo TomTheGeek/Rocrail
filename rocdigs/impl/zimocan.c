@@ -159,7 +159,7 @@ static iOSlot __getSlot(iOZimoCAN inst, iONode node) {
   }
 
   msg = allocMem(32);
-  msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_STATE, MODE_REQ, 2, slot->nid, 0, 0, 0, 0, 0, 0, 0);
+  msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_STATE, MODE_REQ, 2, data->NID, slot->nid, 0, 0, 0, 0, 0, 0);
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "query state for loco %s with NID=0x%X", slot->id, slot->nid );
   ThreadOp.post(data->writer, (obj)msg);
 
