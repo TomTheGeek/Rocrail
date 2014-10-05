@@ -352,9 +352,9 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
         AddrOp.fromPADA( port, &addr, &port );
 
       wSwitch.setbus( nodeC, wSwitch.getbus( node ) );
-      wSwitch.setaddr1( nodeC, addr );
-      wSwitch.setport1( nodeC, port );
-      wSwitch.setgate1( nodeC, gate );
+      wSwitch.setaddr1( nodeC, wSwitch.getaddr1( node ) );
+      wSwitch.setport1( nodeC, wSwitch.getport1( node ) );
+      wSwitch.setgate1( nodeC, wSwitch.getgate1( node ) );
       wSwitch.setgatevalue( nodeC, action );
 
       if( wSwitch.getiid(node) != NULL )
