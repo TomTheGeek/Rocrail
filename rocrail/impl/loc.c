@@ -1643,11 +1643,12 @@ static void __theSwap(iOLoc loc, Boolean swap, Boolean consist, iONode cmd) {
     __swapConsist(loc, cmd);
   }
 
-  if( wLoc.isv0onswap(data->props) ) {
+  if( wLoc.isv0onswap(data->props) && LocOp.getV(loc) == 0 ) {
     iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
     wLoc.setcmd(cmd, wLoc.velocity );
-    wLoc.setV(cmd, LocOp.getV(loc) );
+    wLoc.setV(cmd, 0 );
     wLoc.setfn( cmd, data->fn0 );
+    wLoc.setdir( cmd, wLoc.isdir(data->props) );
     LocOp.cmd(loc, cmd);
   }
 }
