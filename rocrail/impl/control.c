@@ -746,7 +746,7 @@ static void __callback( obj inst, iONode nodeA ) {
     }
   }
   else if( StrOp.equals( wLoc.name(), nodeName ) ) {
-    iOLoc loc = ModelOp.getLoc( model, wLoc.getid( nodeA ), nodeA, False );
+    iOLoc loc = ModelOp.getLoc( model, wLoc.getid( nodeA ), nodeA, True );
     if( loc != NULL ) {
       LocOp.cmd( loc, nodeA );
       return;
