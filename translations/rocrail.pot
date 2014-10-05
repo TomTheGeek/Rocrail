@@ -7505,3 +7505,9 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
+#. 
+# id="v0onswap"
+#, c-format
+msgid "V0 on swap"
+msgstr ""
+

@@ -529,6 +529,7 @@ public:
     wxCheckBox* m_Check2In;
     wxCheckBox* m_UseDepartDelay;
     wxCheckBox* m_FreeBlockOnEnter;
+    wxCheckBox* m_V0onSwap;
     wxRadioBox* m_EngineBox;
     wxRadioBox* m_Era;
     wxStaticText* m_labClass;

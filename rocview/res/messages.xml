@@ -29098,4 +29098,7 @@
     <sl txt="Lokacija"/>
     <sr_latin txt="Položaj"/>
   </Msg>
+  <Msg id="v0onswap">
+    <en txt="V0 on swap"/>
+  </Msg>
 </Messages>

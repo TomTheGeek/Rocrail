@@ -2589,6 +2589,7 @@
         <var name="mass" vt="int" defval="0" range="0-127" remark="Mass index for use with Dinamo."/>
         <var name="dir" vt="bool" defval="true" remark="Direction; true is forwards."/>
         <var name="placing" vt="bool" defval="true" remark="If loc is placed back to front this should be set to false."/>
+        <var name="v0onswap" vt="bool" defval="false" remark="Command V0 on swap to inform the decoder."/>
         <var name="roaming" vt="bool" defval="true" remark="The roaming flag allows a loc traveling to other systems."/>
         
         <var name="dirpause" vt="int" defval="0" range="0-999" unit="ms" remark="pause after sending last turnout command and before sending the direction to the loc decoder"/>
