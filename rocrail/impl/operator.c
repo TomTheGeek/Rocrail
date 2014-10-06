@@ -165,6 +165,11 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
       }
     }
     StrTokOp.base.del(tok);
+    /* Broadcast to clients. */
+    {
+      iONode clone = (iONode)NodeOp.base.clone( data->props );
+      AppOp.broadcastEvent( clone );
+    }
   }
 
   else if( StrOp.equals( wOperator.removecar, cmd ) ) {
@@ -190,6 +195,11 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
       }
     }
     StrTokOp.base.del(tok);
+    /* Broadcast to clients. */
+    {
+      iONode clone = (iONode)NodeOp.base.clone( data->props );
+      AppOp.broadcastEvent( clone );
+    }
   }
 
   else {
