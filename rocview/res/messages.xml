@@ -29089,6 +29089,7 @@
     <pt_BR txt="Entrada de dados"/>
     <sl txt="Vnosno polje"/>
     <sr_latin txt="Polje za unos"/>
+    <en_GB txt="Input field"/>
   </Msg>
   <Msg id="place">
     <en txt="Location"/>
@@ -29097,8 +29098,12 @@
     <ru txt="Расположение"/>
     <sl txt="Lokacija"/>
     <sr_latin txt="Položaj"/>
+    <en_GB txt="Location"/>
   </Msg>
   <Msg id="v0onswap">
     <en txt="V0 on swap"/>
+    <de txt="V0 bei Richtungswechsel"/>
+    <en_GB txt="V0 on swap"/>
+    <nl txt="Snelheid 0 bij omkeren"/>
   </Msg>
 </Messages>
