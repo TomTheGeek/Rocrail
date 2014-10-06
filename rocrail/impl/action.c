@@ -650,6 +650,22 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
     }
   }
 
+  /* operator action */
+  if( StrOp.equals( wOperator.name(), wAction.gettype( data->action ) ) ) {
+    const char* id = wAction.getoid( data->action );
+    iOOperator op = ModelOp.getOperator( model, id );
+    if( op != NULL ) {
+      iONode cmd = NodeOp.inst( wOperator.name(), NULL, ELEMENT_NODE );
+      const char* cmdStr = wAction.getcmd( data->action );
+      wOperator.setcmd( cmd, cmdStr );
+      wOperator.setcarids( cmd, wAction.getparam(data->action) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operator[%s], [%s] [%s]",
+          id, cmdStr, wAction.getparam(data->action) );
+      OperatorOp.cmd( op, cmd );
+    }
+  }
+
+
   /* variable action */
   if( StrOp.equals( wVariable.name(), wAction.gettype( data->action ) ) ) {
     const char* id = wAction.getid(data->action);

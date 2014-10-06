@@ -191,6 +191,7 @@ void TimedActions::initLabels() {
     m_Type->Append( wxGetApp().getMsg( "stagingblock" ) );
     m_Type->Append( wxGetApp().getMsg( "sound" ) );
     m_Type->Append( wxGetApp().getMsg( "variable" ) );
+    m_Type->Append( wxGetApp().getMsg( "operator" ) );
 
     // Interface
     m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
@@ -248,6 +249,8 @@ void TimedActions::initValues() {
     m_Type->SetSelection(14);
   else if( StrOp.equals( wVariable.name(), type ) )
     m_Type->SetSelection(15);
+  else if( StrOp.equals( wOperator.name(), type ) )
+    m_Type->SetSelection(16);
 
   initOutputList();
   initCommands();
@@ -393,6 +396,7 @@ bool TimedActions::evaluate() {
     case 13: wAction.settype(m_Props, wStage.name()); break;
     case 14: wAction.settype(m_Props, wAction.type_sound); break;
     case 15: wAction.settype(m_Props, wVariable.name()); break;
+    case 16: wAction.settype(m_Props, wOperator.name()); break;
   }
 
   // Interface
@@ -449,6 +453,7 @@ void TimedActions::initOutputList() {
       case 13: colist = wPlan.getsblist( model ); break;
       case 14: return;
       case 15: colist = wPlan.getvrlist( model ); break;
+      case 16: colist = wPlan.getoperatorlist( model ); break;
     }
 
     m_ExecCmd->Enable(false);
@@ -1148,6 +1153,10 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wVariable.op_random, wxConvUTF8));
       m_Command->Append(wxString( wVariable.op_start, wxConvUTF8));
       m_Command->Append(wxString( wVariable.op_stop, wxConvUTF8));
+      break;
+    case 16: // operator
+      m_Command->Append(wxString( wOperator.addcar, wxConvUTF8));
+      m_Command->Append(wxString( wOperator.removecar, wxConvUTF8));
       break;
   }
 }

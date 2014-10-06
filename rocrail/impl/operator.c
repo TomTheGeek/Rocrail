@@ -145,6 +145,53 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
   if( StrOp.equals( wLoc.block, cmd ) ) {
     OperatorOp.setLocality(inst, wOperator.getlocation(nodeA));
   }
+
+  else if( StrOp.equals( wOperator.addcar, cmd ) ) {
+    /* ToDo: add the carids */
+    iOStrTok tok = StrTokOp.inst(wOperator.getcarids(nodeA), ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* carid = StrTokOp.nextToken(tok);
+      if( !OperatorOp.hasCar(inst, carid) ) {
+        /* add the car */
+        char* newCarIds = NULL;
+        if( StrOp.len(wOperator.getcarids(data->props)) > 0 ) {
+          newCarIds = StrOp.fmt("%s,%s", wOperator.getcarids(data->props), carid);
+        }
+        else {
+          newCarIds = StrOp.fmt("%s", carid);
+        }
+        wOperator.setcarids(data->props, newCarIds);
+        StrOp.free(newCarIds);
+      }
+    }
+    StrTokOp.base.del(tok);
+  }
+
+  else if( StrOp.equals( wOperator.removecar, cmd ) ) {
+    /* ToDo: remove the carids */
+    iOStrTok tok = StrTokOp.inst(wOperator.getcarids(nodeA), ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* carid = StrTokOp.nextToken(tok);
+      if( OperatorOp.hasCar(inst, carid) ) {
+        char* newCarIds = NULL;
+        iOStrTok cars = StrTokOp.inst(wOperator.getcarids(data->props), ',');
+        while( StrTokOp.hasMoreTokens(tok) ) {
+          const char* oldcarid = StrTokOp.nextToken(cars);
+          if( !StrOp.equals(oldcarid, carid) ) {
+            if( newCarIds != NULL && StrOp.len(newCarIds) > 0 ) {
+              newCarIds = StrOp.cat(newCarIds, ",");
+            }
+            newCarIds = StrOp.cat(newCarIds, oldcarid);
+          }
+        }
+        StrTokOp.base.del(cars);
+        wOperator.setcarids(data->props, newCarIds);
+        StrOp.free(newCarIds);
+      }
+    }
+    StrTokOp.base.del(tok);
+  }
+
   else {
     iOStrTok tok = StrTokOp.inst(wOperator.getcarids(data->props), ',');
     while( StrTokOp.hasMoreTokens(tok) ) {
