@@ -483,19 +483,19 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
       }
       else {
         iOLoc loc1 = ModelOp.getLoc( model, (const char*)ListOp.get(data->fifoList, 0), NULL, False );
-        iOLoc locn = ModelOp.getLoc( model, (const char*)ListOp.get(data->fifoList, ListOp.size(data->fifoList)-1), NULL, False );
+        loc = ModelOp.getLoc( model, (const char*)ListOp.get(data->fifoList, ListOp.size(data->fifoList)-1), NULL, False );
         __dumpFiFo(inst);
-        if( locn != NULL ) {
+        if( loc != NULL ) {
           Boolean oppwait = False;
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event for fifo automobile %s in block %s (Vmid)", LocOp.getId(locn), data->id );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "event for fifo automobile %s in block %s (Vmid)", LocOp.getId(loc), data->id );
           convertEnter2In = True;
-          LocOp.stop(locn, False);
+          LocOp.stop(loc, False);
 
-          if( BlockOp.wait( inst, locn, False, &oppwait ) || ( loc1!=NULL && StrOp.equals(wLoc.mode_wait, wLoc.getmode( LocOp.base.properties(loc1))) )  ) {
+          if( BlockOp.wait( inst, loc, False, &oppwait ) || ( loc1!=NULL && StrOp.equals(wLoc.mode_wait, wLoc.getmode( LocOp.base.properties(loc1))) )  ) {
             iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
             wLoc.setcmd(cmd, wLoc.velocity);
             wLoc.setV_hint(cmd, wLoc.mid);
-            LocOp.cmd(locn, cmd);
+            LocOp.cmd(loc, cmd);
           }
         }
       }
