@@ -2915,7 +2915,9 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   }
 
   if( !MutexOp.trywait( data->muxCmd, 100 ) ) {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "timeout on loco command mutex: [%s] [%s:%s]", wLoc.getid(data->props), nodename, cmd );
+    char* cmdStr = NodeOp.base.toString(nodeA);
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "timeout on loco command mutex: [%s] [%s:%s]\n%s", wLoc.getid(data->props), nodename, cmd, cmdStr );
+    StrOp.free(cmdStr);
     NodeOp.base.del(nodeA);
     return False;
   }
@@ -3024,12 +3026,18 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       LocOp.resetPrevBlock(inst);
     }
     else if( StrOp.equals( wLoc.reset, cmd ) ) {
+      MutexOp.post( data->muxCmd );
       _reset( inst, False );
       LocOp.resetPrevBlock(inst);
+      nodeA->base.del(nodeA);
+      return True;
     }
     else if( StrOp.equals( wLoc.softreset, cmd ) ) {
+      MutexOp.post( data->muxCmd );
       _reset( inst, True );
       LocOp.resetPrevBlock(inst);
+      nodeA->base.del(nodeA);
+      return True;
     }
     else if( StrOp.equals( wLoc.activate, cmd ) ) {
       wLoc.setactive(data->props, True);
