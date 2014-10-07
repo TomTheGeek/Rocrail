@@ -160,6 +160,7 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
         else {
           newCarIds = StrOp.fmt("%s", carid);
         }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "add car [%s] to operator [%s]: [%s]", carid, wOperator.getid(data->props), newCarIds );
         wOperator.setcarids(data->props, newCarIds);
         StrOp.free(newCarIds);
       }
@@ -180,7 +181,8 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
       if( OperatorOp.hasCar(inst, carid) ) {
         char* newCarIds = NULL;
         iOStrTok cars = StrTokOp.inst(wOperator.getcarids(data->props), ',');
-        while( StrTokOp.hasMoreTokens(tok) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "remove car [%s] to operator [%s]", carid, wOperator.getid(data->props) );
+        while( StrTokOp.hasMoreTokens(cars) ) {
           const char* oldcarid = StrTokOp.nextToken(cars);
           if( !StrOp.equals(oldcarid, carid) ) {
             if( newCarIds != NULL && StrOp.len(newCarIds) > 0 ) {
@@ -190,6 +192,7 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
           }
         }
         StrTokOp.base.del(cars);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operator [%s] cars=[%s]", wOperator.getid(data->props), newCarIds );
         wOperator.setcarids(data->props, newCarIds);
         StrOp.free(newCarIds);
       }
