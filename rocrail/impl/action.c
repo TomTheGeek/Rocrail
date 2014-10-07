@@ -58,6 +58,7 @@
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/Loc.h"
 #include "rocrail/wrapper/public/FunCmd.h"
+#include "rocrail/wrapper/public/Car.h"
 #include "rocrail/wrapper/public/Turntable.h"
 #include "rocrail/wrapper/public/SelTab.h"
 #include "rocrail/wrapper/public/Text.h"
@@ -662,6 +663,21 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "operator[%s], [%s] [%s]",
           id, cmdStr, wAction.getparam(data->action) );
       OperatorOp.cmd( op, cmd );
+    }
+  }
+
+
+  /* car action */
+  if( StrOp.equals( wCar.name(), wAction.gettype( data->action ) ) ) {
+    const char* id = wAction.getoid( data->action );
+    iOCar car = ModelOp.getCar( model, id );
+    if( car != NULL ) {
+      iONode cmd = NodeOp.inst( wCar.name(), NULL, ELEMENT_NODE );
+      const char* cmdStr = wAction.getcmd( data->action );
+      wCar.setcmd( cmd, cmdStr );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car[%s], [%s] [%s]",
+          id, cmdStr, wAction.getparam(data->action) );
+      CarOp.cmd( car, cmd );
     }
   }
 

@@ -198,7 +198,21 @@ static Boolean _cmd( iOCar inst, iONode nodeA ) {
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "command %s:%s for car %s",
       nodename, (cmd==NULL?"-":cmd), wCar.getid( data->props ) );
 
-  if( wCar.getaddr(data->props) > 0 ) {
+  /* car command */
+  if( StrOp.equals(wCar.name(), nodename ) ) {
+    if( StrOp.equals(wCar.status_empty, cmd ) || StrOp.equals(wCar.status_loaded, cmd ) || StrOp.equals(wCar.status_maintenance, cmd ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set car [%s] status to [%s]", wCar.getid( data->props ), cmd);
+      wCar.setstatus(data->props, cmd);
+      /* Broadcast to clients. */
+      {
+        iONode clone = (iONode)NodeOp.base.clone( data->props );
+        AppOp.broadcastEvent( clone );
+      }
+    }
+  }
+
+  /* loco or function command in case the address > 0 */
+  else if( wCar.getaddr(data->props) > 0 ) {
     if( StrOp.equals(wLoc.name(), nodename ) ) {
       Boolean dir = wCar.isinvdir(data->props) ? !wLoc.isdir(nodeA):wLoc.isdir(nodeA);
       Boolean lights = wLoc.isfn(nodeA);
