@@ -38,6 +38,9 @@
 
 static int instCnt = 0;
 
+static void __informLocos(iOOperator inst);
+
+
 /** ----- OBase ----- */
 static void __del( void* inst ) {
   if( inst != NULL ) {
@@ -162,6 +165,7 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
       }
     }
     StrTokOp.base.del(tok);
+    __informLocos(inst);
   }
 
   else if( StrOp.equals( wOperator.emptycar, cmd ) ) {
@@ -179,6 +183,7 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
       }
     }
     StrTokOp.base.del(tok);
+    __informLocos(inst);
   }
 
   else if( StrOp.equals( wOperator.addcar, cmd ) ) {
@@ -206,6 +211,7 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
       iONode clone = (iONode)NodeOp.base.clone( data->props );
       AppOp.broadcastEvent( clone );
     }
+    __informLocos(inst);
   }
 
   else if( StrOp.equals( wOperator.removecar, cmd ) ) {
@@ -238,6 +244,7 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
       iONode clone = (iONode)NodeOp.base.clone( data->props );
       AppOp.broadcastEvent( clone );
     }
+    __informLocos(inst);
   }
 
   else {
@@ -271,7 +278,21 @@ static void _swapPlacing( iOOperator inst, iONode cmd ) {
 }
 
 
+static void __informLocos(iOOperator inst) {
+  iOOperatorData data = Data(inst);
+  /* Inform locos */
+  iOMap lcMap = ModelOp.getLocoMap(AppOp.getModel());
+  iOLoc lc = (iOLoc)MapOp.first( lcMap );
 
+  while( lc != NULL ) {
+    iONode props = LocOp.base.properties(lc);
+    if( StrOp.equals(wOperator.getid(data->props), wLoc.gettrain(props) )) {
+      LocOp.getLen(lc);
+      AppOp.broadcastEvent( (iONode)props->base.clone( props ) );
+    }
+    lc = (iOLoc)MapOp.next( lcMap );
+  };
+}
 
 /**  */
 static void _modify( struct OOperator* inst ,iONode props ) {
@@ -290,20 +311,7 @@ static void _modify( struct OOperator* inst ,iONode props ) {
   }
 
   /* Inform locos */
-  {
-    iOMap lcMap = ModelOp.getLocoMap(AppOp.getModel());
-    iOLoc lc = (iOLoc)MapOp.first( lcMap );
-
-    while( lc != NULL ) {
-      iONode props = LocOp.base.properties(lc);
-      if( StrOp.equals(wOperator.getid(data->props), wLoc.gettrain(props) )) {
-        LocOp.getLen(lc);
-        AppOp.broadcastEvent( (iONode)props->base.clone( props ) );
-      }
-      lc = (iOLoc)MapOp.next( lcMap );
-    };
-  }
-
+  __informLocos(inst);
 
   /* Broadcast to clients. */
   {
