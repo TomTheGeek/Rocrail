@@ -2758,6 +2758,8 @@
         <var name="carids" vt="string" defval="" range="*" remark="Comma separated car IDs"/>
         <const name="addcar" vt="string" val="addcar"/>
         <const name="removecar" vt="string" val="removecar"/>
+        <const name="emptycar" vt="string" val="emptycar"/>
+        <const name="loadcar" vt="string" val="loadcar"/>
         <var name="cmd" vt="string" defval="NULL" range="*" remark="Operator command."/>
         <var name="cargo" vt="string" defval="none"/>
         <var name="class" vt="string" defval="" range="*"/>

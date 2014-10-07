@@ -34,6 +34,7 @@
 
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/Loc.h"
+#include "rocrail/wrapper/public/Car.h"
 
 static int instCnt = 0;
 
@@ -146,8 +147,42 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
     OperatorOp.setLocality(inst, wOperator.getlocation(nodeA));
   }
 
+  else if( StrOp.equals( wOperator.emptycar, cmd ) ) {
+    /* empty the carids */
+    iOStrTok tok = StrTokOp.inst(wOperator.getcarids(nodeA), ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* carid = StrTokOp.nextToken(tok);
+      if( OperatorOp.hasCar(inst, carid) ) {
+        iOCar car = ModelOp.getCar(AppOp.getModel(), carid);
+        if( car != NULL ) {
+          iONode cmd = NodeOp.inst( wCar.name(), NULL, ELEMENT_NODE );
+          wCar.setcmd( cmd, wCar.status_empty );
+          CarOp.cmd( car, cmd );
+        }
+      }
+    }
+    StrTokOp.base.del(tok);
+  }
+
+  else if( StrOp.equals( wOperator.emptycar, cmd ) ) {
+    /* load the carids */
+    iOStrTok tok = StrTokOp.inst(wOperator.getcarids(nodeA), ',');
+    while( StrTokOp.hasMoreTokens(tok) ) {
+      const char* carid = StrTokOp.nextToken(tok);
+      if( OperatorOp.hasCar(inst, carid) ) {
+        iOCar car = ModelOp.getCar(AppOp.getModel(), carid);
+        if( car != NULL ) {
+          iONode cmd = NodeOp.inst( wCar.name(), NULL, ELEMENT_NODE );
+          wCar.setcmd( cmd, wCar.status_loaded );
+          CarOp.cmd( car, cmd );
+        }
+      }
+    }
+    StrTokOp.base.del(tok);
+  }
+
   else if( StrOp.equals( wOperator.addcar, cmd ) ) {
-    /* ToDo: add the carids */
+    /* add the carids */
     iOStrTok tok = StrTokOp.inst(wOperator.getcarids(nodeA), ',');
     while( StrTokOp.hasMoreTokens(tok) ) {
       const char* carid = StrTokOp.nextToken(tok);
@@ -174,7 +209,7 @@ static Boolean _cmd( iOOperator inst, iONode nodeA ) {
   }
 
   else if( StrOp.equals( wOperator.removecar, cmd ) ) {
-    /* ToDo: remove the carids */
+    /* remove the carids */
     iOStrTok tok = StrTokOp.inst(wOperator.getcarids(nodeA), ',');
     while( StrTokOp.hasMoreTokens(tok) ) {
       const char* carid = StrTokOp.nextToken(tok);

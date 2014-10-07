@@ -1162,6 +1162,8 @@ void TimedActions::initCommands()
     case 16: // operator
       m_Command->Append(wxString( wOperator.addcar, wxConvUTF8));
       m_Command->Append(wxString( wOperator.removecar, wxConvUTF8));
+      m_Command->Append(wxString( wOperator.emptycar, wxConvUTF8));
+      m_Command->Append(wxString( wOperator.loadcar, wxConvUTF8));
       break;
     case 17: // car
       m_Command->Append(wxString( wCar.status_empty, wxConvUTF8));
