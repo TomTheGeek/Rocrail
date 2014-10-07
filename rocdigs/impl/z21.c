@@ -410,20 +410,20 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[4] = OPC_IMM_PACKET;
     packet[5] = 0x0B;
     packet[6] = 0x7F;
-    packet[7] = (longaddr ? 0x44:0x34); // REPS
+    packet[7] = (longaddr ? 0x54:0x44); // LEN, REPS
     packet[8] = 0x20; // DHI
     if( longaddr ) {
       packet[9]  = 0xC0 | (addr >> 8); // IM1 = (lange) Lokadresse 1234 HIGH BYTE
       packet[10] = addr & 0xFF;  // IM2 = (lange) Lokadresse 1234 LOW BYTE
-      packet[11] = 0xDD; // IM2 = Binary state Control - short form
-      packet[12] = nr + (val?0x80:0x00); // IM3 = (nr | val)
+      packet[11] = 0xC0; // IM3 = Binary state Control - long form
+      packet[12] = (nr & 0x7F) + (val?0x80:0x00); // IM4 = (nr 7 low bits | val)
       packet[13] = nr >> 7; // IM5 = nr 8 high bits
     }
     else {
       packet[9]  = addr; // IM1 = (kurze) Lokadresse 3
-      packet[10] = 0xDD; // IM2 = Binary state Control - short form
-      packet[11] = nr | (val?0x80:0x00); // IM3 = (nr | val)
-      packet[12] = nr >> 7; // IM5 = nr 8 high bits
+      packet[10] = 0xC0; // IM2 = Binary state Control - long form
+      packet[11] = (nr & 0x7F) | (val?0x80:0x00); // IM3 = (nr 7 low bits | val)
+      packet[12] = nr >> 7; // IM4 = nr 8 high bits
       packet[13] = 0; // IM5
     }
     packet[14] = 0;
