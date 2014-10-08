@@ -29106,4 +29106,7 @@
     <en_GB txt="V0 on swap"/>
     <nl txt="Snelheid 0 bij omkeren"/>
   </Msg>
+  <Msg id="swapstraight">
+    <en txt="Swap straight"/>
+  </Msg>
 </Messages>

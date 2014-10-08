@@ -282,6 +282,7 @@ public:
     wxCheckBox* m_Road;
     wxCheckBox* m_Show;
     wxCheckBox* m_RectCrossing;
+    wxCheckBox* m_SwapStraight;
     wxButton* m_Actions;
     wxPanel* m_LocationPanel;
     wxStaticText* m_LabelX;

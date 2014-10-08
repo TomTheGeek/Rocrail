@@ -644,8 +644,10 @@ static Boolean _hasThrownSwitch( iORoute inst ) {
           return True;
         }
         else if( !StrOp.equals( wSwitch.straight, wSwitchCmd.getcmd(sw) ) ) {
-          /* everything not straight on all others -> reduce speed */
-          return True;
+          if( !wSwitch.isswapstraight(swProps) ) {
+            /* everything not straight on all others -> reduce speed */
+            return True;
+          }
         }
       }
       sw = wRoute.nextswcmd( o->props, sw );

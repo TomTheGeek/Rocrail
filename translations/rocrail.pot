@@ -7511,3 +7511,9 @@ msgstr ""
 msgid "V0 on swap"
 msgstr ""
 
+#. 
+# id="swapstraight"
+#, c-format
+msgid "Swap straight"
+msgstr ""
+
