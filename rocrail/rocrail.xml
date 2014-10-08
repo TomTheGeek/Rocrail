@@ -1495,6 +1495,9 @@
     <fun name="hasThrownSwitch" vt="Boolean">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>
+    <fun name="hasSwitchCommands" vt="Boolean">
+      <param name="inst" vt="this" remark="Route instance"/>
+    </fun>
     <fun name="isSet" vt="Boolean" remark="true if all turnouts are set">
       <param name="inst" vt="this" remark="Route instance"/>
     </fun>

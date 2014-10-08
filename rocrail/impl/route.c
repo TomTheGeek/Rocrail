@@ -614,6 +614,14 @@ static Boolean _isSwapPost( iORoute inst ) {
   return wRoute.isswappost( o->props );
 }
 
+
+static Boolean _hasSwitchCommands( iORoute inst ) {
+  iORouteData data = Data(inst);
+  iONode        sw = wRoute.getswcmd( data->props );
+  return (sw != NULL ? True:False);
+}
+
+
 static Boolean _hasThrownSwitch( iORoute inst ) {
   iORouteData o = Data(inst);
   iOModel    model = AppOp.getModel(  );
@@ -1322,9 +1330,11 @@ static Boolean _lock( iORoute inst, const char* id, Boolean reverse, Boolean loc
     }
 
 
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Route [%s] locked by [%s]", RouteOp.getId(inst), o->lockedId );
     return True;
   }
   else if( StrOp.equals( id, o->lockedId ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Route [%s] still locked by [%s]", RouteOp.getId(inst), o->lockedId );
     return True;
   }
   else {
