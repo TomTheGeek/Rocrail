@@ -29109,4 +29109,7 @@
   <Msg id="swapstraight">
     <en txt="Swap straight"/>
   </Msg>
+  <Msg id="freeblocks">
+    <en txt="Free blocks"/>
+  </Msg>
 </Messages>

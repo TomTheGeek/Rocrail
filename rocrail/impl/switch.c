@@ -1841,11 +1841,29 @@ static void __accThread( void* threadinst ) {
 
     if( (data->lockedId == NULL || StrOp.len(data->lockedId) == 0) && wAccessoryCtrl.isactive(data->accctrl) && wAccessoryCtrl.getinterval(data->accctrl) > 0 ) {
       if( elapsedinterval >= wAccessoryCtrl.getinterval(data->accctrl) ) {
+        Boolean allBlocksFree = True;
+
+        if( StrOp.len( wAccessoryCtrl.getfreeblocks(data->accctrl) ) >= 0 ) {
+          iOStrTok tok = StrTokOp.inst( wAccessoryCtrl.getfreeblocks(data->accctrl) , ',' );
+          while( StrTokOp.hasMoreTokens(tok) ) {
+            const char* blockid = StrTokOp.nextToken( tok );
+            iIBlockBase block = ModelOp.getBlock(AppOp.getModel(), blockid);
+            if( block != NULL) {
+              if( !block->isFree(block, NULL) ) {
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "block %s for accessory \"%s\" is not free", blockid, data->id );
+                allBlocksFree = False;
+                break;
+              }
+            }
+          }
+          StrTokOp.base.del(tok);
+        }
+
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "activating accessory \"%s\"...", data->id );
 
         /* try to lock the routes */
         const char* routeid = NULL;
-        if( StrOp.len( wAccessoryCtrl.getlockroutes(data->accctrl) ) >= 0 ) {
+        if( allBlocksFree ) {
           iOStrTok tok = StrTokOp.inst( wAccessoryCtrl.getlockroutes(data->accctrl) , ',' );
           Boolean allRouteesLocked = True;
           /* iterate all routes to lock */
@@ -1909,6 +1927,10 @@ static void __accThread( void* threadinst ) {
             /* reset interval */
             elapsedinterval = 0;
           }
+        }
+        else {
+          /* reset interval */
+          elapsedinterval = 0;
         }
 
 

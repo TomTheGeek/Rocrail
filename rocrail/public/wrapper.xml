@@ -1749,6 +1749,7 @@
           <var name="interval" vt="int" defval="0" remark="Interval in seconds."/>
           <var name="delay" vt="int" defval="0" remark="Seconds to elaps to go back to the closed position."/>
           <var name="lockroutes" vt="string" defval="" range="Routes to lock at open, and unlock at close."/>
+          <var name="freeblocks" vt="string" defval="" range="Blocks which must be free at open and close."/>
         </accessoryctrl>
 
       </sw>

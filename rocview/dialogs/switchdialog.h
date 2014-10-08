@@ -396,6 +396,8 @@ public:
     wxStaticText* m_labCtrlDelaySec;
     wxStaticText* m_labCtrlRoutes;
     wxTextCtrl* m_CtrlRoutes;
+    wxStaticText* m_labCtrlBlocks;
+    wxTextCtrl* m_CtrlBlocks;
     wxPanel* m_FrogPanel;
     wxStaticText* m_labFrogIID;
     wxTextCtrl* m_FrogIID;

@@ -7517,3 +7517,9 @@ msgstr ""
 msgid "Swap straight"
 msgstr ""
 
+#. 
+# id="freeblocks"
+#, c-format
+msgid "Free blocks"
+msgstr ""
+
