@@ -64,11 +64,17 @@ Boolean initializeDestination( iOLcDriver inst, iIBlockBase block, iORoute stree
         TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "not locking route [%s] for automobile [%s]",
             street->getId( street ), data->loc->getId( data->loc ) );
 
-        data->gotoBlock = data->loc->getNextGotoBlock( data->loc, data->gotoBlock );
-        if( data->gotoBlock == NULL) {
-          /* stop after reaching the last gotoBlock */
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stop after reaching the last gotoBlock");
-          data->run = False;
+        if( data->gotoBlock != NULL && StrOp.equals( data->gotoBlock, block->base.id( block ) ) ) {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+                         "GotoBlock %s found for \"%s\"",
+                         data->gotoBlock, data->loc->getId( data->loc ) );
+
+          data->gotoBlock = data->loc->getNextGotoBlock( data->loc, data->gotoBlock );
+          if( data->gotoBlock == NULL) {
+            /* stop after reaching the last gotoBlock */
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "stop after reaching the last gotoBlock");
+            data->run = False;
+          }
         }
         data->slowdown4route = False;
         return True;
