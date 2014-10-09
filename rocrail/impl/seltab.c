@@ -458,17 +458,21 @@ static void _fbEvent( obj inst ,Boolean state ,const char* id ,const char* ident
           iONode fbevt = (iONode)MapOp.get( data->fbEvents, key );
 
           if( fbevt == NULL ) {
-            Boolean fromReverseSide = False;
+            Boolean blockSide = False;
+            if( data->byRouteId != NULL && StrOp.len(data->byRouteId) > 0 ) {
+              iORoute byRoute = ModelOp.getRoute( AppOp.getModel(), data->byRouteId );
+              blockSide = RouteOp.getToBlockSide(byRoute);
+            }
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "seltab [%s] no event found for fromBlockId [%s], try to find one for all...",
                 wSelTab.getid( data->props ), fromBlockId?fromBlockId:"?" );
 
-            /* TODO: check running direction -> from_all or from_all_reverse */
+            /* check running direction -> from_all or from_all_reverse */
             TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "seltab [%s] fromBlockId[%s] id[%s] ident[%s] inst[%08.8X] data->reverse[%s]", wSelTab.getid( data->props ), fromBlockId, id, ident, inst, data->reverse?"True":"False" );
-            if( data->reverse ) {
-              StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
+            if( blockSide ) {
+              StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all );
             }
             else {
-              StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all );
+              StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
             }
             fbevt = (iONode)MapOp.get( data->fbEvents, key );
           }
@@ -1045,7 +1049,9 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Selectiontable [%s] is locked by [%s] with %d routes, new is [%s].",
           inst->base.id( inst ), data->lockedId, ListOp.size(data->lockedRouteList), routeid );
       if( wSelTab.ismanager(data->props) ) {
-        data->reverse = reverse;
+        data->reverse     = reverse;
+        data->fromBlockId = blockid;
+        data->byRouteId   = routeid;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "seltab lock: inst[%08.8X] data->reverse[%s] reverse[%s]", inst, data->reverse?"True":"False", reverse?"True":"False" );
       }
     }
@@ -1062,7 +1068,9 @@ static Boolean _lock( iIBlockBase inst, const char* id, const char* blockid, con
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "seltab lock: inst[%08.8X] reverse[%s] id[%s] blockid[%s] routeid[%s] manager[%s]", inst, reverse?"True":"False", id, blockid, routeid, manager?"True":"False" );
 
       if( wSelTab.ismanager(data->props) ) {
-        data->reverse = reverse;
+        data->reverse     = reverse;
+        data->fromBlockId = blockid;
+        data->byRouteId   = routeid;
         TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "seltab lock: inst[%08.8X] data->reverse[%s] reverse[%s]", inst, data->reverse?"True":"False", reverse?"True":"False" );
       }
 
