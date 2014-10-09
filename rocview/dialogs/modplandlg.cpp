@@ -73,7 +73,7 @@ ModPlanDlg::ModPlanDlg( wxWindow* parent, iONode p_Props )
   m_Props = p_Props;
   m_TabAlign = wxGetApp().getTabAlign();
   Init();
-  Create(parent, -1, wxGetApp().getMsg("modplan") );
+  Create(parent, -1, wxGetApp().getMsg("modpanel") );
 
   initLabels();
   initValues();
