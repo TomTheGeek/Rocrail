@@ -2287,11 +2287,33 @@ void SymbolRenderer::drawSelTab( wxPaintDC& dc, bool occupied, const char* ori )
 
   wxFont* font = setFont(m_iTextps);
 
+  /* center the blocktext */
+  double width = 0;
+  double height = 0;
+  double descent = 0;
+  double externalLeading = 0;
+  if( m_UseGC )
+    m_GC->GetTextExtent( wxString(m_Label,wxConvUTF8).Trim(),(wxDouble*)&width,(wxDouble*)&height,(wxDouble*)&descent,(wxDouble*)&externalLeading);
+  else {
+    wxCoord w;
+    wxCoord h;
+    dc.GetTextExtent(wxString(m_Label,wxConvUTF8).Trim(), &w, &h, 0,0, font);
+    width  = w;
+    height = h;
+  }
+
   if( StrOp.equals( ori, wItem.south ) ) {
     drawString( wxString(m_Label,wxConvUTF8), 32-5, 3, 270.0, false );
   }
   else if( StrOp.equals( ori, wItem.north ) ) {
     drawString( wxString(m_Label,wxConvUTF8), 5, (32 * nrtracks)-3, 90.0, false );
+  }
+  else {
+#ifdef __WIN32__
+      drawString( wxString(m_Label,wxConvUTF8), 9, 8, 0.0, false );
+#else
+      drawString( wxString(m_Label,wxConvUTF8), ((32*m_cx-width)/2), (32-height)/2, 0.0, false );
+#endif
   }
 
   delete font;
