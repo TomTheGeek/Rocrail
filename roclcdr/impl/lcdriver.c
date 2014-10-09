@@ -703,6 +703,8 @@ static iOLcDriver _inst( const iOLoc loc, const iOModel model, const iOTrace tra
   data->stopnonecommuter  = wCtrl.isstopnonecommuter(ctrl);
   data->stopatin4gomanual = wCtrl.isstopatin4gomanual(ctrl);
 
+  data->notlocksimpleroutes4automobiles = wCtrl.isnotlocksimpleroutes4automobiles(ctrl);
+
   instCnt++;
 
   SystemOp.inst();

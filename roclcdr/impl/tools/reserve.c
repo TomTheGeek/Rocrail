@@ -120,7 +120,7 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
       if( initializeGroup( inst, nextBlock, NULL ) &&
           nextBlock->lock( nextBlock, data->loc->getId( data->loc ), fromBlock->base.id(fromBlock), nextRoute->base.id(nextRoute), False, True, !fromto, indelay ) )
       {
-        if( StrOp.equals( wLoc.engine_automobile, data->loc->getEngine(data->loc)) && !nextRoute->hasSwitchCommands(nextRoute) ) {
+        if( data->notlocksimpleroutes4automobiles && StrOp.equals( wLoc.engine_automobile, data->loc->getEngine(data->loc)) && !nextRoute->hasSwitchCommands(nextRoute) ) {
           TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "not locking route [%s] for automobile [%s]",
               nextRoute->getId( nextRoute ), data->loc->getId( data->loc ) );
         }

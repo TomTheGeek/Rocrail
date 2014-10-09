@@ -29115,4 +29115,7 @@
   <Msg id="modroutes">
     <en txt="Module routes"/>
   </Msg>
+  <Msg id="notlocksimpleroutes4automobiles">
+    <en txt="Not lock simple routes for automobiles"/>
+  </Msg>
 </Messages>

@@ -7529,3 +7529,9 @@ msgstr ""
 msgid "Module routes"
 msgstr ""
 
+#. 
+# id="notlocksimpleroutes4automobiles"
+#, c-format
+msgid "Not lock simple routes for automobiles"
+msgstr ""
+
