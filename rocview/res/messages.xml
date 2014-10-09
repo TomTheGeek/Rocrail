@@ -2900,7 +2900,7 @@
   </Msg>
   <Msg id="sensorfromblock">
     <de txt="Rückmelder von Block %s aus:"/>
-    <en txt="Sensors comming from block %s:"/>
+    <en txt="Sensors comming from block %s:" alttxt="Sensors coming from block %s:"/>
     <nl txt="Melders vanuit blok %s:"/>
     <sv txt="Sensor från block %s:"/>
     <fr txt="Détecteurs en provenance du bloc %s:"/>
