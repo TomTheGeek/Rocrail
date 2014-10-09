@@ -3266,7 +3266,7 @@ static iORoute _getRoute( iOModel inst, const char* id ) {
       route = (iORoute)MapOp.get( o->routeMap, routeID );
     }
     else {
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "route [%s] undefined", id );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "route [%s] undefined", id );
     }
   }
   else if( route == NULL ) {

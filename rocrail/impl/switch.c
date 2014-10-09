@@ -1929,8 +1929,8 @@ static void __accThread( void* threadinst ) {
           }
         }
         else {
-          /* reset interval */
-          elapsedinterval = 0;
+          /* random interval */
+          elapsedinterval = rand() % wAccessoryCtrl.getinterval(data->accctrl);
         }
 
 
