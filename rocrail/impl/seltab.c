@@ -441,7 +441,7 @@ static void _fbEvent( obj inst ,Boolean state ,const char* id ,const char* ident
     __evaluatePosition(inst);
 
   }
-  else if( wSelTab.issharedfb(data->props) ) {
+  else if( wSelTab.issharedfb(data->props) && !data->pending ) {
     /* dispatch event to the active track block */
     iONode pos = wSelTab.getseltabpos( data->props );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dispatching [%s]", id);
@@ -795,7 +795,7 @@ static struct OSelTab* _inst( iONode ini ) {
 
   data->muxLock = MutexOp.inst( NULL, True );
   data->fbEvents = MapOp.inst();
-  data->lockedId = wSelTab.getlocid(ini);
+  /*data->lockedId = wSelTab.getlocid(ini);*/
   data->lockedRouteList = ListOp.inst();
 
   NodeOp.removeAttrByName(data->props, "cmd");
