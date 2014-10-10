@@ -602,5 +602,7 @@ void GenericCtrlDlg::OnHelpClick( wxCommandEvent& event )
     wxGetApp().openLink( "roco-cs" );
   else if( StrOp.equals( wDigInt.easydcc, wDigInt.getlib( m_Props ) ) )
     wxGetApp().openLink( "easydcc" );
+  else if( StrOp.equals( wDigInt.inter10, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "inter10" );
 }
 
