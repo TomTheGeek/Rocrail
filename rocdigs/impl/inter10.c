@@ -179,8 +179,6 @@ static void __RFIReader( void* threadinst ) {
 
   /* IO buffer */
   byte buffer[64];
-  /* already sended RIF's */
-  iOMap map = MapOp.inst();
 
   data->initOK = False;
 
@@ -189,6 +187,7 @@ static void __RFIReader( void* threadinst ) {
 
     if( !data->initOK ) {
       buffer[0] = 0x25; /* Interface Start */
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "start mode 0x25...");
       data->initOK = SerialOp.write(data->serial, (char*)buffer, 1 );
       __flushPort(pInter10);
       if( !data->initOK ) {
@@ -199,67 +198,54 @@ static void __RFIReader( void* threadinst ) {
 
 
     if( SerialOp.available(data->serial) )
-      ok = SerialOp.read( data->serial, (char*)buffer, 2 );
+      ok = SerialOp.read( data->serial, (char*)buffer, 1 );
     else
       continue;
 
-    if( ok && buffer[1] == 0x70 ) {
-      /* reader is occupied and will send this message every cycle until no longer occupied */
-      ok = SerialOp.read( data->serial, (char*)buffer+2, 1 );
+    if( ok && buffer[0] < 100 ) {
+      /* RFID Data */
+      ok = SerialOp.read( data->serial, (char*)buffer+1, 5 );
       if( ok ) {
-        /* */
         int reader = buffer[0];
-        int rfid  = buffer[2];
         char ident[32];
-        /* create a key: */
-        char* key = StrOp.fmt( "%d_%d", reader, rfid );
-
-        /* check if key is already in map: every read cycle is the occupancy send */
-        if( MapOp.get( map, key ) == NULL ) {
-          iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-          MapOp.put( map, key, (obj)"RFI" );
-
-          wFeedback.setstate( evt, True );
-          wFeedback.setaddr( evt, reader );
-          wFeedback.setfbtype( evt, wFeedback.fbtype_rfid );
-          StrOp.fmtb(ident, "%d", rfid);
-          wFeedback.setidentifier( evt, ident );
-          if( data->iid != NULL )
-            wFeedback.setiid( evt, data->iid );
-
-          data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
-        }
-        else {
-          /* ignore event; already sended */
-        }
-        StrOp.free( key);
+        iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
+        wFeedback.setstate( evt, True );
+        wFeedback.setaddr( evt, reader );
+        wFeedback.setfbtype( evt, wFeedback.fbtype_rfid );
+        StrOp.fmtb(ident, "%d.%d.%d.%d.%d", buffer[1], buffer[2], buffer[3], buffer[4], buffer[5] );
+        wFeedback.setidentifier( evt, ident );
+        if( data->iid != NULL )
+          wFeedback.setiid( evt, data->iid );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reader %d RFID: %d.%d.%d.%d.%d", reader, buffer[1], buffer[2], buffer[3], buffer[4], buffer[5]);
+        data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
       }
     }
-    else if( ok && buffer[1] == 0x80 ) {
-      /* reader is no longer occupied */
-      ok = SerialOp.read( data->serial, (char*)buffer+2, 1 );
+    else if( ok && buffer[1] == 0x70 ) {
+      /* reader is occupied and will send this message every cycle until no longer occupied */
+      ok = SerialOp.read( data->serial, (char*)buffer+1, 1 );
       if( ok ) {
-        /* */
-        int reader = buffer[0];
-        int ident  = buffer[2];
+        int reader = buffer[1];
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reader %d stil occupied", reader);
+      }
+    }
+    else if( ok && buffer[0] == 0x80 ) {
+      /* reader is no longer occupied */
+      ok = SerialOp.read( data->serial, (char*)buffer+1, 1 );
+      if( ok ) {
+        int reader = buffer[1];
         iONode evt = NodeOp.inst( wFeedback.name(), NULL, ELEMENT_NODE );
-        char* key = StrOp.fmt( "%d_%d", reader, ident );
-        /* check if key is already in map */
-        if( MapOp.get( map, key ) != NULL ) {
-          MapOp.remove( map, key );
-        }
-
         wFeedback.setstate( evt, False );
         wFeedback.setaddr( evt, reader );
         wFeedback.setfbtype( evt, wFeedback.fbtype_rfid );
         wFeedback.setidentifier( evt, 0 );
         if( data->iid != NULL )
           wFeedback.setiid( evt, data->iid );
-
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "reader %d no longer occupied", reader);
         data->listenerFun( data->listenerObj, evt, TRCLEVEL_INFO );
-
-        StrOp.free( key);
       }
+    }
+    else {
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "unhandled start byte: 0x%02X", buffer[0]);
     }
 
   }
@@ -303,16 +289,17 @@ static struct OInter10* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inter10 %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "mode: event started by PC (J2 + J3 open)" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Mode   = 0x25; jumpers J2 and J3 must be open" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "IID    = %s", wDigInt.getiid(ini) != NULL ? wDigInt.getiid(ini):"" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Device = %s", data->device);
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "BPS    = %d", data->bps);
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "inter10[%s]: %s,%d",
-    wDigInt.getiid( ini ) != NULL ? wDigInt.getiid( ini ):"", data->device, data->bps);
 
   data->serial = SerialOp.inst( data->device );
   SerialOp.setFlow( data->serial, -1 );
   SerialOp.setLine( data->serial, data->bps, 8, 1, none, wDigInt.isrtsdisabled( ini ) );
   /*SerialOp.setTimeout( data->serial, data->timeout, 0 );*/
+  SerialOp.setDTR(data->serial, True);   // pin 1 in DIN8; on main connector, this is DTR
   data->serialOK = SerialOp.open( data->serial );
 
   if( data->serialOK ) {
