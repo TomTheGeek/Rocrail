@@ -913,7 +913,6 @@
       <var name="v0atpoweron" vt="bool" defval="false"/>
       <var name="useonlyfirstident" vt="bool" defval="true"/>
       <var name="userandomrate" vt="bool" defval="false"/>
-      <var name="notlocksimpleroutes4automobiles" vt="bool" defval="false"/>
     </ctrl>
     <anaopt remark="Analyser options." wrappername="AnaOpt">
       <!-- option -->

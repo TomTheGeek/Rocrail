@@ -393,7 +393,6 @@ public:
     wxCheckBox* m_ResetFxSp;
     wxCheckBox* m_ProcessSignalEvents;
     wxCheckBox* m_UseRandomRate;
-    wxCheckBox* m_NotLockSimpleRoutes4Automobiles;
     wxPanel* m_ControllersPanel;
     wxListBox* m_Controllers;
     wxButton* m_ControllerDelete;

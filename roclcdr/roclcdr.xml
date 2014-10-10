@@ -102,7 +102,6 @@
       <var name="stopatin4gomanual" vt="Boolean"/>
       <var name="forceDeparture" vt="Boolean"/>
       <var name="didFree" vt="Boolean"/>
-      <var name="notlocksimpleroutes4automobiles" vt="Boolean"/>
     </data>
   </object>
 

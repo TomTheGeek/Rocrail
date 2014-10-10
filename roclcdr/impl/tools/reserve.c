@@ -120,27 +120,21 @@ void reserveSecondNextBlock( iOLcDriver inst, const char* gotoBlock, iIBlockBase
       if( initializeGroup( inst, nextBlock, NULL ) &&
           nextBlock->lock( nextBlock, data->loc->getId( data->loc ), fromBlock->base.id(fromBlock), nextRoute->base.id(nextRoute), False, True, !fromto, indelay ) )
       {
-        if( data->notlocksimpleroutes4automobiles && StrOp.equals( wLoc.engine_automobile, data->loc->getEngine(data->loc)) && !nextRoute->hasSwitchCommands(nextRoute) ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "not locking route [%s] for automobile [%s]",
-              nextRoute->getId( nextRoute ), data->loc->getId( data->loc ) );
+        if( nextRoute->lock( nextRoute, data->loc->getId( data->loc ), !fromto, True ) ) {
+          *toBlock = nextBlock;
+          *toRoute = nextRoute;
+          /* TODO: test if this will not hold other actions... */
+          /* TODO: check if the destination is the same before fire a go command for the street */
+          nextRoute->go(nextRoute);
         }
         else {
-          if( nextRoute->lock( nextRoute, data->loc->getId( data->loc ), !fromto, True ) ) {
-            *toBlock = nextBlock;
-            *toRoute = nextRoute;
-            /* TODO: test if this will not hold other actions... */
-            /* TODO: check if the destination is the same before fire a go command for the street */
-            nextRoute->go(nextRoute);
-          }
-          else {
-            nextBlock->unLock( nextBlock, data->loc->getId( data->loc ), NULL );
-            *toBlock = NULL;
-            *toRoute = NULL;
-            TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                         "could not lock [%s]/[%s] for [%s]",
-                         nextBlock->base.id(nextBlock), nextRoute->getId(nextRoute),
-                         data->loc->getId( data->loc ) );
-          }
+          nextBlock->unLock( nextBlock, data->loc->getId( data->loc ), NULL );
+          *toBlock = NULL;
+          *toRoute = NULL;
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "could not lock [%s]/[%s] for [%s]",
+                       nextBlock->base.id(nextBlock), nextRoute->getId(nextRoute),
+                       data->loc->getId( data->loc ) );
         }
       }
 
