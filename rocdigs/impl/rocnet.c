@@ -446,6 +446,9 @@ static iONode __translate( iOrocNet inst, iONode node ) {
     byte   dir = wLoc.isdir( node ) ? RN_MOBILE_DIR_FORWARDS:0;
     byte  prot = __getProtocol(node);
 
+    if( bus == 0 && data->lcbus > 0 )
+      bus = data->lcbus;
+
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loc %d:%d V=%d lights=%s dir=%s spcnt=%d",
         bus, addr, V, fn?"on":"off", dir?"forwards":"reverse", spcnt );
 
@@ -511,6 +514,9 @@ static iONode __translate( iOrocNet inst, iONode node ) {
       if( NodeOp.getBool(node, key, False) )
         fb3 |= (1 << i);
     }
+
+    if( bus == 0 && data->lcbus > 0 )
+      bus = data->lcbus;
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "lc=%d:%d fb1=0x%02X fb2=0x%02X fb3=0x%02X changed=%d",
         bus, addr, fb1, fb2, fb3, wFunCmd.getfnchanged(node));
@@ -1909,8 +1915,9 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
     data->rnini = NodeOp.inst( wRocNet.name(), ini, ELEMENT_NODE );
     NodeOp.addChild( ini, data->rnini );
   }
-  data->crc = wRocNet.iscrc(data->rnini);
-  data->sack = wRocNet.issack(data->rnini);
+  data->crc   = wRocNet.iscrc(data->rnini);
+  data->sack  = wRocNet.issack(data->rnini);
+  data->lcbus = wRocNet.getlcbus(data->rnini);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Rocnet %d.%d.%d", vmajor, vminor, patch );
@@ -1920,6 +1927,7 @@ static struct OrocNet* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  secure ack   = %s", data->sack ? "on":"off" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  watchdog     = %s", wRocNet.iswd(data->rnini) ? "on":"off" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  shutdown all = %s", wRocNet.isshutdownall(data->rnini) ? "on":"off" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  loco bus     = %d", data->lcbus );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 

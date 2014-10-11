@@ -72,6 +72,11 @@ void RocNetDlg::initLabels() {
   m_Sack->SetLabel(wxGetApp().getMsg( "secureack" ));
   m_ShutdownAll->SetLabel(wxGetApp().getMsg( "shutdownall" ));
 
+  m_OptionsBox->GetStaticBox()->SetLabel(wxGetApp().getMsg( "options" ));
+
+  m_LocoOptions->GetStaticBox()->SetLabel(wxGetApp().getMsg( "loc" ));
+  m_labLocoBus->SetLabel(wxGetApp().getMsg( "bus" ));
+
   m_NodeList->InsertColumn(0, wxGetApp().getMsg( "id" ), wxLIST_FORMAT_RIGHT );
   m_NodeList->InsertColumn(1, wxGetApp().getMsg( "vendor" ), wxLIST_FORMAT_LEFT );
   m_NodeList->InsertColumn(2, wxGetApp().getMsg( "product" ), wxLIST_FORMAT_LEFT );
@@ -139,6 +144,7 @@ void RocNetDlg::initValues() {
   m_Watchdog->SetValue( wRocNet.iswd(rnini) ? true:false);
   m_Address->SetValue( wxString( wRocNet.getaddr( rnini ), wxConvUTF8 ) );
   m_Port->SetValue( wRocNet.getport( rnini ) );
+  m_LocoBus->SetValue( wRocNet.getlcbus( rnini ) );
 
   initNodeList();
 }
@@ -177,6 +183,8 @@ void RocNetDlg::evaluate() {
   wRocNet.setwd(rnini, m_Watchdog->IsChecked()?True:False);
   wRocNet.setsack(rnini, m_Sack->IsChecked()?True:False);
   wRocNet.setshutdownall(rnini, m_ShutdownAll->IsChecked()?True:False);
+
+  wRocNet.setlcbus( rnini, m_LocoBus->GetValue() );
 }
 
 

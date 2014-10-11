@@ -882,6 +882,7 @@
       <var name="sack" vt="Boolean"/>
       <var name="power" vt="Boolean"/>
       <var name="sensor" vt="Boolean"/>
+      <var name="lcbus" vt="int"/>
     </data>
   </object>
 

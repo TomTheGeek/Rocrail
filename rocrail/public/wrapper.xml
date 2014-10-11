@@ -663,6 +663,7 @@
         <var name="wd" vt="bool" defval="false"/>
         <var name="sack" vt="bool" defval="false"/>
         <var name="shutdownall" vt="bool" defval="false"/>
+        <var name="lcbus" vt="int" defval="0" range="0-*" remark="Default loco bus if greater then zero."/>
         <rocnetnodeoptions wrappername="RocNetNodeOptions" cardinality="1">
           <var name="sack" vt="bool" defval="false"/>
           <var name="rfid" vt="bool" defval="false"/>
