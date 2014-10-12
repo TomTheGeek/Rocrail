@@ -13242,7 +13242,7 @@
     <ro txt="Plasament swop"/>
     <sr_latin txt="Zameni postavke"/>
     <zh_CN txt="换位"/>
-    <sl txt="Zamenjaj mesto"/>
+    <sl txt="Zamenjaj postavitev"/>
     <pt_BR txt="Inverter inserção"/>
     <fi txt="Vaihda sijoitusta"/>
     <pl txt="Zmiana położenia"/>
@@ -21795,7 +21795,7 @@
     <it txt="Invertire lato di ingresso del blocco"/>
     <sr_latin txt="Zameni ulaznu stranu bloka"/>
     <zh_CN txt="交换区间进入另一端"/>
-    <sl txt="Zamenjan stran vhoda v odseku"/>
+    <sl txt="Zamenjaj stran vhoda v odseku"/>
     <en_GB txt="Swap block enter side"/>
     <da txt="Skift indgangsside til blok"/>
     <pt_BR txt="Inverter lado de entrada do bloco"/>
@@ -29006,7 +29006,7 @@
   <Msg id="showroute4switch">
     <en txt="Show routes on switches"/>
     <nl txt="Toon rijwegen over wissels"/>
-    <sl txt="Prikaži smeri za kretnice"/>
+    <sl txt="Prikaži poti za kretnice"/>
     <de txt="Zeige Fahrstraßen bei Weichen"/>
     <en_GB txt="Show routes on switches"/>
     <fr txt="Afficher les routes sur les aiguillages"/>
@@ -29099,20 +29099,42 @@
     <sl txt="Lokacija"/>
     <sr_latin txt="Položaj"/>
     <en_GB txt="Location"/>
+    <it txt="Località"/>
+    <pt_BR txt="Localidade"/>
   </Msg>
   <Msg id="v0onswap">
     <en txt="V0 on swap"/>
     <de txt="V0 bei Richtungswechsel"/>
     <en_GB txt="V0 on swap"/>
     <nl txt="Snelheid 0 bij omkeren"/>
+    <it txt="V0 all'inversione"/>
+    <pt_BR txt="V0 na inversão"/>
+    <sl txt="V0 ob zamenjavi"/>
+    <sr_latin txt="Brz. 0 kod zamene pravca"/>
   </Msg>
   <Msg id="swapstraight">
     <en txt="Swap straight"/>
+    <de txt="Gerade tauschen"/>
+    <en_GB txt="Swap straight"/>
+    <nl txt="Rechtdoor omdraaien"/>
+    <pt_BR txt="Inverter reto"/>
+    <sl txt="Zamenjaj V premo"/>
   </Msg>
   <Msg id="freeblocks">
     <en txt="Free blocks"/>
+    <de txt="Freie Blöcke"/>
+    <en_GB txt="Free blocks"/>
+    <it txt="Blocchi da liberare"/>
+    <nl txt="Vrije blokken"/>
+    <pt_BR txt="Blocos livres"/>
+    <sl txt="Prosti odseki"/>
   </Msg>
   <Msg id="modroutes">
     <en txt="Module routes"/>
+    <de txt="Modul-Fahrstraßen"/>
+    <en_GB txt="Module routes"/>
+    <nl txt="Moduul rijstraten"/>
+    <pt_BR txt="Rotas de módulo"/>
+    <sl txt="Poti modulov"/>
   </Msg>
 </Messages>
