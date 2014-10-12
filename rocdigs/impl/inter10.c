@@ -281,6 +281,7 @@ static struct OInter10* _inst( const iONode ini ,const iOTrace trc ) {
   iOInter10Data data = allocMem( sizeof( struct OInter10Data ) );
   MemOp.basecpy( __Inter10, &Inter10Op, 0, sizeof( struct OInter10 ), data );
 
+  TraceOp.set( trc );
   /* Initialize data->xxx members... */
   data->device   = StrOp.dup( wDigInt.getdevice( ini ) );
   data->iid      = StrOp.dup( wDigInt.getiid( ini ) );
