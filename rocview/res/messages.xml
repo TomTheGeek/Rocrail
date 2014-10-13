@@ -29137,4 +29137,7 @@
     <pt_BR txt="Rotas de módulo"/>
     <sl txt="Poti modulov"/>
   </Msg>
+  <Msg id="savemodules">
+    <en txt="Save modules"/>
+  </Msg>
 </Messages>

@@ -92,6 +92,7 @@ void ModPlanDlg::initLabels() {
   m_InitField->SetLabel( wxGetApp().getMsg( "initfield" ) );
   m_Save->SetLabel( wxGetApp().getMsg( "save" ) );
   m_ModRoutes->SetLabel( wxGetApp().getMsg( "modroutes" ) );
+  m_SaveModules->SetLabel( wxGetApp().getMsg( "savemodules" ) );
 
   m_OK->SetLabel( wxGetApp().getMsg( "ok" ) );
   m_Cancel->SetLabel( wxGetApp().getMsg( "cancel" ) );
