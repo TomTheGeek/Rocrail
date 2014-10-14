@@ -36,6 +36,7 @@
 #include "rocrail/public/fback.h"
 #include "rocrail/public/car.h"
 #include "rocrail/public/var.h"
+#include "rocrail/public/location.h"
 
 #include "rocs/public/system.h"
 #include "rocs/public/mem.h"
@@ -67,6 +68,7 @@
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/BinStateCmd.h"
 #include "rocrail/wrapper/public/Variable.h"
+#include "rocrail/wrapper/public/Location.h"
 
 static int instCnt = 0;
 static int levelCnt = 0;
@@ -678,6 +680,22 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "car[%s], [%s] [%s]",
           id, cmdStr, wAction.getparam(data->action) );
       CarOp.cmd( car, cmd );
+    }
+  }
+
+
+  /* location action */
+  if( StrOp.equals( wLocation.name(), wAction.gettype( data->action ) ) ) {
+    const char* id = wAction.getoid( data->action );
+    iOLocation location = ModelOp.getLocation( model, id );
+    if( location != NULL ) {
+      iONode cmd = NodeOp.inst( wLocation.name(), NULL, ELEMENT_NODE );
+      const char* cmdStr = wAction.getcmd( data->action );
+      wLocation.setcmd( cmd, cmdStr );
+      wLocation.setvalue( cmd, atoi(wAction.getparam(data->action)) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "location[%s], [%s] [%s]",
+          id, cmdStr, wAction.getparam(data->action) );
+      LocationOp.cmd( location, cmd );
     }
   }
 

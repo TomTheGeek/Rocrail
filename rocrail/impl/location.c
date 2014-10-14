@@ -271,6 +271,33 @@ static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
 }
 
 
+static Boolean _cmd( struct OLocation* inst ,iONode node ) {
+  iOLocationData data = Data(inst);
+  const char* nodename = NodeOp.getName( node );
+  const char* cmd      = wLocation.getcmd( node );
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "command %s:%s for location %s",
+      nodename, (cmd==NULL?"-":cmd), wLocation.getid( data->props ) );
+
+  /* location command */
+  if( StrOp.equals(wLocation.name(), nodename ) ) {
+    if( StrOp.equals(wLocation.cmd_minocc, cmd ) ) {
+      int minocc = wLocation.getvalue(node);
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set location [%s] minocc to [%d]", wLocation.getid( data->props ), minocc);
+      wLocation.setminocc(data->props, minocc);
+      data->minocc = minocc;
+      /* Broadcast to clients. */
+      {
+        iONode clone = (iONode)NodeOp.base.clone( data->props );
+        AppOp.broadcastEvent( clone );
+      }
+    }
+  }
+
+  return True;
+}
+
+
 /**  */
 static void _modify( struct OLocation* inst ,iONode mod ) {
   iOLocationData data = Data(inst);

@@ -55,6 +55,7 @@
 #include "rocrail/wrapper/public/AutoCmd.h"
 #include "rocrail/wrapper/public/Variable.h"
 #include "rocrail/wrapper/public/Schedule.h"
+#include "rocrail/wrapper/public/Location.h"
 
 #include "rocview/public/guiapp.h"
 
@@ -193,6 +194,7 @@ void TimedActions::initLabels() {
     m_Type->Append( wxGetApp().getMsg( "variable" ) );
     m_Type->Append( wxGetApp().getMsg( "operator" ) );
     m_Type->Append( wxGetApp().getMsg( "car" ) );
+    m_Type->Append( wxGetApp().getMsg( "location" ) );
 
     // Interface
     m_labIID->SetLabel( wxGetApp().getMsg( "iid" ) );
@@ -254,6 +256,8 @@ void TimedActions::initValues() {
     m_Type->SetSelection(16);
   else if( StrOp.equals( wCar.name(), type ) )
     m_Type->SetSelection(17);
+  else if( StrOp.equals( wLocation.name(), type ) )
+    m_Type->SetSelection(18);
 
   initOutputList();
   initCommands();
@@ -401,6 +405,7 @@ bool TimedActions::evaluate() {
     case 15: wAction.settype(m_Props, wVariable.name()); break;
     case 16: wAction.settype(m_Props, wOperator.name()); break;
     case 17: wAction.settype(m_Props, wCar.name()); break;
+    case 18: wAction.settype(m_Props, wLocation.name()); break;
   }
 
   // Interface
@@ -459,6 +464,7 @@ void TimedActions::initOutputList() {
       case 15: colist = wPlan.getvrlist( model ); break;
       case 16: colist = wPlan.getoperatorlist( model ); break;
       case 17: colist = wPlan.getcarlist( model ); break;
+      case 18: colist = wPlan.getlocationlist( model ); break;
     }
 
     m_ExecCmd->Enable(false);
@@ -1169,6 +1175,9 @@ void TimedActions::initCommands()
       m_Command->Append(wxString( wCar.status_empty, wxConvUTF8));
       m_Command->Append(wxString( wCar.status_loaded, wxConvUTF8));
       m_Command->Append(wxString( wCar.status_maintenance, wxConvUTF8));
+      break;
+    case 18: // location
+      m_Command->Append(wxString( wLocation.cmd_minocc, wxConvUTF8));
       break;
   }
 }

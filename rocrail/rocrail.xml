@@ -2470,6 +2470,10 @@
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Location definition"/>
     </fun>
+    <fun name="cmd" vt="Boolean">
+      <param name="inst" vt="this" remark="instance"/>
+      <param name="cmd" vt="iONode" remark="Cmd node"/>
+    </fun>
     <fun name="modify" vt="void">
       <param name="inst" vt="this" remark="instance"/>
       <param name="mod" vt="iONode" remark="Modify node"/>

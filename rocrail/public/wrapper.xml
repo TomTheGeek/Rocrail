@@ -1974,6 +1974,10 @@
         <var name="blocks" vt="string" defval="" range="*" required="true" remark="location related blocks as csv"/>
         <var name="fifo" vt="bool" defval="true" remark="Firts in, First out"/>
         <var name="minocc" vt="int" defval="0" range="0-*" required="false" remark="minimal tracks to be occupied before leaving the fiddle yard"/>
+        <const name="cmd_minocc" vt="string" val="minocc"/>
+        <const name="cmd_fifo" vt="string" val="fifo"/>
+        <var name="cmd" vt="string" defval="NULL" range="*"/>
+        <var name="value" vt="int" defval="0" range="0-*"/>
       </location>
     </locationlist>
 
