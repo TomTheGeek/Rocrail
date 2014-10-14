@@ -111,6 +111,7 @@
 #include "rocrail/wrapper/public/Schedule.h"
 #include "rocrail/wrapper/public/Tour.h"
 #include "rocrail/wrapper/public/Location.h"
+#include "rocrail/wrapper/public/LocationList.h"
 #include "rocrail/wrapper/public/ScheduleList.h"
 #include "rocrail/wrapper/public/TourList.h"
 #include "rocrail/wrapper/public/LocationList.h"
@@ -1411,6 +1412,27 @@ static void rocrailCallback( obj me, iONode node ) {
             }
           }
         }
+
+        else if( StrOp.equals( wLocation.name(), NodeOp.getName(node) ) ) {
+          TraceOp.trc( "app", TRCLEVEL_INFO, __LINE__, 9999, "Location %s", wLocation.getid(node) );
+          iONode db = NodeOp.findNode( guiApp->getModel(), wLocationList.name() );
+          if( db != NULL ) {
+            Boolean found = False;
+            int cnt = NodeOp.getChildCnt( db );
+            for( int i = 0; i < cnt; i++ ) {
+              iONode child = NodeOp.getChild( db, i );
+              if( StrOp.equals( wLocation.getid(node), wItem.getid(child) ) ) {
+                found = True;
+                NodeOp.mergeNode(child, node, True, True, True);
+                break;
+              }
+            }
+            if( !found ) {
+              NodeOp.addChild( db, (iONode)NodeOp.base.clone(node));
+            }
+          }
+        }
+
         else {
           int pagecnt = guiApp->getFrame()->getNotebook()->GetPageCount();
           const char* nodeName = NodeOp.getName(node);
