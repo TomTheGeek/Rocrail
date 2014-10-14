@@ -171,7 +171,7 @@ static iOSlot __getSlot(iOZimoCAN inst, iONode node) {
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set mode parameters, M1=%d M2=%d, for loco %s", M1, M2, slot->id );
   ThreadOp.post(data->writer, (obj)msg);
 
-  msg = allocMem(32);
+  msg = allocMem(256);
   msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, slot->nid, 0, slot->id );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set name for loco %s with NID=0x%X", slot->id, slot->nid );
   ThreadOp.post(data->writer, (obj)msg);
