@@ -41,6 +41,7 @@ Boolean SerialConnect( obj inst ) {
   }
   else {
     SerialOp.base.del( data->serial );
+    data->serial = NULL;
     return False;
   }
 }

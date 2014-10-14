@@ -59,6 +59,7 @@ static int instCnt = 0;
 
 
 static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int id, int addr, int d2, int d3, int d4, int d5, int d6, int d7 );
+static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid, int value, const char* str );
 static int __getNID(byte* msg);
 
 /** ----- OBase ----- */
@@ -169,6 +170,12 @@ static iOSlot __getSlot(iOZimoCAN inst, iONode node) {
   msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_MODE, MODE_CMD, 4, data->NID, slot->nid, M1, M2, 0, 0, 0, 0);
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set mode parameters, M1=%d M2=%d, for loco %s", M1, M2, slot->id );
   ThreadOp.post(data->writer, (obj)msg);
+
+  msg = allocMem(32);
+  msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, slot->nid, 0, slot->id );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set name for loco %s with NID=0x%X", slot->id, slot->nid );
+  ThreadOp.post(data->writer, (obj)msg);
+
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "slot created for %s", wLoc.getid(node) );
   return slot;
@@ -515,6 +522,47 @@ static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int n
   }
   if( dlc >= 8 ) {
     msg[idx] = d7;
+    idx++;
+  }
+
+  crc = CRCOp.checkSum16(msg+2, 5+dlc);
+  msg[7+dlc] = (crc & 0xFF);
+  msg[8+dlc] = ((crc >> 8) & 0xFF);
+
+  msg[ 9+dlc] = 0x32;
+  msg[10+dlc] = 0x5A;
+
+  return (11 + dlc);
+}
+
+static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid, int value, const char* str ) {
+  int crc    = 0;
+  int idx    = 0;
+  int strlen = StrOp.len(str);
+  int dlc    = 6 + strlen;
+  int i      = 0;
+
+  msg[0]  = 0x5A;
+  msg[1]  = 0x32;
+  msg[2]  = dlc;
+  msg[3]  = group;
+  msg[4]  = (cmd << 2);
+  msg[4] |= (mode & 0x03);
+  msg[5]  = (nid & 0xFF);
+  msg[6]  = ((nid >> 8) & 0xFF);
+
+  idx = 7; /* value */
+  msg[idx]  = (value & 0xFF);
+  idx++;
+  msg[idx]  = ((value >> 8) & 0xFF);
+  idx++;
+  msg[idx]  = ((value >> 16) & 0xFF);
+  idx++;
+  msg[idx]  = ((value >> 24) & 0xFF);
+  idx++;
+
+  for( i = 0; i < strlen; i++ ) {
+    msg[idx]  = str[i];
     idx++;
   }
 
