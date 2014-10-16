@@ -23732,7 +23732,7 @@
   </Msg>
   <Msg id="sound">
     <en txt="Sound"/>
-    <de txt="Sound"/>
+    <de txt="Klang"/>
     <nl txt="Geluid"/>
     <ru txt="Звуковые файлы"/>
     <es txt="Sonido"/>
@@ -23754,7 +23754,7 @@
   </Msg>
   <Msg id="soundpath">
     <en txt="Sound path"/>
-    <de txt="Sound-Ordner"/>
+    <de txt="KLangordner"/>
     <nl txt="Geluiden map"/>
     <ru txt="Путь к звуковым файлам"/>
     <es txt="Directorio sonidos"/>
@@ -23776,7 +23776,7 @@
   </Msg>
   <Msg id="soundplayer">
     <en txt="Sound player"/>
-    <de txt="Sound-Abspieler"/>
+    <de txt="Klangabspieler"/>
     <nl txt="Geluid afspeler"/>
     <es txt="Reproductor sonido"/>
     <ru txt="Проигрыватель"/>
@@ -29101,6 +29101,7 @@
     <en_GB txt="Location"/>
     <it txt="Località"/>
     <pt_BR txt="Localidade"/>
+    <fr txt="Emplacement"/>
   </Msg>
   <Msg id="v0onswap">
     <en txt="V0 on swap"/>
@@ -29119,6 +29120,7 @@
     <nl txt="Rechtdoor omdraaien"/>
     <pt_BR txt="Inverter reto"/>
     <sl txt="Zamenjaj V premo"/>
+    <sr_latin txt="Zameni pravo"/>
   </Msg>
   <Msg id="freeblocks">
     <en txt="Free blocks"/>
@@ -29128,6 +29130,7 @@
     <nl txt="Vrije blokken"/>
     <pt_BR txt="Blocos livres"/>
     <sl txt="Prosti odseki"/>
+    <sr_latin txt="Slobodni blokovi"/>
   </Msg>
   <Msg id="modroutes">
     <en txt="Module routes"/>
@@ -29136,8 +29139,15 @@
     <nl txt="Moduul rijstraten"/>
     <pt_BR txt="Rotas de módulo"/>
     <sl txt="Poti modulov"/>
+    <sr_latin txt="Modulne rute"/>
   </Msg>
   <Msg id="savemodules">
     <en txt="Save modules"/>
+    <de txt="Module speichern"/>
+    <en_GB txt="Save modules"/>
+    <nl txt="Modulen opslaan"/>
+    <pt_BR txt="Salvar módulos"/>
+    <sl txt="Shrani module"/>
+    <sr_latin txt="Sačuvaj module"/>
   </Msg>
 </Messages>
