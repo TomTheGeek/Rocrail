@@ -890,6 +890,7 @@ static void __writer( void* threadinst ) {
   iOZimoCAN     zimocan = (iOZimoCAN)ThreadOp.getParm( th );
   iOZimoCANData data    = Data(zimocan);
   int connAckTimer = 0;
+  Boolean didSendInit = False;
   byte eyeCatcher[] = {'Z','2','2','Z',0};
   byte msg[256];
 
@@ -913,9 +914,9 @@ static void __writer( void* threadinst ) {
 
     if( !data->connAck ) {
       connAckTimer++;
-      if( connAckTimer > 5000 ) {
+      if( connAckTimer > 5000 || !didSendInit ) {
         if( data->subWrite((obj)zimocan, eyeCatcher, 4) ) {
-
+          didSendInit = True;
         }
       }
     }
