@@ -82,6 +82,8 @@ ifeq ($(PLATFORM),LINUX)
 endif
 ifeq ($(PLATFORM),MACOSX)
 	LIBS=-lpthread -ldl
+	LNK_FLAGS=-L/usr/local/lib
+  CC_EXTRA_FLAGS=-I/usr/local/include
 endif
 ifeq ($(PLATFORM),HP)
 	LIBS=-lpthread -ldld

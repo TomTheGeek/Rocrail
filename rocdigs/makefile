@@ -72,7 +72,7 @@ else ifeq ($(PLATFORM),MACOSX)
 	LIBUSB=-lusb-1.0
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
-	LNK_FLAGS=-dynamiclib -flat_namespace -undefined suppress
+	LNK_FLAGS=-dynamiclib -flat_namespace -undefined suppress -L/usr/local/lib
 	LNK=gcc
 	SHAREDSUFFIX=.dylib
 else ifeq ($(PLATFORM),OPENBSD)

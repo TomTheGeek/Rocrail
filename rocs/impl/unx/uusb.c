@@ -153,7 +153,7 @@ void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr, i
 
     if (err) {
       TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "could not open USB device: %s", libusb_error_name(err) );
-      return False;
+      return NULL;
     }
     husb = handle;
 
