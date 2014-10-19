@@ -393,9 +393,7 @@ void BidibIdentDlg::initLabels() {
   m_MacroPanel->Enable(false);
 
   m_BiDiBlogo->SetBitmap(*_img_bidib);
-  m_FbLogo->SetBitmap(*_img_fb);
   m_BiDiBlogo->SetToolTip(wxT("http://www.bidib.org"));
-  m_FbLogo->SetToolTip(wxT("http://www.fichtelbahn.de/shop"));
 
 
   // Index
@@ -1938,10 +1936,6 @@ void BidibIdentDlg::onLeftLogo( wxMouseEvent& event ) {
   wxLaunchDefaultBrowser(wxT("http://www.bidib.org"), wxBROWSER_NEW_WINDOW );
 }
 
-
-void BidibIdentDlg::onFBLogo( wxMouseEvent& event ) {
-  wxLaunchDefaultBrowser(wxT("http://shop.fichtelbahn.de"), wxBROWSER_NEW_WINDOW );
-}
 
 void BidibIdentDlg::onProductName( wxMouseEvent& event ) {
   if( www != NULL )
