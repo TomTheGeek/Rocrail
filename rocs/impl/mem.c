@@ -66,7 +66,7 @@ static const char* _mem_getLastOperation( void ) {
     op = "check";
   else if( mt.type == MEMTYPE_REALLOC )
     op = "realloc";
-  sprintf( __opStr, ">>>>> memLastOp: op=%s p=0x%08X file=%s line=%d <<<<<", op, mt.p, mt.file, mt.line );
+  sprintf( __opStr, ">>>>> memLastOp: op=%s p=0x%X file=%s line=%d <<<<<", op, (unsigned int)mt.p, mt.file, mt.line );
   return __opStr;
 }
 
@@ -78,7 +78,7 @@ static Boolean __isMemValid( char* p, const char* file, int line, long* size, in
     mt.file = file;
     mt.p    = p;
     if( memcmp( m->magic, __magic, MAGIC_SIZE ) != 0 ) {
-      printf( ">>>>> Unknown memory block( 0x%08X ) %s:%d <<<<<\n", m, file, line );
+      printf( ">>>>> Unknown memory block( 0x%X ) %s:%d <<<<<\n", (unsigned int)m, file, line );
       return False;
     }
     else if( m->id != id ) {
@@ -172,7 +172,7 @@ static void* __mem_realloc_magic( char* p, long newsize, const char* file, int l
     }
   }
   else {
-    printf( ">>>>> realloc( 0x%08X, %ld ) with NULL pointer! %s:%d <<<<<\n", p, newsize, file, line );
+    printf( ">>>>> realloc( 0x%X, %ld ) with NULL pointer! %s:%d <<<<<\n", (unsigned int)p, newsize, file, line );
     return __mem_alloc_magic( newsize, file, line, -1 );
   }
   return NULL;
@@ -219,20 +219,20 @@ static void _dumpStrings(void) {
 static void* _mem_alloc( long size, const char* file, int line ) {
   void* mp = __mem_alloc_magic( size, file, line, -1 );
   if( mp == NULL ) {
-    printf( "__mem_alloc_magic(%d) failed!", size );
+    printf( "__mem_alloc_magic(%ld) failed!", size );
   }
   if( m_bDebug )
-    printf( " 0x%08X = allocMem( %d ) %s line=%d\n", mp, size, file, line );
+    printf( " 0x%X = allocMem( %ld ) %s line=%d\n", (unsigned int)mp, size, file, line );
   return mp;
 }
 
 static void* _mem_allocTID( long size, int id, const char* file, int line ) {
   void* p = __mem_alloc_magic( size, file, line, id );
   if( p == NULL ) {
-    printf( "__mem_alloc_magic(%d) failed!", size );
+    printf( "__mem_alloc_magic(%ld) failed!", size );
   }
   if( id == -1 ) {
-    printf( " allicIDMem( 0x%08X, %d ) %s line=%d: id -1 not allowed!!!\n", p, size, file, line );
+    printf( " allicIDMem( 0x%X, %ld ) %s line=%d: id -1 not allowed!!!\n", (unsigned int)p, size, file, line );
   }
   /*if( m_bDebug )
     printf( " 0x%08X = allocIDMem( 0x%08X ) %s line=%d\n", p, size, file, line );*/
@@ -253,7 +253,7 @@ static void* _mem_allocTID( long size, int id, const char* file, int line ) {
 static void* _mem_realloc( void* p, long size, const char* file, int line ) {
   void* mp = __mem_realloc_magic( p, size, file, line );
   if( mp == NULL ) {
-    printf( "__mem_realloc_magic(%08X, %d) failed!", p, size );
+    printf( "__mem_realloc_magic(0x%X, %ld) failed!", (unsigned int)p, size );
   }
   /*if( m_bDebug )
     printf( " 0x%08X = reallocMem( 0x%08X, %d ) %s line=%d\n", p, p2, size, file, line );*/
@@ -265,12 +265,12 @@ static void _mem_free( void* p, const char* file, int line ) {
     __mem_free_magic( p, file, line, -1 );
   }
   if( m_bDebug )
-    printf( " freeMem( 0x%08X ) %s line=%d\n", p, file, line );
+    printf( " freeMem( 0x%X ) %s line=%d\n", (unsigned int)p, file, line );
 }
 
 static void _mem_freeTID( void* p, int id, const char* file, int line ) {
   if( id == -1 && p!= NULL ) {
-    printf( " freeIDMem( 0x%08X ) %s line=%d: id -1 not allowed!!!\n", p, file, line );
+    printf( " freeIDMem( 0x%X ) %s line=%d: id -1 not allowed!!!\n", (unsigned int)p, file, line );
   }
   /*if( m_bDebug )
     printf( " freeMem( 0x%08X ) %s line=%d\n", p, file, line );*/
