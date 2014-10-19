@@ -2506,6 +2506,7 @@
       <var name="minocc" vt="int"/>
       <var name="fifo" vt="Boolean"/>
       <var name="arriveList" vt="iOList"/>
+      <var name="locoPending" vt="Boolean"/>
       <var name="listmux" vt="iOMutex"/>
     </data>
   </object>

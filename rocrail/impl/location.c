@@ -107,6 +107,7 @@ static struct OLocation* _inst( iONode ini ) {
   data->minocc = wLocation.getminocc(ini);
   data->fifo   = wLocation.isfifo(ini);
   data->arriveList = ListOp.inst();
+  data->locoPending = False;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "location %s: MinOcc=%d Fifo=%d", wLocation.getid(ini), data->minocc, data->fifo );
 
@@ -191,6 +192,8 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
           if( ListOp.size(data->arriveList) >= data->minocc ) {
             if( data->fifo && i == 0 ) {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is first in the list for FiFo, departure is allowed", LocoId );
+              __dumpOcc(inst);
+              data->locoPending = True;
               MutexOp.post( data->listmux );
               return True;
             }
@@ -200,8 +203,16 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
               MutexOp.post( data->listmux );
               return False;
             }
+            else if(data->locoPending) {
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "there is already a loco pending to depart" );
+              __dumpOcc(inst);
+              MutexOp.post( data->listmux );
+              return False;
+            }
             else {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s may depart", LocoId );
+              __dumpOcc(inst);
+              data->locoPending = True;
               MutexOp.post( data->listmux );
               return True;
             }
@@ -261,6 +272,7 @@ static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
         char* locoid = (char*)ListOp.remove( data->arriveList, i);
         if( locoid != NULL )
           StrOp.free(locoid);
+        data->locoPending = False;
         break;
       }
     }
