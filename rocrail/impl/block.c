@@ -1514,8 +1514,12 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* opp
   signal = (iOSignal)inst->hasManualSignal(inst, False, !bkeside );
   oppsignal = (iOSignal)inst->hasManualSignal(inst, False, bkeside );
 
-  if( oppsignal != NULL && ( SignalOp.isState(oppsignal, wSignal.red) || SignalOp.isState(oppsignal, wSignal.yellow) ) ) {
+  if( oppsignal != NULL && SignalOp.isState(oppsignal, wSignal.red) ) {
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has an oppwait red manual signal", inst->base.id(inst) );
+    *oppwait = True;
+  }
+  else if( oppsignal != NULL && SignalOp.isState(oppsignal, wSignal.yellow) && StrOp.equals( wLoc.engine_automobile, LocOp.getEngine(loc) ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has an oppwait yellow manual signal", inst->base.id(inst) );
     *oppwait = True;
   }
   else if( oppsignal != NULL ) {
@@ -1523,8 +1527,12 @@ static Boolean _wait( iIBlockBase inst, iOLoc loc, Boolean reverse, Boolean* opp
     *oppwait = data->tempwait;
   }
 
-  if( signal != NULL && ( SignalOp.isState(signal, wSignal.red) || SignalOp.isState(signal, wSignal.yellow) ) ) {
+  if( signal != NULL && SignalOp.isState(signal, wSignal.red) ) {
     TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "block %s has a red manual signal", inst->base.id(inst) );
+    return True; /* wait until it is set to green */
+  }
+  else if( signal != NULL && SignalOp.isState(signal, wSignal.yellow) && StrOp.equals( wLoc.engine_automobile, LocOp.getEngine(loc) ) ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "block %s has a yellow manual signal", inst->base.id(inst) );
     return True; /* wait until it is set to green */
   }
   else if( signal != NULL ) {
