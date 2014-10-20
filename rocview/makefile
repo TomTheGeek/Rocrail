@@ -170,9 +170,11 @@ $(TARGET): $(ROBJS) $(IOBJS) $(UTILOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) 
 	$(LNK) -o $(TARGET) $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(UTILOBJS) $(WINRESOURCE) $(RRLIBS) $(LNK_FLAGS) $(WX_LIBS) $(LIBS) $(WINLIBS)
 
 $(WINRESOURCE): rocview.rc
+ifeq ($(NATIVE),WIN32)
 	windres --include-dir $(MINGWINSTALL)$(FS)include --define __WIN32__ --define __GNUWIN32__ -irocview.rc -o$(WINRESOURCE)
-#	`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --rescomp` -irocview.rc -o$(WINRESOURCE)
-
+else
+	`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --rescomp` -irocview.rc -o$(WINRESOURCE)
+endif
 
 $(TMPOUTDIR)/%.o: impl/%.cpp
 	$(CPP) $(CC_WXFLAGS) $< -o $@
