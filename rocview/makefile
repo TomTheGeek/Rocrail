@@ -97,7 +97,7 @@ else ifeq ($(PLATFORM),WIN32)
 	endif
 	WX_FLAGS=`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --cflags`
 	ifeq ($(NATIVE),WIN32)
-		LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -mthreads -static -Wl,--subsystem,windows -mwindows -lwx_msw$(LIBEXT)_html-$(wxversion) -lwx_msw$(LIBEXT)_core-$(wxversion) -lwx_base$(LIBEXT)-$(wxversion) -lwxtiff-$(wxversion) -lwxjpeg-$(wxversion) -lwxpng-$(wxversion) -lwxzlib-$(wxversion) -lwxregex$(LIBEXT)-$(wxversion) -lwxexpat-$(wxversion) -lwx_msw$(LIBEXT)_adv-$(wxversion) -lwx_msw$(LIBEXT)_qa-$(wxversion) -lwx_base$(LIBEXT)_xml-$(wxversion) -lwx_base$(LIBEXT)_net-$(wxversion)
+		LNK_FLAGS=-L$(MINGWINSTALL)\lib-$(LIBRARY) -mthreads -static -Wl,--subsystem,windows -mwindows -lwx_msw$(LIBEXT)-$(wxversion) -lwxpng-$(wxversion) -lwxjpeg-$(wxversion) -lwxtiff-$(wxversion) -lwxzlib-$(wxversion)
 		WX_FLAGS=-c $(DEBUG) -D__WXMSW__ -O2 -fno-strict-aliasing -mthreads -mwindows -DWX_PRECOMP -DNO_GCC_PRAGMA
 	endif
 	DIRPREFIX=win
@@ -170,7 +170,8 @@ $(TARGET): $(ROBJS) $(IOBJS) $(UTILOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) 
 	$(LNK) -o $(TARGET) $(ROBJS) $(IOBJS) $(WOBJS) $(DOBJS) $(CDOBJS) $(DECOBJS) $(SOBJS) $(OBJS) $(UTILOBJS) $(WINRESOURCE) $(RRLIBS) $(LNK_FLAGS) $(WX_LIBS) $(LIBS) $(WINLIBS)
 
 $(WINRESOURCE): rocview.rc
-	`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --rescomp` -irocview.rc -o$(WINRESOURCE)
+	windres --include-dir $(MINGWINSTALL)$(FS)include --define __WIN32__ --define __GNUWIN32__ -irocview.rc -o$(WINRESOURCE)
+#	`$(MINGWINSTALL)$(FS)bin$(FS)wx-config --rescomp` -irocview.rc -o$(WINRESOURCE)
 
 
 $(TMPOUTDIR)/%.o: impl/%.cpp
