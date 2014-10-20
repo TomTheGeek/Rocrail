@@ -980,6 +980,27 @@ static void __evaluateMCS2Verify( iOMCS2Data mcs2, byte* in ) {
 }
 
 
+static void __evaluateMCS2Bind( iOMCS2Data mcs2, byte* in ) {
+  int uid = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
+  int sid = (in[9] << 8) + in[10];
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Bind acknowledged, requesting Verify UID=0x%04X on sid %d", uid, sid );
+  if( sid > 0 && wMCS2.isbind(mcs2->mcs2ini) ) {
+    iONode loco = __getUID(mcs2, uid);
+    if( wProduct.getsid(loco) == sid ) {  // is the sid the same as Rocrail serves it then request the verify?
+      byte  buffer[32];
+      buffer[0]  = in[5];
+      buffer[1]  = in[6];
+      buffer[2]  = in[7];
+      buffer[3]  = in[8];
+      buffer[4]  = (wProduct.getsid(loco) / 256) & 0xFF;
+      buffer[5]  = (wProduct.getsid(loco) % 256) & 0xFF;
+
+      ThreadOp.post( mcs2->writer, (obj)__makeMsg(0, CMD_LOCO_VERIFY, 0x4711, False, 6, buffer) );
+    }
+  }
+}
+
+
 static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
 /*
   T000303005FFE405E920<\r>
@@ -1319,6 +1340,9 @@ static void __reader( void* threadinst ) {
     else if( in[1] != 0xFF ) {
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "Unhandled packet: CAN-ID=0x%02X len=%d", in[1]&0xFF, in[4]&0x0F );
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 13 );
+    }
+    else if( in[1] == (ID_LOCO_BIND + BIT_RESPONSE) ) {
+       __evaluateMCS2Discovery( data, in );
     }
     ThreadOp.sleep(0);
 
