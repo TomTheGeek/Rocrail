@@ -1342,7 +1342,7 @@ static void __reader( void* threadinst ) {
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, 13 );
     }
     else if( in[1] == (ID_LOCO_BIND + BIT_RESPONSE) ) {
-       __evaluateMCS2Discovery( data, in );
+       __evaluateMCS2Bind( data, in );
     }
     ThreadOp.sleep(0);
 
