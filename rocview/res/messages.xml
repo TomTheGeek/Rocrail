@@ -23732,7 +23732,7 @@
   </Msg>
   <Msg id="sound">
     <en txt="Sound"/>
-    <de txt="Klang"/>
+    <de txt="Sound"/>
     <nl txt="Geluid"/>
     <ru txt="Звуковые файлы"/>
     <es txt="Sonido"/>
@@ -23754,7 +23754,7 @@
   </Msg>
   <Msg id="soundpath">
     <en txt="Sound path"/>
-    <de txt="KLangordner"/>
+    <de txt="Soundordner"/>
     <nl txt="Geluiden map"/>
     <ru txt="Путь к звуковым файлам"/>
     <es txt="Directorio sonidos"/>
@@ -23776,7 +23776,7 @@
   </Msg>
   <Msg id="soundplayer">
     <en txt="Sound player"/>
-    <de txt="Klangabspieler"/>
+    <de txt="Soundabspieler"/>
     <nl txt="Geluid afspeler"/>
     <es txt="Reproductor sonido"/>
     <ru txt="Проигрыватель"/>
@@ -28901,6 +28901,7 @@
     <sl txt="Številka modula"/>
     <sr_latin txt="Broj modula"/>
     <en_GB txt="Module number"/>
+    <fi txt="Modulin numero"/>
   </Msg>
   <Msg id="newaddress">
     <en txt="New address"/>
@@ -29013,6 +29014,7 @@
     <it txt="Mostrare itinerario su deviatoi"/>
     <pt_BR txt="Exibir rotas nos desvios"/>
     <sr_latin txt="Prikaži rute na skretnicama"/>
+    <fi txt="Näytä kulkutiet vaihteissa"/>
   </Msg>
   <Msg id="userandomrate">
     <en txt="Use random block rate"/>
@@ -29024,6 +29026,7 @@
     <pt_BR txt="Use frequência randômica de blocos"/>
     <sl txt="Uporabi naključno stopnjo odseka"/>
     <sr_latin txt="Koristi slučajni izbor bloka"/>
+    <fi txt="Käytä satunnaista kulkuteiden tasoa"/>
   </Msg>
   <Msg id="randomrate">
     <en txt="Random rate"/>
@@ -29035,6 +29038,7 @@
     <pt_BR txt="Frequência randômica"/>
     <sl txt="Naključna stopnja"/>
     <sr_latin txt="Slučajni izbor"/>
+    <fi txt="Satunnainen taso"/>
   </Msg>
   <Msg id="variabletable" dialog="true">
     <en txt="Variable table" alttxt="Variables" tip="Variable table"/>
@@ -29047,6 +29051,7 @@
     <sl txt="Seznam spremenljivk"/>
     <sr_latin txt="Izmenjiva tabela"/>
     <fr txt="Table variable"/>
+    <fi txt="Muuttujat"/>
   </Msg>
   <Msg id="subid">
     <en txt="Sub-ID"/>
@@ -29058,6 +29063,7 @@
     <sr_latin txt="Pod-ID"/>
     <en_GB txt="Sub-ID"/>
     <fr txt="Sous-identifiant"/>
+    <fi txt="Alitunniste (ID)"/>
   </Msg>
   <Msg id="binary">
     <en txt="Binary"/>
@@ -29069,6 +29075,7 @@
     <en_GB txt="Binary"/>
     <fr txt="Binaire"/>
     <pt_BR txt="Binário"/>
+    <fi txt="Binääri"/>
   </Msg>
   <Msg id="group">
     <en txt="Group"/>
@@ -29080,6 +29087,7 @@
     <sl txt="Skupina"/>
     <sr_latin txt="Grupa"/>
     <ru txt="Группа"/>
+    <fi txt="Ryhmä"/>
   </Msg>
   <Msg id="inputfield">
     <en txt="Input field" accel="0"/>
@@ -29090,6 +29098,7 @@
     <sl txt="Vnosno polje"/>
     <sr_latin txt="Polje za unos"/>
     <en_GB txt="Input field"/>
+    <fi txt="Syöte"/>
   </Msg>
   <Msg id="place">
     <en txt="Location"/>
@@ -29102,6 +29111,7 @@
     <it txt="Località"/>
     <pt_BR txt="Localidade"/>
     <fr txt="Emplacement"/>
+    <fi txt="Sijainti"/>
   </Msg>
   <Msg id="v0onswap">
     <en txt="V0 on swap"/>
@@ -29112,6 +29122,7 @@
     <pt_BR txt="V0 na inversão"/>
     <sl txt="V0 ob zamenjavi"/>
     <sr_latin txt="Brz. 0 kod zamene pravca"/>
+    <fi txt="V0 vaihtaessa"/>
   </Msg>
   <Msg id="swapstraight">
     <en txt="Swap straight"/>
@@ -29121,6 +29132,7 @@
     <pt_BR txt="Inverter reto"/>
     <sl txt="Zamenjaj V premo"/>
     <sr_latin txt="Zameni pravo"/>
+    <fi txt="Vaihda suoraan"/>
   </Msg>
   <Msg id="freeblocks">
     <en txt="Free blocks"/>
@@ -29131,6 +29143,7 @@
     <pt_BR txt="Blocos livres"/>
     <sl txt="Prosti odseki"/>
     <sr_latin txt="Slobodni blokovi"/>
+    <fi txt="Vapaat raideosuudet"/>
   </Msg>
   <Msg id="modroutes">
     <en txt="Module routes"/>
@@ -29140,6 +29153,8 @@
     <pt_BR txt="Rotas de módulo"/>
     <sl txt="Poti modulov"/>
     <sr_latin txt="Modulne rute"/>
+    <fi txt="Modulien kulkutiet"/>
+    <it txt="Itinerari modulo"/>
   </Msg>
   <Msg id="savemodules">
     <en txt="Save modules"/>
@@ -29149,5 +29164,7 @@
     <pt_BR txt="Salvar módulos"/>
     <sl txt="Shrani module"/>
     <sr_latin txt="Sačuvaj module"/>
+    <fi txt="Tallenna modulit"/>
+    <it txt="Salvare moduli"/>
   </Msg>
 </Messages>
