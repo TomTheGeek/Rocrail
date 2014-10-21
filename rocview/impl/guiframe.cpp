@@ -5037,17 +5037,21 @@ void RocGuiFrame::OnCellLeftDClick( wxGridEvent& event ){
 
 
 void RocGuiFrame::OnLabelLeftClick( wxGridEvent& event ){
-  int column = event.GetCol();
-  if( m_LocoSortColumn == column )
-    ms_LocoSortInvert = !ms_LocoSortInvert;
-  else {
-    ms_LocoSortInvert = false;
-    m_LocoSortColumn = column;
+  if( event.ShiftDown() ) {
+    event.Skip();
   }
-  TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnLabelLeftClick column=%d invert=%s", m_LocoSortColumn, ms_LocoSortInvert?"true":"false" );
-  wxCommandEvent cmdevent;
-  InitActiveLocs(cmdevent);
-  event.Skip();
+  else {
+    int column = event.GetCol();
+    if( m_LocoSortColumn == column )
+      ms_LocoSortInvert = !ms_LocoSortInvert;
+    else {
+      ms_LocoSortInvert = false;
+      m_LocoSortColumn = column;
+    }
+    TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnLabelLeftClick column=%d invert=%s", m_LocoSortColumn, ms_LocoSortInvert?"true":"false" );
+    wxCommandEvent cmdevent;
+    InitActiveLocs(cmdevent);
+  }
 }
 
 
