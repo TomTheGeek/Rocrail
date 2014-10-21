@@ -284,6 +284,12 @@
       <var name="cx" vt="int" defval="420" range="*" remark="Width of SensorMonitor"/>
       <var name="cy" vt="int" defval="120" range="*" remark="Height of SensorMonitor"/>
     </sensormonitor>
+    <locogrid wrappername="LocoGrid">
+      <colpos wrappername="ColPos">
+        <var name="id" vt="int" defval="0"/>
+        <var name="pos" vt="int" defval="0"/>
+      </colpos>
+    </locogrid>
   </gui>
 
   <release wrappername="Release">

@@ -138,6 +138,8 @@
 #include "rocview/wrapper/public/WorkSpace.h"
 #include "rocview/wrapper/public/Tab.h"
 #include "rocview/wrapper/public/Accelerator.h"
+#include "rocview/wrapper/public/LocoGrid.h"
+#include "rocview/wrapper/public/ColPos.h"
 
 #include "rocrail/wrapper/public/Global.h"
 #include "rocrail/wrapper/public/Item.h"
@@ -1010,6 +1012,16 @@ static int locComparator(obj* o1, obj* o2) {
 }
 
 
+static int locRoadnameComparator(obj* o1, obj* o2) {
+  if( *o1 == NULL || *o2 == NULL )
+    return 0;
+  if( ms_LocoSortInvert )
+    return strcmp( wLoc.getroadname( (iONode)*o2 ), wLoc.getroadname( (iONode)*o1 ) );
+  else
+    return strcmp( wLoc.getroadname( (iONode)*o1 ), wLoc.getroadname( (iONode)*o2 ) );
+}
+
+
 static int locBlockComparator(obj* o1, obj* o2) {
   const char* block1 = "";
   const char* block2 = "";
@@ -1240,6 +1252,8 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
           ListOp.sort( list, locDestBlockComparator );
         else if(m_LocoSortColumn == 6)
           ListOp.sort( list, locTrainComparator );
+        else if(m_LocoSortColumn == 7)
+          ListOp.sort( list, locRoadnameComparator );
         else
           ListOp.sort( list, locComparator );
       }
@@ -1280,6 +1294,10 @@ void RocGuiFrame::InitActiveLocs(wxCommandEvent& event) {
         m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, wxString(id,wxConvUTF8) );
         m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, true );
         m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ID, wxALIGN_LEFT, wxALIGN_CENTRE );
+
+        m_ActiveLocs->SetCellValue(m_ActiveLocs->GetNumberRows()-1, LOC_COL_ROADNAME, wxString(wLoc.getroadname(lc),wxConvUTF8) );
+        m_ActiveLocs->SetReadOnly( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ROADNAME, true );
+        m_ActiveLocs->SetCellAlignment( m_ActiveLocs->GetNumberRows()-1, LOC_COL_ROADNAME, wxALIGN_LEFT, wxALIGN_CENTRE );
 
         if( wLoc.gettrain(lc) != NULL && StrOp.len(wLoc.gettrain(lc)) > 0 ) {
           char* val = StrOp.fmt( "%s(%d,%d)", wLoc.gettrain( lc ), wLoc.gettrainlen( lc ), wLoc.gettrainweight(lc) );
@@ -2520,7 +2538,8 @@ void RocGuiFrame::create() {
   if(wGui.isgrayicons(wxGetApp().getIni()))
     m_ActiveLocs->SetBackgroundColour(Base::getGrey());
   m_ActiveLocs->SetRowLabelSize(0);
-  m_ActiveLocs->CreateGrid(1, m_bLocoImageColumn?8:7, wxGrid::wxGridSelectRows);
+  m_ActiveLocs->CreateGrid(1, m_bLocoImageColumn?9:8, wxGrid::wxGridSelectRows);
+  m_ActiveLocs->EnableDragColMove();
 
   wxFont* fontHeader = new wxFont( m_ActiveLocs->GetLabelFont() );
   fontHeader->SetPointSize( (int)(fontHeader->GetPointSize() + wGui.getgridfontsizeadjust(m_Ini) ) );
@@ -2539,10 +2558,23 @@ void RocGuiFrame::create() {
   m_ActiveLocs->SetColLabelValue(LOC_COL_MODE, wxGetApp().getMsg("mode") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_DESTBLOCK, wxGetApp().getMsg("destination") );
   m_ActiveLocs->SetColLabelValue(LOC_COL_CONSIST, wxGetApp().getMsg("train") );
+  m_ActiveLocs->SetColLabelValue(LOC_COL_ROADNAME, wxGetApp().getMsg("roadname") );
   if( m_bLocoImageColumn )
     m_ActiveLocs->SetColLabelValue(LOC_COL_IMAGE, wxGetApp().getMsg("image") );
   m_ActiveLocs->AutoSizeColumns();
   m_ActiveLocs->AutoSizeRows();
+
+  iONode locoGridIni = wGui.getlocogrid(m_Ini);
+  if( locoGridIni == NULL ) {
+    locoGridIni = NodeOp.inst(wLocoGrid.name(), m_Ini, ELEMENT_NODE );
+    NodeOp.addChild(m_Ini, locoGridIni);
+  }
+
+  iONode colpos = wLocoGrid.getcolpos(locoGridIni);
+  while( colpos != NULL ) {
+    m_ActiveLocs->SetColPos(wColPos.getid(colpos), wColPos.getpos(colpos));
+    colpos = wLocoGrid.nextcolpos(locoGridIni, colpos);
+  }
 
   activeLocsSizer->Add(m_ActiveLocs, 1, wxGROW|wxALL|wxADJUST_MINSIZE, 2);
 
@@ -4653,6 +4685,28 @@ void RocGuiFrame::OnClose(wxCloseEvent& event) {
     }
   }
 
+  // Save the column positions.
+  iONode locoGridIni = wGui.getlocogrid(m_Ini);
+  if( locoGridIni == NULL ) {
+    locoGridIni = NodeOp.inst(wLocoGrid.name(), m_Ini, ELEMENT_NODE );
+    NodeOp.addChild(m_Ini, locoGridIni);
+  }
+
+  iONode colpos = wLocoGrid.getcolpos(locoGridIni);
+  while( colpos != NULL ) {
+    NodeOp.removeChild( locoGridIni, colpos );
+    NodeOp.base.del(colpos);
+    colpos = NULL;
+    colpos = wLocoGrid.getcolpos(locoGridIni);
+  }
+
+  int nrcols = m_ActiveLocs->GetNumberCols();
+  for( int i = 0; i < nrcols; i++ ) {
+    colpos = NodeOp.inst(wColPos.name(), locoGridIni, ELEMENT_NODE );
+    wColPos.setid(colpos, i);
+    wColPos.setpos(colpos, m_ActiveLocs->GetColPos(i));
+    NodeOp.addChild(locoGridIni, colpos);
+  }
 
   m_LC->stopTimer();
   wxGetApp().OnExit();
@@ -4993,6 +5047,7 @@ void RocGuiFrame::OnLabelLeftClick( wxGridEvent& event ){
   TraceOp.trc( "frame", TRCLEVEL_INFO, __LINE__, 9999, "OnLabelLeftClick column=%d invert=%s", m_LocoSortColumn, ms_LocoSortInvert?"true":"false" );
   wxCommandEvent cmdevent;
   InitActiveLocs(cmdevent);
+  event.Skip();
 }
 
 
