@@ -1029,6 +1029,7 @@ static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
         wLoc.setaddr( lc, wProduct.getsid(loco));
         StrOp.fmtb(ident, "%d", uid);
         wLoc.setidentifier(lc, ident);
+        wLoc.setprot(lc, wLoc.prot_F); // MFX
         wLoc.setcmd(lc, wLoc.discover);
         if( mcs2->iid != NULL )
           wLoc.setiid( lc, mcs2->iid );

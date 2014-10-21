@@ -3868,6 +3868,8 @@ static void _event( iOModel inst, iONode nodeC ) {
           iONode props = LocOp.base.properties(lc);
           wLoc.setaddr(props, wLoc.getaddr(nodeC) );
           wLoc.setidentifier(props, ident );
+          if( NodeOp.findAttr(nodeC, "prot") != NULL )
+            wLoc.setprot(props, wLoc.getprot(nodeC) );
           LocOp.modify(lc, (iONode)NodeOp.base.clone(props));
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s with addr=%d", ident, addr );
         }
