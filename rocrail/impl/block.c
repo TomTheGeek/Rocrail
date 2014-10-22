@@ -2059,6 +2059,13 @@ static Boolean _unLock( iIBlockBase inst, const char* id, const char* routeId ) 
           data->locId = (const char*)ListOp.get(data->fifoList, 0);
           loc = ModelOp.getLoc( AppOp.getModel(), data->locId, NULL, False );
           if( loc != NULL ) {
+            Boolean oppwait = False;
+            if( inst->wait( inst, loc, False, &oppwait ) ) {
+              iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+              wLoc.setcmd(cmd, wLoc.velocity);
+              wLoc.setV(cmd, 0);
+              LocOp.cmd(loc, cmd);
+            }
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
                 "fifo block [%s] setting automobile [%s] to front", data->id, data->locId );
             LocOp.go(loc);
@@ -2213,9 +2220,7 @@ static void _depart(iIBlockBase inst) {
           wLoc.setV(cmd, 0);
           LocOp.cmd(loc, cmd);
         }
-        else {
-          LocOp.go(loc);
-        }
+        LocOp.go(loc);
       }
     }
   }
@@ -2547,7 +2552,7 @@ static obj _hasManualSignal( iIBlockBase inst, Boolean distant, Boolean reverse 
     iOSignal sg = ModelOp.getSignal( model, sgId );
     if( sg != NULL && SignalOp.isManualOperated(sg) ) {
       TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
-          "block [%s] has a manual operated signal [%s]", inst->base.id(inst), sgId );
+          "block [%s] has a manual operated signal [%s] blockside=%s", inst->base.id(inst), sgId, reverse?"+":"-" );
       return (obj)sg;
     }
   }
