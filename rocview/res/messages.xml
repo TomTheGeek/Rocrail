@@ -21874,7 +21874,7 @@
     <en_CA txt="Decoder type"/>
   </Msg>
   <Msg id="analyze">
-    <en txt="Analyze" tip="Analyze track plan for generating routes."/>
+    <en txt="Analyze" alttxt="Analyse" tip="Analyse track plan for generating routes."/>
     <nl txt="Analyseren" tip="Analyseer om rijstraten te genereren."/>
     <fr txt="analyser" tip="analyser  le plan des voies pour générer des itinéraires"/>
     <de txt="Analysieren" tip="Gleisplan zur Erzeugung von Fahrstraßen analysieren"/>
@@ -23192,7 +23192,7 @@
     <pl txt="Czujniki czasowe"/>
   </Msg>
   <Msg id="enableanalyzer">
-    <en txt="Enable analyzer"/>
+    <en txt="Enable analyzer" alttxt="Enable analyser"/>
     <nl txt="Aktiveer analyzer"/>
     <de txt="Auswerteprogramm aktivieren"/>
     <fr txt="Mettre en service l'analyseur"/>
@@ -25444,7 +25444,7 @@
     <en_CA txt="Clean action and condition problems"/>
   </Msg>
   <Msg id="ana_clean">
-    <en txt="Clean all analyze"/>
+    <en txt="Clean all analyze" alttxt="Clean all analyse"/>
     <cs txt="Smaž všechny analýzy"/>
     <nl txt="Verwijder alle analysator resultaten"/>
     <it txt="Azzerare analyser"/>
