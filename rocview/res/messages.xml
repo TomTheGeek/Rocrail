@@ -23193,8 +23193,8 @@
   </Msg>
   <Msg id="enableanalyzer">
     <en txt="Enable analyzer" alttxt="Enable analyser"/>
-    <nl txt="Aktiveer analyzer"/>
-    <de txt="Auswerteprogramm aktivieren"/>
+    <nl txt="Aktiveer analyser"/>
+    <de txt="Analyser aktivieren"/>
     <fr txt="Mettre en service l'analyseur"/>
     <ru txt="Разрешить анализатор"/>
     <es txt="Activar analizador"/>
@@ -25116,7 +25116,7 @@
     <nl txt="Analysator"/>
     <it txt="Analyser"/>
     <es txt="Analizador"/>
-    <de txt="Gleisplan-Auswerter"/>
+    <de txt="Gleisplan-Analyser"/>
     <sr_latin txt="Analizator"/>
     <sv txt="Analyserare."/>
     <zh_CN txt="分析器"/>
