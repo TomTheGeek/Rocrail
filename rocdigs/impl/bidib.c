@@ -2275,34 +2275,20 @@ static void __handleCSStat(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata) {
   iOBiDiBData data = Data(bidib);
   int level = TRCLEVEL_MONITOR;
 
-  /*
-    0x00  BIDIB_CS_STATE_OFF  Die Gleisausgabe wird abgeschaltet.
-    0x01  BIDIB_CS_STATE_STOP Alle Loks werden mittels Nothalt angehalten, jedoch Weichen können nach wie vor geschaltet werden.
-          Wenn Stop von der Zentrale nicht unterstützt wird, so wird OFF ausgeführt.
-    0x02  BIDIB_CS_STATE_SOFTSTOP Alle Loks werden mit Fahrstufe 0 (also mit ihrer eigenen Verzögerung) angehalten,
-          Weichen können weiterhin geschaltet werden. Wenn Soft-Stop von der Zentrale nicht unterstützt wird,
-          so wird STOP ausgeführt.
-    0x03  BIDIB_CS_STATE_SHORT  Die Zentrale hat einen Fehler am Ausgang erkannt. Diese Nachricht ist nur relevant für
-          Zentralen mit eigener Ausgang.
-    0x10  BIDIB_CS_STATE_GO Wiederaufnahme des Betriebes, Loks und Weichen können geschaltet werden.
-    0x80  BIDIB_CS_STATE_PROG Programmiermode; Die Zentrale hat in den Programmiermode umgeschaltet und ist zur Ausführung von
-          Programmierbefehlen (auf den Programmiergleis) bereit. Der normale Betrieb ruht.
-    0x81  BIDIB_CS_STATE_PROGBUSY Programmiermode; diese Meldung zeigt an, dass aktuell ein Programmiervorgang auf dem
-          Programmiergleis durchgeführt wird. (nur bei Abfrage)
-    0xF0  BIDIB_CS_STATE_BUSY Die Gleisausgabe ist nicht mehr aufnahmefähig für neue Befehle, z.B. weil entsprechende
-          Ausgabe-Fifos voll sind. (nur bei Abfrage oder beim Senden einer MSG_CS_DRIVE )
-   */
-
-  if( data->power == ((pdata[0] == BIDIB_CS_STATE_OFF) ? False:True) ) {
-    level = TRCLEVEL_DEBUG;
+  if( bidibnode->laststat != pdata[0] ) {
+    const char* stateStr = __csstate2str(pdata[0], &level);
+    bidibnode->laststat = pdata[0];
+    TraceOp.trc( name, level, __LINE__, 9999, "CS state=0x%02X [%s][%08X]", pdata[0], stateStr, bidibnode!=NULL?bidibnode->uid:0 );
+    data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
+    if( bidibnode != NULL ) {
+      bidibnode->stat &= ~BIDIB_BST_STATE_ON;
+      bidibnode->stat |= data->power?BIDIB_BST_STATE_ON:0;
+    }
+    __reportState(bidib, bidibnode, bidibnode->shortcut, data->power);
   }
-  TraceOp.trc( name, level, __LINE__, 9999, "CS state=0x%02X [%s][%08X]", pdata[0], __csstate2str(pdata[0], &level), bidibnode!=NULL?bidibnode->uid:0 );
-  data->power = (pdata[0] == BIDIB_CS_STATE_OFF) ? False:True;
-  if( bidibnode != NULL ) {
-    bidibnode->stat &= ~BIDIB_BST_STATE_ON;
-    bidibnode->stat |= data->power?BIDIB_BST_STATE_ON:0;
+  else {
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "CS state=0x%02X [%s][%08X]", pdata[0], __csstate2str(pdata[0], &level), bidibnode!=NULL?bidibnode->uid:0 );
   }
-  __reportState(bidib, bidibnode, bidibnode->shortcut, data->power);
 }
 
 

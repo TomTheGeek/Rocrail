@@ -1324,6 +1324,7 @@
       <var name="voltmin" vt="int"/>
       <var name="tempmax" vt="int"/>
       <var name="stat" vt="int"/>
+      <var name="laststat" vt="int"/>
       <var name="shortcut" vt="Boolean"/>
       <var name="fwup" vt="Boolean"/>
       <var name="iocfg" vt="Boolean"/>
