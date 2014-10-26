@@ -226,6 +226,7 @@ void StageDlg::initLabels() {
 
   // Details
   m_labDepartDelay->SetLabel( wxGetApp().getMsg( "departdelay" ) );
+  m_labMinOcc->SetLabel( wxGetApp().getMsg( "minocc" ) );
   m_WaitBox->GetStaticBox()->SetLabel( wxGetApp().getMsg( "wait" ) );
   m_WaitType->SetLabel( wxGetApp().getMsg( "type" ) );
   m_WaitType->SetString( 0, wxGetApp().getMsg( "random" ) );
@@ -274,6 +275,7 @@ bool StageDlg::evaluate() {
 
   // Details
   wStage.setdepartdelay( m_Props, m_DepartDelay->GetValue() );
+  wStage.setminocc( m_Props, m_MinOcc->GetValue() );
 
 
   if( m_WaitType->GetSelection() == 0 )
@@ -379,6 +381,7 @@ void StageDlg::initValues() {
 
   // Details
   m_DepartDelay->SetValue( wStage.getdepartdelay( m_Props ) );
+  m_MinOcc->SetValue( wStage.getminocc( m_Props ) );
 
   int wait = 0;
   if( StrOp.equals( wBlock.wait_random, wStage.getwaitmode( m_Props ) ) )

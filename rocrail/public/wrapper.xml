@@ -2205,6 +2205,7 @@
         <var name="suitswell" vt="bool" defval="false" remark=""/>
         <var name="inatlen" vt="bool" defval="false" remark="In event if train length fits in the current sections."/>
         <var name="usewd" vt="bool" defval="true" remark="Use a watchdog for compressing when needed."/>
+        <var name="minocc" vt="int" defval="0" range="0-*" remark="Minimal occupation before exit block."/>
         <const name="compress" vt="string" val="compress"/>
         <const name="open" vt="string" val="open" remark="In this state the block is chooseable for locs to enter."/>
         <const name="closed" vt="string" val="closed" remark="In this state the block is not chooseable for locs to enter."/>

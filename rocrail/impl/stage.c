@@ -117,7 +117,7 @@ static void __initSensors( iOStage inst );
 static Boolean __freeSection(iIBlockBase inst, const char* secid);
 static Boolean __occSection(iIBlockBase inst, const char* secid, const char* lcid);
 static Boolean __moveStageLocos(iIBlockBase inst);
-static Boolean __dumpSections( iOStage inst );
+static Boolean __dumpSections( iOStage inst, int* cnt );
 static Boolean __freeSections(iIBlockBase inst, const char* locid);
 static Boolean __getLength2Section( iOStage inst, const char* sectionid );
 static Boolean __unregisterCallback( iOStage inst );
@@ -408,7 +408,7 @@ static Boolean __updateList4Move( iIBlockBase inst, const char* locId, int targe
         wStageSection.setlcid(section, locId );
       }
 
-      __dumpSections((iOStage)inst);
+      __dumpSections((iOStage)inst, NULL);
 
       return True;
     }
@@ -521,12 +521,13 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
   }
 
   else if( section != NULL && !data->wait4enter ) {
+    int lcCount = 0;
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
         "sensors [%s] %s event for stage [%s] section [%s][%d] of [%d] target=%d sectionidx=%d ident=%s",
         id, puls?"on":"off", data->id, wStageSection.getid(section), wStageSection.getnr(section),
         data->sectionCount, data->targetSection, wStageSection.getidx(section), ident!=NULL?ident:"-" );
 
-    __dumpSections((iOStage)inst);
+    __dumpSections((iOStage)inst, &lcCount);
 
 
     if( puls && wStageSection.getidx(section) == data->targetSection ) {
@@ -608,22 +609,28 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
           }
 
           if( !LocOp.isAutomode(loc) ) {
-            if( !data->closereq && ModelOp.isAuto( AppOp.getModel() ) ) {
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s in auto mode", LocOp.getId(loc) );
-              LocOp.go(loc);
-              __checkAction((iOStage)inst, "exit");
-            }
-            else if( data->closereq ) {
-              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s not in auto mode; block is closed.", LocOp.getId(loc) );
-            }
+            if( lcCount >= wStage.getminocc(data->props) ) {
+              if( !data->closereq && ModelOp.isAuto( AppOp.getModel() ) ) {
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s in auto mode", LocOp.getId(loc) );
+                LocOp.go(loc);
+                __checkAction((iOStage)inst, "exit");
+              }
+              else if( data->closereq ) {
+                TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s not in auto mode; block is closed.", LocOp.getId(loc) );
+              }
 
-            if( !data->pendingFree ) {
-              /*
-              iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
-              if( s != NULL )
-                wStageSection.setlcid(s, NULL);
-              */
-              data->pendingFree = True;
+              if( !data->pendingFree ) {
+                /*
+                iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
+                if( s != NULL )
+                  wStageSection.setlcid(s, NULL);
+                */
+                data->pendingFree = True;
+              }
+            }
+            else {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s not in auto mode; minocc=%d occ=%d.",
+                  LocOp.getId(loc), wStage.getminocc(data->props), lcCount );
             }
           }
         }
@@ -1486,7 +1493,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     if( wStageSection.getidx(nextFreeSection) > wStageSection.getidx(firstOccupiedSection) )
     {
     iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(firstOccupiedSection), NULL, False );
-    Boolean eOcc = __dumpSections((iOStage)inst);
+    Boolean eOcc = __dumpSections((iOStage)inst, NULL);
 
       if( lc != NULL && !eOcc ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
@@ -1499,7 +1506,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
         data->pendingFree = False;
         data->locId = LocOp.getId(lc);
 
-        __dumpSections((iOStage)inst);
+        __dumpSections((iOStage)inst, NULL);
 
         wStageSection.setlcid(nextFreeSection, wStageSection.getlcid(firstOccupiedSection) );
         iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
@@ -1556,7 +1563,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
       }
       else if( lc != NULL && LocOp.isAutomode(lc) ) {
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"loco %s is in the last section %s and in auto mode", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
-        __dumpSections((iOStage)inst);
+        __dumpSections((iOStage)inst, NULL);
       }
 
     }
@@ -1772,8 +1779,10 @@ static void _modify( iOStage inst, iONode props ) {
 
 
 
-static Boolean __dumpSections( iOStage inst ) {
+static Boolean __dumpSections( iOStage inst, int* cnt ) {
   iOStageData data = Data(inst);
+  int lcCount = 0;
+  const char* prevLcId = NULL;
   Boolean eOcc = False;
   iONode section = wStage.getsection( data->props );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "---------- dump sections" );
@@ -1791,10 +1800,17 @@ static Boolean __dumpSections( iOStage inst ) {
       eOcc = True;
     }
 
+    if( lcid != NULL && !StrOp.equals(lcid, prevLcId) ) {
+      lcCount++;
+      prevLcId = lcid;
+    }
+
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "section %d, loco %s, occ=%s",
         wStageSection.getnr(section), lcid==NULL?"-":lcid, occ?"true":"false" );
     section = wStage.nextsection( data->props, section );
   }
+  if( cnt != NULL )
+    *cnt = lcCount;
   return eOcc;
 }
 
