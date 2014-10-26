@@ -1541,6 +1541,7 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
     if( lastSection != NULL ) {
       iOLoc lc = ModelOp.getLoc( AppOp.getModel(), wStageSection.getlcid(lastSection), NULL, False );
       if( lc != NULL && !LocOp.isAutomode(lc) ) {
+        int lcCount = 0;
         iONode cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s speed to zero, set in block %s", LocOp.getId(lc), data->id );
         wLoc.setcmd(cmd, wLoc.velocity);
@@ -1549,12 +1550,20 @@ static Boolean __moveStageLocos(iIBlockBase inst) {
 
         LocOp.setCurBlock(lc, data->id);
 
+        __dumpSections((iOStage)inst, &lcCount);
+
         if( !StrOp.equals( wStage.getexitstate(data->props), wBlock.closed )  ) {
-          if( ModelOp.isAuto( AppOp.getModel() ) ) {
-            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
-            cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
-            wLoc.setcmd(cmd, wLoc.go);
-            LocOp.cmd(lc, cmd);
+          if( lcCount >= wStage.getminocc(data->props) ) {
+            if( ModelOp.isAuto( AppOp.getModel() ) ) {
+              TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,"start loco %s in the last section %s", wStageSection.getlcid(lastSection), wStageSection.getid(lastSection));
+              cmd = NodeOp.inst(wLoc.name(), NULL, ELEMENT_NODE);
+              wLoc.setcmd(cmd, wLoc.go);
+              LocOp.cmd(lc, cmd);
+            }
+          }
+          else {
+            TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s not in auto mode; minocc=%d occ=%d.",
+                LocOp.getId(lc), wStage.getminocc(data->props), lcCount );
           }
         }
         else {
@@ -1809,6 +1818,7 @@ static Boolean __dumpSections( iOStage inst, int* cnt ) {
         wStageSection.getnr(section), lcid==NULL?"-":lcid, occ?"true":"false" );
     section = wStage.nextsection( data->props, section );
   }
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "number of locos in stage: %d", lcCount );
   if( cnt != NULL )
     *cnt = lcCount;
   return eOcc;
