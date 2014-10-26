@@ -2558,6 +2558,8 @@ static void __handleNodeTab(iOBiDiB bidib, iOBiDiBNode node, int Type, byte* pat
     if( node == NULL && MemOp.cmp(newNode->path, path, 4) ) {
       /* must be the master node */
       node = newNode;
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system enable on master uid=0x%08X", node->uid );
+      data->subWrite((obj)bidib, node->path, MSG_SYS_ENABLE, NULL, 0, node);
     }
 
     data->subWrite((obj)bidib, node==NULL?path:node->path, MSG_NODETAB_GETNEXT, NULL, 0, node);
@@ -2595,6 +2597,7 @@ static void __handleNewNode(iOBiDiB bidib, iOBiDiBNode bidibnode, byte* pdata, i
     __addNode(bidib, pdata, path);
     data->subWrite((obj)bidib, bidibnode->path, MSG_NODE_CHANGED_ACK, pdata, 1, bidibnode);
     ThreadOp.sleep(50);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system enable uid=0x%08X", bidibnode->uid );
     data->subWrite((obj)bidib, bidibnode->path, MSG_SYS_ENABLE, NULL, 0, bidibnode);
 
   }
