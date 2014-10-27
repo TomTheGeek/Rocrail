@@ -433,21 +433,24 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
     int speed      = 0;
     int speed1     = 0;
     int speed2     = 0;
-    char prot[4];
+    char prot[32]  = {'\0'};
 
     if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_N ) ) {
       addroffset = 0xC000;
       /* DCC loc adress range start */
       StrOp.copy(prot,"dcc");
-    } else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) || StrOp.equals( wLoc.getprot( node ), wLoc.prot_F ) ) {
+    }
+    else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) || StrOp.equals( wLoc.getprot( node ), wLoc.prot_F ) ) {
       addroffset = 0x4000;
       /* MFX loc address range start */
       StrOp.copy(prot,"mfx");
-    } else {
+    }
+    else {
       addroffset = 0x0000;
       /* MM loc address range start */
       StrOp.copy(prot,"mm");
     }
+
     long address = addr + addroffset;
 
     if( wLoc.getV( node ) != -1 ) {
