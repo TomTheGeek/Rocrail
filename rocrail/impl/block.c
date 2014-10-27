@@ -423,13 +423,13 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
     iORoute byRoute = ModelOp.getRoute( AppOp.getModel(), data->byRouteId );
     blockSide = RouteOp.getToBlockSide(byRoute);
 
-    StrOp.fmtb( key, "%s-%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"", data->byRouteId );
+    StrOp.fmtb( key, "%s%s-%s-%s", id, puls?"":"-ep", data->fromBlockId != NULL ? data->fromBlockId:"", data->byRouteId );
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%sfbevent found by key %s", fbevt != NULL ? "":"no ", key);
   }
 
   if( fbevt == NULL ) {
-    StrOp.fmtb( key, "%s-%s", id, data->fromBlockId != NULL ? data->fromBlockId:"" );
+    StrOp.fmtb( key, "%s%s-%s", id, puls?"":"-ep", data->fromBlockId != NULL ? data->fromBlockId:"" );
     /* event without description; look up in map */
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
     TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "%sfbevent found by key %s", fbevt != NULL ? "":"no ", key);
@@ -444,13 +444,12 @@ static Boolean _event( iIBlockBase inst, Boolean puls, const char* id, const cha
   }
 
   if( fbevt == NULL ) {
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] no event found for fromBlockId [%s], try to find one for all...",
-        data->id, data->fromBlockId?data->fromBlockId:"?" );
-
     if ( blockSide )
-      StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all );
+      StrOp.fmtb( key, "%s%s-%s", id, puls?"":"-ep", wFeedbackEvent.from_all );
     else
-      StrOp.fmtb( key, "%s-%s", id, wFeedbackEvent.from_all_reverse );
+      StrOp.fmtb( key, "%s%s-%s", id, puls?"":"-ep", wFeedbackEvent.from_all_reverse );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "Block [%s] no event found for fromBlockId [%s], try to find one for all with key [%s]...",
+        data->id, data->fromBlockId?data->fromBlockId:"?", key );
     fbevt = (iONode)MapOp.get( data->fbEvents, key );
   }
 
@@ -791,6 +790,7 @@ static void __initFeedbackEvents( iOBlock inst ) {
   while( fbevt != NULL ) {
     const char* fbid = wFeedbackEvent.getid( fbevt );
     const char* byroute = wFeedbackEvent.getbyroute( fbevt );
+    Boolean endpuls = wFeedbackEvent.isendpuls( fbevt );
     iOFBack fb = ModelOp.getFBack( model, fbid );
 
     if( StrOp.len( fbid ) > 0 && fb != NULL ) {
@@ -800,9 +800,10 @@ static void __initFeedbackEvents( iOBlock inst ) {
       while( StrTokOp.hasMoreTokens(tok) ) {
         const char* fromblockid = StrTokOp.nextToken( tok );
         if( byroute != NULL && StrOp.len( byroute ) > 0 && !StrOp.equals( wFeedbackEvent.from_all, byroute) && !StrOp.equals( wFeedbackEvent.from_all_reverse, byroute) )
-          StrOp.fmtb( key, "%s-%s-%s", fbid, fromblockid, byroute );
+          StrOp.fmtb( key, "%s%s-%s-%s", fbid, endpuls?"-ep":"", fromblockid, byroute );
         else
-          StrOp.fmtb( key, "%s-%s", fbid, fromblockid );
+          StrOp.fmtb( key, "%s%s-%s", fbid, endpuls?"-ep":"", fromblockid );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "fbevent added by key [%s]", key);
         MapOp.put( data->fbEvents, key, (obj)fbevt );
       };
       StrTokOp.base.del(tok);
