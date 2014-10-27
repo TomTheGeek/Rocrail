@@ -439,7 +439,7 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       addroffset = 0xC000;
       /* DCC loc adress range start */
       StrOp.copy(prot,"dcc");
-    } else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) ) {
+    } else if( StrOp.equals( wLoc.getprot( node ), wLoc.prot_P ) || StrOp.equals( wLoc.getprot( node ), wLoc.prot_F ) ) {
       addroffset = 0x4000;
       /* MFX loc address range start */
       StrOp.copy(prot,"mfx");
