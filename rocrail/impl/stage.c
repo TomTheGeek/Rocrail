@@ -1943,8 +1943,18 @@ static Boolean _isDepartureAllowed( iIBlockBase inst, const char* id, Boolean fo
   for( i = 0; i < ListOp.size(data->sectionList); i++ ) {
     iONode section = (iONode)ListOp.get( data->sectionList, i);
     if( StrOp.equals( id, wStageSection.getlcid(section) ) ) {
-      if( __isEndSection(inst, section) )
-        return True;
+      if( __isEndSection(inst, section) ) {
+        int lcCount = 0;
+        __dumpSections((iOStage)inst, &lcCount);
+        if( lcCount >= wStage.getminocc(data->props) ) {
+          return True;
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "depart of loco %s is not allowed; minocc=%d occ=%d.",
+              id, wStage.getminocc(data->props), lcCount );
+          return False;
+        }
+      }
     }
   }
   TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
