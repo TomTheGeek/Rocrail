@@ -22,6 +22,7 @@
 */
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "rocrail/impl/text_impl.h"
 
@@ -201,6 +202,16 @@ static char* __addActionProperties(iOMap map, iONode node) {
   MapOp.put(map, "carcount", (obj)NodeOp.getStr(node, "carcount", "0") );
   MapOp.put(map, "countedcars", (obj)NodeOp.getStr(node, "countedcars", "0") );
   MapOp.put(map, "wheelcount", (obj)NodeOp.getStr(node, "wheelcount", "0") );
+
+  /* Get time from Control */
+  {
+    long l_time = ControlOp.getTime( AppOp.getControl() );
+    struct tm* ltm = localtime( &l_time );
+    NodeOp.setInt(node, "hour", ltm->tm_hour);
+    NodeOp.setInt(node, "min", ltm->tm_min);
+    MapOp.put(map, "hour", (obj)NodeOp.getStr(node, "hour", "0") );
+    MapOp.put(map, "min", (obj)NodeOp.getStr(node, "min", "0") );
+  }
   return mvspeedStr;
 }
 
