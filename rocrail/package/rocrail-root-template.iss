@@ -14,6 +14,7 @@ AppCopyright=GNU
 AppPublisher=rocrail.net
 AppPublisherURL=http://www.rocrail.net/
 OutputBaseFilename=rocrail-root-<BZR>-win32
+DisableDirPage=yes
 
 [Tasks]
 Name: demoplan; Description: "Demo plan"
