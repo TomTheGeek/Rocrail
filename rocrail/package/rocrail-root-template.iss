@@ -29,6 +29,7 @@ Source: "mkservice.cmd"; DestDir: "C:\Rocrail"
 Source: "..\..\winbin\rocview.exe"; DestDir: "C:\Rocrail"
 Source: "..\..\winbin\*.dll"; DestDir: "C:\Rocrail"
 Source: "plan.xml"; DestDir: "C:\Rocrail\Demo"; Tasks: demoplan; Flags: onlyifdoesntexist uninsneveruninstall
+Source: "rocview.ini"; DestDir: "C:\Rocrail"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "rocrail.mib"; DestDir: "C:\Rocrail";
 Source: "rocraild.ico"; DestDir: "C:\Rocrail"
 Source: "images\*.*"; DestDir: "C:\Rocrail\images"; Tasks: images; Flags: onlyifdoesntexist uninsneveruninstall
