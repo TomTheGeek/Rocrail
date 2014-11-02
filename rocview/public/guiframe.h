@@ -385,6 +385,7 @@ public:
   void resetRocNetNodeRef() {m_RocnetNodeDlg=NULL;}
   void resetBidibIdentRef() {m_BidibIdentDlg=NULL;}
   void resetTrackPickerRef() {m_TrackPickerDlg=NULL;}
+  bool isPendingOpenWorkspace() {return m_bPendingOpenWorkspace;}
 
 private:
   void Save();
@@ -477,6 +478,7 @@ private:
   iOMutex m_TraceMutex;
   bool m_ThrottlesRestored;
   bool m_bLocoImageColumn;
+  bool m_bPendingOpenWorkspace;
   // any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
 };

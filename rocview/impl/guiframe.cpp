@@ -1859,6 +1859,7 @@ RocGuiFrame::RocGuiFrame(const wxString& title, const wxPoint& pos, const wxSize
   m_bEnableCom         = true;
   m_bLocoImageColumn   = wGui.islocoimagecolumn(m_Ini)?true:false;
   m_TrackPickerDlg     = NULL;
+  m_bPendingOpenWorkspace = false;
 
 
   m_bExpired = SystemOp.isExpired(SystemOp.decode(StrOp.strToByte(wxGetApp().m_donkey),
@@ -3112,15 +3113,20 @@ void RocGuiFrame::OnSetStatusText( wxCommandEvent& event ) {
 
 
 void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
+  m_bPendingOpenWorkspace = true;
   if( !wxGetApp().isOffline() ) {
-    return;
+    if( !ShutdownRocRail(true) ) {
+      m_bPendingOpenWorkspace = false;
+      return;
+    }
+    ThreadOp.sleep(500);
   }
 
   int idx = event.GetId() - ME_OpenWorkspace;
   char* workspace = NULL;
 
   if( idx == 0 ) {
-    if( wGui.isstartdefaultworkspace(wxGetApp().getIni()) && StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 ) {
+    if( event.GetExtraLong() == 4711 && wGui.isstartdefaultworkspace(wxGetApp().getIni()) && StrOp.len( wGui.getdefaultworkspace(wxGetApp().getIni()) ) > 0 ) {
       workspace = StrOp.dup( wGui.getdefaultworkspace(wxGetApp().getIni()) );
     }
     else if( event.GetExtraLong() != 4711 ) {
@@ -3232,6 +3238,8 @@ void RocGuiFrame::OnOpenWorkspace( wxCommandEvent& event ) {
     StrOp.free(workspace);
     StrOp.free(rr);
   }
+  m_bPendingOpenWorkspace = false;
+
 }
 
 void RocGuiFrame::OnNew( wxCommandEvent& event ) {
@@ -4105,7 +4113,7 @@ void RocGuiFrame::setOnline( bool online ) {
     GetToolBar()->EnableTool(ME_Open, !online);
     GetToolBar()->EnableTool(ME_Upload, online);
     GetToolBar()->EnableTool(ME_Connect, (!online && !m_bActiveWorkspace) );
-    GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && !online) );
+    //GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && !online) );
   }
 }
 
@@ -4177,7 +4185,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
   mi = menuBar->FindItem(ME_Quit);
   if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) );
   mi = menuBar->FindItem(ME_OpenWorkspace);
-  if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) && l_bOffline );
+  //if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) && l_bOffline );
   mi = menuBar->FindItem(ME_RecentWorkspaces);
   if( mi != NULL ) mi->Enable( (!m_bActiveWorkspace) && l_bOffline );
 
@@ -4415,7 +4423,7 @@ void RocGuiFrame::OnMenu( wxMenuEvent& event ) {
 
   if( m_ToolBar != NULL ) {
     GetToolBar()->EnableTool(ME_Connect, (l_bOffline && !m_bActiveWorkspace) );
-    GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && l_bOffline) );
+    //GetToolBar()->EnableTool(ME_OpenWorkspace, (!m_bActiveWorkspace && l_bOffline) );
   }
 
   wxMenuItem* mi_zoom25  = menuBar->FindItem(ME_Zoom25);
