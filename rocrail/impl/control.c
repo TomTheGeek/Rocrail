@@ -638,7 +638,7 @@ static void __callback( obj inst, iONode nodeA ) {
         }
       }
       else {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "freeze/resume clock not possible with real time" );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "freeze/resume clock not possible with real time" );
       }
     }
     else if( StrOp.equals( wClock.getcmd(nodeA), wClock.go ) ) {
@@ -1144,12 +1144,18 @@ static void __listener( obj inst, iONode nodeC, int level ) {
     /* Broadcast to clients. Node3 */
     wState.setconsolemode( nodeC, AppOp.isConsoleMode() );
     wState.sethealthy( nodeC, ModelOp.isHealthy(model) );
-    if( data->power && !wState.ispower( nodeC ) ) {
+
+    if( wRocRail.getclock(AppOp.getIni()) == NULL ) {
+      iONode clock = NodeOp.inst(wClock.name(), AppOp.getIni(), ELEMENT_NODE);
+      NodeOp.addChild(AppOp.getIni(), clock);
+    }
+
+    if( wClock.isstopclockatpoweroff(wRocRail.getclock(AppOp.getIni())) && data->power && !wState.ispower( nodeC ) ) {
       /* freeze clock */
       control_callback cb = ControlOp.getCallback((iOControl)inst);
       iONode clockcmd = NodeOp.inst( wClock.name(), NULL, ELEMENT_NODE );
       wClock.setcmd(clockcmd, wClock.freeze );
-      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "power off, freeze clock" );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "power off, freeze clock" );
       cb(inst,clockcmd);
     }
 

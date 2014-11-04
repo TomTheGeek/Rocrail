@@ -29167,4 +29167,7 @@
     <fi txt="Tallenna modulit"/>
     <it txt="Salvare moduli"/>
   </Msg>
+  <Msg id="stopclockatpoweroff">
+    <en txt="Stop clock at power off"/>
+  </Msg>
 </Messages>

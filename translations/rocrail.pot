@@ -5066,7 +5066,7 @@ msgstr ""
 #. 
 # id="analyze"
 #, c-format
-msgid "Analyze track plan for generating routes."
+msgid "Analyse track plan for generating routes."
 msgstr ""
 
 #. 
@@ -7533,5 +7533,11 @@ msgstr ""
 # id="savemodules"
 #, c-format
 msgid "Save modules"
+msgstr ""
+
+#. 
+# id="stopclockatpoweroff"
+#, c-format
+msgid "Stop clock at power off"
 msgstr ""
 

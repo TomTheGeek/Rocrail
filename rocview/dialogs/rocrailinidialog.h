@@ -299,6 +299,7 @@ public:
     wxTextCtrl* m_Hour;
     wxStaticText* m_labMinute;
     wxTextCtrl* m_Minute;
+    wxCheckBox* m_StopClockAtPowerOff;
     wxStaticBoxSizer* m_ClientBox;
     wxStaticText* m_LabelClientPort;
     wxTextCtrl* m_ClientPort;
