@@ -108,17 +108,17 @@ void MGVDlg::SendNibble(int value)
 {
     /* Lower b4 first */
     SetBit(m_Addr4->GetValue(), m_Port4->GetValue(), false);
-    ThreadOp.sleep(50);
+    ThreadOp.sleep(10);
 
     /* Set b1 */
     SetBit(m_Addr1->GetValue(), m_Port1->GetValue(), (value & 0x01) != 0);
-    ThreadOp.sleep(50);
+    ThreadOp.sleep(10);
     /* Set b2 */
     SetBit(m_Addr2->GetValue(), m_Port2->GetValue(), (value & 0x02) != 0);
-    ThreadOp.sleep(50);
+    ThreadOp.sleep(10);
     /* Set b3 */
     SetBit(m_Addr3->GetValue(), m_Port3->GetValue(), (value & 0x04) != 0);
-    ThreadOp.sleep(50);
+    ThreadOp.sleep(10);
 
     /* Raise B4 to transmit */
     SetBit(m_Addr4->GetValue(), m_Port4->GetValue(), true);
@@ -130,7 +130,7 @@ void MGVDlg::SendNibble(int value)
     SetBit(m_Addr4->GetValue(), m_Port4->GetValue(), false);
 
     /* Wait a while */
-    ThreadOp.sleep(50);
+    ThreadOp.sleep(10);
 }
 
 
@@ -213,13 +213,13 @@ void MGVDlg::OnResetBits( wxCommandEvent& event ) {
   m_ProgrammingOff->Enable(true);
 
   SetBit(m_Addr4->GetValue(), m_Port4->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   SetBit(m_Addr3->GetValue(), m_Port3->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   SetBit(m_Addr2->GetValue(), m_Port2->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   SetBit(m_Addr1->GetValue(), m_Port1->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
 }
 
 
@@ -227,7 +227,7 @@ void MGVDlg::OnProgrammingOn( wxCommandEvent& event ){
   enableSetup(false);
   EnterProgrammingMode();
   m_ProgrammingOff->Enable(true);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(100);
   m_Servo->Enable(true);
 
   OnServoSelect();
@@ -237,38 +237,38 @@ void MGVDlg::EnterProgrammingMode(){
   m_bProgrammingMode = true;
   // Turn all bits off (Reset did this already!?)
   SetBit(m_Addr4->GetValue(), m_Port4->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   SetBit(m_Addr3->GetValue(), m_Port3->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   SetBit(m_Addr2->GetValue(), m_Port2->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   SetBit(m_Addr1->GetValue(), m_Port1->GetValue(), false);
   ThreadOp.sleep(1000);
 
   // Turn bit 1 on
   SetBit(m_Addr1->GetValue(), m_Port1->GetValue(), true);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   // Turn bit 2 on
   SetBit(m_Addr2->GetValue(), m_Port2->GetValue(), true);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   // Turn bit 3 on
   SetBit(m_Addr3->GetValue(), m_Port3->GetValue(), true);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   // Turn bit 4 on
   SetBit(m_Addr4->GetValue(), m_Port4->GetValue(), true);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   // Turn bit 1 off
   SetBit(m_Addr1->GetValue(), m_Port1->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   // Turn bit 2 off
   SetBit(m_Addr2->GetValue(), m_Port2->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   // Turn bit 3 off
   SetBit(m_Addr3->GetValue(), m_Port3->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   // Turn bit 4 off
   SetBit(m_Addr4->GetValue(), m_Port4->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
 }
 
 void MGVDlg::ExitProgrammingMode(){
@@ -276,13 +276,13 @@ void MGVDlg::ExitProgrammingMode(){
 
   /* Reset all 4 bits */
   SetBit(m_Addr4->GetValue(), m_Port4->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   SetBit(m_Addr3->GetValue(), m_Port3->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   SetBit(m_Addr2->GetValue(), m_Port2->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   SetBit(m_Addr1->GetValue(), m_Port1->GetValue(), false);
-  ThreadOp.sleep(50);
+  ThreadOp.sleep(10);
   m_bProgrammingMode = false;
 }
 
