@@ -1659,10 +1659,22 @@ static void _event( iOSwitch inst, iONode nodeC ) {
     else {
       /* single motor */
       if( wSwitch.issinglegate(data->props) && wSwitch.getgatevalue(nodeC) != -1 ) {
-        if( inv )
-          wSwitch.setstate( data->props, wSwitch.getgatevalue(nodeC) ? wSwitch.straight:wSwitch.turnout );
-        else
-          wSwitch.setstate( data->props, wSwitch.getgatevalue(nodeC) ? wSwitch.turnout:wSwitch.straight );
+        if( inv ) {
+          if( wSwitch.getgatevalue(nodeC) < 2 )
+            wSwitch.setstate( data->props, wSwitch.getgatevalue(nodeC) ? wSwitch.straight:wSwitch.turnout );
+          else {
+            if( StrOp.equals( state, wSwitch.turnout ) )
+              wSwitch.setstate( data->props, wSwitch.straight );
+            else if( StrOp.equals( state, wSwitch.straight ) )
+              wSwitch.setstate( data->props, wSwitch.turnout );
+          }
+        }
+        else {
+          if( wSwitch.getgatevalue(nodeC) < 2 )
+            wSwitch.setstate( data->props, wSwitch.getgatevalue(nodeC) ? wSwitch.turnout:wSwitch.straight );
+          else
+            wSwitch.setstate( data->props, state );
+        }
       }
       else if( !inv ) {
         if( StrOp.equals(wSwitch.left, state ) )
@@ -1684,8 +1696,8 @@ static void _event( iOSwitch inst, iONode nodeC ) {
 
     wSwitch.setfieldstate( data->props, wSwitch.getstate(data->props) );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] field state=%s(%s) gatevalue=%d",
-        SwitchOp.getId(inst), wSwitch.getstate( data->props), wSwitch.getstate(nodeC), wSwitch.getgatevalue(nodeC) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "switch [%s] field state=%s(%s) gatevalue=%d inv=%d state=%s",
+        SwitchOp.getId(inst), wSwitch.getstate( data->props), wSwitch.getstate(nodeC), wSwitch.getgatevalue(nodeC), inv, state );
 
     __checkAction( inst );
 
