@@ -159,7 +159,7 @@ void MGVDlg::initLabels() {
   m_labServoLeft->SetLabel( wxGetApp().getMsg( "left" ) );
   m_labServoRight->SetLabel( wxGetApp().getMsg( "right" ) );
   m_labServoSpeed->SetLabel( wxGetApp().getMsg( "speed" ) );
-  m_ServoRelay->SetLabel( wxGetApp().getMsg( "polarizationrelay" ) );
+  m_ServoRelay->SetLabel( wxGetApp().getMsg( "polarizationrelais" ) );
 
   // Buttons
   m_StdButtonOK->SetLabel( wxGetApp().getMsg( "ok" ) );
