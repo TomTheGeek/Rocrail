@@ -982,6 +982,9 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
   iONode incl = wRoute.getincl( data->props );
   iONode excl = wRoute.getexcl( data->props );
 
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                 "Check if loco [%s] has no permission to use route [%s]", id, wRoute.getid(data->props) );
+
   /* test if the id is included: */
   if( incl != NULL ) {
     Boolean included = False;
@@ -1107,6 +1110,9 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
     const char* locoPrevBlockID = LocOp.getPrevBlock(loc);
     const char* locoCurBlockID  = LocOp.getCurBlock(loc);
     
+    if( locoPrevBlockID == NULL )
+      locoPrevBlockID = locoCurBlockID;
+
     while( cond != NULL ) {
       const char* prevbkid = wRouteCondition.getprevbkid(cond);
       Boolean notprevbk = wRouteCondition.isnotprevbk(cond);
@@ -1125,6 +1131,8 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
                          "Condition does not match: unequal blockIDs(%s!=%s), but should be equal.", prevbkid, locoPrevBlockID );
           continue;
         }
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                       "Condition: %sblock %s, Loco prev=%s cur=%s prevcall=%s", notprevbk?"NOT ":"", prevbkid, locoPrevBlockID, locoCurBlockID, prevBlockID );
       }
 
       if( wRouteCondition.iscommuter(data->props) && !LocOp.isCommuter(loc) ) {
@@ -1169,11 +1177,17 @@ static Boolean _hasPermission( iORoute inst, iOLoc loc, const char* prevBlockID,
       }
 
       /**/
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "conditions OK");
       return True;
     };
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "conditions not OK");
     return False;
   }
+  else {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "*****No conditions");
+  }
 
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "*****OK");
   return True;
 
 }

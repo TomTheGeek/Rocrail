@@ -88,6 +88,7 @@ void statusEnter( iILcDriverInt inst, Boolean re_enter ) {
     /* Find and lock next destination block and street... */
     if( data->schedule == NULL || StrOp.len( data->schedule ) == 0 ) {
       if( data->next2Block == NULL ) {
+        data->loc->resetPrevBlock(data->loc);
         data->next2Block = data->model->findDest( data->model, data->next1Block->base.id( data->next1Block ),
                                               data->next1Route->base.id( data->next1Route ),
                                               data->loc, &data->next2Route, data->gotoBlock,
