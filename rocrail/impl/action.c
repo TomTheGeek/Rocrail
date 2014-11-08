@@ -1283,15 +1283,18 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
       int addr = VarOp.getValue(wAction.getparam(data->action), NULL);
       iOLoc lc = ModelOp.getLoc( model, wAction.getoid( data->action ), NULL, False);
 
+      if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
+        lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL, False );
+        if( lc != NULL )
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found loco [%s] by ID", LocOp.getId(lc) );
+      }
+
       if( lc == NULL && addr > 0 ) {
         lc = ModelOp.getLocByAddress( model, addr, NULL);
         if( lc != NULL )
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "found loco [%s] by variable address %d", LocOp.getId(lc), addr );
       }
 
-      if( lc == NULL && wActionCtrl.getlcid(actionctrl) != NULL) {
-        lc = ModelOp.getLoc( model, wActionCtrl.getlcid(actionctrl), NULL, False );
-      }
       if( lc != NULL ) {
         if( StrOp.equals( wAction.loco_class, wAction.getcmd( data->action ) ) ) {
           LocOp.setClass(lc, wAction.getparam( data->action ));
