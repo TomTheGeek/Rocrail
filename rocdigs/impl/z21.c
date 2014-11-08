@@ -1201,7 +1201,6 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       wLoc.setV_raw( nodeC, speed );
       wLoc.setV_rawMax( nodeC, steps );
       wLoc.setthrottleid( nodeC, "x-bus" );
-      wLoc.setcmd( nodeC, wLoc.velocity );
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
           "Loco %d:%d V_raw=%d dir=%s lights=%s", addr, steps, speed, dir?"fwd":"rev", fn?"on":"off");
       data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
