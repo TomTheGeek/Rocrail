@@ -588,8 +588,9 @@ static iONode __translate(iOZ21 inst, iONode node) {
     packet[1] = 0x00;
     packet[2] = LAN_LOCONET_DISPATCH_ADDR;
     packet[3] = 0x00;
-    packet[4] = addr / 256; /*MSB*/
-    packet[5] = addr % 256; /*LSB*/
+    /* Address Little Endian */
+    packet[4] = addr % 256; /*LSB*/
+    packet[5] = addr / 256; /*MSB*/
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dispatch loco %d", addr );
     ThreadOp.post(data->writer, (obj)packet);
   }
