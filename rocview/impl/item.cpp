@@ -3157,15 +3157,16 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( StrOp.equals( wBlock.open, state ) ) {
       Boolean isReserved    = wBlock.isreserved( node );
       Boolean isEntering    = wBlock.isentering( node );
+      Boolean isShowImage   = wGui.isshowlocoimageinblock(wxGetApp().getIni());
 
       if( fifoids != NULL && StrOp.len(fifoids) == 0 )
         fifoids = NULL;
 
       wBlock.setreserved( m_Props, isReserved );
 
-      if( wBlock.issmallsymbol(m_Props) && StrOp.len(locoid) > 0 )
+      if( (wBlock.issmallsymbol(m_Props) || isShowImage ) && StrOp.len(locoid) > 0 )
         l_locidStr = StrOp.fmt( "%s%s", fifoids!=NULL?fifoids:locoid, hasCars?"#":"" );
-      else if( showID && wBlock.issmallsymbol(m_Props) )
+      else if( showID && (wBlock.issmallsymbol(m_Props) || isShowImage ) )
         l_locidStr = StrOp.fmt( "%s%s", wBlock.getid( node ), hasCars?"#":"" );
       else {
         if(showID && fifoids == NULL)
@@ -3285,10 +3286,10 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( carList != NULL )
       StrOp.free(carList);
 
-    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "id=[%s] occupied=[%d] rotate=[%d] state=[%s] locoid=[%s]",
-        id, occupied, m_RotateSym, state, locoid );
+    TraceOp.trc( "item", TRCLEVEL_DEBUG, __LINE__, 9999, "id=[%s] occupied=[%d] rotate=[%d] state=[%s] locoid=[%s] updateenterside=%d",
+        id, occupied, m_RotateSym, state, locoid, updateEnterside );
 
-    m_Renderer->setLabel( l_locidStr, updateEnterside ? -1:occupied, m_RotateSym );
+    m_Renderer->setLabel( l_locidStr, (updateEnterside && !oncreate) ? -1:occupied, m_RotateSym );
     // Free previous string.
     StrOp.free( m_locidStr );
     // Save current string in member.
