@@ -675,7 +675,30 @@ static iONode __translate(iOZ21 inst, iONode node) {
     int addr = wProgram.getaddr( node );
     Boolean accessory = wProgram.isacc( node );
 
-    if( wProgram.getcmd( node ) == wProgram.fb_setaddr ) {
+    if(  wProgram.getcmd( node ) == wProgram.pton ) {
+      byte* packet = allocMem(32);
+      packet[0] = 0x07;
+      packet[1] = 0x00;
+      packet[2] = X_BUS_TUNNEL;
+      packet[3] = 0x00;
+      packet[4] = 0x21;
+      packet[5] = 0x80;
+      packet[6] = 0xA1;
+      ThreadOp.post(data->writer, (obj)packet);
+    }
+    else if(  wProgram.getcmd( node ) == wProgram.ptoff ) {
+      byte* packet = allocMem(32);
+      packet[0] = 0x07;
+      packet[1] = 0x00;
+      packet[2] = X_BUS_TUNNEL;
+      packet[3] = 0x00;
+      packet[4] = 0x21;
+      packet[5] = 0x81;
+      packet[6] = 0xA0;
+      ThreadOp.post(data->writer, (obj)packet);
+    }
+
+    else if( wProgram.getcmd( node ) == wProgram.fb_setaddr ) {
       byte* packet = allocMem(32);
       packet[0] = 0x05;
       packet[1] = 0x00;
@@ -1068,6 +1091,8 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       }
       else if( packet[packetIdx+4] == 0x61 && packet[packetIdx+5] == 0x02 ) {
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_PROGRAMMING_MODE" );
+        data->power = False;
+        __reportState(inst);
       }
     }
 
