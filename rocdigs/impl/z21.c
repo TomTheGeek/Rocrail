@@ -1074,6 +1074,8 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       else if( packet[packetIdx+4] == 0x81 && packet[packetIdx+5] == 0x00 ) {
         /* Emergency break */
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "LAN_X_BC_STOPPED" );
+        data->power = False;
+        __reportState(inst);
       }
       else if( packet[packetIdx+4] == 0x61 && packet[packetIdx+5] == 0x12 ) {
         /* PT short cut */
@@ -1184,8 +1186,11 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
       data->volt = packet[packetIdx+15] * 256 + packet[packetIdx+14];
 
       TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999,
-          "System state changed: main=%dmV %dmA pt=%dmA temp=%dC", data->volt, data->load, data->ptload, data->temp);
-      data->power = (stat1 & csTrackVoltageOff) ? False:True;
+          "System state changed: main=%dmV %dmA pt=%dmA temp=%dC satus=0x%X", data->volt, data->load, data->ptload, data->temp, stat1);
+      if( stat1 & csTrackVoltageOff || stat1 & csEmergencyStop || stat1 & csShortCircuit || stat1 & csProgrammingModeActive )
+        data->power = False;
+      else
+        data->power = True;
       __reportState(inst);
     }
 
