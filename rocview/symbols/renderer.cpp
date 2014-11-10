@@ -2015,17 +2015,17 @@ void SymbolRenderer::drawBlockTriangle( wxPaintDC& dc, const char* ori ) {
 
   if( StrOp.equals( wItem.west, ori ) || StrOp.equals( wItem.east, ori ) ) {
     // horizontal triangle
-    if( StrOp.equals( wItem.west, ori ) ) {
-      p[0].x = 3; p[0].y =  9;
-      p[1].x = 8; p[1].y = 12;
-      p[2].x = 8; p[2].y =  6;
-      p[3].x = 3; p[3].y =  9;
+    if( m_cx <= 3 ) {
+      p[0].x =  8; p[0].y =  8;
+      p[1].x = 11; p[1].y = 11;
+      p[2].x = 11; p[2].y =  5;
+      p[3].x =  8; p[3].y =  8;
     }
     else {
-      p[0].x = 3; p[0].y = 22;
-      p[1].x = 8; p[1].y = 19;
-      p[2].x = 8; p[2].y = 25;
-      p[3].x = 3; p[3].y = 22;
+      p[0].x = 3; p[0].y = 15;
+      p[1].x = 6; p[1].y = 18;
+      p[2].x = 6; p[2].y = 12;
+      p[3].x = 3; p[3].y = 15;
     }
 
     if(  ( StrOp.equals( wItem.east, ori ) && ! m_rotate )
@@ -2041,17 +2041,17 @@ void SymbolRenderer::drawBlockTriangle( wxPaintDC& dc, const char* ori ) {
   }
   else {
     // vertical triangle
-    if( StrOp.equals( wItem.north, ori ) ) {
-      p[0].x =  9; p[0].y = 3;
-      p[1].x = 12; p[1].y = 8;
-      p[2].x =  6; p[2].y = 8;
-      p[3].x =  9; p[3].y = 3;
+    if( m_cy <= 3 ) {
+      p[0].x =  8; p[0].y =  8;
+      p[1].x = 11; p[1].y = 11;
+      p[2].x =  5; p[2].y = 11;
+      p[3].x =  8; p[3].y =  8;
     }
     else {
-      p[0].x = 22; p[0].y = 3;
-      p[1].x = 19; p[1].y = 8;
-      p[2].x = 25; p[2].y = 8;
-      p[3].x = 22; p[3].y = 3;
+      p[0].x = 15; p[0].y = 3;
+      p[1].x = 18; p[1].y = 6;
+      p[2].x = 12; p[2].y = 6;
+      p[3].x = 15; p[3].y = 3;
     }
 
     if(  ( StrOp.equals( wItem.north, ori ) && ! m_rotate )
@@ -2097,8 +2097,6 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
   svgSym[7] = (m_bSmall && m_SvgSym14 != NULL)?m_SvgSym14:m_SvgSym13;
   svgSym[8] = (m_bSmall && m_SvgSym16 != NULL)?m_SvgSym16:m_SvgSym15;
 
-  TraceOp.trc( "renderer", TRCLEVEL_INFO, __LINE__, 9999, "block[%s] state=%s occupied=%d", wBlock.getid(m_Props), wBlock.getstate(m_Props), m_iOccupied );
-
   // SVG Symbol:
   if( (svgSym[1]!=NULL && m_iOccupied == 0) ||
       (svgSym[1]!=NULL && svgSym[5]==NULL && m_iOccupied == 4) ||
@@ -2139,11 +2137,6 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
 
   drawBlockTriangle( dc, ori );
 
-  int xTextStart = 0;
-  int yTextStart = 0;
-  int x = 0;
-  int y = 0;
-  wxBitmap* imageBitmap = NULL;
 
   bool l_ImageOK = false;
   if( (m_iOccupied == 1 || m_iOccupied == 3) && m_LocoImage != NULL && StrOp.len(m_LocoImage) > 0 ) {
@@ -2153,43 +2146,31 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
     StrOp.fmtb( pixpath, "%s%c%s", imagepath, SystemOp.getFileSeparator(), FileOp.ripPath( m_LocoImage ) );
 
     if( FileOp.exist(pixpath) && StrOp.endsWithi( pixpath, ".png" ) ) {
-      
+      wxBitmap* imageBitmap = NULL;
       wxImage img(wxString(pixpath,wxConvUTF8), wxBITMAP_TYPE_PNG);
       int maxheight = 20;
-      if( wItem.isroad( m_Props ) ) 
-        maxheight = 18;
-
-      int imageDistance = 10;
-
-      int symbolLength = 128;
-      if( m_bSmall ) symbolLength = 64;
-
-      int maxwidth = symbolLength - (imageDistance * 2);
-
-      if( img.GetHeight() > maxheight || img.GetWidth() > maxwidth) {
+      if( img.GetHeight() > maxheight ) {
         int h = img.GetHeight();
         int w = img.GetWidth();
-        float scaleh = (float)h / (float)maxheight;
-        float scalew = (float)w / (float)maxwidth;
-        float imgwidth = 0;
-        float imgheight = 0;
-        if( scaleh > scalew) {
-           imgwidth = (float)w / scaleh;
-           imgheight = (float)h / scaleh;
-        }
-        else {
-           imgwidth = (float)w / scalew;
-           imgheight = (float)h / scalew;
-        }
-        imageBitmap = new wxBitmap(img.Scale((int)imgwidth, (int)imgheight, wxIMAGE_QUALITY_HIGH));
+        float scale = (float)h / (float)maxheight;
+        float width = (float)w / scale;
+        imageBitmap = new wxBitmap(img.Scale((int)width, maxheight, wxIMAGE_QUALITY_HIGH));
       }
       else {
         imageBitmap = new wxBitmap(img);
       }
 
-      /* mirror */
-      if( (m_rotate && (StrOp.equals( ori, wItem.east ))) ||
-          (!m_rotate && (StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) || StrOp.equals( ori, wItem.west ))) )
+      int symbolLength = 128;
+      if( m_bSmall )
+        symbolLength = 64;
+
+      int x = (symbolLength - imageBitmap->GetWidth()) / 2;
+      int y = (32-maxheight)/2;
+      if( x < 10 )
+        x = 10;
+
+      if( (m_rotate && !(StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ))) ||
+          (!m_rotate && (StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ))) )
       {
         wxImage img = imageBitmap->ConvertToImage();
         delete imageBitmap;
@@ -2197,54 +2178,26 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
         imageBitmap = new wxBitmap(img);
       }
 
-
-      /* west or east */
-      x = imageDistance;
-      xTextStart = x + imageBitmap->GetWidth() + 1;
-      if ( (m_rotate && StrOp.equals( ori, wItem.west)) ||
-           (!m_rotate && StrOp.equals( ori, wItem.east))) {
-        x = (symbolLength - imageBitmap->GetWidth()) - imageDistance;
-        xTextStart = 2;
-        if( x < imageDistance )
-          x = imageDistance;
-      }
-      y = (32 - imageBitmap->GetHeight()) / 2;
-      
-      /* north or south */
-      /* rotate image */
       if( StrOp.equals( ori, wItem.north ) || StrOp.equals( ori, wItem.south ) ) {
         wxImage img = imageBitmap->ConvertToImage();
         delete imageBitmap;
-        img = img.Rotate90( StrOp.equals( ori, wItem.south ) ? true:false );
+        img = img.Rotate90( StrOp.equals( ori, wItem.north ) ? true:false );
         imageBitmap = new wxBitmap(img);
-
-        y = imageDistance;
-        yTextStart = y + imageBitmap->GetHeight() + 1;
-        if( ( m_rotate && (StrOp.equals( ori, wItem.south ))) ||
-            ( !m_rotate && (StrOp.equals( ori, wItem.north ))) ) {
-          y = symbolLength - imageBitmap->GetHeight() - imageDistance;
-          if( y < imageDistance ) 
-            y = imageDistance;
-        }
-        if( m_rotate ) {
-          if( StrOp.equals( ori, wItem.north ) ) {
-            yTextStart = imageDistance + imageBitmap->GetHeight();
-          } else {
-            yTextStart = 2;
-          }
-        } else {
-          if( StrOp.equals( ori, wItem.north ) ) {
-            yTextStart = y;
-          }            
-        }
-        x = (32 - imageBitmap->GetWidth()) / 2;
+        x = (32-maxheight)/2;
+        y = (symbolLength - imageBitmap->GetHeight()) / 2;
+        if( y < 10 )
+          y = 10;
       }
 
+      if( m_UseGC )
+        m_GC->DrawBitmap(*imageBitmap, x, y, imageBitmap->GetWidth(), imageBitmap->GetHeight());
+      else
+        dc.DrawBitmap(*imageBitmap, x, y);
       l_ImageOK = true;
     }
   }
 
-  if( StrOp.len(m_Label) > 0 ) {
+  if( !l_ImageOK && StrOp.len(m_Label) > 0 ) {
     int red = 0;
     int green = 0;
     int blue = 0;
@@ -2273,52 +2226,23 @@ void SymbolRenderer::drawBlock( wxPaintDC& dc, bool occupied, const char* ori ) 
       height = h;
     }
 
-    if( !l_ImageOK ) {
-      xTextStart = ( 32 * m_cx - width ) / 2;
-      if( StrOp.equals( ori, wItem.north ) ) {
-        yTextStart = ( 32 * m_cy + width ) / 2;
-      } else {
-        yTextStart = ( 32 * m_cy - width ) / 2;
-      }
+    if( StrOp.equals( textOri, wItem.south ) ) {
+      drawString( wxString(m_Label,wxConvUTF8), 32-5, 9, 270.0, false );
     }
-    if( l_ImageOK && m_rotate ) {
-      if( StrOp.equals( ori, wItem.north ) ) {
-        yTextStart = yTextStart + width + 2;
-      } else {
-        yTextStart = y - (width + 2);
-      }
-    }
-    if( l_ImageOK && !m_rotate ) {
-      if( StrOp.equals( ori, wItem.north ) ) {
-        yTextStart = y - 2;
-      }
-    }
-    if( StrOp.equals( ori, wItem.north ) ) {
-
-      drawString( wxString(m_Label,wxConvUTF8), 16 - ( height / 2 ), yTextStart, 90.0, false );
-    }
-    else if( StrOp.equals( ori, wItem.south ) ) {
-      drawString( wxString(m_Label,wxConvUTF8), 16 + ( height / 2 ), yTextStart, 270.0, false );
+    else if( StrOp.equals( textOri, wItem.north ) ) {
+      drawString( wxString(m_Label,wxConvUTF8), 7, (32 * m_cy)-8, 90.0, false );
     }
     else {
-      if ( l_ImageOK &&
-           ((m_rotate && StrOp.equals( ori, wItem.west)) ||
-           (!m_rotate && StrOp.equals( ori, wItem.east))) ) {
-        xTextStart = x - (width + 2);
-      }
-      drawString( wxString(m_Label,wxConvUTF8), xTextStart, 16 - ( height / 2 ), 0.0, false );
+#ifdef __WIN32__
+      drawString( wxString(m_Label,wxConvUTF8), 9, 8, 0.0, false );
+#else
+      drawString( wxString(m_Label,wxConvUTF8), ((32*m_cx-width)/2), (32-height)/2, 0.0, false );
+#endif
     }
 
     delete font;
   }
 
-  /* Lokimage zeichnen */
-  if( l_ImageOK ) {
-    if( m_UseGC )
-      m_GC->DrawBitmap(*imageBitmap, x, y, imageBitmap->GetWidth(), imageBitmap->GetHeight());
-    else
-      dc.DrawBitmap(*imageBitmap, x, y);
-  }
 }
 
 

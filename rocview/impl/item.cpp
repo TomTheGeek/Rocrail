@@ -3157,16 +3157,15 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( StrOp.equals( wBlock.open, state ) ) {
       Boolean isReserved    = wBlock.isreserved( node );
       Boolean isEntering    = wBlock.isentering( node );
-      Boolean isShowImage   = wGui.isshowlocoimageinblock(wxGetApp().getIni());
 
       if( fifoids != NULL && StrOp.len(fifoids) == 0 )
         fifoids = NULL;
 
       wBlock.setreserved( m_Props, isReserved );
 
-      if( (wBlock.issmallsymbol(m_Props) || isShowImage ) && StrOp.len(locoid) > 0 )
+      if( wBlock.issmallsymbol(m_Props) && StrOp.len(locoid) > 0 )
         l_locidStr = StrOp.fmt( "%s%s", fifoids!=NULL?fifoids:locoid, hasCars?"#":"" );
-      else if( showID && (wBlock.issmallsymbol(m_Props) || isShowImage ) )
+      else if( showID && wBlock.issmallsymbol(m_Props) )
         l_locidStr = StrOp.fmt( "%s%s", wBlock.getid( node ), hasCars?"#":"" );
       else {
         if(showID && fifoids == NULL)
