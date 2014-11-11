@@ -38,6 +38,7 @@
  *
  */
 
+#include <stdlib.h>
 #include "rocdigs/impl/mcs2_impl.h"
 #include "rocdigs/impl/mcs2/mcs2-const.h"
 
@@ -67,6 +68,7 @@
 
 
 static int instCnt = 0;
+static int rrHash = 0x1314;
 
 static void __reportState(iOMCS2Data data);
 
@@ -124,15 +126,15 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OMCS2 ----- */
-static byte* __makeMsg( int prio, int cmd, int hash, Boolean rsp, int len, byte* buffer ) {
+static byte* __makeMsg( int prio, int cmd, Boolean rsp, int len, byte* buffer ) {
   int i = 0;
   byte* msg = allocMem(32);
   msg[0]  = (prio << 1);
   msg[0] |= (cmd >> 7);
   msg[1]  = ((cmd & 0x7F) << 1 );
   msg[1] |= rsp;
-  msg[2]  = (hash/256)&0xFF;
-  msg[3]  = (hash%256)&0xFF;
+  msg[2]  = (rrHash/256)&0xFF;
+  msg[3]  = (rrHash%256)&0xFF;
   msg[4]  = len;
   for(i = 0; i < len; i++ )
     msg[5+i]  = buffer[i];
@@ -182,8 +184,8 @@ static void __setSysMsg( byte* msg, int prio, int cmd, Boolean rsp, int len, lon
   msg[0] |= (cmd >> 7);
   msg[1]  = ((cmd & 0x7F) << 1 );
   msg[1] |= rsp;
-  msg[2]  = 0x03;
-  msg[3]  = 0x00;
+  msg[2]  = (rrHash / 256) & 0xFF;
+  msg[3]  = (rrHash % 256) & 0xFF;
   msg[4]  = len;
   msg[5]  = (addr & 0xFF000000) >> 24;
   msg[6]  = (addr & 0x00FF0000) >> 16;
@@ -230,8 +232,8 @@ static void __SoD( iOMCS2 inst ) {
       byte*  msg   = allocMem(32);
       msg[0] = (CMD_ACC_SENSOR >> 7);
       msg[1]  = ((CMD_ACC_SENSOR & 0x7F) << 1 );
-      msg[2]  = 0x03;
-      msg[3]  = 0x00;
+      msg[2]  = (rrHash / 256) & 0xFF;
+      msg[3]  = (rrHash % 256) & 0xFF;
       msg[4]  = 7;
       msg[5]  = wMCS2.getfbdevid(data->mcs2ini) / 256; /* Geraetekenner */
       msg[6]  = wMCS2.getfbdevid(data->mcs2ini) % 256;
@@ -875,6 +877,15 @@ static void __evaluatePing( iOMCS2Data data, byte* in ) {
     data->ms2UID = (in[5] << 24) + (in[6] << 16) + (in[7] << 8) + in[8];
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "MS-2 UID: 0x%04X stored", data->ms2UID );
   }
+
+  int rcvHash = (in[2] << 8) + in[3];
+
+  if( rcvHash == rrHash ) {
+    rrHash = rand() % 0x10000;
+    rrHash &= 0xFF7F;
+    rrHash |= 0x0300;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Duplicate CANbus address detect, new hash generated: 0x%04X", rrHash );
+  }
 }
 
 static void __evaluateMCS2Switch( iOMCS2Data mcs2, byte* in ) {
@@ -1000,7 +1011,7 @@ static void __evaluateMCS2Bind( iOMCS2Data mcs2, byte* in ) {
       buffer[4]  = (wProduct.getsid(loco) / 256) & 0xFF;
       buffer[5]  = (wProduct.getsid(loco) % 256) & 0xFF;
 
-      ThreadOp.post( mcs2->writer, (obj)__makeMsg(0, CMD_LOCO_VERIFY, 0x4711, False, 6, buffer) );
+      ThreadOp.post( mcs2->writer, (obj)__makeMsg(0, CMD_LOCO_VERIFY, False, 6, buffer) );
     }
   }
 }
@@ -1025,7 +1036,7 @@ static void __evaluateMCS2Discovery( iOMCS2Data mcs2, byte* in ) {
       buffer[4]  = (wProduct.getsid(loco) / 256) & 0xFF;
       buffer[5]  = (wProduct.getsid(loco) % 256) & 0xFF;
 
-      ThreadOp.post( mcs2->writer, (obj)__makeMsg(0, CMD_LOCO_BIND, 0x4711, False, 6, buffer) );
+      ThreadOp.post( mcs2->writer, (obj)__makeMsg(0, CMD_LOCO_BIND, False, 6, buffer) );
 
       /* Send UID & SID to the Rocrail server. */
       {
@@ -1370,7 +1381,7 @@ static void __discovery( void* threadinst ) {
     byte buffer[32];
     buffer[0] = 96;
     ThreadOp.sleep(5000);
-    ThreadOp.post( data->writer, (obj)__makeMsg(0, CMD_LOCO_DISCOVERY, 0x0300, False, 1, buffer) );
+    ThreadOp.post( data->writer, (obj)__makeMsg(0, CMD_LOCO_DISCOVERY, False, 1, buffer) );
 
     if( testResponse ) {
       byte buffer[32];
@@ -1381,7 +1392,7 @@ static void __discovery( void* threadinst ) {
       buffer[4]  = 0x20;
       ThreadOp.sleep(500);
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send dummy discover response..." );
-      ThreadOp.post( data->writer, (obj)__makeMsg(0, CMD_LOCO_DISCOVERY, 0x0300, True, 5, buffer) );
+      ThreadOp.post( data->writer, (obj)__makeMsg(0, CMD_LOCO_DISCOVERY, True, 5, buffer) );
     }
 
   } while( data->run );
