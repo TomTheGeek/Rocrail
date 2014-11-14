@@ -59,7 +59,7 @@ static int instCnt = 0;
 
 
 static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int id, int addr, int d2, int d3, int d4, int d5, int d6, int d7 );
-static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid, int value, const char* str );
+static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid, int value1, int value2, const char* str );
 static int __getNID(byte* msg);
 
 /** ----- OBase ----- */
@@ -172,7 +172,7 @@ static iOSlot __getSlot(iOZimoCAN inst, iONode node) {
   ThreadOp.post(data->writer, (obj)msg);
 
   msg = allocMem(256);
-  msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, slot->nid, 0, slot->id );
+  msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, slot->nid, 0, 0, slot->id );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set name for loco %s with NID=0x%X", slot->id, slot->nid );
   ThreadOp.post(data->writer, (obj)msg);
 
@@ -535,11 +535,11 @@ static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int n
   return (11 + dlc);
 }
 
-static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid, int value, const char* str ) {
+static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid, int value1, int value2, const char* str ) {
   int crc    = 0;
   int idx    = 0;
   int strlen = StrOp.len(str);
-  int dlc    = 6 + strlen;
+  int dlc    = 12 + strlen;
   int i      = 0;
 
   msg[0]  = 0x5A;
@@ -551,29 +551,28 @@ static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid,
   msg[5]  = (nid & 0xFF);
   msg[6]  = ((nid >> 8) & 0xFF);
 
-  idx = 7; /* value */
-  msg[idx]  = (value & 0xFF);
-  idx++;
-  msg[idx]  = ((value >> 8) & 0xFF);
-  idx++;
-  msg[idx]  = ((value >> 16) & 0xFF);
-  idx++;
-  msg[idx]  = ((value >> 24) & 0xFF);
-  idx++;
+  msg[7]  = (value1 & 0xFF);
+  msg[8]  = ((value1 >> 8) & 0xFF);
+  msg[9]  = ((value1 >> 16) & 0xFF);
+  msg[10]  = ((value1 >> 24) & 0xFF);
+
+  msg[11]  = (value2 & 0xFF);
+  msg[12]  = ((value2 >> 8) & 0xFF);
+  msg[13]  = ((value2 >> 16) & 0xFF);
+  msg[14]  = ((value2 >> 24) & 0xFF);
 
   for( i = 0; i < strlen; i++ ) {
-    msg[idx]  = str[i];
-    idx++;
+    msg[15+i]  = str[i];
   }
 
-  crc = CRCOp.checkSum16(msg+2, 5+dlc);
-  msg[7+dlc] = (crc & 0xFF);
-  msg[8+dlc] = ((crc >> 8) & 0xFF);
+  crc = CRCOp.checkSum16(msg+2, 5+dlc+strlen);
+  msg[7+dlc+strlen] = (crc & 0xFF);
+  msg[8+dlc+strlen] = ((crc >> 8) & 0xFF);
 
-  msg[ 9+dlc] = 0x32;
-  msg[10+dlc] = 0x5A;
+  msg[ 9+dlc+strlen] = 0x32;
+  msg[10+dlc+strlen] = 0x5A;
 
-  return (11 + dlc);
+  return (11 + dlc + strlen);
 }
 
 static int __getNID(byte* msg) {
