@@ -926,6 +926,13 @@
       <var name="sod_fbmod" vt="int"/>
       <var name="sod_sensorbegin" vt="int"/>
       <var name="sod_sensorend" vt="int"/>
+      <var name="id" vt="char*" remark="Id name"/>
+      <var name="sid" vt="int" remark="address"/>
+      <var name="reguid" vt="unsigned int" remark="UID"/>
+      <var name="regloc" vt="Boolean" remark="flag to register/generate loco"/>
+      <var name="locolist" vt="iONode"/>
+      <var name="mfxbinder" vt="iOThread"/>
+      <var name="mfxDetectInProgress" vt="Boolean"/>
     </data>
   </object>
 

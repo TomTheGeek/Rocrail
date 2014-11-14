@@ -2623,12 +2623,28 @@ static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean genera
         iONode lc = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "generating a loco for addres [%d]", addr );
         wLoc.setid( lc, id );
+        StrOp.fmtb( identifier, "%d", addr );
+        wLoc.setidentifier( lc, identifier );
         if( props != NULL ) {
+          wLoc.setspcnt( lc, wLoc.getspcnt(props) );
+          wLoc.setprot( lc, wLoc.getprot(props) );
           if( wLoc.getshortid(props) != NULL && StrOp.len(wLoc.getshortid(props)) > 0 ) {
             wLoc.setid( lc, wLoc.getshortid(props) );
           }
-          wLoc.setspcnt( lc, wLoc.getspcnt(props) );
-          wLoc.setprot( lc, wLoc.getprot(props) );
+          if( wLoc.getid(props) != NULL && StrOp.len(wLoc.getid(props)) > 0 ) {
+            wLoc.setid( lc, wLoc.getid(props) );
+            id = wLoc.getid(props);
+          }
+          if( wLoc.getidentifier(props) != NULL && StrOp.len(wLoc.getidentifier(props)) > 0 ) {
+            wLoc.setidentifier( lc, wLoc.getidentifier(props) );
+          }
+          if( wLoc.getiid(props) != NULL && StrOp.len(wLoc.getiid(props)) > 0 ) {
+            wLoc.setiid( lc, wLoc.getiid(props) );
+          }
+          if( wLoc.getprot(props) != NULL && StrOp.equals( wLoc.getprot(props), wLoc.prot_F ) ) {
+            wLoc.setspcnt( lc, 128 );
+            wLoc.setprot( lc, wLoc.prot_F );
+          }
         }
         else {
           wLoc.setspcnt( lc, 128 );
@@ -2640,8 +2656,6 @@ static iOLoc _getLoc( iOModel inst, const char* id, iONode props, Boolean genera
         wLoc.setV_mid( lc, 50 );
         wLoc.setV_min( lc, 10 );
         wLoc.setV_mode( lc, wLoc.V_mode_percent );
-        StrOp.fmtb( identifier, "%d", addr );
-        wLoc.setidentifier( lc, identifier );
         wLoc.setshow( lc, True );
         wItem.setgenerated( lc, True );
         _addItem(inst, lc);
@@ -3842,6 +3856,7 @@ static void _event( iOModel inst, iONode nodeC ) {
       StrOp.equals( wFunCmd.name(), NodeOp.getName( nodeC ) ) )
   {
     int addr = wLoc.getaddr( nodeC );
+    char addrStr[32] = {'\0'};
     const char* id = wLoc.getid( nodeC );
     const char* iid = wLoc.getiid( nodeC );
     const char* ident = wLoc.getidentifier( nodeC );
@@ -3862,14 +3877,14 @@ static void _event( iOModel inst, iONode nodeC ) {
     }
     else {
       if( cmd != NULL && StrOp.equals( wLoc.discover, cmd ) ) {
-        iOLoc lc = ModelOp.getLocByIdent(inst, ident, NULL, NULL, NULL, True);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "discover loco %s with addr=%d lc=%X", ident, addr, lc );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "discover mfx loco %s with addr=%d lc=%X", ident, addr, lc );
+        StrOp.fmtb(addrStr, "%d", addr);
+        iOLoc lc = ModelOp.getLoc( inst, addrStr, nodeC, True );
         if( lc != NULL ) {
           iONode props = LocOp.base.properties(lc);
-          wLoc.setaddr(props, wLoc.getaddr(nodeC) );
-          wLoc.setidentifier(props, ident );
-          if( NodeOp.findAttr(nodeC, "prot") != NULL )
-            wLoc.setprot(props, wLoc.getprot(nodeC) );
+          Boolean dir = True;
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set gen loco %s mfx direction to %s", LocOp.getId(lc), dir?"fwd":"rev" );
+          wLoc.setplacing( props, dir );
           LocOp.modify(lc, (iONode)NodeOp.base.clone(props));
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco %s with addr=%d", ident, addr );
         }
