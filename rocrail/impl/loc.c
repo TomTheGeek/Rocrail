@@ -3200,6 +3200,10 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   if( data->driver != NULL )
     data->driver->info( data->driver, nodeA );
 
+  /* release mutex to avoid blocking */
+  MutexOp.post( data->muxCmd );
+
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "call engine from cmd...");
   __engine( inst, nodeA );
 
   __checkConsist(inst, nodeF, False);
@@ -3207,7 +3211,6 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
   /* Broadcast to clients. */
   __broadcastLocoProps( inst, NULL, nodeF, NULL );
 
-  MutexOp.post( data->muxCmd );
   return True;
 }
 
