@@ -434,6 +434,50 @@ static byte __makeXor(byte* buf, int len) {
 }
 
 
+static void __handleSystemState(iORocoMP roco, byte* packet) {
+  iORocoMPData data = Data(roco);
+  int state = packet[2];
+  char* stateStr = "Undefined system state";
+  /*
+#define csEmergencyStop           0x01  // Der Nothalt ist eingeschaltet
+#define csTrackVoltageOff         0x02  // Die Gleisspannung ist abgeschaltet
+#define csShortCircuit            0x04  // Kurschluss am Gleisausgang
+#define csNotDefined              0x08  // Nicht definiert bzw. unbekannt
+#define csAutoMode                0x10  // Der Automatische Startmodus ist aktiv
+#define csProgrammingModeActive   0x20  // Der Programmiermodus ist aktiv
+#define csColdStart               0x40  // Kaltstart
+#define csRamError                0x80  // RAM Fehler in der Zentrale
+   */
+  switch( state ) {
+  case csEmergencyStop:
+    stateStr = "Emergency break";
+    break;
+  case csTrackVoltageOff:
+    stateStr = "Rail power is off";
+    break;
+  case csShortCircuit:
+    stateStr = "Shortcut detected";
+    break;
+  case csNotDefined:
+    break;
+  case csAutoMode:
+    stateStr = "Automatic start mode is active";
+    break;
+  case csProgrammingModeActive:
+    stateStr = "Programming mode is active";
+    break;
+  case csColdStart:
+    stateStr = "Cold start";
+    break;
+  case csRamError:
+    stateStr = "RAM error!!!";
+    break;
+  }
+
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, stateStr );
+}
+
+
 static void __handleRMBus(iORocoMP roco, byte* packet) {
   iORocoMPData data = Data(roco);
   int grp = packet[2];
@@ -493,6 +537,9 @@ static void __evaluatePacket(iORocoMP roco, byte* in) {
     break;
   case USB_RMBUS_DATACHANGED:
     __handleRMBus(roco, in);
+    break;
+  case USB_SYSTEMSTATE_DATACHANGED:
+    __handleSystemState(roco, in);
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled packet: len=%d usb=0x%02X", len, usb );
