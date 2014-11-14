@@ -543,6 +543,7 @@ static void __evaluatePacket(iORocoMP roco, byte* in) {
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled packet: len=%d usb=0x%02X", len, usb );
+    TraceOp.dump ( name, TRCLEVEL_INFO, (char*)in, len );
     break;
   }
 }
