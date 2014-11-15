@@ -317,21 +317,29 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wLoc.name() ) ) {
     iOSlot slot = __getSlot( inst, node );
     if( slot != NULL ) {
-      byte* msg = allocMem(32);
-      int Div = 1; /* Speed divider */
-      int V = 0;
-      Boolean dir = wLoc.isdir(node);
-
-      if( wLoc.getV( node ) != -1 ) {
-        if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
-          V = (wLoc.getV( node ) * 1023) / 100;
-        else if( wLoc.getV_max( node ) > 0 )
-          V = (wLoc.getV( node ) * 1023) / wLoc.getV_max( node );
+      if( StrOp.equals( wLoc.shortid, wLoc.getcmd(node) ) ) {
+        byte* msg = allocMem(256);
+        msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, slot->nid, 0, 0, slot->id );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set name for loco %s with NID=0x%X", slot->id, slot->nid );
+        ThreadOp.post(data->writer, (obj)msg);
       }
+      else {
+        byte* msg = allocMem(32);
+        int Div = 1; /* Speed divider */
+        int V = 0;
+        Boolean dir = wLoc.isdir(node);
 
-      msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_SPEED, MODE_CMD, 6, data->NID, slot->nid, (V&0xFF), (V>>8) | (dir?0x00:0x04), Div, 0, 0, 0);
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Set loco speed to %d, dir=%s for %s", V, dir?"fwd":"rev", slot->id );
-      ThreadOp.post(data->writer, (obj)msg);
+        if( wLoc.getV( node ) != -1 ) {
+          if( StrOp.equals( wLoc.getV_mode( node ), wLoc.V_mode_percent ) )
+            V = (wLoc.getV( node ) * 1023) / 100;
+          else if( wLoc.getV_max( node ) > 0 )
+            V = (wLoc.getV( node ) * 1023) / wLoc.getV_max( node );
+        }
+
+        msg[0] = __makePacket(msg+1, MOBILE_CONTROL_GROUP, MOBILE_SPEED, MODE_CMD, 6, data->NID, slot->nid, (V&0xFF), (V>>8) | (dir?0x00:0x04), Div, 0, 0, 0);
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Set loco speed to %d, dir=%s for %s", V, dir?"fwd":"rev", slot->id );
+        ThreadOp.post(data->writer, (obj)msg);
+      }
     }
   }
 
@@ -565,14 +573,14 @@ static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid,
     msg[15+i]  = str[i];
   }
 
-  crc = CRCOp.checkSum16(msg+2, 5+dlc+strlen);
-  msg[7+dlc+strlen] = (crc & 0xFF);
-  msg[8+dlc+strlen] = ((crc >> 8) & 0xFF);
+  crc = CRCOp.checkSum16(msg+2, 5+dlc);
+  msg[7+dlc] = (crc & 0xFF);
+  msg[8+dlc] = ((crc >> 8) & 0xFF);
 
-  msg[ 9+dlc+strlen] = 0x32;
-  msg[10+dlc+strlen] = 0x5A;
+  msg[ 9+dlc] = 0x32;
+  msg[10+dlc] = 0x5A;
 
-  return (11 + dlc + strlen);
+  return (11 + dlc);
 }
 
 static int __getNID(byte* msg) {
