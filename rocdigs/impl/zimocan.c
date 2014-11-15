@@ -288,7 +288,7 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
   iOZimoCANData data = Data(inst);
   iONode rsp = NULL;
 
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "translate: %s", NodeOp.getName( node ) );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "translate: %s:%s", NodeOp.getName( node ), NodeOp.getStr(node, "cmd", "-") );
 
   if( StrOp.equals( NodeOp.getName( node ), wFbInfo.name() ) ) {
   }
@@ -320,7 +320,7 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
       if( StrOp.equals( wLoc.shortid, wLoc.getcmd(node) ) ) {
         byte* msg = allocMem(256);
         msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, slot->nid, 0, 0, slot->id );
-        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set name for loco %s with NID=0x%X", slot->id, slot->nid );
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set ID for loco %s with NID=0x%X", slot->id, slot->nid );
         ThreadOp.post(data->writer, (obj)msg);
       }
       else {

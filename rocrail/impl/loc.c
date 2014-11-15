@@ -3099,19 +3099,22 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
     }
     else if( StrOp.equals( wLoc.shortid, cmd ) ) {
       /* send short ID to command station */
-      if( wLoc.isuseshortid(data->props) && wLoc.getshortid(data->props) != NULL &&
-          StrOp.len(wLoc.getshortid(data->props)) > 0 )
+      if( wLoc.isuseshortid(data->props) )
       {
         iONode cmdNode = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
         wLoc.setid( cmdNode, wLoc.getid(data->props) );
         wLoc.setaddr( cmdNode, wLoc.getaddr(data->props) );
-        wLoc.setshortid( cmdNode, wLoc.getshortid(data->props) );
+        if( wLoc.getshortid(data->props) != NULL && StrOp.len(wLoc.getshortid(data->props)) > 0 )
+          wLoc.setshortid( cmdNode, wLoc.getshortid(data->props) );
+        else
+          wLoc.setshortid( cmdNode, wLoc.getid(data->props) );
         wLoc.setthrottlenr( cmdNode, wLoc.getthrottlenr(data->props) );
         wLoc.setprot( cmdNode, wLoc.getprot( data->props ) );
         wLoc.setprotver( cmdNode, wLoc.getprotver( data->props ) );
         wLoc.setspcnt( cmdNode, wLoc.getspcnt( data->props ) );
         wLoc.setfncnt( cmdNode, wLoc.getfncnt( data->props ) );
         wLoc.setcmd( cmdNode, wLoc.shortid );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "send (short) ID: %s", wLoc.getshortid(cmdNode) );
         ControlOp.cmd( control, cmdNode, NULL );
       }
     }
