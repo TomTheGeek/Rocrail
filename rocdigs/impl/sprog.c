@@ -555,7 +555,7 @@ static int __translate( iOSprog sprog, iONode node, char* outa, int* insize ) {
 
       /* keep this value for the ping thread */
       data->slots[slot].dir = wLoc.isdir( node );
-      data->slots[slot].V = V;
+      data->slots[slot].V = (V > 127 ? 127:V);
       data->slots[slot].steps = steps;
       data->slots[slot].addr = wLoc.getaddr( node );
       data->slots[slot].longaddr = (wLoc.getaddr( node ) > 127) ? True:False;
