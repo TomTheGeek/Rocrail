@@ -291,6 +291,10 @@ static iONode __translate( iOMCS2 inst, iONode node ) {
       out = allocMem(32);
       __setSysMsg(out, 0, CMD_SYSTEM, False, 7, 0, CMD_SYSSUB_SWTIME, (data->swtime/10)/256, (data->swtime/10)%256, 0);
       ThreadOp.post( data->writer, (obj)out );
+
+      out = allocMem(32);
+      __setSysMsg(out, 0, CAN_CMD_PING, False, 0, 0, 0, 0, 0, 0);
+      ThreadOp.post( data->writer, (obj)out );
       return rsp;
     }
     else if( StrOp.equals( cmd, wSysCmd.sod ) ) {
@@ -1595,43 +1599,43 @@ static void __binder( void* threadinst ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "binder started." );
 
-  while( data->run ) {
+  while( data->run && !data->power ) {
     ThreadOp.sleep(1000);
+  }
 
-    if( data->power && data->ms2UID == 0 && data->mcs2guiUID == 0 && data->gbUID != 0 ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Bind registered loco's for Gleisbox started." );
+  if( data->power && data->ms2UID == 0 && data->mcs2guiUID == 0 && data->gbUID != 0 ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Bind registered loco's for Gleisbox started." );
 
-      iONode loco = wMCS2.getproduct(data->mcs2ini);
+    iONode loco = wMCS2.getproduct(data->mcs2ini);
 
-      while( data->run && loco != NULL ) {
-        while( data->run && (!data->power || data->mfxDetectInProgress) ) {
-          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Waiting for power of mfx detection in progress" );
-          ThreadOp.sleep(1000);
-        }
-
-        if( data->run ) {
-          data->sid = wProduct.getsid(loco);
-          StrOp.fmt(descname, "%s", wProduct.getdesc(loco));
-          data->id = descname;
-
-          byte  buffer[32];
-
-          buffer[0]  = (wProduct.getpid(loco) & 0xFF000000) >> 24;
-          buffer[1]  = (wProduct.getpid(loco) & 0x00FF0000) >> 16;
-          buffer[2]  = (wProduct.getpid(loco) & 0x0000FF00) >> 8;
-          buffer[3]  = (wProduct.getpid(loco) & 0x000000FF);
-          buffer[4]  = (wProduct.getsid(loco) / 256) & 0xFF;
-          buffer[5]  = (wProduct.getsid(loco) % 256) & 0xFF;
-
-          ThreadOp.post( data->writer, (obj)__makeMsg(0, CMD_LOCO_BIND, False, 6, buffer) );
-          TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Gleisbox binding requested for %s sid %d", wProduct.getdesc(loco), wProduct.getsid(loco));
-          ThreadOp.sleep(3000);
-
-          loco = wMCS2.nextproduct(data->mcs2ini, loco);
-        }
+    while( data->run && loco != NULL ) {
+      while( data->run && (!data->power || data->mfxDetectInProgress) ) {
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Waiting for power of mfx detection in progress" );
+        ThreadOp.sleep(1000);
       }
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Bind registered loco's for Gleisbox ended." );
+
+      if( data->run ) {
+        data->sid = wProduct.getsid(loco);
+        StrOp.fmt(descname, "%s", wProduct.getdesc(loco));
+        data->id = descname;
+
+        byte  buffer[32];
+
+        buffer[0]  = (wProduct.getpid(loco) & 0xFF000000) >> 24;
+        buffer[1]  = (wProduct.getpid(loco) & 0x00FF0000) >> 16;
+        buffer[2]  = (wProduct.getpid(loco) & 0x0000FF00) >> 8;
+        buffer[3]  = (wProduct.getpid(loco) & 0x000000FF);
+        buffer[4]  = (wProduct.getsid(loco) / 256) & 0xFF;
+        buffer[5]  = (wProduct.getsid(loco) % 256) & 0xFF;
+
+        ThreadOp.post( data->writer, (obj)__makeMsg(0, CMD_LOCO_BIND, False, 6, buffer) );
+        TraceOp.trc(name, TRCLEVEL_INFO, __LINE__, 9999, "Gleisbox binding requested for %s sid %d", wProduct.getdesc(loco), wProduct.getsid(loco));
+        ThreadOp.sleep(3000);
+
+        loco = wMCS2.nextproduct(data->mcs2ini, loco);
+      }
     }
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Bind registered loco's for Gleisbox ended." );
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Binder ended." );
