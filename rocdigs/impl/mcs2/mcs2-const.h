@@ -93,5 +93,7 @@
 #define CAN_S88_REPORT       0x21
 #define CAN_SENSOR_EVENT     0x23
 
+/* CAN device control */
+# define CMD_CAN_BOOT_BOUND  0x1B
 
 #endif /* MCS2CONST_H_ */
