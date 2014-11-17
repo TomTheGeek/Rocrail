@@ -172,7 +172,7 @@ static iOSlot __getSlot(iOZimoCAN inst, iONode node) {
   ThreadOp.post(data->writer, (obj)msg);
 
   msg = allocMem(256);
-  msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, slot->nid, 0, 0, 0, slot->id );
+  msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, data->NID, slot->nid, 0, 0, slot->id );
   TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set name for loco %s with NID=0x%X", slot->id, slot->nid );
   ThreadOp.post(data->writer, (obj)msg);
 
@@ -319,7 +319,7 @@ static iONode __translate( iOZimoCAN inst, iONode node ) {
     if( slot != NULL ) {
       if( StrOp.equals( wLoc.shortid, wLoc.getcmd(node) ) ) {
         byte* msg = allocMem(256);
-        msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, slot->nid, 0, 0, 0, slot->id );
+        msg[0] = __makeStringPacket( msg+1, DATA_GROUP, DATA_NAME, MODE_CMD, data->NID, slot->nid, 0, 0, slot->id );
         TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set ID for loco %s with NID=0x%X", slot->id, slot->nid );
         ThreadOp.post(data->writer, (obj)msg);
       }
@@ -533,21 +533,21 @@ static int __makePacket( byte* msg, int group, int cmd, int mode, int dlc, int n
     idx++;
   }
 
-  crc = CRCOp.checkSum16(msg+2, 5+dlc);
+  crc = CRCOp.checkSum16(msg+7, dlc);
   msg[7+dlc] = (crc & 0xFF);
   msg[8+dlc] = ((crc >> 8) & 0xFF);
 
   msg[ 9+dlc] = 0x32;
   msg[10+dlc] = 0x5A;
 
-  return (11 + dlc);
+  return (7 + dlc + 4);
 }
 
-static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid, int subid, int value1, int value2, const char* str ) {
+static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid, int nidTarget, int value1, int value2, const char* str ) {
   int crc    = 0;
   int idx    = 0;
   int strlen = StrOp.len(str);
-  int dlc    = 17 + strlen;
+  int dlc    = 10 + strlen + 1;
   int i      = 0;
 
   msg[0]  = 0x5A;
@@ -559,8 +559,8 @@ static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid,
   msg[5]  = (nid & 0xFF);
   msg[6]  = ((nid >> 8) & 0xFF);
 
-  msg[7]  = (subid & 0xFF);
-  msg[8]  = ((subid >> 8) & 0xFF);
+  msg[7]  = (nidTarget & 0xFF);
+  msg[8]  = ((nidTarget >> 8) & 0xFF);
 
   msg[9]  = (value1 & 0xFF);
   msg[10]  = ((value1 >> 8) & 0xFF);
@@ -575,15 +575,16 @@ static int __makeStringPacket( byte* msg, int group, int cmd, int mode, int nid,
   for( i = 0; i < strlen; i++ ) {
     msg[17+i]  = str[i];
   }
+  msg[17+i] = 0;
 
-  crc = CRCOp.checkSum16(msg+2, 5+dlc);
+  crc = CRCOp.checkSum16(msg+7, dlc);
   msg[7+dlc] = (crc & 0xFF);
   msg[8+dlc] = ((crc >> 8) & 0xFF);
 
   msg[ 9+dlc] = 0x32;
   msg[10+dlc] = 0x5A;
 
-  return (11 + dlc);
+  return (7 + dlc + 4);
 }
 
 static int __getNID(byte* msg) {
@@ -950,7 +951,7 @@ static struct OZimoCAN* _inst( const iONode ini ,const iOTrace trc ) {
 
   data->ini = ini;
   data->iid = StrOp.dup( wDigInt.getiid( ini ) );
-  data->NID = 0xC200;
+  data->NID = PCID;
   data->masterNID = 0xAFFA; /* Dummy */
   data->lcmap  = MapOp.inst();
   data->lcmux  = MutexOp.inst( NULL, True );

@@ -24,6 +24,8 @@
 #ifndef ZIMOCAN_CONST_H_
 #define ZIMOCAN_CONST_H_
 
+#define PCID 0xC200
+
 #define HEADER 0x5A32
 #define TAIL   0x325A
 
