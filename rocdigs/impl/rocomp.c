@@ -437,7 +437,7 @@ static byte __makeXor(byte* buf, int len) {
 static void __handleSystemState(iORocoMP roco, byte* packet) {
   iORocoMPData data = Data(roco);
   int state = packet[2];
-  char* stateStr = "Undefined system state";
+  char* stateStr = NULL;
   /*
 #define csEmergencyStop           0x01  // Der Nothalt ist eingeschaltet
 #define csTrackVoltageOff         0x02  // Die Gleisspannung ist abgeschaltet
@@ -448,6 +448,8 @@ static void __handleSystemState(iORocoMP roco, byte* packet) {
 #define csColdStart               0x40  // Kaltstart
 #define csRamError                0x80  // RAM Fehler in der Zentrale
    */
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system state=0x%02X", state );
+
   switch( state ) {
   case csEmergencyStop:
     stateStr = "Emergency break";
@@ -473,8 +475,8 @@ static void __handleSystemState(iORocoMP roco, byte* packet) {
     stateStr = "RAM error!!!";
     break;
   }
-
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, stateStr );
+  if( stateStr != NULL )
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, stateStr );
 }
 
 
