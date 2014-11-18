@@ -451,10 +451,18 @@ static iONode __translate(iOZ21 inst, iONode node) {
   /* Switch command. */
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     int addr  = wSwitch.getaddr1( node );
+    int gate  = wSwitch.getgate1( node );
     int delay = wSwitch.getdelay(node) > 0 ? wSwitch.getdelay(node):data->swtime;
     Boolean turnout = StrOp.equals(wSwitch.turnout, wSwitch.getcmd(node));
     Boolean active = True;
+    Boolean single = wSwitch.issinglegate(node);
     iOPoint point = __getPoint(inst, node);
+
+    if( single ) {
+      active = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout );
+      turnout = gate ? True:False;
+    }
+
     if( !point->timerpending ) {
       byte* packet = allocMem(32);
 
@@ -488,7 +496,7 @@ static iONode __translate(iOZ21 inst, iONode node) {
         packet[7] = 0x80 + 0x20 + (active?0x08:0x00) + (turnout?0x00:0x01); /* 0x20 is a patch for DCC */
         packet[8] = packet[4] ^ packet[5] ^ packet[6] ^ packet[7]; /*xor*/
       }
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "dual gate switch %d: %s", addr, wSwitch.getcmd(node) );
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "%s gate(%d) switch %d: %s", single?"single":"dual", gate, addr, wSwitch.getcmd(node) );
       ThreadOp.post(data->writer, (obj)packet);
 
       if( wSwitch.isactdelay(node) ) {
