@@ -618,21 +618,13 @@ static Boolean _event( iIBlockBase inst ,Boolean puls ,const char* id ,const cha
               else if( data->closereq ) {
                 TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s not in auto mode; block is closed.", LocOp.getId(loc) );
               }
-
-              if( !data->pendingFree ) {
-                /*
-                iONode s = (iONode)ListOp.get(data->sectionList, data->pendingSection );
-                if( s != NULL )
-                  wStageSection.setlcid(s, NULL);
-                */
-                data->pendingFree = True;
-              }
             }
             else {
               TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "set loco %s not in auto mode; minocc=%d occ=%d.",
                   LocOp.getId(loc), wStage.getminocc(data->props), lcCount );
             }
           }
+          data->pendingFree = True;
         }
         ModelOp.setBlockOccupancy( AppOp.getModel(), data->id, LocOp.getId(loc), False, 0, 0, wStageSection.getid(section) );
         data->locId = NULL;
