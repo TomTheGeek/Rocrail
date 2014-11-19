@@ -1794,6 +1794,8 @@
       <var name="usbOK" vt="Boolean"/>
       <var name="timeout" vt="int"/>
       <var name="sensor[256]" vt="byte"/>
+      <var name="systemstate" vt="int"/>
+      <var name="power" vt="Boolean"/>
     </data>
   </object>
 

@@ -434,6 +434,21 @@ static byte __makeXor(byte* buf, int len) {
 }
 
 
+static void __reportState(iORocoMP inst) {
+  iORocoMPData data = Data(inst);
+
+  if( data->listenerFun != NULL && data->listenerObj != NULL ) {
+    iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
+
+    if( data->iid != NULL )
+      wState.setiid( node, data->iid );
+    wState.setpower( node, data->power );
+
+    data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+  }
+}
+
+
 static void __handleSystemState(iORocoMP roco, byte* packet) {
   iORocoMPData data = Data(roco);
   int state = packet[2];
@@ -448,35 +463,34 @@ static void __handleSystemState(iORocoMP roco, byte* packet) {
 #define csColdStart               0x40  // Kaltstart
 #define csRamError                0x80  // RAM Fehler in der Zentrale
    */
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system state=0x%02X", state );
-
-  switch( state ) {
-  case csEmergencyStop:
-    stateStr = "Emergency break";
-    break;
-  case csTrackVoltageOff:
-    stateStr = "Rail power is off";
-    break;
-  case csShortCircuit:
-    stateStr = "Shortcut detected";
-    break;
-  case csNotDefined:
-    break;
-  case csAutoMode:
-    stateStr = "Automatic start mode is active";
-    break;
-  case csProgrammingModeActive:
-    stateStr = "Programming mode is active";
-    break;
-  case csColdStart:
-    stateStr = "Cold start";
-    break;
-  case csRamError:
-    stateStr = "RAM error!!!";
-    break;
+  if( data->power && (state & csTrackVoltageOff) == csTrackVoltageOff ) {
+    data->power = False;
+    __reportState(roco);
   }
-  if( stateStr != NULL )
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, stateStr );
+  else if( !data->power && (state & csTrackVoltageOff) == 0 ) {
+    data->power = True;
+    __reportState(roco);
+  }
+
+  if( data->systemstate != state ) {
+    data->systemstate = state;
+    if( state & csEmergencyStop )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Emergency stop. state=0x%02X", state );
+    if( state & csTrackVoltageOff )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Rail power is off. state=0x%02X", state );
+    if( state & csShortCircuit )
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Shortcut detected. state=0x%02X", state );
+    if( state & csAutoMode )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Automatic start mode is active. state=0x%02X", state );
+    if( state & csProgrammingModeActive )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Programming mode is active. state=0x%02X", state );
+    if( state & csColdStart )
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Cold start. state=0x%02X", state );
+    if( state & csRamError )
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "RAM error!!! state=0x%02X", state );
+    if( state & csNotDefined )
+      TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "Undefined error. state=0x%02X", state );
+  }
 }
 
 
