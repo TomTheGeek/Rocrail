@@ -1131,6 +1131,7 @@ static void __evaluatePacket(iOZ21 inst, byte* packet, int packetSize) {
           if( data->iid != NULL )
             wSwitch.setiid( nodeC, data->iid );
           wSwitch.setstate( nodeC, zz==0x02?"straight":"turnout" );
+          wSwitch.setgatevalue( nodeC, zz==0x02?0:1 );
           data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
         }
       }
