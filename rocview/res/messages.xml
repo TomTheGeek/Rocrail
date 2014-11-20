@@ -14092,7 +14092,7 @@
   </Msg>
   <Msg id="shortcutchecking">
     <de txt="Kurzschlussüberwachung"/>
-    <en txt="Shortcut checking"/>
+    <en txt="Shortcut checking" alttxt="Short circuit checking"/>
     <nl txt="Kortsluit controle"/>
     <sv txt="Kortslutningsövervakning"/>
     <fr txt="Vérification de court-circuit"/>
@@ -19189,7 +19189,7 @@
   </Msg>
   <Msg id="shortcutsensor">
     <de txt="Kurzschluss-Rückmelder"/>
-    <en txt="Shortcut sensor"/>
+    <en txt="Shortcut sensor" alttxt="Short circuit sensor"/>
     <nl txt="Kortsluit melder"/>
     <pt txt="Atalho de sensor"/>
     <fr txt="Détecteur de court-circuit"/>
@@ -19215,7 +19215,7 @@
   </Msg>
   <Msg id="shortcut">
     <de txt="Kurzschluss"/>
-    <en txt="Shortcut"/>
+    <en txt="Shortcut" alttxt="Short circuit"/>
     <nl txt="Kortsluiting"/>
     <pt txt="Atalho"/>
     <fr txt="Court-circuit"/>
@@ -19502,7 +19502,7 @@
     <pl txt="Zatrzymaj wszystkie lokomotywy w tym rejonie."/>
   </Msg>
   <Msg id="scopt_repoweron">
-    <en txt="Repower on after the shortcut is cleared."/>
+    <en txt="Repower on after the shortcut is cleared." alttxt="Repower on after the short circuit is cleared."/>
     <pt txt="Reiniciar corrente depois de curto circuito restablecido"/>
     <nl txt="Schakel baanspanning weer aan nadat de kortsluiting is verholpen."/>
     <fr txt="Remettre sous tension après suppression du court-circuit."/>
