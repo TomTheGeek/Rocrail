@@ -224,6 +224,8 @@ static iONode __translate( iOVirtual virtual, iONode node ) {
       wSwitch.setbus( nodeC, wSwitch.getbus( node ) );
       wSwitch.setaddr1( nodeC, wSwitch.getaddr1( node ) );
       wSwitch.setport1( nodeC, wSwitch.getport1( node ) );
+      wSwitch.setgate1( nodeC, wSwitch.getgate1( node ) );
+      wSwitch.setgatevalue( nodeC, action );
 
       if( wSwitch.getiid(node) != NULL )
         wSwitch.setiid( nodeC, wSwitch.getiid(node) );
