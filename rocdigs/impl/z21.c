@@ -194,14 +194,23 @@ static iOSlot __getSlotByAddr(iOZ21 inst, int lcaddr) {
 }
 
 
-static iOPoint __getPointByAddr(iOZ21 inst, int swaddr) {
+static iOPoint __getPointByAddr(iOZ21 inst, int swaddr, Boolean singlegate, int gate) {
   iOZ21Data data = Data(inst);
   iOPoint point = NULL;
   if( MutexOp.wait( data->swmux ) ) {
     point = (iOPoint)MapOp.first( data->swmap);
     while( point != NULL ) {
       if( point->addr == swaddr ) {
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point found for %s by address %d", point->id, swaddr );
+        if( singlegate && !point->singlegate ) {
+          point = (iOPoint)MapOp.next( data->swmap);
+          continue;
+        }
+        if( singlegate && point->singlegate && gate != point->gate) {
+          point = (iOPoint)MapOp.next( data->swmap);
+          continue;
+        }
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "point found for %s by address %d:%d", point->id, swaddr, gate );
         break;
       }
       point = (iOPoint)MapOp.next( data->swmap);
@@ -214,8 +223,10 @@ static iOPoint __getPointByAddr(iOZ21 inst, int swaddr) {
 
 static iOPoint __getPoint(iOZ21 inst, iONode node) {
   iOZ21Data data = Data(inst);
-  int     bus   = wSwitch.getbus(node);
-  int     addr  = wSwitch.getaddr1(node);
+  int     bus    = wSwitch.getbus(node);
+  int     addr   = wSwitch.getaddr1(node);
+  int     gate   = wSwitch.getgate1(node);
+  Boolean single = wSwitch.issinglegate(node);
   char    key[256] = {'\0'};
   iOPoint point = NULL;
 
@@ -229,6 +240,8 @@ static iOPoint __getPoint(iOZ21 inst, iONode node) {
   point = allocMem( sizeof( struct point) );
   point->bus  = bus;
   point->addr = addr;
+  point->gate = gate;
+  point->singlegate = single;
   point->id  = StrOp.dup(wSwitch.getid(node));
 
   if( MutexOp.wait( data->swmux ) ) {
@@ -504,6 +517,8 @@ static iONode __translate(iOZ21 inst, iONode node) {
         point->timerpending = True;
         cmd->time   = SystemOp.getTick();
         cmd->delay  = delay / 10;
+        cmd->singlegate = single;
+        cmd->gate = gate;
         active = False;
         if( wSwitch.getbus(node) == 1 ) {
           /* Loconet command */
@@ -1485,7 +1500,7 @@ static void __timedqueue( void* threadinst ) {
         if( (cmd->out[0] == 0x09 && cmd->out[2] == 0x40 && cmd->out[4] == 0x53) ||
             (cmd->out[0] == 0x08 && cmd->out[2] == LAN_LOCONET_FROM_LAN && cmd->out[4] == OPC_SW_REQ) )
         {
-          iOPoint point = __getPointByAddr(z21, data->zerobased?addr:addr+1);
+          iOPoint point = __getPointByAddr(z21, data->zerobased?addr:addr+1, cmd->singlegate, cmd->gate);
           if( point != NULL ) {
             point->timerpending = False;
           }

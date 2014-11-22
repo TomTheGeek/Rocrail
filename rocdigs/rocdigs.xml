@@ -1720,12 +1720,16 @@
       <var name="id" vt="char*"/>
       <var name="bus" vt="int"/>
       <var name="addr" vt="int"/>
+      <var name="gate" vt="int"/>
+      <var name="singlegate" vt="Boolean"/>
       <var name="timerpending" vt="Boolean"/>
       </struct>
     <struct name="QCmd" typedef="*iQCmd" remark="Queue command.">
       <var name="out[32]" vt="byte"/>
       <var name="time" vt="unsigned long"/>
       <var name="delay" vt="unsigned long"/>
+      <var name="singlegate" vt="Boolean"/>
+      <var name="gate" vt="int"/>
     </struct>
     <data>
       <var name="ini" vt="iONode"/>
