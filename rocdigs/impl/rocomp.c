@@ -479,7 +479,7 @@ static void __handleSystemState(iORocoMP roco, byte* packet) {
     if( state & csTrackVoltageOff )
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Rail power is off. state=0x%02X", state );
     if( state & csShortCircuit )
-      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Shortcut detected. state=0x%02X", state );
+      TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "short circuit detected. state=0x%02X", state );
     if( state & csAutoMode )
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "Automatic start mode is active. state=0x%02X", state );
     if( state & csProgrammingModeActive )

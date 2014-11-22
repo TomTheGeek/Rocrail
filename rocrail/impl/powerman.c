@@ -154,7 +154,7 @@ static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared )
   if( blockids != NULL && StrOp.len( blockids ) > 0 ) {
     iOStrTok tok = StrTokOp.inst( blockids, ',' );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing blocks [%s] of shortcut", blockids);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing blocks [%s] of short circuit", blockids);
 
     /* iterate all blockid's */
     while( StrTokOp.hasMoreTokens(tok) ) {
@@ -175,7 +175,7 @@ static void __informClientOfShortcut(obj inst, iONode booster, Boolean cleared )
   if( modids != NULL && StrOp.len( modids ) > 0 ) {
     iOStrTok tok = StrTokOp.inst( modids, ',' );
 
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing modules [%s] of shortcut", modids);
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "informing modules [%s] of short circuit", modids);
 
     /* iterate all modid's */
     while( StrTokOp.hasMoreTokens(tok) ) {
@@ -203,7 +203,7 @@ static void __processEvent( obj inst ,Boolean pulse ,const char* id ,const char*
 
   if( scbooster != NULL ) {
     TraceOp.trc( name, pulse?TRCLEVEL_WARNING:TRCLEVEL_INFO, __LINE__, 9999,
-        "shortcut %s[%s] event for booster [%s][%s]", pulse?"":"cleared ", id,
+        "short circuit %s[%s] event for booster [%s][%s]", pulse?"":"cleared ", id,
             wBooster.getid(scbooster), wBooster.getdistrict(scbooster) );
     wPwrEvent.setid( pwrevent, wBooster.getid(scbooster) );
     wPwrEvent.setshortcut( pwrevent, pulse );
@@ -375,7 +375,7 @@ static void __initBoosters( iOPowerMan inst ) {
     MapOp.put( data->boostermap, wBooster.getid(booster), (obj)booster );
 
     if( scfb != NULL ) {
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init shortcut sensors for booster [%s]...", wBooster.getid(booster) );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init short circuit sensors for booster [%s]...", wBooster.getid(booster) );
       FBackOp.addListener( scfb, (obj)inst );
       MapOp.put( data->scmap, wBooster.getscfb( booster ), (obj)booster );
     }

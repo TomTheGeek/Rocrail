@@ -113,7 +113,7 @@ static void* __event( void* inst, const void* evt ) {
         "sensor event [%s][%s]", wFeedback.getid(node), wFeedback.isstate(node)?"ON":"OFF" );
     if( StrOp.equals( wFeedback.getid(node), wRocRail.getscsensor(AppOp.getIni()) ) ) {
       if( wFeedback.isstate(node) ) {
-        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "ShortCut!" );
+        TraceOp.trc( name, TRCLEVEL_EXCEPTION, __LINE__, 9999, "short circuit!" );
         /* inform command station */
         if( wRocRail.getsciid(AppOp.getIni()) != NULL && StrOp.len( wRocRail.getsciid(AppOp.getIni()) ) > 0 ) {
           const char* iid = wRocRail.getsciid(AppOp.getIni());
@@ -181,13 +181,13 @@ static void __initSensors( iOControl inst ) {
   iOModel model = AppOp.getModel();
   iOFBack s = ModelOp.getFBack( model, wRocRail.getscsensor(AppOp.getIni()) );
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init shortcut sensor..." );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Init short circuit sensor..." );
 
   if( s != NULL ) {
     FBackOp.addListener( s, (obj)inst );
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "Shortcut sensor not set." );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "short circuit sensor not set." );
   }
 
 }

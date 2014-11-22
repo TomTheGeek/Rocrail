@@ -557,7 +557,7 @@ static void _shortcut( obj inst ) {
   data->power = False;
   if( data->comOK )
     SerialOp.setDTR(data->serial, False);
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "external shortcut event [%s]...", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "external short circuit event [%s]...", data->iid );
   __stateChanged((iODCC232)inst);
   return;
 }
@@ -675,10 +675,10 @@ static void __watchDog( void* threadinst ) {
     if( data->power && data->comOK ) {
 
       if ( ( SerialOp.isDSR(data->serial) && !inversedsr ) ) {
-        TraceOp.trc( __FILE__, TRCLEVEL_DEBUG, __LINE__, 9999, "shortcut detected" );
+        TraceOp.trc( __FILE__, TRCLEVEL_DEBUG, __LINE__, 9999, "short circuit detected" );
 
         if( scdetected && scdelay > (data->shortcutdelay / 100) ) {
-          TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "shortcut detected!" );
+          TraceOp.trc( __FILE__, TRCLEVEL_MONITOR, __LINE__, 9999, "short circuit detected!" );
           scdelay = 0;
           scdetected = False;
           data->power = False;
@@ -686,7 +686,7 @@ static void __watchDog( void* threadinst ) {
           __stateChanged(dcc232);
         }
         else if(!scdetected) {
-          TraceOp.trc( __FILE__, TRCLEVEL_INFO, __LINE__, 9999, "shortcut timer started [%dms]", 1000 );
+          TraceOp.trc( __FILE__, TRCLEVEL_INFO, __LINE__, 9999, "short circuit timer started [%dms]", 1000 );
           scdelay++;
           scdetected = True;
         }
@@ -1002,13 +1002,13 @@ static struct ODCC232* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "dcc232 %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid             = [%s]"    , data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device          = [%s]"    , data->device );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge           = [%s]"    , data->purge?"yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge idle time = [%d]s"   , data->purgetime );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut check  = [%s]"    , data->shortcut?"yes":"no" );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "shortcut delay  = [%d]ms"  , data->shortcutdelay );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invert DSR      = [%s]"    , wDCC232.isinversedsr(data->dcc232)?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "iid                 = [%s]"    , data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "device              = [%s]"    , data->device );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge               = [%s]"    , data->purge?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "purge idle time     = [%d]s"   , data->purgetime );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short circuit check = [%s]"    , data->shortcut?"yes":"no" );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short circuit delay = [%d]ms"  , data->shortcutdelay );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "invert DSR          = [%s]"    , wDCC232.isinversedsr(data->dcc232)?"yes":"no" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->serial = SerialOp.inst( data->device );

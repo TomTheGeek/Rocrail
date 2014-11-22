@@ -395,7 +395,7 @@ static void _event( iOFBack inst, iONode nodeC ) {
     data->shortcut = state;
     wFeedback.setshortcut(data->props, state);
     TraceOp.trc( name, state ? TRCLEVEL_EXCEPTION:TRCLEVEL_INFO, __LINE__, 9999,
-        "Sensor [%s] report: %s", wFeedback.getid(data->props), state?"SHORTCUT detected":"Cutout is OK" );
+        "Sensor [%s] report: %s", wFeedback.getid(data->props), state?"short circuit detected":"Cutout is OK" );
     AppOp.broadcastEvent( (iONode)NodeOp.base.clone(data->props) );
     nodeC->base.del(nodeC);
     return;

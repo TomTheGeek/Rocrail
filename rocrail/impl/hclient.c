@@ -141,7 +141,7 @@ static void __header( iOSocket s, int refresh ) {
   SocketOp.fmt( s, "HTTP/1.0 200 OK\r\n" );
   SocketOp.fmt( s, "Content-type: text/html\r\n\r\n" );
   SocketOp.fmt( s, "<html><head><title>Rocrail HTTP Service </title>\n" );
-  SocketOp.fmt( s, "<link href=\"rocrail.gif\" rel=\"shortcut icon\">\n" );
+  SocketOp.fmt( s, "<link href=\"rocrail.gif\" rel=\"short circuit icon\">\n" );
   if( refresh > 0 )
     SocketOp.fmt( s, "<META CONTENT=\"%d\" HTTP-EQUIV=\"refresh\">\n", refresh );
   SocketOp.fmt( s, "</head><body>\n" );

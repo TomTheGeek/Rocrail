@@ -650,7 +650,7 @@ static void __transactor( void* threadinst ) {
         }
         // Shortcut
         else if ( in[0] == 0x00 && in[1] == 0x61 && in[2] == 0x12){
-           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Shortcut!");
+           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "short circuit!");
            responceRecieved = True;
         }
         // No data

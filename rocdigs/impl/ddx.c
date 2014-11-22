@@ -610,7 +610,7 @@ static int _state( obj inst ) {
 /* external shortcut event */
 static void _shortcut(obj inst) {
   iODDXData data = Data( inst );
-  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "external shortcut event; power off." );
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "external short circuit event; power off." );
   stop_voltage(inst);
 }
 
@@ -654,9 +654,9 @@ static struct ODDX* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx portbase addr=0x%X", data->portbase );
 
   data->shortcutchecking = wDDX.isshortcutchecking( ddx_ini );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx shortcutchecking=%d", data->shortcutchecking );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx short circuit checking=%d", data->shortcutchecking );
   data->shortcutdelay = wDDX.getshortcutdelay( ddx_ini );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx shortcutdelay=%d", wDDX.getshortcutdelay( ddx_ini ) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx short circuit delay=%d", wDDX.getshortcutdelay( ddx_ini ) );
   data->inversedsr = wDDX.isinversedsr( ddx_ini );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "ddx inversedsr=%d", data->inversedsr );
   data->dcc = wDDX.isdcc( ddx_ini );

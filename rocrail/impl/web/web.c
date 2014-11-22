@@ -31,7 +31,7 @@ Boolean webHeader( iOSocket s ) {
   if(ok) ok=SocketOp.fmt( s, "HTTP/1.0 200 OK\r\n" );
   if(ok) ok=SocketOp.fmt( s, "Content-type: text/html\r\n\r\n" );
   if(ok) ok=SocketOp.fmt( s, "<html><head><title>RocRail WebClient</title>\n" );
-  if(ok) ok=SocketOp.fmt( s, "<link href=\"rocrail.gif\" rel=\"shortcut icon\">\n" );
+  if(ok) ok=SocketOp.fmt( s, "<link href=\"rocrail.gif\" rel=\"short circuit icon\">\n" );
   
   if(ok) ok=SocketOp.fmt( s, "<STYLE type=\"text/css\">\n" );
   if(ok) ok=SocketOp.fmt( s, "<!--\n" );

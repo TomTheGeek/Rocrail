@@ -1052,7 +1052,7 @@ static Boolean _isFree( iIBlockBase inst, const char* locId ) {
   /* check all sensors... */
     if( __hasShortcut(inst) ) {
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999,
-                     "Block [%s] has a shortcut reported.",
+                     "Block [%s] has a short circuit reported.",
                      data->id );
       return False;
     }

@@ -1426,7 +1426,7 @@ static void __transactor( void* threadinst ) {
       }
       /* Shortcut*/
       else if (in[0] == 0x61 && in[1] == 0x12){
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT: Shortcut! [%s]", data->iid);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "PT: short circuit! [%s]", data->iid);
         rspReceived = True;
       }
       /* No data*/
