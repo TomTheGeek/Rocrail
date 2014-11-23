@@ -2236,9 +2236,26 @@ static const char* _getTrain( iOLoc inst ) {
 }
 
 
-static void __adjustAccel(iOLoc inst, int accel) {
+static void _adjustAccel(iOLoc inst, int p_Accel, int weight) {
   iOLocData data = Data(inst);
   iONode cmd = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+  int accel = p_Accel;
+
+  if( accel == -1 ) {
+    float maxload = wLoc.getmaxload(data->props);
+    int accelmin = wLoc.getaccelmin(data->props);
+    int accelmax = wLoc.getaccelmax(data->props);
+    if( weight > 0 && maxload > 0 && accelmin > 0 && accelmax > 0 ) {
+      float accel = accelmax - accelmin;
+      accel /= maxload;
+      accel *= weight;
+      accel += accelmin;
+    }
+    else {
+      accel = accelmin;
+    }
+  }
+
   wProgram.setcmd( cmd, wProgram.set );
   wProgram.setiid( cmd, wLoc.getiid(data->props) );
   wProgram.setaddr( cmd, wLoc.getaddr(data->props) );
@@ -2251,6 +2268,22 @@ static void __adjustAccel(iOLoc inst, int accel) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "loco [%s] adjust acceleration: CV3=%d",
       wLoc.getid(data->props), (int)accel );
   ControlOp.cmd( AppOp.getControl(), cmd, NULL );
+
+
+  if( wLoc.getconsist(data->props) != NULL && StrOp.len(wLoc.getconsist(data->props)) > 0) {
+    iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );
+    while( StrTokOp.hasMoreTokens( consist ) ) {
+      const char* tok = StrTokOp.nextToken( consist );
+      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL, False );
+      if( consistloc != NULL ) {
+        if( wLoc.isadjustaccel(LocOp.base.properties(consistloc)) && weight != -1 ) {
+          LocOp.adjustAccel(consistloc, -1, weight);
+        }
+      }
+    }
+    StrTokOp.base.del( consist );
+  }
+
 }
 
 
@@ -2282,6 +2315,7 @@ static Boolean __matchTrainIdent(iOLoc inst, const char* ident1, const char* ide
 static void __calcTrainLen(iOLoc inst, Boolean adjust) {
   iOLocData data = Data(inst);
   Boolean report = False;
+  int weight = -1;
 
   wLoc.settrainlen( data->props, wLoc.getlen(data->props));
 
@@ -2289,25 +2323,12 @@ static void __calcTrainLen(iOLoc inst, Boolean adjust) {
   if( wLoc.gettrain( data->props) != NULL && StrOp.len(wLoc.gettrain( data->props)) > 0 ) {
     iOOperator train = ModelOp.getOperator(AppOp.getModel(), wLoc.gettrain( data->props) );
     if( train != NULL ) {
-      int weight = 0;
       wLoc.settrainlen( data->props, OperatorOp.getLen(train, &weight) + wLoc.getlen(data->props));
       wLoc.settrainweight( data->props, weight );
       report = True;
 
       if( wLoc.isadjustaccel(data->props) && adjust) {
-        float maxload = wLoc.getmaxload(data->props);
-        int accelmin = wLoc.getaccelmin(data->props);
-        int accelmax = wLoc.getaccelmax(data->props);
-        if( weight > 0 && maxload > 0 && accelmin > 0 && accelmax > 0 ) {
-          float accel = accelmax - accelmin;
-          accel /= maxload;
-          accel *= weight;
-          accel += accelmin;
-          __adjustAccel(inst, (int)accel);
-        }
-        else {
-          __adjustAccel(inst, accelmin);
-        }
+        LocOp.adjustAccel(inst, -1, weight);
       }
     }
   }
@@ -3159,7 +3180,7 @@ static Boolean _cmd( iOLoc inst, iONode nodeA ) {
       wLoc.settrainlen(data->props, 0);
       wLoc.settrainweight( data->props, 0 );
       if( wLoc.isadjustaccel(data->props) ) {
-        __adjustAccel(inst, wLoc.getaccelmin(data->props) );
+        LocOp.adjustAccel(inst, wLoc.getaccelmin(data->props), 0 );
       }
       broadcast = True;
     }

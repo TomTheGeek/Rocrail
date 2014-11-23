@@ -741,6 +741,11 @@
       <param name="inst" vt="this" remark="Loc instance"/>
       <param name="class" vt="const char*"/>
     </fun>
+    <fun name="adjustAccel" vt="void">
+      <param name="inst" vt="this" remark="Loc instance"/>
+      <param name="accel" vt="int"/>
+      <param name="weight" vt="int"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>
