@@ -624,6 +624,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.lrc135, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.massoth, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.mcs2, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.mgbox, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.mttmfcc, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.muet, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.nce, wxConvUTF8 ) );
@@ -2186,6 +2187,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
   else if( StrOp.equals( wDigInt.opendcc, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new OpenDCCCtrlDlg(this,m_Controller, devices);
   else if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
+  else if( StrOp.equals( wDigInt.mgbox, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.lenz, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new LenzDlg(this,m_Controller, devices);

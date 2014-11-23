@@ -441,6 +441,7 @@
       <const name="vcs" vt="string" val="virtual"/>
       <const name="rocnet" vt="string" val="rocnet"/>
       <const name="mcs2" vt="string" val="mcs2"/>
+      <const name="mgbox" vt="string" val="mgbox"/>
       <const name="clock" vt="string" val="clock"/>
       <const name="lrc135" vt="string" val="lrc135"/>
       <const name="sprog" vt="string" val="sprog"/>

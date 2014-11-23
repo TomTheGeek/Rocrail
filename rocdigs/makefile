@@ -131,7 +131,7 @@ all: $(OBJS) $(NMRAOBJS) $(COMMONOBJS) $(OUTDIR)$(FS)opendcc$(SHAREDSUFFIX) $(OU
 	$(OUTDIR)$(FS)zs2$(SHAREDSUFFIX) $(OUTDIR)$(FS)cbus$(SHAREDSUFFIX) $(OUTDIR)$(FS)perir$(SHAREDSUFFIX) $(OUTDIR)$(FS)editspro$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)infracar$(SHAREDSUFFIX) $(OUTDIR)$(FS)cti$(SHAREDSUFFIX) $(OUTDIR)$(FS)easydcc$(SHAREDSUFFIX) $(OUTDIR)$(FS)z21$(SHAREDSUFFIX) \
 	$(OUTDIR)$(FS)xnmm$(SHAREDSUFFIX) $(OUTDIR)$(FS)rocomp$(SHAREDSUFFIX) $(OUTDIR)$(FS)zimocan$(SHAREDSUFFIX) $(OUTDIR)$(FS)ucons88$(SHAREDSUFFIX) $(OUTDIR)$(FS)got$(SHAREDSUFFIX) \
-	$(OUTDIR)$(FS)esunavi$(SHAREDSUFFIX) $(OUTDIR)$(FS)spl$(SHAREDSUFFIX) $(OUTDIR)$(FS)inter10$(SHAREDSUFFIX)
+	$(OUTDIR)$(FS)esunavi$(SHAREDSUFFIX) $(OUTDIR)$(FS)spl$(SHAREDSUFFIX) $(OUTDIR)$(FS)inter10$(SHAREDSUFFIX) $(OUTDIR)$(FS)mgbox$(SHAREDSUFFIX)
 
 # ------------------------------------------------------------
 # The Digital Interfaces as shared libraries.
@@ -232,6 +232,8 @@ $(OUTDIR)$(FS)spl$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)spl.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)spl$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)spl.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 $(OUTDIR)$(FS)inter10$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)inter10.o $(COMMONOBJS) $(RRLIBS)
 	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)inter10$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)inter10.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
+$(OUTDIR)$(FS)mgbox$(SHAREDSUFFIX): $(TMPOUTDIR)$(FS)mgbox.o $(COMMONOBJS) $(RRLIBS)
+	$(LNK) $(LNK_FLAGS) -o $(OUTDIR)$(FS)mgbox$(SHAREDSUFFIX) $(TMPOUTDIR)$(FS)mgbox.o $(COMMONOBJS) $(RRLIBS) $(LIBS)
 
 # ------------------------------------------------------------
 # The RocDigs objects.
@@ -317,6 +319,7 @@ clean:
 	-$(REMOVE) $(OUTDIR)$(FS)rocnet$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)virtual$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)mcs2$(SHAREDSUFFIX)
+	-$(REMOVE) $(OUTDIR)$(FS)mgbox$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)clock$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)lrc135$(SHAREDSUFFIX)
 	-$(REMOVE) $(OUTDIR)$(FS)sprog$(SHAREDSUFFIX)
@@ -369,6 +372,7 @@ install:
 	-cp -p $(OUTDIR)$(FS)rocnet$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)virtual$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)mcs2$(SHAREDSUFFIX) $(DESTDIR)
+	-cp -p $(OUTDIR)$(FS)mgbox$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)clock$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)lrc135$(SHAREDSUFFIX) $(DESTDIR)
 	-cp -p $(OUTDIR)$(FS)sprog$(SHAREDSUFFIX) $(DESTDIR)

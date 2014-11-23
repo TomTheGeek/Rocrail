@@ -72,7 +72,7 @@ ECoSCtrlDialog::ECoSCtrlDialog( wxWindow* parent, iONode props, const char* devi
   initLabels();
   initValues();
 
-  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) ) {
+  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) || StrOp.equals( wDigInt.mgbox, wDigInt.getlib( m_Props ) ) ) {
     m_Port->Enable(false);
     this->SetTitle( _T("CS2") );
     if( wDigInt.getmcs2(m_Props) == NULL ) {
@@ -149,7 +149,7 @@ void ECoSCtrlDialog::initValues() {
   m_Bind->SetValue(false);
   m_ReportState->SetValue( wDigInt.isreportstate(m_Props)?true:false );
 
-  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) ) {
+  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) || StrOp.equals( wDigInt.mgbox, wDigInt.getlib( m_Props ) ) ) {
     m_Discovery->SetValue( wMCS2.isdiscovery(wDigInt.getmcs2( m_Props )) );
     m_Bind->SetValue( wMCS2.isbind(wDigInt.getmcs2( m_Props )) );
   }
@@ -183,7 +183,7 @@ void ECoSCtrlDialog::evaluate() {
   wDigInt.setflow( m_Props, m_CTS->IsChecked()?wDigInt.cts:wDigInt.none );
   wDigInt.setasciiprotocol( m_Props, m_SLCAN->IsChecked()?True:False );
 
-  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) ) {
+  if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) || StrOp.equals( wDigInt.mgbox, wDigInt.getlib( m_Props ) ) ) {
     wMCS2.setdiscovery(wDigInt.getmcs2( m_Props), m_Discovery->IsChecked()?True:False );
     wMCS2.setbind(wDigInt.getmcs2( m_Props), m_Bind->IsChecked()?True:False );
   }
@@ -517,7 +517,7 @@ void ECoSCtrlDialog::SublibSelected()
   }
   else {
     m_Host->Enable(true);
-    m_Port->Enable(StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) )?false:true);
+    m_Port->Enable( (StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) || StrOp.equals( wDigInt.mgbox, wDigInt.getlib( m_Props ) ) )?false:true);
     m_Device->Enable(false);
     m_CTS->Enable(false);
     m_SLCAN->Enable(false);
@@ -548,6 +548,8 @@ void ECoSCtrlDialog::OnHelpClick( wxCommandEvent& event )
 { // ecos, zimocan, z21, mcs2
   if( StrOp.equals( wDigInt.mcs2, wDigInt.getlib( m_Props ) ) )
     wxGetApp().openLink( "cs2:cs2" );
+  else if( StrOp.equals( wDigInt.mgbox, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "cs2:gbox" );
   else if( StrOp.equals( wDigInt.ecos, wDigInt.getlib( m_Props ) ) )
     wxGetApp().openLink( "ecos" );
   else if( StrOp.equals( wDigInt.z21, wDigInt.getlib( m_Props ) ) )

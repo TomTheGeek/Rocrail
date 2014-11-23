@@ -1991,5 +1991,55 @@
     </data>
   </object>
 
+  <object name="MGBOX" interface="$../rocint/rocint.xml:DigInt" use="node,trace,socket,serial,thread,mutex,map" include="$rocint/public/digint" remark="rocNet object">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="const iONode" remark="Ini node"/>
+      <param name="trc" vt="const iOTrace" remark="Trace instance"/>
+    </fun>
+    <data>
+      <var name="ini" vt="iONode" remark="DigInt Ini"/>
+      <var name="mcs2ini" vt="iONode" remark="MCS2 Ini"/>
+      <var name="trace" vt="iOTrace" remark="Trace pointer"/>
+      <var name="listenerObj" vt="obj" remark="Listener pointer"/>
+      <var name="listenerFun" vt="digint_listener" remark="Listener Function pointer"/>
+      <var name="iid" vt="const char*" remark="Interface ID"/>
+      <var name="gbUID" vt="int" remark="Gleisbox UID"/>
+      <var name="ms2UID" vt="int" remark="MS2-GUI UID"/>
+      <var name="mcs2gfpUID" vt="int" remark="CS2 GFP UID"/>
+      <var name="mcs2guiUID" vt="int" remark="CS2-GUI UID"/>
+      <var name="run" vt="Boolean"/>
+      <var name="udp" vt="Boolean"/>
+      <var name="conOK" vt="Boolean"/>
+      <var name="serial" vt="iOSerial"/>
+      <var name="readUDP" vt="iOSocket"/>
+      <var name="writeUDP" vt="iOSocket"/>
+      <var name="reader" vt="iOThread"/>
+      <var name="writer" vt="iOThread"/>
+      <var name="feedbackReader" vt="iOThread"/>
+      <var name="fbmod" vt="int"/>
+      <var name="swtime" vt="int"/>
+      <var name="power" vt="Boolean"/>
+      <var name="sensor" vt="Boolean"/>
+      <var name="discovery" vt="iOThread"/>
+      <var name="initASCII" vt="Boolean"/>
+      <var name="cmdpause" vt="int"/>
+      <var name="sensorbegin" vt="int"/>
+      <var name="sensorend" vt="int"/>
+      <var name="load" vt="int"/>
+      <var name="volt" vt="int"/>
+      <var name="temp" vt="int"/>
+      <var name="sod_fbmod" vt="int"/>
+      <var name="sod_sensorbegin" vt="int"/>
+      <var name="sod_sensorend" vt="int"/>
+      <var name="id" vt="char*" remark="Id name"/>
+      <var name="sid" vt="int" remark="address"/>
+      <var name="reguid" vt="unsigned int" remark="UID"/>
+      <var name="regloc" vt="Boolean" remark="flag to register/generate loco"/>
+      <var name="locolist" vt="iONode"/>
+      <var name="mfxbinder" vt="iOThread"/>
+      <var name="mfxDetectInProgress" vt="Boolean"/>
+    </data>
+  </object>
+
 </Project>
 
