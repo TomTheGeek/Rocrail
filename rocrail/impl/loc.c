@@ -2246,10 +2246,11 @@ static void _adjustAccel(iOLoc inst, int p_Accel, int weight) {
     int accelmin = wLoc.getaccelmin(data->props);
     int accelmax = wLoc.getaccelmax(data->props);
     if( weight > 0 && maxload > 0 && accelmin > 0 && accelmax > 0 ) {
-      float accel = accelmax - accelmin;
-      accel /= maxload;
-      accel *= weight;
-      accel += accelmin;
+      float faccel = accelmax - accelmin;
+      faccel /= maxload;
+      faccel *= weight;
+      faccel += accelmin;
+      accel = (int)faccel;
     }
     else {
       accel = accelmin;
