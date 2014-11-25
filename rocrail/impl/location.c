@@ -108,6 +108,7 @@ static struct OLocation* _inst( iONode ini ) {
   data->fifo   = wLocation.isfifo(ini);
   data->arriveList = ListOp.inst();
   data->locoPending = False;
+  data->locoPendingID = NULL;
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
       "location %s: MinOcc=%d Fifo=%d", wLocation.getid(ini), data->minocc, data->fifo );
 
@@ -197,6 +198,7 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
                   "loco %s is first in the list for FiFo, departure is allowed from location [%s]", LocoId, wLocation.getid( data->props ) );
               __dumpOcc(inst);
               data->locoPending = True;
+              data->locoPendingID = LocoId;
               MutexOp.post( data->listmux );
               return True;
             }
@@ -207,9 +209,9 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
               MutexOp.post( data->listmux );
               return False;
             }
-            else if(data->locoPending) {
+            else if(data->locoPending && !StrOp.equals(data->locoPendingID, LocoId) ) {
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                  "there is already a loco pending to depart in location [%s]", wLocation.getid( data->props ) );
+                  "loco [%s] is pending to depart from location [%s]", data->locoPendingID==NULL?"?":data->locoPendingID, wLocation.getid( data->props ) );
               __dumpOcc(inst);
               MutexOp.post( data->listmux );
               return False;
@@ -218,6 +220,7 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
               TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s may depart from location [%s]", LocoId, wLocation.getid( data->props ) );
               __dumpOcc(inst);
               data->locoPending = True;
+              data->locoPendingID = LocoId;
               MutexOp.post( data->listmux );
               return True;
             }
@@ -278,6 +281,7 @@ static void _locoDidDepart( struct OLocation* inst ,const char* LocoId ) {
         if( locoid != NULL )
           StrOp.free(locoid);
         data->locoPending = False;
+        data->locoPendingID = NULL;
         break;
       }
     }
