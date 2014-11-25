@@ -162,10 +162,10 @@ static void __dumpOcc(iOLocation inst) {
   iOLocationData data = Data(inst);
   int i = 0;
   int size = ListOp.size(data->arriveList);
-  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "----- dump occ list -----" );
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "----- dump occ list [%s] -----", wLocation.getid( data->props ) );
   for( i = 0; i < size; i++ ) {
     const char* arrLoco = (const char*)ListOp.get( data->arriveList, i );
-    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list %d", arrLoco, i, size );
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list of %d [%s]", arrLoco, i, size, wLocation.getid( data->props ) );
   }
 }
 
@@ -185,32 +185,37 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
     for( i = 0; i < size; i++ ) {
       const char* arrLoco = (const char*)ListOp.get( data->arriveList, i );
       if( arrLoco != NULL ) {
-        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list of %d", arrLoco, i, size );
+        TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+            "loco %s is nr %d in the list of %d from location %s", arrLoco, i, size, wLocation.getid( data->props ) );
         if( StrOp.equals( LocoId, arrLoco ) ) {
-          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is nr %d in the list of %d", LocoId, i, size );
+          TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+              "loco %s is nr %d in the list of %d from location %s", LocoId, i, size, wLocation.getid( data->props ) );
 
           if( ListOp.size(data->arriveList) >= data->minocc ) {
             if( data->fifo && i == 0 ) {
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is first in the list for FiFo, departure is allowed", LocoId );
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "loco %s is first in the list for FiFo, departure is allowed from location [%s]", LocoId, wLocation.getid( data->props ) );
               __dumpOcc(inst);
               data->locoPending = True;
               MutexOp.post( data->listmux );
               return True;
             }
             else if( data->fifo && i > 0 ) {
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s is not first in the list for FiFo", LocoId );
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "loco %s is not first in the list for FiFo in location [%s]", LocoId, wLocation.getid( data->props ) );
               __dumpOcc(inst);
               MutexOp.post( data->listmux );
               return False;
             }
             else if(data->locoPending) {
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "there is already a loco pending to depart" );
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
+                  "there is already a loco pending to depart in location [%s]", wLocation.getid( data->props ) );
               __dumpOcc(inst);
               MutexOp.post( data->listmux );
               return False;
             }
             else {
-              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s may depart", LocoId );
+              TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco %s may depart from location [%s]", LocoId, wLocation.getid( data->props ) );
               __dumpOcc(inst);
               data->locoPending = True;
               MutexOp.post( data->listmux );
@@ -219,7 +224,7 @@ static Boolean _isDepartureAllowed( struct OLocation* inst ,const char* LocoId )
           }
           else {
             TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999,
-                "loco %s must wait: MinOcc=%d Occ=%d", LocoId, data->minocc, ListOp.size(data->arriveList) );
+                "loco %s must wait: MinOcc=%d Occ=%d Location=%s", LocoId, data->minocc, ListOp.size(data->arriveList), wLocation.getid( data->props ) );
             __dumpOcc(inst);
             MutexOp.post( data->listmux );
             return False;
