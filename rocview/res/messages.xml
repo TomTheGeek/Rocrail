@@ -29170,4 +29170,7 @@
   <Msg id="stopclockatpoweroff">
     <en txt="Stop clock at power off"/>
   </Msg>
+  <Msg id="showtrainidinblock">
+    <en txt="Show train ID in block"/>
+  </Msg>
 </Messages>

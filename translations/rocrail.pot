@@ -7541,3 +7541,9 @@ msgstr ""
 msgid "Stop clock at power off"
 msgstr ""
 
+#. 
+# id="showtrainidinblock"
+#, c-format
+msgid "Show train ID in block"
+msgstr ""
+

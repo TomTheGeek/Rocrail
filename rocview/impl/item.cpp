@@ -3104,8 +3104,9 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
   else if( StrOp.equals( wBlock.name(), NodeOp.getName( m_Props ) ) ) {
     char* l_locidStr = NULL;
     Boolean updateEnterside = wBlock.isupdateenterside(node);
-    const char* state  = wBlock.getstate( node );
-    const char* locoid = wBlock.getlocid( node );
+    const char* state   = wBlock.getstate( node );
+    const char* locoid  = wBlock.getlocid( node );
+    const char* trainid = "";
     int occupied = 0;
     Boolean showID = True;
 
@@ -3114,10 +3115,12 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
     if( locoid == NULL ) {
       locoid = "";
     }
-    else if( wGui.isshowlocoimageinblock(wxGetApp().getIni()) ) {
+    else {
       iONode loc = wxGetApp().getFrame()->findLoc( updateEnterside ? wBlock.getlocid(m_Props):locoid );
       if( loc != NULL ) {
-        m_Renderer->setLocoImage(wLoc.getimage(loc));
+        if( wGui.isshowlocoimageinblock(wxGetApp().getIni()) )
+          m_Renderer->setLocoImage(wLoc.getimage(loc));
+        trainid = wLoc.gettrain(loc);
       }
     }
 
@@ -3168,8 +3171,12 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       else if( showID && wBlock.issmallsymbol(m_Props) )
         l_locidStr = StrOp.fmt( "%s%s", wBlock.getid( node ), hasCars?"#":"" );
       else {
-        if(showID && fifoids == NULL)
-          l_locidStr = StrOp.fmt( "%s%s%s", wBlock.getid( node ), hasCars?"#":" ", fifoids!=NULL?fifoids:locoid );
+        if(showID && fifoids == NULL) {
+          if( wGui.isshowtrainidinblock(wxGetApp().getIni()) && trainid != NULL && StrOp.len(trainid) > 0 )
+            l_locidStr = StrOp.fmt( "%s%s%s@%s", wBlock.getid( node ), hasCars?"#":" ", locoid, trainid );
+          else
+            l_locidStr = StrOp.fmt( "%s%s%s", wBlock.getid( node ), hasCars?"#":" ", locoid );
+        }
         else
           l_locidStr = StrOp.fmt( "%s%s", fifoids!=NULL?fifoids:locoid, hasCars?"#":"" );
       }

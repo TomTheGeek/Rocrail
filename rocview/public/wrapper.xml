@@ -146,6 +146,7 @@
     <var name="rendergc" vt="bool" defval="true"/>
     <var name="showlocoimage" vt="bool" defval="true"/>
     <var name="showlocoimageinblock" vt="bool" defval="false"/>
+    <var name="showtrainidinblock" vt="bool" defval="true"/>
     <var name="gridfontsizeadjust" vt="int" defval="0"/>
     <var name="helpurl" vt="string" defval="http://wiki.rocrail.net" remark="WikiOnAStick: http://localhost:8800"/>
     <accelerator cardinality="n"/>
