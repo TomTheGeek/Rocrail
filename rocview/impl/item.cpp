@@ -3173,7 +3173,7 @@ void Symbol::modelEvent( iONode node, bool oncreate ) {
       else {
         if(showID && fifoids == NULL) {
           if( wGui.isshowtrainidinblock(wxGetApp().getIni()) && trainid != NULL && StrOp.len(trainid) > 0 )
-            l_locidStr = StrOp.fmt( "%s%s%s@%s", wBlock.getid( node ), hasCars?"#":" ", locoid, trainid );
+            l_locidStr = StrOp.fmt( "%s%s%s_%s", wBlock.getid( node ), hasCars?"#":" ", locoid, trainid );
           else
             l_locidStr = StrOp.fmt( "%s%s%s", wBlock.getid( node ), hasCars?"#":" ", locoid );
         }
