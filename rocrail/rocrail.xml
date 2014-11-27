@@ -746,6 +746,10 @@
       <param name="accel" vt="int"/>
       <param name="weight" vt="int"/>
     </fun>
+    <fun name="setMaxKmh" vt="void">
+      <param name="inst" vt="this" remark="Loc instance"/>
+      <param name="maxkmh" vt="int"/>
+    </fun>
     <data include="$rocint/public/lcdriverint">
       <var name="props" vt="iONode"/>
       <var name="cvMap" vt="iOMap"/>
@@ -856,6 +860,7 @@
       <var name="savedSpeed" vt="int"/>
       <var name="v0sleep" vt="int"/>
       <var name="v0pending" vt="Boolean"/>
+      <var name="maxkmh" vt="int"/>
     </data>
   </object>
 

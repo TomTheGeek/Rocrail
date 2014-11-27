@@ -904,6 +904,25 @@ static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
     }
   }
 
+  /* inform all slave locos of the new maxkmh */
+  if( wLoc.getconsist(data->props) != NULL && StrOp.len(wLoc.getconsist(data->props)) > 0) {
+    iOStrTok  consist = StrTokOp.inst( wLoc.getconsist ( data->props ), ',' );
+    while( StrTokOp.hasMoreTokens( consist ) ) {
+      const char* tok = StrTokOp.nextToken( consist );
+      iOLoc consistloc = ModelOp.getLoc( AppOp.getModel(), tok, NULL, False );
+      if( consistloc != NULL ) {
+        LocOp.setMaxKmh(consistloc, V_maxkmh);
+      }
+    }
+    StrTokOp.base.del( consist );
+  }
+
+  /* use the maxkmh from master */
+  if( ModelOp.getMasterLoc(AppOp.getModel(), wLoc.getid(data->props) ) != NULL ) {
+    V_maxkmh = data->maxkmh;
+  }
+
+
 
   if( !wLoc.isdir(data->props) || (wLoc.isdir(data->props) && !wLoc.isplacing( data->props ) ) ){
     if( wLoc.getV_Rmax( data->props ) > 0 ) {
@@ -3849,6 +3868,10 @@ static void _setClass( iOLoc inst, const char* p_Class ) {
   AppOp.broadcastEvent( (iONode)NodeOp.base.clone( data->props ) );
 }
 
+static void _setMaxKmh( iOLoc inst, int maxkmh ) {
+  iOLocData data = Data(inst);
+  data->maxkmh = maxkmh;
+}
 
 
 static iOLoc _inst( iONode props ) {
