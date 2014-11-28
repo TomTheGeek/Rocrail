@@ -17691,7 +17691,7 @@
   </Msg>
   <Msg id="inatpre2in">
     <en txt="Stop at pre2in event"/>
-    <de txt="Stop bei pre2In"/>
+    <de txt="Stop bei pre2in"/>
     <bg txt="Спиране на pre2in събитие"/>
     <el txt="Στάση στο pre2in περίπτωση"/>
     <fr txt="Arrêt à l'événement \&quot;pre2in\&quot;"/>
@@ -21875,9 +21875,9 @@
   </Msg>
   <Msg id="analyze">
     <en txt="Analyze" alttxt="Analyse" tip="Analyse track plan for generating routes."/>
-    <nl txt="Analyseren" tip="Analyseer om rijstraten te genereren."/>
+    <nl txt="Analyseren" tip="Analyseer het baan plan om rijwegen te genereren"/>
     <fr txt="analyser" tip="analyser  le plan des voies pour générer des itinéraires"/>
-    <de txt="Analysieren" tip="Gleisplan zur Erzeugung von Fahrstraßen analysieren"/>
+    <de txt="Analysieren" tip="Für Fahrstraßen-Erzeugung Gleisplan analysieren"/>
     <em_GB txt="Analyze" tip="Analyze track plan for generating routes."/>
     <em_AU txt="Analyze" tip="Analyze track plan for generating routes."/>
     <pt txt="Analisar"/>
@@ -21890,10 +21890,10 @@
     <cs txt="Analyzovat" tip="Analyzovat plán trati pro vytváření cest"/>
     <sv txt="Analysera." tip="Analysera spårplan för att generera tågvägar."/>
     <zh_CN txt="分析" tip="从铁路线模拟图进行分析生成路径"/>
-    <sl txt="Analiziraj" tip="Analiziraj tirni načrt za generirane poti."/>
+    <sl txt="Analiziraj" tip="Analiziraj tirni načrt za generiranje smeri"/>
     <en_GB txt="Analyse" tip="Analyse track plan for generating routes."/>
     <da txt="Analysér" tip="Analysér sporplan for oprettelse af sporveje"/>
-    <pt_BR txt="Analisar" tip="Analisar diagrama de trilhos para gerar rotas."/>
+    <pt_BR txt="Analisar" tip="Analisar o diagrama de trilhos para gerar rotas"/>
     <fi txt="Analysointi" tip="Analysoi ratasuunnitelma kulkuteiden tekemistä varten"/>
     <pl txt="Analiza" tip="Analizowanie torowiska do generowania tras."/>
     <en_CA txt="Analyse" tip="Analyse track plan for generating routes."/>
@@ -29155,6 +29155,7 @@
     <sr_latin txt="Modulne rute"/>
     <fi txt="Modulien kulkutiet"/>
     <it txt="Itinerari modulo"/>
+    <fr txt="Itinéraires du module"/>
   </Msg>
   <Msg id="savemodules">
     <en txt="Save modules"/>
@@ -29166,11 +29167,22 @@
     <sr_latin txt="Sačuvaj module"/>
     <fi txt="Tallenna modulit"/>
     <it txt="Salvare moduli"/>
+    <fr txt="Enregistrer les modules"/>
   </Msg>
   <Msg id="stopclockatpoweroff">
     <en txt="Stop clock at power off"/>
+    <de txt="Uhr anhalten bei Gleisspannung Aus"/>
+    <en_GB txt="Stop clock at power off"/>
+    <nl txt="Stop de klok bij spanning uit"/>
+    <pt_BR txt="Parar o relógio ao desligar"/>
+    <sl txt="Ustavi uro ob izklopu"/>
   </Msg>
   <Msg id="showtrainidinblock">
     <en txt="Show train ID in block"/>
+    <de txt="Zug-Kennung im Block anzeigen"/>
+    <en_GB txt="Show train ID in block"/>
+    <nl txt="Toon de trein ID in het blok"/>
+    <pt_BR txt="Exibir identificador do trem no bloco"/>
+    <sl txt="Prikaži ID vlaka v odseku"/>
   </Msg>
 </Messages>
