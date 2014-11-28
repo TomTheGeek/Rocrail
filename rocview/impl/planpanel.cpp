@@ -362,12 +362,12 @@ void PlanPanel::showTooltip(bool show) {
   // iterate the items in this panel
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
     if( !item->isDragged() )
       item->showTooltip(show);
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 }
 
@@ -431,12 +431,12 @@ void PlanPanel::OnPaint(wxPaintEvent& event)
   // iterate the items in this panel
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
     if( !item->isDragged() )
       item->setPosition();
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 }
 
@@ -520,7 +520,7 @@ void PlanPanel::moveSelection(iONode sel) {
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
   bool modified = false;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
   // model event node
   iONode move = NodeOp.inst( wItem.name(), NULL, ELEMENT_NODE );
   while( node != NULL ) {
@@ -554,7 +554,7 @@ void PlanPanel::moveSelection(iONode sel) {
       NodeOp.addChild( cmd, moveditem );
       modified = true;
     }
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 
   if( modified )
@@ -593,7 +593,7 @@ void PlanPanel::copySelection(iONode sel) {
   // iterate the items in this panel
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
 
   bool modified = false;
   while( node != NULL ) {
@@ -619,7 +619,7 @@ void PlanPanel::copySelection(iONode sel) {
       addItemAttr( copy );
       modified = true;
     }
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 
   if( modified )
@@ -644,7 +644,7 @@ void PlanPanel::deleteSelection(iONode sel) {
   // iterate the items in this panel
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
 
   bool modified = false;
   while( node != NULL ) {
@@ -658,7 +658,7 @@ void PlanPanel::deleteSelection(iONode sel) {
       if( wxGetApp().isOffline() )
         removeItemFromList( props );
     }
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 
   if( modified )
@@ -691,7 +691,7 @@ void PlanPanel::routeidSelection(iONode sel) {
   // iterate the items in this panel
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
   bool modified = false;
 
   while( node != NULL ) {
@@ -714,7 +714,7 @@ void PlanPanel::routeidSelection(iONode sel) {
       NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( props ) );
       modified = true;
     }
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 
   if( modified )
@@ -746,7 +746,7 @@ void PlanPanel::blockidSelection(iONode sel) {
   // iterate the items in this panel
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
   bool modified = false;
 
   while( node != NULL ) {
@@ -759,7 +759,7 @@ void PlanPanel::blockidSelection(iONode sel) {
       NodeOp.addChild( cmd, (iONode)NodeOp.base.clone( props ) );
       modified = true;
     }
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 
   if( modified )
@@ -980,11 +980,11 @@ void PlanPanel::OnRemovePanel(wxCommandEvent& event) {
     // iterate the items in this panel
     m_ChildTable->BeginFind();
     Symbol* item = NULL;
-    wxNode* node = (wxNode*)m_ChildTable->Next();
+    wxHashTable::Node* node = m_ChildTable->Next();
     while( node != NULL ) {
       item = (Symbol*)node->GetData();
       item->OnDelete(event);
-      node = (wxNode*)m_ChildTable->Next();
+      node = m_ChildTable->Next();
     }
   }
 
@@ -1278,12 +1278,12 @@ void PlanPanel::OnTimer(wxTimerEvent& event) {
   m_bAlt = !m_bAlt;
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
     if( item->isSignal() && !item->isDragged() && item->hasAlt())
       item->Refresh();
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 }
 
@@ -1863,7 +1863,7 @@ void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
 
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* tablenode = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* tablenode = m_ChildTable->Next();
   while( tablenode != NULL ) {
     item = (Symbol*)tablenode->GetData();
     const char* nodeName = NodeOp.getName( item->getProperties() );
@@ -1881,7 +1881,7 @@ void PlanPanel::updateTTItemCmd(wxCommandEvent& event) {
         item->blockEvent( wItem.getid(node));
       }
     }
-    tablenode = (wxNode*)m_ChildTable->Next();
+    tablenode = m_ChildTable->Next();
   }
 
   // Cleanup copy:
@@ -1913,11 +1913,11 @@ void PlanPanel::update4Route(wxCommandEvent& event) {
 
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* tablenode = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* tablenode = m_ChildTable->Next();
   while( tablenode != NULL ) {
     item = (Symbol*)tablenode->GetData();
     item->routeEvent( routeId, locked );
-    tablenode = (wxNode*)m_ChildTable->Next();
+    tablenode = m_ChildTable->Next();
   }
 
   // Cleanup copy:
@@ -2298,12 +2298,12 @@ void PlanPanel::clean() {
   Show(false);
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
     item->disable();
     RemoveChild(item);
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
   m_ChildTable->Clear();
   Refresh();
@@ -2320,11 +2320,11 @@ void PlanPanel::blockEvent( const char* id ) {
 
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
     item->blockEvent( id );
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 }
 
@@ -2347,7 +2347,7 @@ void PlanPanel::reScale( double scale ) {
 
   m_ChildTable->BeginFind();
   Symbol* item = NULL;
-  wxNode* node = (wxNode*)m_ChildTable->Next();
+  wxHashTable::Node* node = m_ChildTable->Next();
   while( node != NULL ) {
     item = (Symbol*)node->GetData();
     item->SetBackgroundColour( GetBackgroundColour() );
@@ -2361,7 +2361,7 @@ void PlanPanel::reScale( double scale ) {
         cy = wItem.gety(iProps);
     }
 
-    node = (wxNode*)m_ChildTable->Next();
+    node = m_ChildTable->Next();
   }
 
   if( needSize ) {
