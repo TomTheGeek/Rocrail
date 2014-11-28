@@ -7547,3 +7547,9 @@ msgstr ""
 msgid "Show train ID in block"
 msgstr ""
 
+#. 
+# id="sensormonitorauto"
+#, c-format
+msgid "Sensor monitor in automatic mode"
+msgstr ""
+

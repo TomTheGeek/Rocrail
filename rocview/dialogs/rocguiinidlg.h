@@ -206,6 +206,7 @@ public:
     wxCheckBox* m_ShowLocoImageInBlock;
     wxCheckBox* m_ShowTrainIdInBlock;
     wxCheckBox* m_GrayIcons;
+    wxCheckBox* m_SensorMonitorAuto;
     wxStaticBox* m_labWorkspace;
     wxTextCtrl* m_Workspace;
     wxButton* m_WorkspaceDlg;

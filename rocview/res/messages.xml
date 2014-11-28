@@ -29185,4 +29185,7 @@
     <pt_BR txt="Exibir identificador do trem no bloco"/>
     <sl txt="Prikaži ID vlaka v odseku"/>
   </Msg>
+  <Msg id="sensormonitorauto">
+    <en txt="Sensor monitor in automatic mode"/>
+  </Msg>
 </Messages>
