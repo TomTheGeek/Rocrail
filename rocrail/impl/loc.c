@@ -919,6 +919,7 @@ static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
 
   /* use the maxkmh from master */
   if( ModelOp.getMasterLoc(AppOp.getModel(), wLoc.getid(data->props) ) != NULL ) {
+    TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "slave loco [%s] maxkmh=%d", wLoc.getid(data->props), data->maxkmh);
     V_maxkmh = data->maxkmh;
   }
 
@@ -972,9 +973,10 @@ static int __translateVhint(iOLoc inst, const char* V_hint, int V_maxkmh ) {
   }
   
   if(StrOp.equals( wLoc.V_mode_kmh, wLoc.getV_mode(data->props) ) && V_maxkmh > 0 ) {
+    int l_Vnew = V_new;
     if( V_new > V_maxkmh ) {
       V_new = V_maxkmh;
-      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "reduce max. speed from %dKmh to %dKmh", V_new, V_maxkmh );
+      TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco [%s] reduce max. speed from %dKmh to %dKmh", wLoc.getid(data->props), l_Vnew, V_maxkmh );
     }
   }
 
@@ -3870,6 +3872,7 @@ static void _setClass( iOLoc inst, const char* p_Class ) {
 
 static void _setMaxKmh( iOLoc inst, int maxkmh ) {
   iOLocData data = Data(inst);
+  TraceOp.trc( name, TRCLEVEL_USER1, __LINE__, 9999, "loco [%s] maxkmh=%d", wLoc.getid(data->props), maxkmh);
   data->maxkmh = maxkmh;
 }
 
