@@ -443,6 +443,8 @@ static void __reportState(iORocoMP inst) {
     if( data->iid != NULL )
       wState.setiid( node, data->iid );
     wState.setpower( node, data->power );
+    wState.settemp( node, data->temp );
+    wState.setload( node, data->current );
 
     data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
   }
@@ -451,7 +453,10 @@ static void __reportState(iORocoMP inst) {
 
 static void __handleSystemState(iORocoMP roco, byte* packet) {
   iORocoMPData data = Data(roco);
-  int state = packet[2];
+  int current  = packet[2] + packet[3] * 256;
+  int fcurrent = packet[4] + packet[5] * 256;
+  int temp     = packet[6] + packet[7] * 256;
+  int state    = packet[8];
   char* stateStr = NULL;
   /*
 #define csEmergencyStop           0x01  // Der Nothalt ist eingeschaltet
@@ -463,14 +468,15 @@ static void __handleSystemState(iORocoMP roco, byte* packet) {
 #define csColdStart               0x40  // Kaltstart
 #define csRamError                0x80  // RAM Fehler in der Zentrale
    */
-  if( data->power && (state & csTrackVoltageOff) == csTrackVoltageOff ) {
-    data->power = False;
+
+  if( data->state != state || data->current != fcurrent || data->temp != temp ) {
+    data->power   = (csTrackVoltageOff == 0) ? True:False;
+    data->state   = state;
+    data->current = fcurrent;
+    data->temp    = temp;
     __reportState(roco);
   }
-  else if( !data->power && (state & csTrackVoltageOff) == 0 ) {
-    data->power = True;
-    __reportState(roco);
-  }
+
 
   if( data->systemstate != state ) {
     data->systemstate = state;
@@ -555,7 +561,7 @@ static void __evaluatePacket(iORocoMP roco, byte* in) {
     __handleRMBus(roco, in);
     break;
   case USB_SYSTEMSTATE_DATACHANGED:
-    /*__handleSystemState(roco, in);*/
+    __handleSystemState(roco, in);
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled packet: len=%d usb=0x%02X", len, usb );
