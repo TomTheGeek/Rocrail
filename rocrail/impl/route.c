@@ -243,7 +243,11 @@ static void __broadcast(iORoute inst) {
   wRoute.setlocid(nodeD, o->lockedId );
 
   if( wRoute.getstatus(o->props) != wRoute.status_closed ) {
-    if( o->lockedId == NULL || StrOp.len(o->lockedId) == 0 )
+    if( o->testlocked ) {
+      wRoute.setstatus( nodeD, wRoute.status_locked);
+      o->testlocked = False;
+    }
+    else if( o->lockedId == NULL || StrOp.len(o->lockedId) == 0 )
       wRoute.setstatus( nodeD, wRoute.status_free);
     else if( o->lockedId != NULL && StrOp.len(o->lockedId) > 0 )
       wRoute.setstatus( nodeD, wRoute.status_locked);
@@ -532,8 +536,10 @@ static Boolean _cmd( iORoute inst, iONode nodeA ) {
     ok = _go( inst );
   }
   else if( StrOp.equals( wRoute.test, cmdStr ) ) {
-    if( RouteOp.isFree(inst, "__manualcommand__") )
+    if( RouteOp.isFree(inst, "__manualcommand__") ) {
+      o->testlocked = (wRoute.getstatus(nodeA) == wRoute.status_locked);
       ok = _go( inst );
+    }
     else
       TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "Route %s is locked and cannot be switched by hand.", RouteOp.getId(inst) );
   }

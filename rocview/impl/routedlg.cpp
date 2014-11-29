@@ -74,6 +74,7 @@ RouteCtrlDlg::RouteCtrlDlg(wxWindow *parent)
 
   m_Test = new wxButton( this, -1, wxGetApp().getMsg("test") );
   m_Force = new wxButton( this, -1, wxGetApp().getMsg("force") );
+  m_Lock = new wxButton( this, -1, wxGetApp().getMsg("lock") );
   m_Quit = new wxButton( this, -1, wxGetApp().getMsg("cancel") );
 
   m_Grid = new wxGrid( this, -1, wxDefaultPosition, wxSize(-1,400) ) ;
@@ -98,6 +99,7 @@ RouteCtrlDlg::RouteCtrlDlg(wxWindow *parent)
   sizer1->Add( m_Quit, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5 );
   sizer1->Add( m_Test, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5 );
   sizer1->Add( m_Force, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5 );
+  sizer1->Add( m_Lock, 0, wxALIGN_CENTER | wxEXPAND | wxALL, 5 );
 
   sizer2->Add( sizer1 , 0, wxALIGN_CENTER | wxEXPAND | wxALL, 0 );
 
@@ -124,6 +126,7 @@ void RouteCtrlDlg::OnButton(wxCommandEvent& event)
       iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
       wRoute.setcmd( cmd, wRoute.test );
       wRoute.setid( cmd, str.mb_str(wxConvUTF8) );
+      wRoute.setstatus( cmd, wRoute.status_free);
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
@@ -135,6 +138,19 @@ void RouteCtrlDlg::OnButton(wxCommandEvent& event)
       iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
       wRoute.setcmd( cmd, wRoute.force );
       wRoute.setid( cmd, str.mb_str(wxConvUTF8) );
+      wRoute.setstatus( cmd, wRoute.status_free);
+      wxGetApp().sendToRocrail( cmd );
+      cmd->base.del(cmd);
+    }
+  }
+  else if( event.GetEventObject() == m_Lock ) {
+    wxString str = m_Grid->GetCellValue( m_Grid->GetGridCursorRow(), 0 );
+    TraceOp.trace( NULL, TRCLEVEL_INFO, 0, "Lock %s", (const char*)str.mb_str(wxConvUTF8) );
+    {
+      iONode cmd = NodeOp.inst( wRoute.name(), NULL, ELEMENT_NODE );
+      wRoute.setcmd( cmd, wRoute.test );
+      wRoute.setid( cmd, str.mb_str(wxConvUTF8) );
+      wRoute.setstatus( cmd, wRoute.status_locked);
       wxGetApp().sendToRocrail( cmd );
       cmd->base.del(cmd);
     }
@@ -196,6 +212,7 @@ void RouteCtrlDlg::init() {
   else {
     m_Test->Enable( false );
     m_Force->Enable( false );
+    m_Lock->Enable( false );
   }
 }
 

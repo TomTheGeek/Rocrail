@@ -43,6 +43,7 @@ private:
   wxButton*   m_Quit;
   wxButton*   m_Test;
   wxButton*   m_Force;
+  wxButton*   m_Lock;
 
   DECLARE_EVENT_TABLE()
 };

@@ -1553,7 +1553,8 @@
       <var name="ctc1" vt="Boolean"/>
       <var name="ctc2" vt="Boolean"/>
       <var name="ctc3" vt="Boolean"/>
-    </data>
+      <var name="testlocked" vt="Boolean"/>
+      </data>
   </object>
 
 
