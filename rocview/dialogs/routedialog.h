@@ -66,6 +66,7 @@ class wxGrid;
 #define ID_BUTTON_ST_NEW 10003
 #define ID_BUTTON_ST_DELETE_ROUTE 10017
 #define ID_BUTTON_ST_TEST 10312
+#define ID_ROUTE_LOCK 10451
 #define ID_RESET_ROUTE 10421
 #define ID_BUTTON_ST_DOC 10353
 #define ID_BUTTON_ST_COPY 10401
@@ -169,6 +170,9 @@ public:
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON_ST_TEST
     void OnButtonStTestClick( wxCommandEvent& event );
 
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ROUTE_LOCK
+    void OnRouteLockClick( wxCommandEvent& event );
+
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_RESET_ROUTE
     void OnResetRouteClick( wxCommandEvent& event );
 
@@ -268,6 +272,7 @@ public:
     wxButton* m_New;
     wxButton* m_DeleteRoute;
     wxButton* m_Test;
+    wxButton* m_TestLock;
     wxButton* m_ResetRoute;
     wxButton* m_Doc;
     wxButton* m_CopyRoute;
