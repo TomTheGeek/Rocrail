@@ -1336,22 +1336,22 @@ void RouteDialog::CreateControls()
 
     wxFlexGridSizer* itemFlexGridSizer7 = new wxFlexGridSizer(0, 6, 0, 0);
     itemBoxSizer5->Add(itemFlexGridSizer7, 0, wxGROW|wxALL, 5);
-    m_New = new wxButton( m_IndexPanel, ID_BUTTON_ST_NEW, _("New"), wxDefaultPosition, wxSize(80, -1), 0 );
+    m_New = new wxButton( m_IndexPanel, ID_BUTTON_ST_NEW, _("New"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_New, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    m_DeleteRoute = new wxButton( m_IndexPanel, ID_BUTTON_ST_DELETE_ROUTE, _("Delete"), wxDefaultPosition, wxSize(80, -1), 0 );
+    m_DeleteRoute = new wxButton( m_IndexPanel, ID_BUTTON_ST_DELETE_ROUTE, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_DeleteRoute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    m_Test = new wxButton( m_IndexPanel, ID_BUTTON_ST_TEST, _("Test"), wxDefaultPosition, wxSize(80, -1), 0 );
+    m_Test = new wxButton( m_IndexPanel, ID_BUTTON_ST_TEST, _("Test"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_Test, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
     m_ResetRoute = new wxButton( m_IndexPanel, ID_RESET_ROUTE, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_ResetRoute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    m_Doc = new wxButton( m_IndexPanel, ID_BUTTON_ST_DOC, _("Doc"), wxDefaultPosition, wxSize(80, -1), 0 );
+    m_Doc = new wxButton( m_IndexPanel, ID_BUTTON_ST_DOC, _("Doc"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_Doc, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
-    m_CopyRoute = new wxButton( m_IndexPanel, ID_BUTTON_ST_COPY, _("Copy"), wxDefaultPosition, wxSize(80, -1), 0 );
+    m_CopyRoute = new wxButton( m_IndexPanel, ID_BUTTON_ST_COPY, _("Copy"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer7->Add(m_CopyRoute, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5);
 
     m_Notebook->AddPage(m_IndexPanel, _("Index"));
