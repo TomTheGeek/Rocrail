@@ -470,7 +470,7 @@ static void __handleSystemState(iORocoMP roco, byte* packet) {
    */
 
   if( data->state != state || data->current != fcurrent || data->temp != temp ) {
-    data->power   = (csTrackVoltageOff == 0) ? True:False;
+    data->power   = ((state & csTrackVoltageOff) == csTrackVoltageOff) ? False:True;
     data->state   = state;
     data->current = fcurrent;
     data->temp    = temp;
