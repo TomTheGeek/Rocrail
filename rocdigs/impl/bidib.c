@@ -3169,7 +3169,7 @@ static Boolean __processBidiMsg(iOBiDiB bidib, byte* msg, int size) {
     iOSlot slot = __getSlotByAddr(bidib, locoAddr);
     if( slot != NULL && slot->kmh != speed ) {
       slot->kmh = speed;
-      TraceOp.trc( name, TRCLEVEL_CALC, __LINE__, 9999,
+      TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999,
           "loco=%s addr=%d speed=%dkm/h", slot->id, locoAddr, speed );
 
       iONode nodeC = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );

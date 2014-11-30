@@ -690,7 +690,7 @@ static void* __event( void* inst, const void* evt ) {
   if( StrOp.equals( wLoc.name(), NodeOp.getName(evtNode) ) && StrOp.equals( wLoc.bidikmh, wLoc.getcmd(evtNode) ) ) {
     int kmh = wLoc.getV_realkmh(evtNode);
     wLoc.setV_realkmh( data->props, kmh );
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reported speed for [%s] is %dkm/h", wLoc.getid(data->props), kmh );
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reported speed for [%s] is %dkm/h", wLoc.getid(data->props), kmh );
     __broadcastLocoProps(inst, wLoc.bidikmh, NULL, NULL);
     return NULL;
   }
