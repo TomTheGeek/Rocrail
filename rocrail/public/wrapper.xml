@@ -574,6 +574,11 @@
         <var name="nrleds" vt="int" defval="5"/>
       </spl>
 
+      <hue remark="HUE options" wrappername="HUE">
+        <var name="bridge" vt="string" defval="" remark="hostname."/>
+        <var name="user" vt="string" defval="" remark="username."/>
+      </hue>
+
       <opendcc remark="OpenDCC options" wrappername="OpenDCC">
         <var name="lib" vt="string" defval="p50x"/>
         <var name="loccnfg" vt="bool" defval="false" remark="send loco config commands"/>

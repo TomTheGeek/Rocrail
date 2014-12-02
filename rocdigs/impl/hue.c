@@ -24,6 +24,7 @@
 #include "rocs/public/mem.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
+#include "rocrail/wrapper/public/HUE.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Output.h"
 
@@ -83,6 +84,61 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OHUE ----- */
+/*
+https://www.meethue.com/api/nupnp
+
+GET /api/nupnp HTTP/1.1
+Host: www.meethue.com
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:33.0) Gecko/20100101 Firefox/33.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,* / *;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Cache-Control: max-age=0
+
+HTTP/1.1 200 OK
+access-control-allow-credentials: true
+access-control-allow-headers: Origin, X-Requested-With, Content-Type, Accept
+access-control-allow-methods: GET, POST, PUT, DELETE
+access-control-allow-origin: *
+Cache-Control: no-cache
+Content-Encoding: gzip
+Content-Length: 22
+Content-Type: application/json
+Date: Tue, 02 Dec 2014 11:47:39 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Google Frontend
+Set-Cookie: PLAY_FLASH=;Path=/;Expires=Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: PLAY_ERRORS=;Path=/;Expires=Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: PLAY_SESSION=;Path=/;Expires=Thu, 01 Jan 1970 00:00:00 GMT
+Vary: Accept-Encoding
+X-Firefox-Spdy: 3.1
+----------------------------------------------------------
+<html><head><link rel="alternate stylesheet" type="text/css" href="resource://gre-resources/plaintext.css" title="Wrap Long Lines"></head><body><pre>[]</pre></body></html>
+ */
+
+static Boolean __hueConnect(iOHUE inst) {
+  return True;
+}
+
+static Boolean __hueDisConnect(iOHUE inst) {
+  return True;
+}
+
+/*
+ * Content-Type: application/json
+ */
+static iONode __hueGET(iOHUE inst, const char* json) {
+  iONode rsp = NULL;
+  return rsp;
+}
+
+
+static iONode __huePUT(iOHUE inst, const char* json) {
+  iONode rsp = NULL;
+  return rsp;
+}
+
 
 static iONode __translate( iOHUE inst, iONode node ) {
   iOHUEData data = Data(inst);
@@ -191,11 +247,18 @@ static struct OHUE* _inst( const iONode ini ,const iOTrace trc ) {
 
   /* Initialize data->xxx members... */
   data->ini     = ini;
+  data->hueini  = wDigInt.gethue(ini);
   data->iid     = StrOp.dup( wDigInt.getiid( ini ) );
+
+  if( data->hueini == NULL ) {
+    data->hueini = NodeOp.inst(wHUE.name(), ini, ELEMENT_NODE);
+    NodeOp.addChild(ini, data->hueini);
+  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Philips HUE %d.%d.%d", vmajor, vminor, patch );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bridge: [%s]", wDigInt.gethost(ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bridge: [%s]", wHUE.getbridge(data->hueini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  user  : [%s]", wHUE.getuser(data->hueini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 
