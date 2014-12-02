@@ -1326,6 +1326,9 @@
       <param name="varid" vt="const char*" remark="VarID to search for"/>
       <param name="map" vt="iOMap" remark="Map with replacements"/>
     </fun>
+    <fun name="initMasterLocMap" vt="void">
+      <param name="inst" vt="this" remark="Model instance"/>
+    </fun>
     <data include="mvtrack,modplan">
       <var name="callback" vt="model_listener"/>
       <var name="cbCargo" vt="obj"/>

@@ -135,7 +135,6 @@ static int instCnt = 0;
 
 
 static Boolean __removeLoco(iOModel data, iONode item );
-static void __initMasterLocMap(iOModel inst);
 
 
 /*
@@ -1057,7 +1056,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       _addItem( inst, item );
     }
     if( modified ) {
-      __initMasterLocMap(inst);
+      ModelOp.initMasterLocMap(inst);
     }
   }
   else if( StrOp.equals( wCar.name(), name ) ) {
@@ -2393,7 +2392,7 @@ static Boolean __removeLoco(iOModel inst, iONode item ) {
     __removeItemFromList( data, wLocList.name(), props );
     lc->base.del( lc );
     props->base.del( props );
-    __initMasterLocMap(inst);
+    ModelOp.initMasterLocMap(inst);
     return True;
   }
   return False;
@@ -3583,7 +3582,7 @@ static iOLoc _getMasterLoc(iOModel inst, const char* slaveID ) {
 }
 
 
-static void __initMasterLocMap(iOModel inst) {
+static void _initMasterLocMap(iOModel inst) {
   iOModelData data = Data(inst);
   MapOp.clear( data->masterLocMap );
   int i = 0;
@@ -3718,7 +3717,7 @@ static Boolean _init( iOModel inst ) {
 
   __initGroups(inst);
 
-  __initMasterLocMap(inst);
+  ModelOp.initMasterLocMap(inst);
 
   /* Reset FxSp flag. */
   wRocRail.setresetspfx(AppOp.getIni(), False);

@@ -1303,6 +1303,7 @@ static void __executeAction( struct OAction* inst, iONode actionctrl ) {
           iONode cmd = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE);
           wLoc.setconsist(cmd, wAction.getparam(data->action));
           LocOp.modify(lc, cmd);
+          ModelOp.initMasterLocMap(model);
         }
         else if( StrOp.equals(wLoc.go, wAction.getcmd(data->action) ) ) {
           if( wAction.getparam(data->action) != NULL && StrOp.len( wAction.getparam(data->action) ) > 0 ) {
