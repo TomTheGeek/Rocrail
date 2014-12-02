@@ -231,7 +231,7 @@ static Boolean _supportPT( obj inst ) {
 /** vmajor*1000 + vminor*100 + patch */
 static int vmajor = 2;
 static int vminor = 0;
-static int patch  = 99;
+static int patch  = 1;
 static int _version( obj inst ) {
   return vmajor*10000 + vminor*100 + patch;
 }
@@ -257,8 +257,12 @@ static struct OHUE* _inst( const iONode ini ,const iOTrace trc ) {
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Philips HUE %d.%d.%d", vmajor, vminor, patch );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  iid   : [%s]", data->iid );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bridge: [%s]", wDigInt.gethost(data->ini) );
+  /*
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bridge: [%s]", wHUE.getbridge(data->hueini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  user  : [%s]", wHUE.getuser(data->hueini) );
+  */
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
 
