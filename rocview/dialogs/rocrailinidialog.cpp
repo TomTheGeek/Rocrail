@@ -618,6 +618,7 @@ void RocrailIniDialog::initValues() {
   m_Lib->Append( wxString( wDigInt.esunavi, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.got, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.hsi88, wxConvUTF8 ) );
+  m_Lib->Append( wxString( wDigInt.hue, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.infracar, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.inter10, wxConvUTF8 ) );
   m_Lib->Append( wxString( wDigInt.loconet, wxConvUTF8 ) );
@@ -2214,6 +2215,8 @@ void RocrailIniDialog::OnButtonRrPropsClick( wxCommandEvent& event )
     m_CSDialog = new uConS88Dlg(this,m_Controller,devices);
   else if( StrOp.equals( wDigInt.spl, wDigInt.getlib( m_Controller ) ) )
     m_CSDialog = new SplDlg(this,m_Controller, devices);
+  else if( StrOp.equals( wDigInt.hue, wDigInt.getlib( m_Controller ) ) )
+    m_CSDialog = new ECoSCtrlDialog(this,m_Controller,devices);
   else
     m_CSDialog = new GenericCtrlDlg(this,m_Controller,wDigInt.getlib( m_Controller ), 0, NULL, devices);
 
