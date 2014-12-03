@@ -1219,6 +1219,7 @@ static Boolean _shutdown( int network, const char* signame ) {
       HttpOp.shutdown( data->http );
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Informing controller..." );
+    WeatherOp.halt( data->weather );
     ControlOp.halt( data->control );
 
     /* signal main loop */

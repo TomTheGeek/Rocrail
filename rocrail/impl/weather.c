@@ -21,10 +21,15 @@
 
 #include "rocrail/impl/weather_impl.h"
 
+#include <time.h>
+
 #include "rocs/public/mem.h"
 #include "rocs/public/trace.h"
 #include "rocs/public/node.h"
 #include "rocs/public/thread.h"
+
+#include "rocrail/public/app.h"
+#include "rocrail/public/control.h"
 
 static int instCnt = 0;
 
@@ -82,6 +87,60 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OWeather ----- */
+static void __doDaylight(iOWeather weather, int hour, int min ) {
+  iOWeatherData data = Data(weather);
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "do daylight at %02d:%02d", hour, min );
+}
+
+
+static void __checkWeatherThemes(iOWeather weather, int hour, int min ) {
+  iOWeatherData data = Data(weather);
+
+  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "check weather themes at %02d:%02d", hour, min );
+}
+
+
+static void __makeWeather( void* threadinst ) {
+  iOThread        th = (iOThread)threadinst;
+  iOWeather  weather = (iOWeather)ThreadOp.getParm(th);
+  iOWeatherData data = Data(weather);
+
+  iOControl control = AppOp.getControl();
+  int lastMin = 0;
+  int loopCnt = 10;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "make weather started..." );
+
+  while( data->run ) {
+    if( loopCnt >= 10 ) {
+      loopCnt = 0;
+      long t = ControlOp.getTime(control);
+      struct tm* ltm = localtime( &t );
+
+      if( lastMin != ltm->tm_min ) {
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "weather time is %02d:%02d", ltm->tm_hour, ltm->tm_min );
+        lastMin = ltm->tm_min;
+        __doDaylight(weather, ltm->tm_hour, ltm->tm_min );
+        __checkWeatherThemes(weather, ltm->tm_hour, ltm->tm_min );
+      }
+    }
+    else {
+      loopCnt++;
+    }
+
+    ThreadOp.sleep(100);
+  }
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "make weather ended..." );
+
+}
+
+static void _halt( iOWeather inst ) {
+  iOWeatherData data = Data(inst);
+  data->run = False;
+  ThreadOp.sleep(120);
+}
 
 
 /**  */
@@ -92,8 +151,10 @@ static struct OWeather* _inst( iONode ini ) {
 
   /* Initialize data->xxx members... */
   data->props = ini;
+  data->run = True;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "weather started..." );
+  data->makeWeather = ThreadOp.inst( "makeWeather", __makeWeather, __Weather );
+  ThreadOp.start( data->makeWeather );
 
   instCnt++;
   return __Weather;

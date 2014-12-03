@@ -2751,6 +2751,9 @@
     <fun name="inst" vt="this">
       <param name="ini" vt="iONode" remark="Weather definition"/>
     </fun>
+    <fun name="halt">
+      <param name="inst" vt="this" remark="Weather instance"/>
+    </fun>
     <data>
       <var name="props" vt="iONode"/>
       <var name="run" vt="Boolean"/>
