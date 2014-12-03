@@ -1249,6 +1249,9 @@ static void __saveRoutes( iOModPlan inst, const char* filename ) {
   if( wPlan.getlinklist(data->model) != NULL )
     NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getlinklist(data->model) ) );
 
+  if( wPlan.getsystem(data->model) != NULL )
+    NodeOp.addChild( model, (iONode)NodeOp.base.clone( wPlan.getsystem(data->model) ) );
+
   /* only routes without a modid set */
   if( wPlan.getstlist(data->model) != NULL ) {
   iONode routes = wPlan.getstlist(data->model);
