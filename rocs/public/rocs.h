@@ -8,10 +8,10 @@
 #define __ROCS_H
 
 #if defined _WIN64
-  #pragma message("--- [WIN64] ---")
+  /*#pragma message("--- [WIN64] ---")*/
 #endif
 #if defined _WIN32
-  #pragma message("--- [WIN32] ---")
+  /*#pragma message("--- [WIN32] ---")*/
 #elif defined _AIX
   #ifndef __unix__
     #define __unix__
@@ -23,7 +23,7 @@
 #elif defined __OS2__
   #pragma message("--- [OS/2] ---")
 #elif defined __linux__
-  #pragma message("--- [LINUX] ---")
+  /*#pragma message("--- [LINUX] ---")*/
 #elif defined __APPLE__
   /*#pragma message("--- [APPLE] ---")*/
   #define __apple__

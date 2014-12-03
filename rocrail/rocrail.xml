@@ -22,7 +22,7 @@
 -->
 <Project name="RocRail" title="RocRail API" docname="rocrailapi" source="$Source: /cvsroot/rojav/rocrail/rocrail.xml,v $" revision="$Revision: 1.56 $">
 
-  <object name="App" use="node" include="clntcon,srcpcon,control,model,http,snmp,script" remark="RocRail application">
+  <object name="App" use="node" include="clntcon,srcpcon,control,weather,model,http,snmp,script" remark="RocRail application">
     <fun name="inst" vt="this">
     </fun>
     <fun name="Main" vt="int">
@@ -81,6 +81,7 @@
       <var name="newini" vt="iONode" remark="RocRail ini"/>
       <var name="model" vt="iOModel" remark=""/>
       <var name="control" vt="iOControl" remark=""/>
+      <var name="weather" vt="iOWeather" remark=""/>
       <var name="clntCon" vt="iOClntCon" remark=""/>
       <var name="srcpCon" vt="iOSrcpCon" remark=""/>
       <var name="appstartTime" vt="long"/>
@@ -2727,7 +2728,7 @@
       <var name="prevtime" vt="long"/>
       <var name="callback" vt="obj"/>
       <var name="stamp" vt="Boolean"/>
-      </data>
+    </data>
   </object>
   
   <object name="Var" use="node,map" include="htmlint" remark="Decoder object">
@@ -2743,6 +2744,18 @@
       <param name="valStr" vt="const char*" remark="Value string."/>
       <param name="map" vt="iOMap" remark="Map with replacements. (optional)"/>
     </fun>
+  </object>
+
+
+  <object name="Weather" use="node,map,list,mutex,thread" remark="Weather object">
+    <fun name="inst" vt="this">
+      <param name="ini" vt="iONode" remark="Weather definition"/>
+    </fun>
+    <data>
+      <var name="props" vt="iONode"/>
+      <var name="run" vt="Boolean"/>
+      <var name="makeWeather" vt="iOThread"/>
+    </data>
   </object>
   
 </Project>

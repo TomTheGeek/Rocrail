@@ -61,6 +61,8 @@
 #include "rocrail/wrapper/public/SrcpCon.h"
 #include "rocrail/wrapper/public/Program.h"
 #include "rocrail/wrapper/public/SnmpService.h"
+#include "rocrail/wrapper/public/Plan.h"
+#include "rocrail/wrapper/public/Weather.h"
 
 #include "common/version.h"
 
@@ -978,6 +980,13 @@ static int _Main( iOApp inst, int argc, char** argv ) {
 
   /* Control */
   data->control = ControlOp.inst( nocom );
+
+  /* Weather */
+  if( wPlan.getweather(ModelOp.getModel(data->model)) == NULL ) {
+    iONode weather = NodeOp.inst(wWeather.name(), ModelOp.getModel(data->model), ELEMENT_NODE);
+    NodeOp.addChild(ModelOp.getModel(data->model), weather);
+  }
+  data->weather = WeatherOp.inst( wPlan.getweather(ModelOp.getModel(data->model)) );
 
   /* Client connection */
   {

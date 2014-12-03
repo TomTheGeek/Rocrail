@@ -1546,6 +1546,31 @@
     <system cardinality="1" wrappername="SystemActions">
       <actionctrl cardinality="n"/>
     </system>
+    <weather cardinality="1" wrappername="Weather">
+      <var name="outputs" vt="string" defval="" range="*" remark="Comma separated list of outputs from east to west."/>
+      <var name="red" vt="int" defval="0" range="0-255" remark="Red value for noon."/>
+      <var name="green" vt="int" defval="0" range="0-255" remark="Green value for noon."/>
+      <var name="blue" vt="int" defval="0" range="0-255" remark="Blue value for noon."/>
+      <var name="brightness" vt="int" defval="0" range="0-*" remark="Brightness value for noon."/>
+      <sunrise cardinality="1" remark="Sunrise definition" wrappername="Sunrise">
+        <var name="hour" vt="int" defval="0" range="0-23"/>
+        <var name="minute" vt="int" defval="0" range="0-59"/>
+        <var name="red" vt="int" defval="0" range="0-255"/>
+        <var name="green" vt="int" defval="0" range="0-255"/>
+        <var name="blue" vt="int" defval="0" range="0-255"/>
+      </sunrise>
+      <sunset cardinality="1" remark="Sunset definition" wrappername="Sunset">
+        <var name="hour" vt="int" defval="0" range="0-23"/>
+        <var name="minute" vt="int" defval="0" range="0-59"/>
+        <var name="red" vt="int" defval="0" range="0-255"/>
+        <var name="green" vt="int" defval="0" range="0-255"/>
+        <var name="blue" vt="int" defval="0" range="0-255"/>
+      </sunset>
+      <weathertheme cardinality="n" wrappername="WeatherTheme">
+        <var name="dim" vt="int" defval="0" range="0-100"/>
+        <var name="outputs" vt="string" defval="" range="*" remark="Comma separated list of outputs from lightning."/>
+      </weathertheme>
+    </weather>
     <zlevel cardinality="n" remark="Z-Level description" wrappername="ZLevel">
       <var name="title" vt="string" defval="" range="*"/>
       <var name="z" vt="int" defval="0" range="0-9"/>
@@ -1872,6 +1897,10 @@
         <var name="inv" vt="bool" defval="false" remark="Output as switch inverted. (Software wiring correction)"/>
         <var name="blink" vt="bool" defval="false" remark="Blink output."/>
         <var name="asswitch" vt="bool" defval="false" remark="send a switch command"/>
+        <var name="red" vt="int" defval="0" range="0-255"/>
+        <var name="green" vt="int" defval="0" range="0-255"/>
+        <var name="blue" vt="int" defval="0" range="0-255"/>
+        <var name="brightness" vt="int" defval="0" range="0-*"/>
 
         <var name="tristate" vt="bool" defval="false" remark="Tri-state flag."/>
         <var name="toggleswitch" vt="bool" defval="true" remark="Toggle switch or push button."/>
