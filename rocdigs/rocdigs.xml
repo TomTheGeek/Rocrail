@@ -2055,7 +2055,6 @@
     </struct>
     <data>
       <var name="ini" vt="iONode"/>
-      <var name="hueini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="socket" vt="iOSocket"/>
       <var name="run" vt="Boolean"/>

@@ -29188,4 +29188,7 @@
   <Msg id="sensormonitorauto">
     <en txt="Sensor monitor in automatic mode"/>
   </Msg>
+  <Msg id="userid">
+    <en txt="User ID"/>
+  </Msg>
 </Messages>

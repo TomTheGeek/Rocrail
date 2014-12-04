@@ -98,6 +98,7 @@ void ECoSCtrlDialog::initLabels() {
   m_labDevice->SetLabel( wxGetApp().getMsg( "device" ) );
   m_labHost->SetLabel( wxGetApp().getMsg( "host" ) );
   m_labPort->SetLabel( wxGetApp().getMsg( "port" ) );
+  m_labUserID->SetLabel( wxGetApp().getMsg( "userid" ) );
   m_labUDPPorts->SetLabel( wxGetApp().getMsg( "udpports" ) );
   m_labFBMod->SetLabel( wxGetApp().getMsg( "sensors" ) );
   m_labVersion->SetLabel( wxGetApp().getMsg( "version" ) );
@@ -128,6 +129,7 @@ void ECoSCtrlDialog::initValues() {
   }
 
   m_Host->SetValue( wxString( wDigInt.gethost( m_Props ), wxConvUTF8 ) );
+  m_UserID->SetValue( wxString( wDigInt.getuserid( m_Props ), wxConvUTF8 ) );
 
   char* val = StrOp.fmt( "%d", wDigInt.getport( m_Props ) );
   m_Port->SetValue( wxString( val, wxConvUTF8 ) );
@@ -169,6 +171,7 @@ void ECoSCtrlDialog::evaluate() {
   wDigInt.setiid( m_Props, m_IID->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setdevice( m_Props, m_Device->GetValue().mb_str(wxConvUTF8) );
   wDigInt.sethost( m_Props, m_Host->GetValue().mb_str(wxConvUTF8) );
+  wDigInt.setuserid( m_Props, m_UserID->GetValue().mb_str(wxConvUTF8) );
   wDigInt.setport( m_Props, atoi( m_Port->GetValue().mb_str(wxConvUTF8) ) );
   wDigInt.setudpportTX( m_Props, atoi( m_PortTX->GetValue().mb_str(wxConvUTF8) ) );
   wDigInt.setudpportRX( m_Props, atoi( m_PortRX->GetValue().mb_str(wxConvUTF8) ) );
@@ -241,6 +244,8 @@ void ECoSCtrlDialog::Init()
     m_Host = NULL;
     m_labPort = NULL;
     m_Port = NULL;
+    m_labUserID = NULL;
+    m_UserID = NULL;
     m_labUDPPorts = NULL;
     m_PortTX = NULL;
     m_PortRX = NULL;
@@ -321,123 +326,129 @@ void ECoSCtrlDialog::CreateControls()
     m_Port->SetMaxLength(5);
     itemFlexGridSizer6->Add(m_Port, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    m_labUserID = new wxStaticText( itemPanel3, wxID_ANY, _("User ID"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer6->Add(m_labUserID, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_UserID = new wxTextCtrl( itemPanel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer6->Add(m_UserID, 0, wxGROW|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
     m_labUDPPorts = new wxStaticText( itemPanel3, wxID_ANY, _("UDP Ports"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labUDPPorts, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer16 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer6->Add(itemFlexGridSizer16, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
+    wxFlexGridSizer* itemFlexGridSizer18 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer6->Add(itemFlexGridSizer18, 0, wxGROW|wxALIGN_CENTER_VERTICAL, 5);
 
     m_PortTX = new wxTextCtrl( itemPanel3, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_PortTX->SetMaxLength(5);
-    itemFlexGridSizer16->Add(m_PortTX, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer18->Add(m_PortTX, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_PortRX = new wxTextCtrl( itemPanel3, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE );
     m_PortRX->SetMaxLength(5);
-    itemFlexGridSizer16->Add(m_PortRX, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer18->Add(m_PortRX, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labFBMod = new wxStaticText( itemPanel3, wxID_ANY, _("FBmod"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labFBMod, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_FBMod = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 64, 0 );
+    m_FBMod = new wxSpinCtrl( itemPanel3, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 64, 0 );
     itemFlexGridSizer6->Add(m_FBMod, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSensorRange = new wxStaticText( itemPanel3, wxID_ANY, _("Sensor range"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labSensorRange, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer22 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemFlexGridSizer6->Add(itemFlexGridSizer22, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+    wxFlexGridSizer* itemFlexGridSizer24 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemFlexGridSizer6->Add(itemFlexGridSizer24, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 
-    m_SensorBegin = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 16383, 0 );
-    itemFlexGridSizer22->Add(m_SensorBegin, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_SensorBegin = new wxSpinCtrl( itemPanel3, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 16383, 0 );
+    itemFlexGridSizer24->Add(m_SensorBegin, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_SensorEnd = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 16383, 0 );
-    itemFlexGridSizer22->Add(m_SensorEnd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_SensorEnd = new wxSpinCtrl( itemPanel3, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 16383, 0 );
+    itemFlexGridSizer24->Add(m_SensorEnd, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labVersion = new wxStaticText( itemPanel3, wxID_ANY, _("Version"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6->Add(m_labVersion, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_Version = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10, 0 );
+    m_Version = new wxSpinCtrl( itemPanel3, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(80, -1), wxSP_ARROW_KEYS, 0, 10, 0 );
     itemFlexGridSizer6->Add(m_Version, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     itemFlexGridSizer6->AddGrowableCol(1);
 
-    wxBoxSizer* itemBoxSizer27 = new wxBoxSizer(wxVERTICAL);
-    itemBoxSizer4->Add(itemBoxSizer27, 0, wxALIGN_TOP|wxALL, 5);
+    wxBoxSizer* itemBoxSizer29 = new wxBoxSizer(wxVERTICAL);
+    itemBoxSizer4->Add(itemBoxSizer29, 0, wxALIGN_TOP|wxALL, 5);
 
     wxArrayString m_SubLibStrings;
     m_SubLibStrings.Add(_("&Ethernet"));
     m_SubLibStrings.Add(_("&Serial"));
     m_SubLib = new wxRadioBox( itemPanel3, ID_SUBLIB, _("SubType"), wxDefaultPosition, wxDefaultSize, m_SubLibStrings, 1, wxRA_SPECIFY_ROWS );
     m_SubLib->SetSelection(0);
-    itemBoxSizer27->Add(m_SubLib, 0, wxALIGN_LEFT|wxALL, 5);
+    itemBoxSizer29->Add(m_SubLib, 0, wxALIGN_LEFT|wxALL, 5);
 
     m_OptionsBox = new wxStaticBox(itemPanel3, wxID_ANY, _("Options"));
-    wxStaticBoxSizer* itemStaticBoxSizer29 = new wxStaticBoxSizer(m_OptionsBox, wxVERTICAL);
-    itemBoxSizer27->Add(itemStaticBoxSizer29, 0, wxGROW|wxALL, 5);
+    wxStaticBoxSizer* itemStaticBoxSizer31 = new wxStaticBoxSizer(m_OptionsBox, wxVERTICAL);
+    itemBoxSizer29->Add(itemStaticBoxSizer31, 0, wxGROW|wxALL, 5);
 
     m_SystemInfo = new wxCheckBox( itemPanel3, wxID_ANY, _("System info"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SystemInfo->SetValue(false);
-    itemStaticBoxSizer29->Add(m_SystemInfo, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemStaticBoxSizer31->Add(m_SystemInfo, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_LocoList = new wxCheckBox( itemPanel3, wxID_ANY, _("Loco list"), wxDefaultPosition, wxDefaultSize, 0 );
     m_LocoList->SetValue(false);
-    itemStaticBoxSizer29->Add(m_LocoList, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemStaticBoxSizer31->Add(m_LocoList, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_CTS = new wxCheckBox( itemPanel3, wxID_ANY, _("CTS"), wxDefaultPosition, wxDefaultSize, 0 );
     m_CTS->SetValue(false);
-    itemStaticBoxSizer29->Add(m_CTS, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemStaticBoxSizer31->Add(m_CTS, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_SLCAN = new wxCheckBox( itemPanel3, wxID_ANY, _("SLCAN"), wxDefaultPosition, wxDefaultSize, 0 );
     m_SLCAN->SetValue(false);
-    itemStaticBoxSizer29->Add(m_SLCAN, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemStaticBoxSizer31->Add(m_SLCAN, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Discovery = new wxCheckBox( itemPanel3, wxID_ANY, _("Discovery"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Discovery->SetValue(false);
-    itemStaticBoxSizer29->Add(m_Discovery, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemStaticBoxSizer31->Add(m_Discovery, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_Bind = new wxCheckBox( itemPanel3, wxID_ANY, _("Bind"), wxDefaultPosition, wxDefaultSize, 0 );
     m_Bind->SetValue(false);
-    itemStaticBoxSizer29->Add(m_Bind, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemStaticBoxSizer31->Add(m_Bind, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_ReportState = new wxCheckBox( itemPanel3, wxID_ANY, _("Report state"), wxDefaultPosition, wxDefaultSize, 0 );
     m_ReportState->SetValue(false);
-    itemStaticBoxSizer29->Add(m_ReportState, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemStaticBoxSizer31->Add(m_ReportState, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxFlexGridSizer* itemFlexGridSizer37 = new wxFlexGridSizer(0, 2, 0, 0);
-    itemStaticBoxSizer29->Add(itemFlexGridSizer37, 0, wxALIGN_LEFT, 5);
+    wxFlexGridSizer* itemFlexGridSizer39 = new wxFlexGridSizer(0, 2, 0, 0);
+    itemStaticBoxSizer31->Add(itemFlexGridSizer39, 0, wxALIGN_LEFT, 5);
 
     m_SertFbAddr = new wxButton( itemPanel3, ID_BUTTON_SET_FBADDR, _("Program FB"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer37->Add(m_SertFbAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemFlexGridSizer39->Add(m_SertFbAddr, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_FbAddr = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
-    itemFlexGridSizer37->Add(m_FbAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    m_FbAddr = new wxSpinCtrl( itemPanel3, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 255, 0 );
+    itemFlexGridSizer39->Add(m_FbAddr, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_labSwTime = new wxStaticText( itemPanel3, wxID_ANY, _("Switch time"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer37->Add(m_labSwTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer39->Add(m_labSwTime, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_SwTime = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
-    itemFlexGridSizer37->Add(m_SwTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_SwTime = new wxSpinCtrl( itemPanel3, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 0, 10000, 0 );
+    itemFlexGridSizer39->Add(m_SwTime, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     m_labCmdPause = new wxStaticText( itemPanel3, wxID_ANY, _("Command pause"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemFlexGridSizer37->Add(m_labCmdPause, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    itemFlexGridSizer39->Add(m_labCmdPause, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    m_CmdPause = new wxSpinCtrl( itemPanel3, wxID_ANY, _T("10"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 500, 10 );
-    itemFlexGridSizer37->Add(m_CmdPause, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    m_CmdPause = new wxSpinCtrl( itemPanel3, wxID_ANY, wxT("10"), wxDefaultPosition, wxSize(100, -1), wxSP_ARROW_KEYS, 10, 500, 10 );
+    itemFlexGridSizer39->Add(m_CmdPause, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer44 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer46 = new wxStdDialogButtonSizer;
 
-    itemBoxSizer2->Add(itemStdDialogButtonSizer44, 0, wxGROW|wxALL, 5);
+    itemBoxSizer2->Add(itemStdDialogButtonSizer46, 0, wxGROW|wxALL, 5);
     m_OK = new wxButton( itemDialog1, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0 );
     m_OK->SetDefault();
-    itemStdDialogButtonSizer44->AddButton(m_OK);
+    itemStdDialogButtonSizer46->AddButton(m_OK);
 
     m_Cancel = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer44->AddButton(m_Cancel);
+    itemStdDialogButtonSizer46->AddButton(m_Cancel);
 
-    wxButton* itemButton47 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer44->AddButton(itemButton47);
+    wxButton* itemButton49 = new wxButton( itemDialog1, wxID_HELP, _("&Help"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer46->AddButton(itemButton49);
 
-    itemStdDialogButtonSizer44->Realize();
+    itemStdDialogButtonSizer46->Realize();
 
 ////@end ECoSCtrlDialog content construction
 }

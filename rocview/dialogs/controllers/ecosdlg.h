@@ -123,6 +123,8 @@ public:
     wxTextCtrl* m_Host;
     wxStaticText* m_labPort;
     wxTextCtrl* m_Port;
+    wxStaticText* m_labUserID;
+    wxTextCtrl* m_UserID;
     wxStaticText* m_labUDPPorts;
     wxTextCtrl* m_PortTX;
     wxTextCtrl* m_PortRX;

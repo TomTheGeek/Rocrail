@@ -24,7 +24,6 @@
 #include "rocs/public/mem.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
-#include "rocrail/wrapper/public/HUE.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Output.h"
 
@@ -98,12 +97,12 @@ static char* __httpRequest( iOHUE inst, const char* method, const char* request 
   char* reply = NULL;
   Boolean OK = True;
 
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to connected to %s:80", wHUE.getbridge(data->hueini) );
-  iOSocket sh = SocketOp.inst( wHUE.getbridge(data->hueini), 80, False, False, False );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to connected to %s:80", wDigInt.gethost(data->ini) );
+  iOSocket sh = SocketOp.inst( wDigInt.gethost(data->ini), 80, False, False, False );
   if( SocketOp.connect( sh ) ) {
-    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connected to %s", wHUE.getbridge(data->hueini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connected to %s", wDigInt.gethost(data->ini) );
 
-    char* httpReq = StrOp.fmt("%s HTTP/1.1\nHost: %s\nContent-Type: application/json\nContent-Length: %d\n\n%s", method, wHUE.getbridge(data->hueini), StrOp.len(request), request );
+    char* httpReq = StrOp.fmt("%s HTTP/1.1\nHost: %s\nContent-Type: application/json\nContent-Length: %d\n\n%s", method, wDigInt.gethost(data->ini), StrOp.len(request), request );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "length=%d\n%s", StrOp.len(httpReq), httpReq );
     SocketOp.write( sh, httpReq, StrOp.len(httpReq) );
     StrOp.free(httpReq);
@@ -154,7 +153,7 @@ static char* __httpRequest( iOHUE inst, const char* method, const char* request 
     SocketOp.disConnect(sh);
   }
   else {
-    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not connected to %s", wHUE.getbridge(data->hueini) );
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not connected to %s", wDigInt.gethost(data->ini) );
   }
   SocketOp.base.del(sh);
 
@@ -197,9 +196,9 @@ static iONode __translate( iOHUE inst, iONode node ) {
   iOHUEData data = Data(inst);
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "cmd=%s", NodeOp.getName( node ) );
+  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
 
   /* System command. */
-  if( StrOp.equals( NodeOp.getName( node ), wSysCmd.name() ) ) {
     const char* cmdstr = wSysCmd.getcmd( node );
     if( StrOp.equals( cmdstr, wSysCmd.stop ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system STOP" );
@@ -217,7 +216,7 @@ static iONode __translate( iOHUE inst, iONode node ) {
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output addr=%d", addr );
 
     iHueCmd cmd = allocMem(sizeof(struct HueCmd));
-    cmd->methode = StrOp.fmt("PUT /api/%s/lights/%d/state", wHUE.getuser(data->hueini), addr);
+    cmd->methode = StrOp.fmt("PUT /api/%s/lights/%d/state", wDigInt.getuserid(data->ini), addr);
     cmd->request = StrOp.fmt("{\"on\":%s, \"bri\":%d}", active?"true":"false", val);
     ThreadOp.post( data->transactor, (obj)cmd );
 
@@ -328,19 +327,13 @@ static struct OHUE* _inst( const iONode ini ,const iOTrace trc ) {
 
   /* Initialize data->xxx members... */
   data->ini     = ini;
-  data->hueini  = wDigInt.gethue(ini);
   data->iid     = StrOp.dup( wDigInt.getiid( ini ) );
-
-  if( data->hueini == NULL ) {
-    data->hueini = NodeOp.inst(wHUE.name(), ini, ELEMENT_NODE);
-    NodeOp.addChild(ini, data->hueini);
-  }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Philips HUE %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  iid   : [%s]", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bridge: [%s]", wHUE.getbridge(data->hueini) );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  user  : [%s]", wHUE.getuser(data->hueini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bridge: [%s]", wDigInt.gethost(data->ini) );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  user  : [%s]", wDigInt.getuserid(data->ini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
   data->run = True;

@@ -564,6 +564,7 @@
       <!-- tcpip connection -->
       <var name="host" vt="string" defval="" remark="hostname."/>
       <var name="port" vt="int" defval="0" remark="command port."/>
+      <var name="userid" vt="string" defval="" remark="user ID"/>
       <var name="udpportTX" vt="int" defval="0" remark="send port."/>
       <var name="udpportRX" vt="int" defval="0" remark="receive port."/>
       <var name="localip" vt="string" defval="" remark="Local interface IP."/>
@@ -573,11 +574,6 @@
         <var name="toaddr" vt="int" defval="0"/>
         <var name="nrleds" vt="int" defval="5"/>
       </spl>
-
-      <hue remark="HUE options" wrappername="HUE">
-        <var name="bridge" vt="string" defval="" remark="hostname."/>
-        <var name="user" vt="string" defval="" remark="username."/>
-      </hue>
 
       <opendcc remark="OpenDCC options" wrappername="OpenDCC">
         <var name="lib" vt="string" defval="p50x"/>
