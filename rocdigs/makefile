@@ -54,7 +54,7 @@ endif
 PLATFORM=LINUX
 ARCH=
 ifeq ($(PLATFORM),WIN32)
-	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 -lwinmm
+	LIBS=-liphlpapi -lmpr -lws2_32 -ladvapi32 -lwinmm -lm
 	DIRPREFIX=win
 	CC_EXTRA_FLAGS=-mthreads
 	LNK_FLAGS=--def rocdigs.def -mthreads -static
@@ -62,13 +62,13 @@ ifeq ($(PLATFORM),WIN32)
 	SHAREDSUFFIX=.dll
 else ifeq ($(PLATFORM),WIN64)
 	DIRPREFIX=win
-	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32 -lwinmm
+	LIBS=-liphlpapi -lmpr -lmswsock -lws2_32 -ladvapi32 -lwinmm -lm
 	LNK=$(TOOLPREFIX)dllwrap
 	LNK_FLAGS=--def rocdigs.def
 	SHAREDSUFFIX=.dll
 	CC_EXTRA_FLAGS=
 else ifeq ($(PLATFORM),MACOSX)
-	LIBS=-lpthread -ldl
+	LIBS=-lpthread -ldl -lm
 	LIBUSB=-lusb-1.0
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC
@@ -83,7 +83,7 @@ else ifeq ($(PLATFORM),OPENBSD)
 	LNK=gcc
 	SHAREDSUFFIX=.so
 else
-	LIBS=-lpthread -ldl
+	LIBS=-lpthread -ldl -lm
 	LIBUSB=-lusb-1.0
 	DIRPREFIX=unx
 	CC_EXTRA_FLAGS=-fPIC

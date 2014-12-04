@@ -28,6 +28,8 @@
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Output.h"
 
+#include <math.h>
+
 static int instCnt = 0;
 
 /** ----- OBase ----- */
@@ -84,41 +86,14 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OHUE ----- */
+
+
 /*
-https://www.meethue.com/api/nupnp
-
-GET /api/nupnp HTTP/1.1
-Host: www.meethue.com
-User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:33.0) Gecko/20100101 Firefox/33.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,* / *;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate
-Connection: keep-alive
-Cache-Control: max-age=0
-
-HTTP/1.1 200 OK
-access-control-allow-credentials: true
-access-control-allow-headers: Origin, X-Requested-With, Content-Type, Accept
-access-control-allow-methods: GET, POST, PUT, DELETE
-access-control-allow-origin: *
-Cache-Control: no-cache
-Content-Encoding: gzip
-Content-Length: 22
-Content-Type: application/json
-Date: Tue, 02 Dec 2014 11:47:39 GMT
-Expires: Thu, 01 Jan 1970 00:00:00 GMT
-Server: Google Frontend
-Set-Cookie: PLAY_FLASH=;Path=/;Expires=Thu, 01 Jan 1970 00:00:00 GMT
-Set-Cookie: PLAY_ERRORS=;Path=/;Expires=Thu, 01 Jan 1970 00:00:00 GMT
-Set-Cookie: PLAY_SESSION=;Path=/;Expires=Thu, 01 Jan 1970 00:00:00 GMT
-Vary: Accept-Encoding
-X-Firefox-Spdy: 3.1
-----------------------------------------------------------
-<html><head><link rel="alternate stylesheet" type="text/css" href="resource://gre-resources/plaintext.css" title="Wrap Long Lines"></head><body><pre>[]</pre></body></html>
+ * Example
+ * method : PUT /api/<user>/lights/1/state
+ * request: {"bri":42}
  */
-
-
-static char* __httpRequest( iOHUE inst, const char* request ) {
+static char* __httpRequest( iOHUE inst, const char* method, const char* request ) {
   iOHUEData data = Data(inst);
   char* reply = NULL;
   Boolean OK = True;
@@ -128,7 +103,7 @@ static char* __httpRequest( iOHUE inst, const char* request ) {
   if( SocketOp.connect( sh ) ) {
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connected to %s", wHUE.getbridge(data->hueini) );
 
-    char* httpReq = StrOp.fmt("%s HTTP/1.1\nHost: %s\n\n", request, wHUE.getbridge(data->hueini) );
+    char* httpReq = StrOp.fmt("%s HTTP/1.1\nHost: %s\nContent-Type: application/json\nContent-Length: %d\n\n%s", method, wHUE.getbridge(data->hueini), StrOp.len(request), request );
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "length=%d\n%s", StrOp.len(httpReq), httpReq );
     SocketOp.write( sh, httpReq, StrOp.len(httpReq) );
     StrOp.free(httpReq);
@@ -180,23 +155,34 @@ static char* __httpRequest( iOHUE inst, const char* request ) {
 }
 
 
+void __RGBtoXY(int R, int G, int B, float* x, float* y) {
+  float red   = ( (float)R / 255.0 );        //R from 0 to 255
+  float green = ( (float)G / 255.0 );        //G from 0 to 255
+  float blue  = ( (float)B / 255.0 );        //B from 0 to 255
 
-/*
- * Content-Type: application/json
- */
-static iONode __hueGET(iOHUE inst, const char* json) {
-  iOHUEData data = Data(inst);
-  iONode rsp = NULL;
-  __httpRequest(inst, "GET /");
-  return rsp;
+  if ( red > 0.04045 )
+    red = pow( ( red + 0.055 ) / 1.055, 2.4);
+  else
+    red = red / 12.92;
+
+  if ( green > 0.04045 )
+    green = pow( ( green + 0.055 ) / 1.055, 2.4);
+  else
+    green = green / 12.92;
+
+  if ( blue > 0.04045 )
+    blue = pow( ( blue + 0.055 ) / 1.055, 2.4);
+  else
+    blue = blue / 12.92;
+
+  float X = (float) (red * 0.649926 + green * 0.103455 + blue * 0.197109);
+  float Y = (float) (red * 0.234327 + green * 0.743075 + blue * 0.022598);
+  float Z = (float) (red * 0.000000 + green * 0.053077 + blue * 1.035763);
+
+  *x = X / ( X + Y + Z );
+  *y = Y / ( X + Y + Z );
 }
 
-
-static iONode __huePUT(iOHUE inst, const char* json) {
-  iOHUEData data = Data(inst);
-  iONode rsp = NULL;
-  return rsp;
-}
 
 
 static iONode __translate( iOHUE inst, iONode node ) {
@@ -321,7 +307,9 @@ static struct OHUE* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  user  : [%s]", wHUE.getuser(data->hueini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  __hueGET(__HUE, NULL);
+  char* s = StrOp.fmt("PUT /api/%s/lights/1/state", wHUE.getuser(data->hueini));
+  __httpRequest(__HUE, s, "{\"bri\":42}");
+  StrOp.free(s);
 
   instCnt++;
   return __HUE;
