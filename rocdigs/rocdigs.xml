@@ -2049,13 +2049,17 @@
       <param name="ini" vt="const iONode" remark="Ini node"/>
       <param name="trc" vt="const iOTrace" remark="Trace instance"/>
     </fun>
+    <struct name="HueCmd" typedef="*iHueCmd" remark="Hue command.">
+      <var name="methode" vt="char*"/>
+      <var name="request" vt="char*"/>
+    </struct>
     <data>
       <var name="ini" vt="iONode"/>
       <var name="hueini" vt="iONode"/>
       <var name="iid" vt="const char*"/>
       <var name="socket" vt="iOSocket"/>
       <var name="run" vt="Boolean"/>
-      <var name="writer" vt="iOThread"/>
+      <var name="transactor" vt="iOThread"/>
       <var name="listenerObj" vt="obj"/>
       <var name="listenerFun" vt="digint_listener"/>
     </data>

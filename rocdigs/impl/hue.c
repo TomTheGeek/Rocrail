@@ -110,6 +110,7 @@ static char* __httpRequest( iOHUE inst, const char* method, const char* request 
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Read response..." );
     char str[1024] = {'\0'};
+    int idx = 0;
     SocketOp.setRcvTimeout( sh, 1000 );
     /* Read first HTTP header line: */
     OK = False;
@@ -133,13 +134,20 @@ static char* __httpRequest( iOHUE inst, const char* method, const char* request 
           TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "contlen = %d", contlen );
         }
 
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, str );
+        TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, str );
       };
 
       if( OK && contlen > 0 ) {
         char* reply = (char*)allocMem(contlen+1);
         SocketOp.read( sh, reply, contlen );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reply = %.200s", reply );
+      }
+      else if( OK ) {
+        while( SocketOp.read( sh, &str[idx], 1 ) && !SocketOp.isBroken( sh ) && idx < 1024) {
+          idx++;
+          str[idx] = '\0';
+        }
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reply: %s", str  );
       }
     }
 
@@ -204,9 +212,15 @@ static iONode __translate( iOHUE inst, iONode node ) {
   /* Output command. */
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
     int addr = wOutput.getaddr( node );
-    int gate = wOutput.getgate( node );
+    int val  = wOutput.getvalue( node );
     Boolean active = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output addr=%d", addr );
+
+    iHueCmd cmd = allocMem(sizeof(struct HueCmd));
+    cmd->methode = StrOp.fmt("PUT /api/%s/lights/%d/state", wHUE.getuser(data->hueini), addr);
+    cmd->request = StrOp.fmt("{\"on\":%s, \"bri\":%d}", active?"true":"false", val);
+    ThreadOp.post( data->transactor, (obj)cmd );
+
   }
 
   return NULL;
@@ -236,7 +250,8 @@ static byte* _cmdRaw( obj inst ,const byte* cmd ) {
 
 /**  */
 static void _halt( obj inst ,Boolean poweroff ) {
-  return;
+  iOHUEData data = Data(inst);
+  data->run = False;
 }
 
 
@@ -282,6 +297,27 @@ static int _version( obj inst ) {
 }
 
 
+static void __transactor( void* threadinst ) {
+  iOThread  th   = (iOThread)threadinst;
+  iOHUE     hue  = (iOHUE)ThreadOp.getParm(th);
+  iOHUEData data = Data(hue);
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Transactor is started.");
+
+  do {
+    iHueCmd cmd = (iHueCmd)ThreadOp.getPost( th );
+    if (cmd != NULL) {
+      __httpRequest(hue, cmd->methode, cmd->request);
+      StrOp.free(cmd->methode);
+      StrOp.free(cmd->request);
+      freeMem(cmd);
+    }
+  } while( data->run );
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Transactor has stopped.");
+}
+
+
 /**  */
 static struct OHUE* _inst( const iONode ini ,const iOTrace trc ) {
   iOHUE __HUE = allocMem( sizeof( struct OHUE ) );
@@ -307,9 +343,9 @@ static struct OHUE* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  user  : [%s]", wHUE.getuser(data->hueini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
-  char* s = StrOp.fmt("PUT /api/%s/lights/1/state", wHUE.getuser(data->hueini));
-  __httpRequest(__HUE, s, "{\"bri\":42}");
-  StrOp.free(s);
+  data->run = True;
+  data->transactor = ThreadOp.inst( data->iid, &__transactor, __HUE );
+  ThreadOp.start( data->transactor );
 
   instCnt++;
   return __HUE;
