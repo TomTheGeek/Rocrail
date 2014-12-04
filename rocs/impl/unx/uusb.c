@@ -25,10 +25,24 @@
 #include "rocs/public/system.h"
 #include "rocs/public/str.h"
 
-#if defined __linux__
+#if defined __APPLE__ || defined __OpenBSD__
+/* exclude */
+void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr, int* input, int* output) {
+  return NULL;
+}
+Boolean rocs_usb_closeUSB(void* husb, int interfaceNr) {
+  return False;
+}
+int rocs_usb_writeUSB(void* husb, int endpoint, byte* out, int len, int timeout) {
+  return 0;
+}
+int rocs_usb_readUSB(void* husb, int endpoint, byte* in, int len, int timeout) {
+  return 0;
+}
+
+#elif defined __linux__
 /* sudo apt-get install libusb-1.0-0-dev */
 #include <libusb-1.0/libusb.h>
-#endif
 
 
 static const char* __usbDescription(int vendor, int product) {
@@ -123,7 +137,6 @@ static Boolean isWantedDevice( libusb_device *dev, int vendor, int product, int*
 void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr, int* input, int* output) {
   void* husb = NULL;
 
-#if defined __linux__
   // discover devices
   libusb_device **list;
   libusb_device *found = NULL;
@@ -179,7 +192,6 @@ void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr, i
   libusb_free_device_list(list, 1);
 
 
-#endif
 
   if( husb == NULL ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "wanted device 0x%04X:0x%04X not found", vendor, product );
@@ -192,13 +204,11 @@ void* rocs_usb_openUSB(int vendor, int product, int configNr, int interfaceNr, i
 Boolean rocs_usb_closeUSB(void* husb, int interfaceNr) {
   int rc = 0;
 
-#if defined __linux__
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "close USB (interface %d)", interfaceNr );
   if( husb != NULL ) {
     libusb_close( (libusb_device_handle *)husb );
     //libusb_exit( ctx );
   }
-#endif
 
   return rc == 0 ? True:False;
 }
@@ -206,14 +216,12 @@ Boolean rocs_usb_closeUSB(void* husb, int interfaceNr) {
 int rocs_usb_writeUSB(void* husb, int endpoint, byte* out, int len, int timeout) {
   int rc = 0;
 
-#if defined __linux__
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "write %d...", len );
   TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)out, len );
   if( husb != NULL ) {
     int transferred = 0;
     rc = libusb_bulk_transfer ((libusb_device_handle *)husb, endpoint, out, len, &transferred, timeout);
   }
-#endif
 
   return rc;
 }
@@ -222,7 +230,6 @@ int rocs_usb_writeUSB(void* husb, int endpoint, byte* out, int len, int timeout)
 int rocs_usb_readUSB(void* husb, int endpoint, byte* in, int len, int timeout) {
   int rc = -1;
 
-#if defined __linux__
   TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "read %d...", len );
   if( husb != NULL ) {
     int transferred = 0;
@@ -230,7 +237,8 @@ int rocs_usb_readUSB(void* husb, int endpoint, byte* in, int len, int timeout) {
     if( transferred == len )
       TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, len );
   }
-#endif
 
   return rc;
 }
+
+#endif
