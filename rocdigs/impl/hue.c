@@ -117,24 +117,83 @@ X-Firefox-Spdy: 3.1
 <html><head><link rel="alternate stylesheet" type="text/css" href="resource://gre-resources/plaintext.css" title="Wrap Long Lines"></head><body><pre>[]</pre></body></html>
  */
 
-static Boolean __hueConnect(iOHUE inst) {
-  return True;
+
+static char* __httpRequest( iOHUE inst, const char* request ) {
+  iOHUEData data = Data(inst);
+  char* reply = NULL;
+  Boolean OK = True;
+
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "trying to connected to %s:80", wHUE.getbridge(data->hueini) );
+  iOSocket sh = SocketOp.inst( wHUE.getbridge(data->hueini), 80, False, False, False );
+  if( SocketOp.connect( sh ) ) {
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Connected to %s", wHUE.getbridge(data->hueini) );
+
+    char* httpReq = StrOp.fmt("%s HTTP/1.1\nHost: %s\n\n", request, wHUE.getbridge(data->hueini) );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "length=%d\n%s", StrOp.len(httpReq), httpReq );
+    SocketOp.write( sh, httpReq, StrOp.len(httpReq) );
+    StrOp.free(httpReq);
+
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Read response..." );
+    char str[1024] = {'\0'};
+    SocketOp.setRcvTimeout( sh, 1000 );
+    /* Read first HTTP header line: */
+    OK = False;
+
+    if( SocketOp.readln( sh, str ) ) {
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, str );
+      if( StrOp.find( str, "200 OK" ) ) {
+        OK = True;
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "OK" );
+      }
+
+      /* Reading rest of HTTP header: */
+      int contlen = 0;
+      while( SocketOp.readln( sh, str ) && !SocketOp.isBroken( sh ) ) {
+        if( str[0] == '\r' || str[0] == '\n' ) {
+          break;
+        }
+        if( StrOp.find( str, "Content-Length:" ) ) {
+          char* p = StrOp.find( str, ": " ) + 2;
+          contlen = atoi( p );
+          TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "contlen = %d", contlen );
+        }
+
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, str );
+      };
+
+      if( OK && contlen > 0 ) {
+        char* reply = (char*)allocMem(contlen+1);
+        SocketOp.read( sh, reply, contlen );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reply = %.200s", reply );
+      }
+    }
+
+    SocketOp.disConnect(sh);
+  }
+  else {
+    TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "could not connected to %s", wHUE.getbridge(data->hueini) );
+  }
+  SocketOp.base.del(sh);
+
+  return reply;
+
 }
 
-static Boolean __hueDisConnect(iOHUE inst) {
-  return True;
-}
+
 
 /*
  * Content-Type: application/json
  */
 static iONode __hueGET(iOHUE inst, const char* json) {
+  iOHUEData data = Data(inst);
   iONode rsp = NULL;
+  __httpRequest(inst, "GET /");
   return rsp;
 }
 
 
 static iONode __huePUT(iOHUE inst, const char* json) {
+  iOHUEData data = Data(inst);
   iONode rsp = NULL;
   return rsp;
 }
@@ -258,13 +317,11 @@ static struct OHUE* _inst( const iONode ini ,const iOTrace trc ) {
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Philips HUE %d.%d.%d", vmajor, vminor, patch );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  iid   : [%s]", data->iid );
-  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bridge: [%s]", wDigInt.gethost(data->ini) );
-  /*
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  bridge: [%s]", wHUE.getbridge(data->hueini) );
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "  user  : [%s]", wHUE.getuser(data->hueini) );
-  */
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "----------------------------------------" );
 
+  __hueGET(__HUE, NULL);
 
   instCnt++;
   return __HUE;
