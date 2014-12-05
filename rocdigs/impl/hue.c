@@ -214,12 +214,17 @@ static iONode __translate( iOHUE inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
     int addr = wOutput.getaddr( node );
     int val  = wOutput.getvalue( node );
+    int hue  = wOutput.getparam( node );
+    Boolean blink = wOutput.isblink( node );
     Boolean active = StrOp.equals( wOutput.getcmd( node ), wOutput.on );
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output addr=%d", addr );
 
     iHueCmd cmd = allocMem(sizeof(struct HueCmd));
     cmd->methode = StrOp.fmt("PUT /api/%s/lights/%d/state", wDigInt.getuserid(data->ini), addr);
-    cmd->request = StrOp.fmt("{\"on\":%s, \"bri\":%d}", active?"true":"false", val);
+    if( hue > 0 )
+      cmd->request = StrOp.fmt("{\"on\":%s, \"bri\":%d, \"alert\":\"%s\", \"hue\":%d}", active?"true":"false", val, blink?"lselect":"none", hue);
+    else
+      cmd->request = StrOp.fmt("{\"on\":%s, \"bri\":%d, \"alert\":\"%s\"}", active?"true":"false", val, blink?"lselect":"none");
     ThreadOp.post( data->transactor, (obj)cmd );
 
   }
