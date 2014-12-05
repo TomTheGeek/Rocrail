@@ -7553,3 +7553,9 @@ msgstr ""
 msgid "Sensor monitor in automatic mode"
 msgstr ""
 
+#. 
+# id="userid"
+#, c-format
+msgid "User ID"
+msgstr ""
+

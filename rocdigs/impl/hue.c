@@ -26,6 +26,7 @@
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
 #include "rocrail/wrapper/public/Output.h"
+#include "rocrail/wrapper/public/Program.h"
 
 #include <math.h>
 
@@ -137,7 +138,7 @@ static char* __httpRequest( iOHUE inst, const char* method, const char* request 
       };
 
       if( OK && contlen > 0 ) {
-        char* reply = (char*)allocMem(contlen+1);
+        reply = (char*)allocMem(contlen+1);
         SocketOp.read( sh, reply, contlen );
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reply = %.200s", reply );
       }
@@ -146,7 +147,8 @@ static char* __httpRequest( iOHUE inst, const char* method, const char* request 
           idx++;
           str[idx] = '\0';
         }
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reply: %s", str  );
+        reply = StrOp.dup(str);
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reply: %s", reply  );
       }
     }
 
@@ -222,6 +224,15 @@ static iONode __translate( iOHUE inst, iONode node ) {
 
   }
 
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+    if(  wProgram.getcmd( node ) == wProgram.pton ) {
+      iHueCmd cmd = allocMem(sizeof(struct HueCmd));
+      cmd->methode = StrOp.fmt("POST /api");
+      cmd->request = StrOp.fmt("{\"devicetype\": \"rocrail\", \"username\": \"%s\"}", wDigInt.getuserid(data->ini));
+      ThreadOp.post( data->transactor, (obj)cmd );
+    }
+  }
   return NULL;
 }
 
@@ -306,7 +317,14 @@ static void __transactor( void* threadinst ) {
   do {
     iHueCmd cmd = (iHueCmd)ThreadOp.getPost( th );
     if (cmd != NULL) {
-      __httpRequest(hue, cmd->methode, cmd->request);
+      char* reply = __httpRequest(hue, cmd->methode, cmd->request);
+      if( reply != NULL && StrOp.len(reply) > 0 ) {
+        if( StrOp.find(reply, "error") )
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error: %s", reply );
+        else
+          TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "ok: %s", reply );
+      }
+      StrOp.free(reply);
       StrOp.free(cmd->methode);
       StrOp.free(cmd->request);
       freeMem(cmd);
