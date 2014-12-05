@@ -27,9 +27,17 @@
 #include "rocs/public/trace.h"
 #include "rocs/public/node.h"
 #include "rocs/public/thread.h"
+#include "rocs/public/strtok.h"
+#include "rocs/public/list.h"
 
 #include "rocrail/public/app.h"
 #include "rocrail/public/control.h"
+#include "rocrail/public/output.h"
+#include "rocrail/public/model.h"
+
+#include "rocrail/wrapper/public/Weather.h"
+#include "rocrail/wrapper/public/Output.h"
+
 
 static int instCnt = 0;
 
@@ -87,10 +95,44 @@ static void* __event( void* inst, const void* evt ) {
 }
 
 /** ----- OWeather ----- */
-static void __doDaylight(iOWeather weather, int hour, int min ) {
+static void __doDaylight(iOWeather weather, int hour, int min, Boolean shutdown ) {
   iOWeatherData data = Data(weather);
+  iOModel model = AppOp.getModel();
+  iOList list = ListOp.inst();
 
-  TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "do daylight at %02d:%02d", hour, min );
+  TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "do daylight at %02d:%02d on %s", hour, min, wWeather.getoutputs(data->props) );
+
+  iOStrTok tok = StrTokOp.inst( wWeather.getoutputs(data->props), ',' );
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* id = StrTokOp.nextToken(tok);
+    iOOutput output = ModelOp.getOutput(model, id);
+    if( output != NULL ) {
+      ListOp.add(list, (obj)output);
+    }
+  };
+  StrTokOp.base.del(tok);
+
+  if( ListOp.size(list) > 0 ) {
+    int i = 0;
+    int cnt = ListOp.size(list);
+    for(i = 0; i < cnt; i++) {
+      iOOutput output = (iOOutput)ListOp.get(list, i);
+      iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE);
+      float bri = 0;
+      float minutes = hour * 60 + min;
+      /* sunrise=06:00(360) sunset=18:00(1080) day=1080-360=720*/
+      if( minutes <= 720 )
+        bri = 255.0 - ((255.0 / (720.0-360.0)) * (minutes - 360.0));
+      else
+        bri = 255.0 - ((255.0 / (1080.0-720.0)) * (minutes - 720.0));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "brightness=%f, minutes=%f", bri, minutes );
+      wOutput.setvalue(cmd, (int)bri);
+      wOutput.setcmd(cmd, shutdown?wOutput.off:wOutput.value);
+      OutputOp.cmd(output, cmd, False);
+    }
+  }
+  ListOp.base.del(list);
+
 }
 
 
@@ -117,12 +159,14 @@ static void __makeWeather( void* threadinst ) {
       loopCnt = 0;
       long t = ControlOp.getTime(control);
       struct tm* ltm = localtime( &t );
+      int hour = ltm->tm_hour;
+      int min  = ltm->tm_min;
 
       if( lastMin != ltm->tm_min ) {
-        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "weather time is %02d:%02d", ltm->tm_hour, ltm->tm_min );
-        lastMin = ltm->tm_min;
-        __doDaylight(weather, ltm->tm_hour, ltm->tm_min );
-        __checkWeatherThemes(weather, ltm->tm_hour, ltm->tm_min );
+        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "weather time is %02d:%02d", hour, min );
+        __doDaylight(weather, hour, min, False );
+        __checkWeatherThemes(weather, hour, min );
+        lastMin = min;
       }
     }
     else {
@@ -131,6 +175,7 @@ static void __makeWeather( void* threadinst ) {
 
     ThreadOp.sleep(100);
   }
+  __doDaylight(weather, 0, 0, True );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "make weather ended..." );
 

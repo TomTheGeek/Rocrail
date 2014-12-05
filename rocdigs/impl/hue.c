@@ -22,6 +22,7 @@
 #include "rocdigs/impl/hue_impl.h"
 
 #include "rocs/public/mem.h"
+#include "rocs/public/strtok.h"
 
 #include "rocrail/wrapper/public/DigInt.h"
 #include "rocrail/wrapper/public/SysCmd.h"
@@ -87,6 +88,29 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- OHUE ----- */
 
+/*
+{"name": "Philips hue","mac": "00:17:88:12:15:cd","dhcp": true,"ipaddress": "192.168.100.175","netmask": "255.255.255.0",
+"gateway": "192.168.100.99","proxyaddress": "none","proxyport": 0,"UTC": "2014-12-05T09:24:21","localtime": "2014-12-05T10:24:21",
+"timezone": "Europe/Berlin","whitelist":{"000000007b9c25875ddd6a1a5ddd6a1a":{"last use date": "2014-12-04T16:07:30",
+"create date": "2014-12-04T16:03:18","name": "Hue#BullittGroupLimited"},"rocrail4ever":{"last use date": "2014-12-04T16:11:56",
+"create date": "2014-12-04T16:11:56","name": "rocrail"},"rocrail4light":{"last use date": "2014-12-05T09:24:21","create date":
+"2014-12-04T16:13:46","name": "rocrail"}},"swversion": "01010854","apiversion": "1.2.1","swupdate":{"updatestate":0,"url":"",
+"text":"","notify": false},"linkbutton": false,"portalservices": true,"portalconnection": "connected","portalstate":{"signedon": true,
+"incoming": true,"outgoing": true,"communication": "disconnected"}}
+ */
+
+static iONode __parseJSON(const char* json) {
+  iONode node = NULL;
+  iOStrTok tok = StrTokOp.inst( json, ',' );
+  while( StrTokOp.hasMoreTokens(tok) ) {
+    const char* keyvalue = StrTokOp.nextToken(tok);
+    TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "%s", keyvalue );
+  };
+  StrTokOp.base.del(tok);
+
+  return node;
+}
+
 
 /*
  * Example
@@ -149,7 +173,7 @@ static char* __httpRequest( iOHUE inst, const char* method, const char* request 
           str[idx] = '\0';
         }
         reply = StrOp.dup(str);
-        TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reply: %s", reply  );
+        TraceOp.trc( name, TRCLEVEL_DEBUG, __LINE__, 9999, "reply: %s", reply  );
       }
     }
 
@@ -329,6 +353,7 @@ static void __transactor( void* threadinst ) {
     if (cmd != NULL) {
       char* reply = __httpRequest(hue, cmd->methode, cmd->request);
       if( reply != NULL && StrOp.len(reply) > 0 ) {
+        iONode node = __parseJSON(reply);
         if( StrOp.find(reply, "error") )
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "error: %s", reply );
         else
@@ -368,6 +393,11 @@ static struct OHUE* _inst( const iONode ini ,const iOTrace trc ) {
   data->run = True;
   data->transactor = ThreadOp.inst( data->iid, &__transactor, __HUE );
   ThreadOp.start( data->transactor );
+
+  iHueCmd cmd = allocMem(sizeof(struct HueCmd));
+  cmd->methode = StrOp.fmt("GET /api/%s/config", wDigInt.getuserid(data->ini));
+  cmd->request = StrOp.dup("");
+  ThreadOp.post( data->transactor, (obj)cmd );
 
   instCnt++;
   return __HUE;

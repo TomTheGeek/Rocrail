@@ -205,10 +205,14 @@ static Boolean __doCmd( struct OOutput* inst ,iONode nodeA ,Boolean update ) {
     wOutput.setstate( o->props, wOutput.on );
   else if( StrOp.equals(wOutput.value, state ) ) {
     wOutput.setvalue( o->props, value );
-    if( value > 0 )
+    if( value > 0 ) {
       wOutput.setstate( o->props, wOutput.on );
-    else
+      state = wOutput.on;
+    }
+    else {
       wOutput.setstate( o->props, wOutput.off );
+      state = wOutput.off;
+    }
   }
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "setting output %s to %s [%d]",

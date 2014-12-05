@@ -1526,6 +1526,14 @@
     <const name="run" vt="string" val="run"/>
     <const name="stall" vt="string" val="stall"/>
   </fundef>
+  
+  <color wrappername="Color" >
+    <var name="id" vt="string" defval="" range="*"/>
+    <var name="red" vt="int" defval="0" range="0-255" remark="Red value"/>
+		<var name="green" vt="int" defval="0" range="0-255" remark="Green value"/>
+		<var name="blue" vt="int" defval="0" range="0-255" remark="Blue value"/>
+		<var name="brightness" vt="int" defval="0" range="0-255" remark="Brightness"/>
+  </color>
 
   <plan structname="RRP" wrappername="Plan" remark="Root node of the planfile.">
     <var name="title" vt="string" defval="New Plan" range="*" remark="Title of plan."/>
@@ -1547,7 +1555,8 @@
       <var name="red" vt="int" defval="0" range="0-255" remark="Red value for noon."/>
       <var name="green" vt="int" defval="0" range="0-255" remark="Green value for noon."/>
       <var name="blue" vt="int" defval="0" range="0-255" remark="Blue value for noon."/>
-      <var name="brightness" vt="int" defval="0" range="0-*" remark="Brightness value for noon."/>
+      <var name="maxbri" vt="int" defval="255" range="0-255" remark="Maximal brightness value for noon."/>
+      <var name="minbri" vt="int" defval="5" range="0-255" remark="Minimal brightness for night."/>
       <sunrise cardinality="1" remark="Sunrise definition" wrappername="Sunrise">
         <var name="hour" vt="int" defval="0" range="0-23"/>
         <var name="minute" vt="int" defval="0" range="0-59"/>
@@ -1563,6 +1572,7 @@
         <var name="blue" vt="int" defval="0" range="0-255"/>
       </sunset>
       <weathertheme cardinality="n" wrappername="WeatherTheme">
+        <var name="id" vt="string" defval="" range="*"/>
         <var name="dim" vt="int" defval="0" range="0-100"/>
         <var name="outputs" vt="string" defval="" range="*" remark="Comma separated list of outputs from lightning."/>
       </weathertheme>
@@ -1925,6 +1935,7 @@
         <var name="show" vt="bool" defval="true" remark="Visibility flag."/>
         <var name="svgtype" vt="int" defval="0" range="0-*" remark="Defines which SVG symbol should be used in case of show."/>
         <actionctrl cardinality="n"/>
+        <color cardinality="1"/>
       </co>
     </colist>
     <fblist cardinality="1" remark="Sensor table" wrappername="FeedbackList">
