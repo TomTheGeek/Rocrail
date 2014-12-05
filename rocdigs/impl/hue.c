@@ -93,6 +93,7 @@ static void* __event( void* inst, const void* evt ) {
  * method : PUT /api/<user>/lights/1/state
  * request: {"bri":42}
  */
+#define RSPSIZE 4096
 static char* __httpRequest( iOHUE inst, const char* method, const char* request ) {
   iOHUEData data = Data(inst);
   char* reply = NULL;
@@ -109,7 +110,7 @@ static char* __httpRequest( iOHUE inst, const char* method, const char* request 
     StrOp.free(httpReq);
 
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Read response..." );
-    char str[1024] = {'\0'};
+    char str[RSPSIZE] = {'\0'};
     int idx = 0;
     SocketOp.setRcvTimeout( sh, 1000 );
     /* Read first HTTP header line: */
@@ -143,7 +144,7 @@ static char* __httpRequest( iOHUE inst, const char* method, const char* request 
         TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "reply = %.200s", reply );
       }
       else if( OK ) {
-        while( SocketOp.read( sh, &str[idx], 1 ) && !SocketOp.isBroken( sh ) && idx < 1024) {
+        while( SocketOp.read( sh, &str[idx], 1 ) && !SocketOp.isBroken( sh ) && idx < RSPSIZE) {
           idx++;
           str[idx] = '\0';
         }
@@ -207,6 +208,10 @@ static iONode __translate( iOHUE inst, iONode node ) {
     }
     else if( StrOp.equals( cmdstr, wSysCmd.go ) ) {
       TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "system GO" );
+      iHueCmd cmd = allocMem(sizeof(struct HueCmd));
+      cmd->methode = StrOp.fmt("GET /api/%s/lights", wDigInt.getuserid(data->ini));
+      cmd->request = StrOp.dup("");
+      ThreadOp.post( data->transactor, (obj)cmd );
     }
   }
 
@@ -334,6 +339,7 @@ static void __transactor( void* threadinst ) {
       StrOp.free(cmd->request);
       freeMem(cmd);
     }
+    ThreadOp.sleep(10);
   } while( data->run );
 
   TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Transactor has stopped.");
