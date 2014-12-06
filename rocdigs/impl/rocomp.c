@@ -540,6 +540,7 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
   switch( xn ) {
   default:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled Xpressnet packet: header=0x%02X", xn );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in+1, in[0] );
     break;
   }
 }
