@@ -146,6 +146,10 @@ static void __doDaylight(iOWeather weather, int hour, int min, Boolean shutdown 
         bri = maxbri - ((maxbri / (720.0-sunriseMinutes)) * ((720.0-sunriseMinutes) - (minutes-sunriseMinutes))) ;
       else
         bri = maxbri - ((maxbri / (sunsetMinutes-720.0)) * (minutes - 720.0));
+
+      if( bri < minbri )
+        bri = minbri;
+
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
           "brightness=%f, minutes=%d, sunriseMinute=%d, sunsetMinutes=%d", bri, (int)minutes, (int)sunriseMinutes, (int)sunsetMinutes );
       wOutput.setvalue(cmd, (int)bri);
