@@ -437,6 +437,8 @@ static byte __makeXor(byte* buf, int len) {
 static void __reportState(iORocoMP inst) {
   iORocoMPData data = Data(inst);
 
+  TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "power=%s temp=%d load=%d", data->power?"ON":"OFF", data->temp, data->current );
+
   if( data->listenerFun != NULL && data->listenerObj != NULL ) {
     iONode node = NodeOp.inst( wState.name(), NULL, ELEMENT_NODE );
 
@@ -540,7 +542,7 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
   switch( xn ) {
   default:
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled Xpressnet packet: header=0x%02X", xn );
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in+1, in[0] );
+    TraceOp.dump( NULL, TRCLEVEL_MONITOR, (char*)in, in[0] );
     break;
   }
 }
