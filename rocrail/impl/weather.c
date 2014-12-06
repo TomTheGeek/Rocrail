@@ -122,7 +122,7 @@ static void __doDaylight(iOWeather weather, int hour, int min, Boolean shutdown 
       float minutes = hour * 60 + min;
       /* sunrise=06:00(360) sunset=18:00(1080) day=1080-360=720*/
       if( minutes <= 720 )
-        bri = 255.0 - ((255.0 / (720.0-360.0)) * (minutes - 360.0));
+        bri = 255.0 - ((255.0 / (720.0-360.0)) * ((720.0-360.0) - (minutes-360.0))) ;
       else
         bri = 255.0 - ((255.0 / (1080.0-720.0)) * (minutes - 720.0));
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "brightness=%f, minutes=%f", bri, minutes );

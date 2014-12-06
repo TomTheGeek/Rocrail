@@ -567,5 +567,7 @@ void ECoSCtrlDialog::OnHelpClick( wxCommandEvent& event )
     wxGetApp().openLink( "roco:roco-z21" );
   else if( StrOp.equals( wDigInt.zimocan, wDigInt.getlib( m_Props ) ) )
     wxGetApp().openLink( "zimocan" );
+  else if( StrOp.equals( wDigInt.hue, wDigInt.getlib( m_Props ) ) )
+    wxGetApp().openLink( "philips:hue" );
 }
 

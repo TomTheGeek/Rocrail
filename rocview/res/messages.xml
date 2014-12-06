@@ -29191,4 +29191,22 @@
   <Msg id="userid">
     <en txt="User ID"/>
   </Msg>
+  <Msg id="weather" dialog="true">
+    <en txt="Weather" tip="Weather setup"/>
+  </Msg>
+  <Msg id="outputs">
+    <en txt="Outputs"/>
+  </Msg>
+  <Msg id="minbri">
+    <en txt="Min. brightness"/>
+  </Msg>
+  <Msg id="maxbri">
+    <en txt="Max. brightness"/>
+  </Msg>
+  <Msg id="sunrise">
+    <en txt="Sunrise"/>
+  </Msg>
+  <Msg id="sunset">
+    <en txt="Sunset"/>
+  </Msg>
 </Messages>

@@ -171,6 +171,7 @@ public:
   void OnEditModPlan(wxCommandEvent& event);
   void OnCtrlMode(wxCommandEvent& event);
   void OnNewUpdates(wxCommandEvent& event);
+  void OnWeather(wxCommandEvent& event);
 
   void OnEditLocs(wxCommandEvent& event);
   void OnEditAccDecs(wxCommandEvent& event);
@@ -631,6 +632,7 @@ enum
     ME_RocrailIni,
     ME_PowerEvent,
     ME_RocguiIni,
+    ME_Weather,
     ME_ZoomX,
     ME_Zoom25,
     ME_Zoom50,

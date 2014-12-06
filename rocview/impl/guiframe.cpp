@@ -106,6 +106,7 @@
 #include "rocview/dialogs/trackpickerdlg.h"
 #include "rocview/dialogs/zoomdlg.h"
 #include "rocview/dialogs/variabledlg.h"
+#include "rocview/dialogs/weatherdlg.h"
 
 
 
@@ -182,6 +183,7 @@
 #include "rocrail/wrapper/public/Route.h"
 #include "rocrail/wrapper/public/Operator.h"
 #include "rocrail/wrapper/public/Turntable.h"
+#include "rocrail/wrapper/public/Weather.h"
 
 
 #include "rocview/symbols/svg.h"
@@ -347,6 +349,7 @@ BEGIN_EVENT_TABLE(RocGuiFrame, wxFrame)
     EVT_MENU( ME_CtrlBoosters   , RocGuiFrame::OnCtrlBoosters)
     EVT_MENU( ME_EditActions    , RocGuiFrame::OnEditActions)
     EVT_MENU( ME_EditVariables  , RocGuiFrame::OnEditVariables)
+    EVT_MENU( ME_Weather        , RocGuiFrame::OnWeather)
     EVT_MENU( ME_PanelProps     , RocGuiFrame::OnPanelProps)
     EVT_MENU( ME_AddItem        , RocGuiFrame::OnAddItem)
     EVT_MENU( ME_AddPanel       , RocGuiFrame::OnAddPanel)
@@ -2052,6 +2055,7 @@ void RocGuiFrame::initFrame() {
   menuTables->Append(ME_EditActions, wxGetApp().getMenu("systemactions"), wxGetApp().getTip("systemactions") );
   menuTables->Append(ME_EditAccDecs, wxGetApp().getMenu("accdectable"), wxGetApp().getTip("accdectable") );
   menuTables->Append(ME_EditVariables, wxGetApp().getMenu("variabletable"), wxGetApp().getTip("variabletable") );
+  menuTables->Append(ME_Weather, wxGetApp().getMenu("weather"), wxGetApp().getTip("weather") );
 
   wxMenu *menuControl = new wxMenu();
   menuControl->AppendCheckItem(ME_Go, wxGetApp().getMenu("poweron"), wxGetApp().getTip("poweron") );
@@ -3979,6 +3983,22 @@ void RocGuiFrame::OnEditVariables( wxCommandEvent& event ) {
   if( wxGetApp().getModel() == NULL )
     return;
   VariableDlg*  dlg = new VariableDlg(this);
+  if( wxID_OK == dlg->ShowModal() ) {
+    // TODO: inform
+  }
+  dlg->Destroy();
+}
+
+
+void RocGuiFrame::OnWeather( wxCommandEvent& event ) {
+  if( wxGetApp().getModel() == NULL )
+    return;
+  iONode weather = wPlan.getweather(wxGetApp().getModel());
+  if( weather == NULL ) {
+    weather = NodeOp.inst(wWeather.name(), wxGetApp().getModel(), ELEMENT_NODE );
+    NodeOp.addChild(wxGetApp().getModel(), weather);
+  }
+  WeatherDlg*  dlg = new WeatherDlg(this, weather);
   if( wxID_OK == dlg->ShowModal() ) {
     // TODO: inform
   }

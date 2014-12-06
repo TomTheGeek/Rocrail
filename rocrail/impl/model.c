@@ -130,6 +130,7 @@
 #include "rocrail/wrapper/public/DecList.h"
 #include "rocrail/wrapper/public/Variable.h"
 #include "rocrail/wrapper/public/VariableList.h"
+#include "rocrail/wrapper/public/Weather.h"
 
 static int instCnt = 0;
 
@@ -962,6 +963,7 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
 
   if( !StrOp.equals(wMVTrack.name(), NodeOp.getName(item) ) &&
       !StrOp.equals(wSystemActions.name(), NodeOp.getName(item) ) &&
+      !StrOp.equals(wWeather.name(), NodeOp.getName(item) ) &&
       !StrOp.equals(wZLevel.name(), NodeOp.getName(item) ) && (id == NULL ||
       StrOp.len(id) == 0 || StrOp.equals("(null)", id) ) ) {
     TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "invalid id for modify [%s]", name );
@@ -1491,6 +1493,27 @@ static Boolean _modifyItem( iOModel inst, iONode item ) {
       for( i = 0; i < cnt; i++ ) {
         iONode child = NodeOp.getChild( item, i );
         NodeOp.addChild( system, (iONode)NodeOp.base.clone(child) );
+      }
+    }
+  }
+  else if( StrOp.equals( wWeather.name(), name ) ) {
+    iONode weather = wPlan.getweather( data->model );
+    if( weather == NULL ) {
+      weather = (iONode)NodeOp.base.clone( item );
+      NodeOp.addChild( data->model, weather );
+    }
+    else {
+      int cnt = NodeOp.getChildCnt( weather );
+      int i = 0;
+      while( cnt > 0 ) {
+        iONode child = NodeOp.getChild( weather, 0 );
+        NodeOp.removeChild( weather, child );
+        cnt = NodeOp.getChildCnt( weather );
+      }
+      cnt = NodeOp.getChildCnt( item );
+      for( i = 0; i < cnt; i++ ) {
+        iONode child = NodeOp.getChild( item, i );
+        NodeOp.addChild( weather, (iONode)NodeOp.base.clone(child) );
       }
     }
   }
