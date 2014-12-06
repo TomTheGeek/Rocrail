@@ -102,6 +102,27 @@ static void* __event( void* inst, const void* evt ) {
 
 /** ----- ORocoMP ----- */
 
+static void __setLocAddr( int addr, byte* addrbytes ) {
+  /*
+  Für Lokadressen < 100 gilt:
+  Highbyte der Lokadresse ist 0x00
+  Lowbyte der Lokadresse ist 0x00 bis 0x63
+
+  Für Lokadresse von 100 bis 9999 gilt:
+
+  Highbyte der Lokadresse ist: AH = (ADR&0xFF00)+0xC000
+  Lowbyte der Lokadresse ist: AL = (ADR&0x00FF)
+  */
+  if( addr < 100 ) {
+    addrbytes[0] = 0;
+    addrbytes[1] = addr & 0x00FF;
+  }
+  else {
+    addrbytes[0] = ((addr & 0xFF00) >> 8) + 0xC0;
+    addrbytes[1] = addr & 0x00FF;
+  }
+}
+
 
 static void __translate( iORocoMP inst, iONode node ) {
   iORocoMPData data = Data(inst);
@@ -354,6 +375,55 @@ static void __translate( iORocoMP inst, iONode node ) {
     ThreadOp.post( data->transactor, (obj)outb );
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s", addr+1, port+1, gate, wOutput.getcmd( node ) );
+  }
+
+  /* Program command. */
+  else if( StrOp.equals( NodeOp.getName( node ), wProgram.name() ) ) {
+
+    if( wProgram.getcmd( node ) == wProgram.get ) {
+      int cv = wProgram.getcv( node );
+      int addr = wProgram.getaddr( node );
+      Boolean pom = wProgram.ispom(node);
+
+    }
+    else if( wProgram.getcmd( node ) == wProgram.set ) {
+      int cv = wProgram.getcv( node );
+      int value = wProgram.getvalue( node );
+      int decaddr = wProgram.getdecaddr( node );
+      Boolean pom = wProgram.ispom(node);
+
+      if( pom ) {
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "POM: set CV%d of loco %d to %d...", cv, decaddr, value );
+
+        if( data->power) {
+          if (cv > 0) cv--;
+
+          // make message:
+          byte* outb = allocMem(65);
+          outb[0] = 0x80 + 9;
+          outb[1] = 9;
+          outb[2] = USB_XPRESSNET;
+          outb[3] = 0xE6;
+          outb[4] = 0x30;
+          __setLocAddr( decaddr, outb+5 );
+          outb[7] = ((cv & 0x0300) >> 8) + 0xEC;
+          outb[8] = cv & 0x00FF;
+          outb[9] = value & 0xFF;
+          outb[10] = __makeXor(outb+1, 9);
+
+          if ( cv != 0 && decaddr != 0)
+            ThreadOp.post( data->transactor, (obj)outb );
+          else if (decaddr == 0)
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "We do not POM to address == 0!");
+          else
+            TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "POM does not allow writing of address!");
+        }
+        else {
+          TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "POM: not processing; Power is OFF" );
+        }
+
+      }
+    }
   }
 
 }
