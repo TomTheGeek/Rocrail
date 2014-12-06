@@ -36,6 +36,8 @@
 #include "rocrail/public/model.h"
 
 #include "rocrail/wrapper/public/Weather.h"
+#include "rocrail/wrapper/public/Sunrise.h"
+#include "rocrail/wrapper/public/Sunset.h"
 #include "rocrail/wrapper/public/Output.h"
 
 
@@ -117,15 +119,35 @@ static void __doDaylight(iOWeather weather, int hour, int min, Boolean shutdown 
     int cnt = ListOp.size(list);
     for(i = 0; i < cnt; i++) {
       iOOutput output = (iOOutput)ListOp.get(list, i);
+      iONode sunrise = wWeather.getsunrise(data->props);
+      iONode sunset = wWeather.getsunset(data->props);
+
+      if( sunrise == NULL ) {
+        sunrise = NodeOp.inst(wSunrise.name(), data->props, ELEMENT_NODE );
+        NodeOp.addChild(data->props, sunrise);
+        wSunrise.sethour(sunrise, 6) ;
+      }
+      if( sunset == NULL ) {
+        sunset = NodeOp.inst(wSunset.name(), data->props, ELEMENT_NODE );
+        NodeOp.addChild(data->props, sunset);
+        wSunset.sethour(sunset, 18) ;
+      }
+
+      float sunriseMinutes = wSunrise.gethour(sunrise) * 60 + wSunrise.getminute(sunrise);
+      float sunsetMinutes  = wSunset.gethour(sunset) * 60 + wSunset.getminute(sunset);
+      float maxbri = wWeather.getmaxbri(data->props);
+      float minbri = wWeather.getminbri(data->props);
+
       iONode cmd = NodeOp.inst( wOutput.name(), NULL, ELEMENT_NODE);
       float bri = 0;
       float minutes = hour * 60 + min;
       /* sunrise=06:00(360) sunset=18:00(1080) day=1080-360=720*/
       if( minutes <= 720 )
-        bri = 255.0 - ((255.0 / (720.0-360.0)) * ((720.0-360.0) - (minutes-360.0))) ;
+        bri = maxbri - ((maxbri / (720.0-sunriseMinutes)) * ((720.0-sunriseMinutes) - (minutes-sunriseMinutes))) ;
       else
-        bri = 255.0 - ((255.0 / (1080.0-720.0)) * (minutes - 720.0));
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "brightness=%f, minutes=%f", bri, minutes );
+        bri = maxbri - ((maxbri / (sunsetMinutes-720.0)) * (minutes - 720.0));
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999,
+          "brightness=%f, minutes=%d, sunriseMinute=%d, sunsetMinutes=%d", bri, (int)minutes, (int)sunriseMinutes, (int)sunsetMinutes );
       wOutput.setvalue(cmd, (int)bri);
       wOutput.setcmd(cmd, shutdown?wOutput.off:wOutput.value);
       OutputOp.cmd(output, cmd, False);
