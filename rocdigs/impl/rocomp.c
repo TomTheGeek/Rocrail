@@ -471,7 +471,8 @@ static void __handleSystemState(iORocoMP roco, byte* packet) {
 #define csRamError                0x80  // RAM Fehler in der Zentrale
    */
 
-  if( data->state != state || data->current != fcurrent || data->temp != temp ) {
+  if( data->state != state || (data->current < fcurrent && fcurrent - data->current >= 5) || 
+      (data->current > fcurrent && data->current - fcurrent > 5) || data->temp != temp ) {
     data->power   = ((state & csTrackVoltageOff) == csTrackVoltageOff) ? False:True;
     data->state   = state;
     data->current = fcurrent;
@@ -541,8 +542,8 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
 
   switch( xn ) {
   default:
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "unhandled Xpressnet packet: header=0x%02X", xn );
-    TraceOp.dump( NULL, TRCLEVEL_MONITOR, (char*)in, in[0] );
+    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "unhandled Xpressnet packet: header=0x%02X", xn );
+    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, in[0] );
     break;
   }
 }
