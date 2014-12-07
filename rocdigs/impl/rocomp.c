@@ -295,15 +295,8 @@ static void __translate( iORocoMP inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wSwitch.name() ) ) {
     byte* outb = allocMem(65);
     int addr = wSwitch.getaddr1( node );
-    int port = wSwitch.getport1( node );
     int gate = wSwitch.getgate1( node );
 
-    if( port == 0 )
-      AddrOp.fromFADA( addr, &addr, &port, &gate );
-    else if( addr == 0 && port > 0 )
-      AddrOp.fromPADA( port, &addr, &port );
-
-    if( port > 0 ) port--;
     if( addr > 0 ) addr--;
 
     int gate1  = StrOp.equals( wSwitch.getcmd( node ), wSwitch.turnout ) ? 0x00:0x01; //0 = use gate 1, 1 = use gate 2
@@ -318,14 +311,15 @@ static void __translate( iORocoMP inst, iONode node ) {
 
     if( wSwitch.issinglegate( node ) ) {
       //when single gate turn gate on (cmd straight) or off (cmd turnout)
-      outb[6] = 0x90 | action | (port << 1) | gate; //first rocomotion trace shows roco uses 0x9 as high nibble against 0x8 as official xpressnet
+      outb[6] = 0x90 | action | gate; //first rocomotion trace shows roco uses 0x9 as high nibble against 0x8 as official xpressnet
       outb[7] = __makeXor(outb+1, 6);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "single gate switch addr=%d gate=%d cmd=%s", addr+1, gate, action==0?"off":"on" );
       ThreadOp.post( data->transactor, (obj)outb );
 
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout gate %d %d %d %s", addr+1, port+1, gate, action==0?"off":"on" );
-    } else {
+    } 
+    else {
       //otherwise turn gate 1 (cmd turnout) or gate 2 (cmd straight) on and 100 ms later off again
-      outb[6] = 0x90 | 0x08 | (port << 1) | gate1;  //turn gate on
+      outb[6] = 0x90 | 0x08 | gate1;  //turn gate on
       outb[7] = __makeXor(outb+1, 6);
       ThreadOp.post( data->transactor, (obj)outb );
 
@@ -338,11 +332,10 @@ static void __translate( iORocoMP inst, iONode node ) {
       outb[3] = 0x53;
       outb[4] = addr/256;
       outb[5] = addr%256;
-      outb[6] = 0x90 | 0x00 | (port << 1) | gate1;  //turn gate off
+      outb[6] = 0x90 | 0x00 | gate1;  //turn gate off
       outb[7] = __makeXor(outb+1, 6);
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "switch addr=%d cmd=%s", addr+1, wSwitch.getcmd( node ) );
       ThreadOp.post( data->transactor, (obj)outb );
-
-      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "turnout %d %d %s", addr+1, port+1, wSwitch.getcmd( node ) );
     }
   }
 
@@ -350,15 +343,8 @@ static void __translate( iORocoMP inst, iONode node ) {
   else if( StrOp.equals( NodeOp.getName( node ), wOutput.name() ) ) {
 
     int addr   = wOutput.getaddr( node );
-    int port   = wOutput.getport( node );
     int gate   = wOutput.getgate( node );
 
-    if( port == 0 )
-      AddrOp.fromFADA( addr, &addr, &port, &gate );
-    else if( addr == 0 && port > 0 )
-      AddrOp.fromPADA( port, &addr, &port );
-
-    if( port > 0 ) port--;
     if( addr > 0 ) addr--;
 
     int action = StrOp.equals( wOutput.getcmd( node ), wOutput.on ) ? 0x08:0x00;
@@ -371,11 +357,10 @@ static void __translate( iORocoMP inst, iONode node ) {
     outb[3] = 0x53;
     outb[4] = addr/256;
     outb[5] = addr%256;
-    outb[6] = 0x90 | action | (port << 1) | gate;
+    outb[6] = 0x90 | action | gate;
     outb[7] = __makeXor(outb+1, 6);
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output addr=%d gate=%d cmd=%s", addr+1, gate, wOutput.getcmd( node ) );
     ThreadOp.post( data->transactor, (obj)outb );
-
-    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "output %d %d %d %s", addr+1, port+1, gate, wOutput.getcmd( node ) );
   }
 
   /* Program command. */
@@ -717,6 +702,32 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
 
       if( data->listenerFun != NULL && data->listenerObj != NULL )
         data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
+    break;
+  case 0x43:
+    {
+    /*
+    20141207.121209.649 r9999I transact ORocoMP  0763 unhandled Xpressnet packet: header=0x43
+    20141207.121209.650 r0000I transact (null)   *trace dump( 0xACF75E50: length=7 )
+      offset:   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F |ASCII...........|
+      --------------------------------------------------------- |----------------|
+      00000000: 07 40 43 00 20 01 62                            |.@C. .b         |
+    20141207.121209.743 r9999c AC099700 ORocoMP  0337 switch addr=33 cmd=turnout
+    */
+    int addr = in[3] * 256 + in[4];
+    int value = in[5]&0x03;
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet switch report: addr=%d value=%d", addr, value );
+    iONode nodeC = NodeOp.inst( wSwitch.name(), NULL, ELEMENT_NODE );
+
+    wSwitch.setaddr1( nodeC, ( addr+1  ));
+
+    if( data->iid != NULL )
+      wSwitch.setiid( nodeC, data->iid );
+
+    wSwitch.setstate( nodeC, value==0x02?"straight":"turnout" );
+
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
     }
     break;
   case 0xEF:
