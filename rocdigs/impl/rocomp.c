@@ -385,6 +385,44 @@ static void __translate( iORocoMP inst, iONode node ) {
       int addr = wProgram.getaddr( node );
       Boolean pom = wProgram.ispom(node);
 
+      TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "get CV%d on %s...", cv, pom?"POM":"PT" );
+
+      if( pom ) {
+
+      }
+      else {
+        if( wProgram.getmode(node) == wProgram.mode_register ) {
+          byte* outb = allocMem(65);
+          outb[0] = 0x80 + 5;
+          outb[1] = 5;
+          outb[2] = USB_XPRESSNET;
+          outb[3] = 0x22;
+          outb[4] = 0x11;
+          outb[5] = cv & 0x0F;
+          outb[6] = __makeXor(outb+1, 5);
+          ThreadOp.post( data->transactor, (obj)outb );
+        }
+        else {
+          byte* outb = allocMem(65);
+          outb[0] = 0x80 + 5;
+          outb[1] = 5;
+          outb[2] = USB_XPRESSNET;
+          outb[3] = 0x22;
+          outb[4] = 0x15;
+          outb[5] = cv & 0xFF;
+          outb[6] = __makeXor(outb+1, 5);
+          ThreadOp.post( data->transactor, (obj)outb );
+        }
+        byte* outb = allocMem(65);
+        outb[0] = 0x80 + 5;
+        outb[1] = 5;
+        outb[2] = USB_XPRESSNET;
+        outb[3] = 0x21;
+        outb[4] = 0x10;
+        outb[5] = 0x31;
+        outb[6] = __makeXor(outb+1, 5);
+        ThreadOp.post( data->transactor, (obj)outb );
+      }
     }
     else if( wProgram.getcmd( node ) == wProgram.set ) {
       int cv = wProgram.getcv( node );
@@ -421,6 +459,46 @@ static void __translate( iORocoMP inst, iONode node ) {
         else {
           TraceOp.trc( name, TRCLEVEL_WARNING, __LINE__, 9999, "POM: not processing; Power is OFF" );
         }
+
+      }
+      else {
+
+        TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "set CV%d to %d...", cv, value );
+
+        if( wProgram.getmode(node) == wProgram.mode_register ) {
+          byte* outb = allocMem(65);
+          outb[0] = 0x80 + 6;
+          outb[1] = 6;
+          outb[2] = USB_XPRESSNET;
+          outb[3] = 0x23;
+          outb[4] = 0x12;
+          outb[5] = cv & 0x0F;
+          outb[6] = value & 0xFF;
+          outb[7] = __makeXor(outb+1, 6);
+          ThreadOp.post( data->transactor, (obj)outb );
+        }
+        else {
+          byte* outb = allocMem(65);
+          outb[0] = 0x80 + 6;
+          outb[1] = 6;
+          outb[2] = USB_XPRESSNET;
+          outb[3] = 0x23;
+          outb[4] = 0x16;
+          outb[5] = cv & 0xFF;
+          outb[6] = value & 0xFF;
+          outb[7] = __makeXor(outb+1, 6);
+          ThreadOp.post( data->transactor, (obj)outb );
+        }
+
+        byte* outb = allocMem(65);
+        outb[0] = 0x80 + 5;
+        outb[1] = 5;
+        outb[2] = USB_XPRESSNET;
+        outb[3] = 0x21;
+        outb[4] = 0x10;
+        outb[5] = 0x31;
+        outb[6] = __makeXor(outb+1, 5);
+        ThreadOp.post( data->transactor, (obj)outb );
 
       }
     }
