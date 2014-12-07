@@ -209,7 +209,8 @@ static void __translate( iORocoMP inst, iONode node ) {
     outa[5] = addr/256;
     outa[6] = addr%256;
     outa[7] = speed + (dir?0x80:0x00);
-    outa[8] = __makeXor(outa+1, 7);
+    outa[8] = 0;
+    outa[9] = __makeXor(outa+1, 8);
 
     TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999, "loco %d velocity=%d dir=%s", addr, speed, (dir?"fwd":"rev") );
     ThreadOp.post( data->transactor, (obj)outa );
