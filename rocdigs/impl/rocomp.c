@@ -611,8 +611,20 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
   int xn = in[2];
 
   switch( xn ) {
+  case 0x61:
+    if( in[3] == 0x01 )
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet normal operation resumed" );
+    else if( in[3] == 0x00 )
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet track power off" );
+    else if( in[3] == 0x02 )
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet service mode entry" );
+    break;
+  case 0x63:
+    if( in[3] == 0x21 )
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet version: %d.%d", in[4], in[5] );
+    break;
   default:
-    TraceOp.trc( name, TRCLEVEL_BYTE, __LINE__, 9999, "unhandled Xpressnet packet: header=0x%02X", xn );
+    TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unhandled Xpressnet packet: header=0x%02X", xn );
     TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, in[0] );
     break;
   }
