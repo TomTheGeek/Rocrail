@@ -619,8 +619,8 @@ static void __handleSystemState(iORocoMP roco, byte* packet) {
 #define csRamError                0x80  // RAM Fehler in der Zentrale
    */
 
-  if( data->state != state || (data->current < fcurrent && fcurrent - data->current >= 5) || 
-      (data->current > fcurrent && data->current - fcurrent > 5) || data->temp != temp ) {
+  if( data->state != state || (data->current < fcurrent && fcurrent - data->current >= 2) ||
+      (data->current > fcurrent && data->current - fcurrent > 2) || data->temp != temp ) {
     data->power   = ((state & csTrackVoltageOff) == csTrackVoltageOff) ? False:True;
     data->state   = state;
     data->current = fcurrent;
