@@ -701,9 +701,26 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
     if( in[3] == 0x21 )
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet version: %d.%d device type is 0x%X", (in[4]>>4), in[4]&0x0F, in[5] );
     break;
+  case 0x64:
+    if( in[3] == 0x14 ) {
+      int cv  = in[4] * 256 + in[5];
+      int val = in[5];
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet service mode: cv=%d value=%d", cv, val );
+
+      iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
+      wProgram.setcv( node, cv );
+      wProgram.setvalue( node, val );
+      wProgram.setcmd( node, wProgram.datarsp );
+      if( data->iid != NULL )
+        wProgram.setiid( node, data->iid );
+
+      if( data->listenerFun != NULL && data->listenerObj != NULL )
+        data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
+    }
+    break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unhandled Xpressnet packet: header=0x%02X", xn );
-    TraceOp.dump( NULL, TRCLEVEL_BYTE, (char*)in, in[0] );
+    TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, in[0] );
     break;
   }
 }
