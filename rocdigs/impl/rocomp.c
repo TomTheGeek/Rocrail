@@ -719,6 +719,61 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
         data->listenerFun( data->listenerObj, node, TRCLEVEL_INFO );
     }
     break;
+  case 0xEF:
+  {
+    /*
+    20141207.102137.953 r9999I transact ORocoMP  0723 unhandled Xpressnet packet: header=0xEF
+    20141207.102137.953 r0000I transact (null)   *trace dump( 0x72548E50: length=19 )
+        offset:   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F |ASCII...........|
+        --------------------------------------------------------- |----------------|
+        00000000: 13 40 EF C9 64 04 80 10 00 00 00 00 00 00 00 00 |.@..d...........|
+        00000010: 00 00 D6                                        |...             |
+     */
+    int     addr   = (in[3]&0x3F) * 256 + in[4];
+    int     speed  = in[6]&0x7F;
+    int     steps  = in[5]&0x07;
+    Boolean dir    = (in[6]&0x80) ? True:False;
+    Boolean lights = (in[7]&0x10) ? True:False;
+    int     F0     = in[7] & 0x0F;
+    int     F1     = in[8];
+    int     F2     = in[9];
+    int     F3     = in[10];
+    iONode  nodeC  = NodeOp.inst( wLoc.name(), NULL, ELEMENT_NODE );
+
+    if( steps == 0 ) steps = 14;
+    else if( steps == 0x01 ) steps = 27;
+    else if( steps == 0x02 ) steps = 28;
+    else steps = 127;
+
+    if( steps == 27 || steps == 28 ) {
+      int bit4 = (speed & 0x10) >> 4;
+      speed &= 0x0F;
+      speed = (speed << 1) + bit4;
+    }
+
+    if( speed > 0 ) {
+      /* remove ebreak */
+      speed--;
+    }
+
+
+    TraceOp.trc( name, TRCLEVEL_MONITOR, __LINE__, 9999,
+        "loco %d dir=%s fn=%s speed=%d steps=%d F0=0x%02X F1=0x%02X F2=0x%02X F3=0x%02X",
+        addr, dir?"fwd":"rev", lights ? "on":"off", speed, steps, F0, F1, F2, F3 );
+
+    wLoc.setaddr( nodeC, addr );
+    wLoc.setV_raw( nodeC, speed );
+    wLoc.setV_rawMax( nodeC, steps );
+    wLoc.setspcnt( nodeC, steps );
+    wLoc.setdir( nodeC, dir );
+    wLoc.setcmd( nodeC, wLoc.dirfun );
+    wLoc.setfn( nodeC, lights );
+    wLoc.setthrottleid( nodeC, "xpressnet" );
+    if( data->iid != NULL )
+      wLoc.setiid( nodeC, data->iid );
+    data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+  }
+  break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unhandled Xpressnet packet: header=0x%02X", xn );
     TraceOp.dump( NULL, TRCLEVEL_INFO, (char*)in, in[0] );
