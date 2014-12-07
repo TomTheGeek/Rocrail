@@ -703,8 +703,8 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
     break;
   case 0x64:
     if( in[3] == 0x14 ) {
-      int cv  = in[4] * 256 + in[5];
-      int val = in[5];
+      int cv  = in[4] * 256 + in[5] + 1;
+      int val = in[6];
       TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet service mode: cv=%d value=%d", cv, val );
 
       iONode node = NodeOp.inst( wProgram.name(), NULL, ELEMENT_NODE );
