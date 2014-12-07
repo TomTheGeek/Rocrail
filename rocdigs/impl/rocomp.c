@@ -783,6 +783,49 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
     if( data->iid != NULL )
       wLoc.setiid( nodeC, data->iid );
     data->listenerFun( data->listenerObj, nodeC, TRCLEVEL_INFO );
+
+    iONode nodeD = NodeOp.inst( wFunCmd.name(), NULL, ELEMENT_NODE );
+    if( data->iid != NULL )
+      wLoc.setiid( nodeD, data->iid );
+    wFunCmd.setaddr( nodeD, addr );
+    wLoc.setfn( nodeD, lights );
+    wFunCmd.setf0( nodeD, (F0 & 0x10) ? True:False );
+    wFunCmd.setf1( nodeD, (F0 & 0x01) ? True:False );
+    wFunCmd.setf2( nodeD, (F0 & 0x02) ? True:False );
+    wFunCmd.setf3( nodeD, (F0 & 0x04) ? True:False );
+    wFunCmd.setf4( nodeD, (F0 & 0x08) ? True:False );
+
+    wFunCmd.setf5 ( nodeD, (F1 & 0x01) ? True:False );
+    wFunCmd.setf6 ( nodeD, (F1 & 0x02) ? True:False );
+    wFunCmd.setf7 ( nodeD, (F1 & 0x04) ? True:False );
+    wFunCmd.setf8 ( nodeD, (F1 & 0x08) ? True:False );
+    wFunCmd.setf9 ( nodeD, (F1 & 0x10) ? True:False );
+    wFunCmd.setf10( nodeD, (F1 & 0x20) ? True:False );
+    wFunCmd.setf11( nodeD, (F1 & 0x40) ? True:False );
+    wFunCmd.setf12( nodeD, (F1 & 0x80) ? True:False );
+
+    wFunCmd.setf13( nodeD, (F2 & 0x01) ? True:False );
+    wFunCmd.setf14( nodeD, (F2 & 0x02) ? True:False );
+    wFunCmd.setf15( nodeD, (F2 & 0x04) ? True:False );
+    wFunCmd.setf16( nodeD, (F2 & 0x08) ? True:False );
+    wFunCmd.setf17( nodeD, (F2 & 0x10) ? True:False );
+    wFunCmd.setf18( nodeD, (F2 & 0x20) ? True:False );
+    wFunCmd.setf19( nodeD, (F2 & 0x40) ? True:False );
+    wFunCmd.setf20( nodeD, (F2 & 0x80) ? True:False );
+
+    wFunCmd.setf21( nodeD, (F3 & 0x01) ? True:False );
+    wFunCmd.setf22( nodeD, (F3 & 0x02) ? True:False );
+    wFunCmd.setf23( nodeD, (F3 & 0x04) ? True:False );
+    wFunCmd.setf24( nodeD, (F3 & 0x08) ? True:False );
+    wFunCmd.setf25( nodeD, (F3 & 0x10) ? True:False );
+    wFunCmd.setf26( nodeD, (F3 & 0x20) ? True:False );
+    wFunCmd.setf27( nodeD, (F3 & 0x40) ? True:False );
+    wFunCmd.setf28( nodeD, (F3 & 0x80) ? True:False );
+
+    wLoc.setthrottleid( nodeD, "xpressnet" );
+    data->listenerFun( data->listenerObj, nodeD, TRCLEVEL_INFO );
+
+
   }
   break;
   default:

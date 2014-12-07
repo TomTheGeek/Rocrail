@@ -7559,3 +7559,45 @@ msgstr ""
 msgid "User ID"
 msgstr ""
 
+#. 
+# id="weather"
+#, c-format
+msgid "Weather"
+msgstr ""
+
+#. 
+# id="weather"
+#, c-format
+msgid "Weather setup"
+msgstr ""
+
+#. 
+# id="outputs"
+#, c-format
+msgid "Outputs"
+msgstr ""
+
+#. 
+# id="minbri"
+#, c-format
+msgid "Min. brightness"
+msgstr ""
+
+#. 
+# id="maxbri"
+#, c-format
+msgid "Max. brightness"
+msgstr ""
+
+#. 
+# id="sunrise"
+#, c-format
+msgid "Sunrise"
+msgstr ""
+
+#. 
+# id="sunset"
+#, c-format
+msgid "Sunset"
+msgstr ""
+
