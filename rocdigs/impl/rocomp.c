@@ -621,7 +621,7 @@ static void __evaluateXpressnet(iORocoMP roco, byte* in) {
     break;
   case 0x63:
     if( in[3] == 0x21 )
-      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet version: %d.%d", in[4], in[5] );
+      TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "Xpressnet version: %d.%d device type is 0x%X", (in[4]>>4), in[4]&0x0F, in[5] );
     break;
   default:
     TraceOp.trc( name, TRCLEVEL_INFO, __LINE__, 9999, "unhandled Xpressnet packet: header=0x%02X", xn );
